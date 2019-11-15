@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 
 #include "gui.hpp"
+#include "savedata.h"
 
 #define CONFIG_3D_SLIDERSTATE (*(float *)0x1FF81080)
 
@@ -84,6 +85,7 @@ int main()
 	//titleshot = title1shot;
 	
 	int highlightedGame = 0;
+	bool saveWritten = false;
 
 	int fadealpha = 255;
 	int fadecolor = 0;
@@ -227,6 +229,19 @@ int main()
 			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 			Draw_EndFrame();
 
+			if (highlightedGame == 3 && !saveWritten) {
+				readSS4Save();
+				readSS4Character(0);
+				if (ss4CharacterData.gender == 1) {
+					ss4CharacterData.gender = 2;	// Male
+				} else {
+					ss4CharacterData.gender = 1;	// Female
+				}
+				writeSS4Character(0);
+				writeSS4Save();
+				saveWritten = true;
+			}
+
 			if(!fadein) {
 				if(hDown & KEY_B){
 					screenmodebuffer = SCREEN_MODE_GAME_SELECT;
@@ -240,7 +255,7 @@ int main()
 		bg_yPos -= 0.2;
 		if(bg_yPos <= -136) bg_yPos = 0.0f;
 
-		if (fadein == true) {
+		if (fadein) {
 			fadealpha -= 6;
 			if (fadealpha < 0) {
 				fadealpha = 0;
@@ -254,6 +269,9 @@ int main()
 			if (fadealpha > 255) {
 				fadealpha = 255;
 				screenmode = screenmodebuffer;
+				if(screenmode == SCREEN_MODE_CHARACTER_SELECT) {
+					saveWritten = false;
+				}
 				fadein = true;
 				fadeout = false;
 			}
