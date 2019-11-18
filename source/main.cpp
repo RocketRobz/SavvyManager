@@ -166,26 +166,6 @@ int main()
 					Gui::sprite(sprites_title4_screenshot_idx, 0, 0);
 					break;
 			}
-			if(highlightedGame==0) {
-				Gui::sprite(sprites_title1_idx, 0, 0);
-			} else {
-				Gui::Draw_ImageBlend(sprites_title1_idx, 0, 0, GRAY);
-			}
-			if(highlightedGame==1) {
-				Gui::sprite(sprites_title2_idx, 200, 0);
-			} else {
-				Gui::Draw_ImageBlend(sprites_title2_idx, 200, 0, GRAY);
-			}
-			if(highlightedGame==2) {
-				Gui::sprite(sprites_title3_idx, 0, 152);
-			} else {
-				Gui::Draw_ImageBlend(sprites_title3_idx, 0, 152, GRAY);
-			}
-			if(highlightedGame==3) {
-				Gui::sprite(sprites_title4_idx, 200, 152);
-			} else {
-				Gui::Draw_ImageBlend(sprites_title4_idx, 200, 152, GRAY);
-			}
 			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
 			set_screen(bottom);
@@ -195,17 +175,30 @@ int main()
 				}
 			}
 			Draw_Text(8, 8, 0.50, BLACK, "Select a game to manage it's save data.");
+			switch(highlightedGame) {
+				case 0:
+				default:
+					Gui::sprite(sprites_title1_idx, 0, 56);
+					break;
+				case 1:
+					Gui::sprite(sprites_title2_idx, 0, 56);
+					break;
+				case 2:
+					Gui::sprite(sprites_title3_idx, 0, 56);
+					break;
+				case 3:
+					Gui::sprite(sprites_title4_idx, 0, 56);
+					break;
+			}
 			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 			Draw_EndFrame();
 
-			if(hDown & KEY_UP) {
-				if(highlightedGame==2 || highlightedGame==3) highlightedGame -= 2;
-			} else if(hDown & KEY_DOWN) {
-				if(highlightedGame==0 || highlightedGame==1) highlightedGame += 2;
-			} else if(hDown & KEY_LEFT) {
-				if(highlightedGame==1 || highlightedGame==3) highlightedGame--;
+			if(hDown & KEY_LEFT) {
+				highlightedGame--;
+				if (highlightedGame < 0) highlightedGame = 0;
 			} else if(hDown & KEY_RIGHT) {
-				if(highlightedGame==0 || highlightedGame==2) highlightedGame++;
+				highlightedGame++;
+				if (highlightedGame > 3) highlightedGame = 3;
 			}
 
 			if((hDown & KEY_A) && (!fadein)){
