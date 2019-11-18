@@ -17,7 +17,8 @@ extern C3D_RenderTarget* bottom;
 enum ScreenMode {
 	SCREEN_MODE_ROCKETROBZ = 0,			// RocketRobz logo
 	SCREEN_MODE_GAME_SELECT = 1,		// Game select
-	SCREEN_MODE_CHARACTER_SELECT = 2,	// Character select
+	SCREEN_MODE_WHAT_TO_DO = 2,			// What to do?
+	SCREEN_MODE_CHANGE_CHARACTER = 3,	// Change character
 };
 static int screenmode = 0;
 static int screenmodebuffer = 0;
@@ -207,10 +208,53 @@ int main()
 			}
 
 			if((hDown & KEY_A) && (!fadein)){
-				screenmodebuffer = SCREEN_MODE_CHARACTER_SELECT;
+				screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
 				fadeout = true;
 			}
-		} else if(screenmode == SCREEN_MODE_CHARACTER_SELECT) {
+		} else if(screenmode == SCREEN_MODE_WHAT_TO_DO) {
+			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
+			C2D_TargetClear(top, TRANSPARENT);
+			C2D_TargetClear(bottom, TRANSPARENT);
+			Gui::clearTextBufs();
+			set_screen(top);
+
+			for(int w = 0; w < 7; w++) {
+				for(int h = 0; h < 3; h++) {
+					Gui::sprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
+				}
+			}
+			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+
+			set_screen(bottom);
+			for(int w = 0; w < 7; w++) {
+				for(int h = 0; h < 3; h++) {
+					Gui::sprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
+				}
+			}
+			Draw_Text(8, 8, 0.50, BLACK, "What do you want to change?");
+			Gui::Draw_ImageBlend(sprites_icon_shadow_idx, 64, 86, C2D_Color32(0, 0, 0, 63));
+			Gui::sprite(sprites_icon_profile_idx, 64, 80);
+			Draw_Text(62, 140, 0.50, RED, "Characters");
+			Gui::sprite(sprites_button_shadow_idx, 5, 199);
+			Gui::sprite(sprites_button_red_idx, 5, 195);
+			Gui::sprite(sprites_arrow_back_idx, 19, 195);
+			Gui::sprite(sprites_button_b_idx, 44, 218);
+			/*Gui::sprite(sprites_button_shadow_idx, 251, 199);
+			Gui::sprite(sprites_button_blue_idx, 251, 195);*/
+			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+			Draw_EndFrame();
+
+			if(!fadein) {
+				if(hDown & KEY_A){
+					screenmodebuffer = SCREEN_MODE_CHANGE_CHARACTER;
+					fadeout = true;
+				}
+				if(hDown & KEY_B){
+					screenmodebuffer = SCREEN_MODE_GAME_SELECT;
+					fadeout = true;
+				}
+			}
+		} else if(screenmode == SCREEN_MODE_CHANGE_CHARACTER) {
 			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 			C2D_TargetClear(top, TRANSPARENT);
 			C2D_TargetClear(bottom, TRANSPARENT);
@@ -226,6 +270,7 @@ int main()
 					Gui::sprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
 				}
 			}
+			Draw_Text(8, 8, 0.50, BLACK, "Select the character you want to change.");
 			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 			Draw_EndFrame();
 
@@ -244,7 +289,7 @@ int main()
 
 			if(!fadein) {
 				if(hDown & KEY_B){
-					screenmodebuffer = SCREEN_MODE_GAME_SELECT;
+					screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
 					fadeout = true;
 				}
 			}
@@ -269,7 +314,7 @@ int main()
 			if (fadealpha > 255) {
 				fadealpha = 255;
 				screenmode = screenmodebuffer;
-				if(screenmode == SCREEN_MODE_CHARACTER_SELECT) {
+				if(screenmode == SCREEN_MODE_CHANGE_CHARACTER) {
 					saveWritten = false;
 				}
 				fadein = true;
