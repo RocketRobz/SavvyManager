@@ -61,7 +61,7 @@ bool fadeout = false;
 	
 int text_width = 0;
 const char* yeartext = "2019 RocketRobz";
-const char* yeartext2 = "Games 2008-2017 Nintendo & syn Sophia";
+//const char* yeartext2 = "Games 2008-2017 Nintendo & syn Sophia";
 	
 float bg_xPos = 0.0f;
 float bg_yPos = 0.0f;
@@ -123,14 +123,16 @@ int main()
 			set_screen(top);
 
 			Gui::sprite(sprites_logo_rocketrobz_idx, 0, 0);
+			Draw_Text(8, 220, 0.50, BLACK, yeartext);
 			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
 			set_screen(bottom);
 			Draw_Rect(0, 0, 320, 240, WHITE);
-			text_width = 104;
+			/*text_width = 104;
 			Draw_Text(((320-text_width)/2), 100, 0.50, BLACK, yeartext);
 			text_width = 264;
-			Draw_Text(((320-text_width)/2), 116, 0.50, BLACK, yeartext2);
+			Draw_Text(((320-text_width)/2), 116, 0.50, BLACK, yeartext2);*/
+			Gui::sprite(sprites_logo_SSanniversary_idx, 32, 24);
 			if (fadealpha > 0) Draw_Rect(0, 0, 320, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 			Draw_EndFrame();
 
