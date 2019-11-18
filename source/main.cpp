@@ -21,7 +21,7 @@ enum ScreenMode {
 	SCREEN_MODE_CHANGE_CHARACTER = 3,	// Change character
 };
 static int screenmode = 0;
-static int screenmodebuffer = 0;
+int screenmodebuffer = 0;
 
 static int screenDelay = 0;
 
@@ -52,6 +52,36 @@ void screenon(void)
 	}
 }
 
+int highlightedGame = 0;
+
+int fadealpha = 255;
+int fadecolor = 0;
+bool fadein = true;
+bool fadeout = false;
+	
+int text_width = 0;
+const char* yeartext = "2019 RocketRobz";
+const char* yeartext2 = "Games 2008-2017 Nintendo & syn Sophia";
+	
+float bg_xPos = 0.0f;
+float bg_yPos = 0.0f;
+
+bool showCursor = false;
+int cursorX = 0;
+int cursorY = 0;
+int whatToChange_cursorPosition = 0;
+int cursorAlpha = 0;
+
+void drawCursor(void) {
+	if (cursorAlpha == 255) {
+		Gui::sprite(sprites_cursor_idx, cursorX, cursorY);
+	} else if (cursorAlpha > 0) {
+		Gui::Draw_ImageBlend(sprites_cursor_idx, cursorX, cursorY, C2D_Color32(255, 255, 255, cursorAlpha));
+	}
+}
+
+u32 hDown = 0;
+
 int main()
 {
 	screenoff();
@@ -71,43 +101,14 @@ int main()
 	//mkdir("sdmc:/3ds", 0777);
 	//mkdir("sdmc:/3ds/SavvyGameSelect", 0777);
 
-	/*pp2d_load_texture_png(bgtex, "romfs:/graphics/phone_bg.png");
-	pp2d_load_texture_png(titletex, "romfs:/graphics/title.png");
-	pp2d_load_texture_png(title1tex, "romfs:/graphics/title1.png");
-	pp2d_load_texture_png(title2tex, "romfs:/graphics/title2.png");
-	pp2d_load_texture_png(title3tex, "romfs:/graphics/title3.png");
-	pp2d_load_texture_png(title4tex, "romfs:/graphics/title4.png");
-	pp2d_load_texture_png(title1shot, "romfs:/graphics/title1_screenshot.png");
-	pp2d_load_texture_png(title2shot, "romfs:/graphics/title2_screenshot.png");
-	pp2d_load_texture_png(title3shot, "romfs:/graphics/title3_screenshot.png");
-	pp2d_load_texture_png(title4shot, "romfs:/graphics/title4_screenshot.png");
-	pp2d_load_texture_png(photostudiobg, "romfs:/graphics/photostudio/Studio/blue.png");*/
-	
-	//titleshot = title1shot;
-	
-	int highlightedGame = 0;
-	bool saveWritten = false;
-
-	int fadealpha = 255;
-	int fadecolor = 0;
-	bool fadein = true;
-	bool fadeout = false;
-	
-	int text_width = 0;
-	const char* yeartext = "2019 RocketRobz";
-	const char* yeartext2 = "Games 2008-2017 Nintendo & syn Sophia";
-	
-	float bg_xPos = 0.0f;
-	float bg_yPos = 0.0f;
-
 	screenon();
 
 	// Loop as long as the status is not exit
 	while(aptMainLoop()) {
 		// Scan hid shared memory for input events
 		hidScanInput();
-		
-		const u32 hDown = hidKeysDown();
+
+		hDown = hidKeysDown();
 		//const u32 hHeld = hidKeysHeld();
 
 		if(screenmode != SCREEN_MODE_ROCKETROBZ) {
@@ -241,6 +242,7 @@ int main()
 			Gui::sprite(sprites_button_b_idx, 44, 218);
 			/*Gui::sprite(sprites_button_shadow_idx, 251, 199);
 			Gui::sprite(sprites_button_blue_idx, 251, 195);*/
+			drawCursor();
 			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 			Draw_EndFrame();
 
@@ -254,44 +256,39 @@ int main()
 					fadeout = true;
 				}
 			}
+
+			switch (whatToChange_cursorPosition) {
+				case 0:
+				default:
+					cursorX = 80;
+					cursorY = 104;
+					break;
+			}
 		} else if(screenmode == SCREEN_MODE_CHANGE_CHARACTER) {
-			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-			C2D_TargetClear(top, TRANSPARENT);
-			C2D_TargetClear(bottom, TRANSPARENT);
-			Gui::clearTextBufs();
-			set_screen(top);
+			extern void changeCharacter(void);
+			changeCharacter();
+		}
 
-			Gui::sprite(sprites_blue_bg_idx, 0, 0);
-			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+		if ((hDown & KEY_UP)
+		|| (hDown & KEY_DOWN)
+		|| (hDown & KEY_LEFT)
+		|| (hDown & KEY_RIGHT))
+		{
+			showCursor = true;
+		} else if (hDown & KEY_TOUCH)
+		{
+			showCursor = false;
+		}
 
-			set_screen(bottom);
-			for(int w = 0; w < 7; w++) {
-				for(int h = 0; h < 3; h++) {
-					Gui::sprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
-				}
+		if (showCursor) {
+			cursorAlpha += 32;
+			if (cursorAlpha > 255) {
+				cursorAlpha = 255;
 			}
-			Draw_Text(8, 8, 0.50, BLACK, "Select the character you want to change.");
-			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-			Draw_EndFrame();
-
-			if (highlightedGame == 3 && !saveWritten) {
-				readSS4Save();
-				readSS4Character(0);
-				if (ss4CharacterData.gender == 1) {
-					ss4CharacterData.gender = 2;	// Male
-				} else {
-					ss4CharacterData.gender = 1;	// Female
-				}
-				writeSS4Character(0);
-				writeSS4Save();
-				saveWritten = true;
-			}
-
-			if(!fadein) {
-				if(hDown & KEY_B){
-					screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
-					fadeout = true;
-				}
+		} else {
+			cursorAlpha -= 32;
+			if (cursorAlpha < 0) {
+				cursorAlpha = 0;
 			}
 		}
 
@@ -314,9 +311,6 @@ int main()
 			if (fadealpha > 255) {
 				fadealpha = 255;
 				screenmode = screenmodebuffer;
-				if(screenmode == SCREEN_MODE_CHANGE_CHARACTER) {
-					saveWritten = false;
-				}
 				fadein = true;
 				fadeout = false;
 			}

@@ -61,6 +61,8 @@ extern ss3to4character ss4CharacterData;
 extern char ss3Save[0x174000];
 extern char ss4Save[0xF0000];
 
+extern char ss4PlayerName[10];
+
 extern void readSS4Save(void);
 extern void writeSS4Save(void);
 

@@ -9,10 +9,23 @@ ss3to4character ss4CharacterData;
 char ss3Save[0x174000];
 char ss4Save[0xF0000];
 
+char ss4PlayerName[10] = {0};
+
+static bool ss4SaveRead = false;
+
 void readSS4Save(void) {
+	if (ss4SaveRead) return;
+
 	FILE* saveData = fopen("sdmc:/3ds/Checkpoint/extdata/0x01C25 Style Savvy  Styling Star/SavvyManager/savedata.dat", "rb");
 	fread(ss4Save, (int)sizeof(ss4Save), 1, saveData);
 	fclose(saveData);
+
+	// Get playable character's name
+	for (int i = 0; i < 9; i++) {
+		ss4PlayerName[i] = ss4Save[0x24370+(i*2)];
+	}
+
+	ss4SaveRead = true;
 }
 
 void writeSS4Save(void) {
