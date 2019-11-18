@@ -44,6 +44,7 @@ extern void drawCursor(void);
 extern u32 hDown;
 
 static int characterList_cursorPosition = 0;
+static int characterList_cursorPositionOnScreen = 0;
 
 static int characterShownFirst = 0;
 
@@ -53,6 +54,7 @@ void changeCharacter(void) {
 	}
 
 	cursorX = 256;
+	cursorY = 64+(48*characterList_cursorPositionOnScreen);
 
 	C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 	C2D_TargetClear(top, TRANSPARENT);
@@ -107,22 +109,32 @@ void changeCharacter(void) {
 	}*/
 
 	if(!fadein) {
-		if (hDown & KEY_UP) {
-			characterList_cursorPosition--;
-			if (characterList_cursorPosition < 0) {
-				characterList_cursorPosition = 0;
-				characterShownFirst = 0;
-			} else if (characterList_cursorPosition < characterShownFirst) {
-				characterShownFirst--;
+		if (showCursor) {
+			if (hDown & KEY_UP) {
+				characterList_cursorPosition--;
+				characterList_cursorPositionOnScreen--;
+				if (characterList_cursorPosition < 0) {
+					characterList_cursorPosition = 0;
+					characterShownFirst = 0;
+				} else if (characterList_cursorPosition < characterShownFirst) {
+					characterShownFirst--;
+				}
+				if (characterList_cursorPositionOnScreen < 0) {
+					characterList_cursorPositionOnScreen = 0;
+				}
 			}
-		}
-		if (hDown & KEY_DOWN) {
-			characterList_cursorPosition++;
-			if (characterList_cursorPosition > 0x20) {
-				characterList_cursorPosition = 0x20;
-				characterShownFirst = 0x20-2;
-			} else if (characterList_cursorPosition >= 3) {
-				characterShownFirst++;
+			if (hDown & KEY_DOWN) {
+				characterList_cursorPosition++;
+				characterList_cursorPositionOnScreen++;
+				if (characterList_cursorPosition > 0x20) {
+					characterList_cursorPosition = 0x20;
+					characterShownFirst = 0x20-2;
+				} else if (characterList_cursorPosition > characterShownFirst+2) {
+					characterShownFirst++;
+				}
+				if (characterList_cursorPositionOnScreen > 2) {
+					characterList_cursorPositionOnScreen = 2;
+				}
 			}
 		}
 		if (hDown & KEY_B) {
