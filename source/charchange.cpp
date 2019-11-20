@@ -77,9 +77,11 @@ void changeCharacter(void) {
 	if (highlightedGame == 3) {
 		for (int i = characterShownFirst; i < characterShownFirst+3; i++) {
 			if (i==0) {
-				Draw_Text(48, i2, 0.65, BLACK, ss4PlayerName);
+				Gui::sprite((getSS4CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				Draw_Text(64, i2, 0.65, BLACK, ss4PlayerName);
 			} else {
-				Draw_Text(48, i2, 0.65, BLACK, ss4CharacterNames[i]);
+				Gui::sprite((getSS4CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				Draw_Text(64, i2, 0.65, BLACK, ss4CharacterNames[i]);
 			}
 			i2 += 48;
 		}

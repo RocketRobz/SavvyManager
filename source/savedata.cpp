@@ -54,3 +54,14 @@ void writeSS4Character(u16 id) {
 		tonccpy((char*)ss4Save+(0x273EE + (0x1F8*id)), &ss4CharacterData, 0x3E);
 	}
 }
+
+bool getSS4CharacterGender(u16 id) {
+	readSS4Character(id);
+
+	if ((id == 0) && (strcmp(ss4PlayerName, "Robz") == 0)) {
+		return true;	// Robz is male, so return male
+	}
+
+	// true = male, false = female
+	return (ss4CharacterData.gender == 2);
+}

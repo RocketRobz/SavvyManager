@@ -69,6 +69,8 @@ extern void writeSS4Save(void);
 extern void readSS4Character(u16 id);
 extern void writeSS4Character(u16 id);
 
+extern bool getSS4CharacterGender(u16 id);
+
 #ifdef __cplusplus
 }
 #endif
