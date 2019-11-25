@@ -197,10 +197,10 @@ int main()
 
 			if(hDown & KEY_LEFT) {
 				highlightedGame--;
-				if (highlightedGame < 0) highlightedGame = 0;
+				if (highlightedGame < 0) highlightedGame = 3;
 			} else if(hDown & KEY_RIGHT) {
 				highlightedGame++;
-				if (highlightedGame > 3) highlightedGame = 3;
+				if (highlightedGame > 3) highlightedGame = 0;
 			}
 
 			if((hDown & KEY_A) && (!fadein)){
@@ -287,9 +287,9 @@ int main()
 			}
 		}
 
-		bg_xPos += 0.2;
+		bg_xPos += 0.3;
 		if(bg_xPos >= 72) bg_xPos = 0.0f;
-		bg_yPos -= 0.2;
+		bg_yPos -= 0.3;
 		if(bg_yPos <= -136) bg_yPos = 0.0f;
 
 		if (fadein) {
