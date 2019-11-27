@@ -37,6 +37,7 @@ typedef struct ss3to4character {
     u8 nailColor;
     u8 eyeliner;			// Eyeliner (00=Normal, 01=Double)
     u8 unknown1C;
+    u8 unknown1D;
     u16 inner;
     u16 top;				// Top/Dress/Yukatas (Female), Yukatas/Dungarees (Male)
     u16 outer;
@@ -68,6 +69,8 @@ extern void writeSS4Save(void);
 
 extern void readSS4Character(u16 id);
 extern void writeSS4Character(u16 id);
+
+extern void readSS4CharacterFile(u16 id, const char* filename);
 
 extern bool getSS4CharacterGender(u16 id);
 

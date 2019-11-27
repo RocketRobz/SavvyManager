@@ -3,12 +3,16 @@
 #include <string.h>
 #include <3ds.h>
 #include <malloc.h>
+#include <unistd.h>
 #include <sys/stat.h>
 
 #include "gui.hpp"
 #include "savedata.h"
 
 #include "ss4charnames.h"
+#include "import_ss1charnames.h"
+#include "import_ss2charnames.h"
+#include "import_ss3charnames.h"
 #include "import_ss4charnames.h"
 
 extern C3D_RenderTarget* top;
@@ -34,6 +38,9 @@ static int subScreenMode = 0;
 */
 
 static int import_highlightedGame = 0;
+
+static char chrFilePath[256];
+static bool characterChanged = false;
 
 extern int highlightedGame;
 extern bool saveWritten;
@@ -77,6 +84,12 @@ void changeCharacter(void) {
 
 	if (import_highlightedGame == 3) {
 		import_totalCharacters = 0xC;
+	} else if (import_highlightedGame == 2) {
+		import_totalCharacters = (highlightedGame==3 ? 0xF : 0x10);
+	} else if (import_highlightedGame == 1) {
+		import_totalCharacters = 0xF;
+	} else if (import_highlightedGame == 0) {
+		import_totalCharacters = 0x6;
 	}
 
 	C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
@@ -124,6 +137,15 @@ void changeCharacter(void) {
 			if (import_highlightedGame == 3) {
 				Gui::sprite((import_ss4CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Draw_Text(64, i2, 0.65, BLACK, import_ss4CharacterNames[i]);
+			} else if (import_highlightedGame == 2) {
+				Gui::sprite((import_ss3CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				Draw_Text(64, i2, 0.65, BLACK, import_ss3CharacterNames[i]);
+			} else if (import_highlightedGame == 1) {
+				Gui::sprite((import_ss2CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				Draw_Text(64, i2, 0.65, BLACK, import_ss2CharacterNames[i]);
+			} else if (import_highlightedGame == 0) {
+				Gui::sprite((import_ss1CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				Draw_Text(64, i2, 0.65, BLACK, import_ss1CharacterNames[i]);
 			}
 			i2 += 48;
 		}
@@ -202,18 +224,43 @@ void changeCharacter(void) {
 					}
 				}
 			}
-			/*if (hDown & KEY_A) {
+			if (hDown & KEY_A) {
+				switch (highlightedGame) {
+					case 3:
+						sprintf(chrFilePath, "romfs:/character/Styling Star/All Seasons/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Styling Star/Spring/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						}
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Styling Star/Summer/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						}
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Styling Star/Fall/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						}
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Styling Star/Winter/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						}
+						readSS4CharacterFile(characterList_cursorPosition, chrFilePath);
+						break;
+				}
+				characterChanged = true;
 				subScreenMode = 1;
-			}*/
+			}
 			if ((hDown & KEY_L)
 			|| (hDown & KEY_LEFT)) {
 				import_highlightedGame--;
 				if (import_highlightedGame < 0) import_highlightedGame = 4;
+				importCharacterList_cursorPosition = 0;
+				importCharacterList_cursorPositionOnScreen = 0;
+				import_characterShownFirst = 0;
 			}
 			if ((hDown & KEY_R)
 			|| (hDown & KEY_RIGHT)) {
 				import_highlightedGame++;
 				if (import_highlightedGame > 4) import_highlightedGame = 0;
+				importCharacterList_cursorPosition = 0;
+				importCharacterList_cursorPositionOnScreen = 0;
+				import_characterShownFirst = 0;
 			}
 			if (hDown & KEY_B) {
 				subScreenMode = 1;
@@ -272,6 +319,14 @@ void changeCharacter(void) {
 				subScreenMode = 1;
 			}
 			if (hDown & KEY_B) {
+				if (characterChanged) {
+					switch (highlightedGame) {
+						case 3:
+							writeSS4Save();
+							break;
+					}
+					characterChanged = false;
+				}
 				screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
 				fadeout = true;
 			}

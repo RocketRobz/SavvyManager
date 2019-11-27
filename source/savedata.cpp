@@ -4,6 +4,8 @@
 #include "savedata.h"
 #include "tonccpy.h"
 
+#define ss4SavePath	"sdmc:/3ds/Checkpoint/extdata/0x01C25 Style Savvy  Styling Star/SavvyManager/savedata.dat"
+
 ss3to4character ss4CharacterData;
 
 char ss3Save[0x174000];
@@ -16,7 +18,7 @@ static bool ss4SaveRead = false;
 void readSS4Save(void) {
 	if (ss4SaveRead) return;
 
-	FILE* saveData = fopen("sdmc:/3ds/Checkpoint/extdata/0x01C25 Style Savvy  Styling Star/SavvyManager/savedata.dat", "rb");
+	FILE* saveData = fopen(ss4SavePath, "rb");
 	fread(ss4Save, (int)sizeof(ss4Save), 1, saveData);
 	fclose(saveData);
 
@@ -29,7 +31,8 @@ void readSS4Save(void) {
 }
 
 void writeSS4Save(void) {
-	FILE* saveData = fopen("sdmc:/3ds/Checkpoint/extdata/0x01C25 Style Savvy  Styling Star/SavvyManager/savedata.dat", "wb");
+	remove(ss4SavePath);
+	FILE* saveData = fopen(ss4SavePath, "wb");
 	fwrite(ss4Save, (int)sizeof(ss4Save), 1, saveData);
 	fclose(saveData);
 }
@@ -53,6 +56,20 @@ void writeSS4Character(u16 id) {
 		// Non-playable character
 		tonccpy((char*)ss4Save+(0x273EE + (0x1F8*id)), &ss4CharacterData, 0x3E);
 	}
+}
+
+void readSS4CharacterFile(u16 id, const char* filename) {
+	FILE* characterData = fopen(filename, "rb");
+	if (!characterData) return;
+
+	if (id == 0) {
+		// Playable character
+		fread((char*)ss4Save+(0x2440A), 0x3E, 1, characterData);
+	} else {
+		// Non-playable character
+		fread((char*)ss4Save+(0x273EE + (0x1F8*id)), 0x3E, 1, characterData);
+	}
+	fclose(characterData);
 }
 
 bool getSS4CharacterGender(u16 id) {
