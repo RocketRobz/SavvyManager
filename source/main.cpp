@@ -3,10 +3,13 @@
 #include <string.h>
 #include <3ds.h>
 #include <malloc.h>
+#include <unistd.h>		// access
 #include <sys/stat.h>
 
+#include "dumpdsp.h"
 #include "gui.hpp"
 #include "savedata.h"
+#include "sound.h"
 
 #define CONFIG_3D_SLIDERSTATE (*(float *)0x1FF81080)
 
@@ -25,8 +28,43 @@ int screenmodebuffer = 0;
 
 static int screenDelay = 0;
 
+sound *music = NULL;
+sound *sfx_select = NULL;
+sound *sfx_back = NULL;
+sound *sfx_highlight = NULL;
+
+bool dspfirmfound = false;
+static bool musicPlaying = false;
 static bool screenoff_ran = false;
 static bool screenon_ran = true;
+
+static void Play_Music(void) {
+	if (!musicPlaying && dspfirmfound) {
+		music->play();
+		musicPlaying = true;
+	}
+}
+
+void sndSelect(void) {
+	if (dspfirmfound) {
+		sfx_select->stop();
+		sfx_select->play();
+	}
+}
+
+void sndBack(void) {
+	if (dspfirmfound) {
+		sfx_back->stop();
+		sfx_back->play();
+	}
+}
+
+void sndHighlight(void) {
+	if (dspfirmfound) {
+		sfx_highlight->stop();
+		sfx_highlight->play();
+	}
+}
 
 void screenoff(void)
 {
@@ -101,6 +139,39 @@ int main()
 	//mkdir("sdmc:/3ds", 0777);
 	//mkdir("sdmc:/3ds/SavvyGameSelect", 0777);
 
+ 	if( access( "sdmc:/3ds/dspfirm.cdc", F_OK ) != -1 ) {
+		ndspInit();
+		dspfirmfound = true;
+	}else{
+		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
+		set_screen(bottom);
+		Draw_Text(12, 16, 0.5f, WHITE, "Dumping DSP firm...");
+		Draw_EndFrame();
+		screenon();
+		dumpDsp();
+		if( access( "sdmc:/3ds/dspfirm.cdc", F_OK ) != -1 ) {
+			ndspInit();
+			dspfirmfound = true;
+		} else {
+			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
+			set_screen(bottom);
+			Draw_Text(12, 16, 0.5f, WHITE, "DSP firm dumping failed.\n"
+					"Running without sound.");
+			Draw_EndFrame();
+			for (int i = 0; i < 90; i++) {
+				gspWaitForVBlank();
+			}
+		}
+	}
+
+	// Load the sound effects if DSP is available.
+	if (dspfirmfound) {
+		music = new sound("romfs:/sounds/music.wav", 1, true);
+		sfx_select = new sound("romfs:/sounds/select.wav", 2, false);
+		sfx_back = new sound("romfs:/sounds/back.wav", 3, false);
+		sfx_highlight = new sound("romfs:/sounds/highlight.wav", 4, false);
+	}
+
 	screenon();
 
 	// Loop as long as the status is not exit
@@ -142,6 +213,8 @@ int main()
 				fadeout = true;
 			}
 		} else if(screenmode == SCREEN_MODE_GAME_SELECT) {
+			Play_Music();
+
 			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 			C2D_TargetClear(top, TRANSPARENT);
 			C2D_TargetClear(bottom, TRANSPARENT);
@@ -195,17 +268,22 @@ int main()
 			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 			Draw_EndFrame();
 
-			if(hDown & KEY_LEFT) {
-				highlightedGame--;
-				if (highlightedGame < 0) highlightedGame = 3;
-			} else if(hDown & KEY_RIGHT) {
-				highlightedGame++;
-				if (highlightedGame > 3) highlightedGame = 0;
-			}
+			if (!fadein) {
+				if (hDown & KEY_LEFT) {
+					sndHighlight();
+					highlightedGame--;
+					if (highlightedGame < 0) highlightedGame = 3;
+				} else if (hDown & KEY_RIGHT) {
+					sndHighlight();
+					highlightedGame++;
+					if (highlightedGame > 3) highlightedGame = 0;
+				}
 
-			if((hDown & KEY_A) && (!fadein)){
-				screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
-				fadeout = true;
+				if (hDown & KEY_A) {
+					sndSelect();
+					screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
+					fadeout = true;
+				}
 			}
 		} else if(screenmode == SCREEN_MODE_WHAT_TO_DO) {
 			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
@@ -241,12 +319,14 @@ int main()
 			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 			Draw_EndFrame();
 
-			if(!fadein) {
-				if(hDown & KEY_A){
+			if (!fadein) {
+				if (hDown & KEY_A) {
+					sndSelect();
 					screenmodebuffer = SCREEN_MODE_CHANGE_CHARACTER;
 					fadeout = true;
 				}
-				if(hDown & KEY_B){
+				if (hDown & KEY_B) {
+					sndBack();
 					screenmodebuffer = SCREEN_MODE_GAME_SELECT;
 					fadeout = true;
 				}
@@ -313,6 +393,12 @@ int main()
 	}
 
 	
+	delete music;
+	delete sfx_select;
+	if (dspfirmfound) {
+		ndspExit();
+	}
+
 	Gui::exit();
 
 	hidExit();

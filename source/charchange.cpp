@@ -3,12 +3,13 @@
 #include <string.h>
 #include <3ds.h>
 #include <malloc.h>
-#include <unistd.h>
+#include <unistd.h>		// access
 #include <sys/stat.h>
 
 #include "gui.hpp"
 #include "savedata.h"
 
+#include "ss3charnames.h"
 #include "ss4charnames.h"
 #include "import_ss1charnames.h"
 #include "import_ss2charnames.h"
@@ -17,6 +18,10 @@
 
 extern C3D_RenderTarget* top;
 extern C3D_RenderTarget* bottom;
+
+extern void sndSelect(void);
+extern void sndBack(void);
+extern void sndHighlight(void);
 
 // Current screen mode.
 enum ScreenMode {
@@ -80,6 +85,9 @@ void changeCharacter(void) {
 	if (highlightedGame == 3) {
 		totalCharacters = 0x20;
 		readSS4Save();
+	} else if (highlightedGame == 2) {
+		totalCharacters = 0xE;
+		readSS3Save();
 	}
 
 	if (import_highlightedGame == 3) {
@@ -170,8 +178,8 @@ void changeCharacter(void) {
 		Draw_Text(8, 8, 0.50, BLACK, "Select the character you want to change.");
 
 		int i2 = 48;
-		if (highlightedGame == 3) {
-			for (int i = characterShownFirst; i < characterShownFirst+3; i++) {
+		for (int i = characterShownFirst; i < characterShownFirst+3; i++) {
+			if (highlightedGame == 3) {
 				if (i==0) {
 					Gui::sprite((getSS4CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 					Draw_Text(64, i2, 0.65, BLACK, ss4PlayerName);
@@ -179,8 +187,16 @@ void changeCharacter(void) {
 					Gui::sprite((getSS4CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 					Draw_Text(64, i2, 0.65, BLACK, ss4CharacterNames[i]);
 				}
-				i2 += 48;
+			} else if (highlightedGame == 2) {
+				if (i==0) {
+					Gui::sprite((getSS3CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+					Draw_Text(64, i2, 0.65, BLACK, ss3PlayerName);
+				} else {
+					Gui::sprite((getSS3CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+					Draw_Text(64, i2, 0.65, BLACK, ss3CharacterNames[i]);
+				}
 			}
+			i2 += 48;
 		}
 	}
 
@@ -194,10 +210,11 @@ void changeCharacter(void) {
 	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 	Draw_EndFrame();
 
-	if(!fadein) {
+	if (!fadein && !fadeout) {
 		if (subScreenMode == 4) {
 			if (showCursor) {
 				if (hDown & KEY_UP) {
+					sndHighlight();
 					importCharacterList_cursorPosition--;
 					importCharacterList_cursorPositionOnScreen--;
 					if (importCharacterList_cursorPosition < 0) {
@@ -211,6 +228,7 @@ void changeCharacter(void) {
 					}
 				}
 				if (hDown & KEY_DOWN) {
+					sndHighlight();
 					importCharacterList_cursorPosition++;
 					importCharacterList_cursorPositionOnScreen++;
 					if (importCharacterList_cursorPosition > import_totalCharacters) {
@@ -225,6 +243,7 @@ void changeCharacter(void) {
 				}
 			}
 			if (hDown & KEY_A) {
+				sndSelect();
 				switch (highlightedGame) {
 					case 3:
 						sprintf(chrFilePath, "romfs:/character/Styling Star/All Seasons/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
@@ -242,12 +261,29 @@ void changeCharacter(void) {
 						}
 						readSS4CharacterFile(characterList_cursorPosition, chrFilePath);
 						break;
+					case 2:
+						sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Fashion Forward/Spring/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						}
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Fashion Forward/Summer/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						}
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Fashion Forward/Fall/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						}
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Fashion Forward/Winter/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						}
+						readSS3CharacterFile(characterList_cursorPosition, chrFilePath);
+						break;
 				}
 				characterChanged = true;
 				subScreenMode = 1;
 			}
 			if ((hDown & KEY_L)
 			|| (hDown & KEY_LEFT)) {
+				sndHighlight();
 				import_highlightedGame--;
 				if (import_highlightedGame < 0) import_highlightedGame = 4;
 				importCharacterList_cursorPosition = 0;
@@ -256,6 +292,7 @@ void changeCharacter(void) {
 			}
 			if ((hDown & KEY_R)
 			|| (hDown & KEY_RIGHT)) {
+				sndHighlight();
 				import_highlightedGame++;
 				if (import_highlightedGame > 4) import_highlightedGame = 0;
 				importCharacterList_cursorPosition = 0;
@@ -263,32 +300,38 @@ void changeCharacter(void) {
 				import_characterShownFirst = 0;
 			}
 			if (hDown & KEY_B) {
+				sndBack();
 				subScreenMode = 1;
 			}
 		} else if (subScreenMode == 1) {
 			if (showCursor) {
 				if (hDown & KEY_UP) {
+					sndHighlight();
 					characterChangeMenu_cursorPosition--;
 					if (characterChangeMenu_cursorPosition < 0) {
-						characterChangeMenu_cursorPosition = 0;
+						characterChangeMenu_cursorPosition = 2;
 					}
 				}
 				if (hDown & KEY_DOWN) {
+					sndHighlight();
 					characterChangeMenu_cursorPosition++;
 					if (characterChangeMenu_cursorPosition > 2) {
-						characterChangeMenu_cursorPosition = 2;
+						characterChangeMenu_cursorPosition = 0;
 					}
 				}
 			}
 			if (hDown & KEY_A) {
+				sndSelect();
 				subScreenMode = 4;
 			}
 			if (hDown & KEY_B) {
+				sndBack();
 				subScreenMode = 0;
 			}
 		} else {
 			if (showCursor) {
 				if (hDown & KEY_UP) {
+					sndHighlight();
 					characterList_cursorPosition--;
 					characterList_cursorPositionOnScreen--;
 					if (characterList_cursorPosition < 0) {
@@ -302,6 +345,7 @@ void changeCharacter(void) {
 					}
 				}
 				if (hDown & KEY_DOWN) {
+					sndHighlight();
 					characterList_cursorPosition++;
 					characterList_cursorPositionOnScreen++;
 					if (characterList_cursorPosition > totalCharacters) {
@@ -316,13 +360,18 @@ void changeCharacter(void) {
 				}
 			}
 			if (hDown & KEY_A) {
+				sndSelect();
 				subScreenMode = 1;
 			}
 			if (hDown & KEY_B) {
+				sndBack();
 				if (characterChanged) {
 					switch (highlightedGame) {
 						case 3:
 							writeSS4Save();
+							break;
+						case 2:
+							writeSS3Save();
 							break;
 					}
 					characterChanged = false;

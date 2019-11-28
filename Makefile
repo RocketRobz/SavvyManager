@@ -50,7 +50,7 @@ VERSION_MICRO := 0
 #---------------------------------------------------------------------------------
 TARGET		:=	SavvyManager
 BUILD		:=	build
-SOURCES		:=	source
+SOURCES		:=	source source/utils
 DATA		:=	data
 INCLUDES	:=	include include/utils
 GRAPHICS	:=	assets/gfx
@@ -74,7 +74,7 @@ CFLAGS	:=	-g -Wall -O2 -mword-relocations \
 
 CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS
 
-CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -fpermissive -std=c++11 -std=gnu++11
+CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=c++11 -std=gnu++11
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)

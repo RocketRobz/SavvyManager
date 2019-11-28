@@ -59,19 +59,26 @@ typedef struct ss3to4character {
 
 extern ss3to4character ss4CharacterData;
 
-extern char ss3Save[0x174000];
-extern char ss4Save[0xF0000];
+//extern char ss3Save[0x174000];
+//extern char ss4Save[0xF0000];
 
+extern char ss3PlayerName[10];
 extern char ss4PlayerName[10];
 
+extern void readSS3Save(void);
+extern void writeSS3Save(void);
 extern void readSS4Save(void);
 extern void writeSS4Save(void);
 
+extern void readSS3Character(u16 id);
+extern void writeSS3Character(u16 id);
 extern void readSS4Character(u16 id);
 extern void writeSS4Character(u16 id);
 
+extern void readSS3CharacterFile(u16 id, const char* filename);
 extern void readSS4CharacterFile(u16 id, const char* filename);
 
+extern bool getSS3CharacterGender(u16 id);
 extern bool getSS4CharacterGender(u16 id);
 
 #ifdef __cplusplus

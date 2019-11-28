@@ -4,17 +4,124 @@
 #include "savedata.h"
 #include "tonccpy.h"
 
+#define ss2SavePath	"sdmc:/3ds/Checkpoint/saves/0x00A91 Style Savvy  Trendsetters/SavvyManager/record_card.bin"
+#define ss3SavePath	"sdmc:/3ds/Checkpoint/saves/0x01965 Style Savvy  Fashion Forward/SavvyManager/savedata.dat"
 #define ss4SavePath	"sdmc:/3ds/Checkpoint/extdata/0x01C25 Style Savvy  Styling Star/SavvyManager/savedata.dat"
 
 ss3to4character ss4CharacterData;
 
+char ss2Save[0x31736];
 char ss3Save[0x174000];
 char ss4Save[0xF0000];
 
+char ss2PlayerName[10] = {0};
+char ss3PlayerName[10] = {0};
 char ss4PlayerName[10] = {0};
 
+static bool ss2SaveRead = false;
+static bool ss3SaveRead = false;
 static bool ss4SaveRead = false;
 
+/*
+	Style Savvy: Trendsetters
+*/
+void readSS2Save(void) {
+	if (ss2SaveRead) return;
+
+	FILE* saveData = fopen(ss2SavePath, "rb");
+	fread(ss2Save, (int)sizeof(ss2Save), 1, saveData);
+	fclose(saveData);
+
+	// Get playable character's name
+	for (int i = 0; i < 9; i++) {
+		ss2PlayerName[i] = ss2Save[0x1AC8+(i*2)];
+	}
+
+	ss2SaveRead = true;
+}
+
+void writeSS2Save(void) {
+	remove(ss2SavePath);
+	FILE* saveData = fopen(ss2SavePath, "wb");
+	fwrite(ss2Save, (int)sizeof(ss2Save), 1, saveData);
+	fclose(saveData);
+}
+
+
+/*
+	Style Savvy: Fashion Forward
+*/
+void readSS3Save(void) {
+	if (ss3SaveRead) return;
+
+	FILE* saveData = fopen(ss3SavePath, "rb");
+	fread(ss3Save, (int)sizeof(ss3Save), 1, saveData);
+	fclose(saveData);
+
+	// Get playable character's name
+	for (int i = 0; i < 9; i++) {
+		ss3PlayerName[i] = ss3Save[0x54980+(i*2)];
+	}
+
+	ss3SaveRead = true;
+}
+
+void writeSS3Save(void) {
+	remove(ss3SavePath);
+	FILE* saveData = fopen(ss3SavePath, "wb");
+	fwrite(ss3Save, (int)sizeof(ss3Save), 1, saveData);
+	fclose(saveData);
+}
+
+void readSS3Character(u16 id) {
+	if (id == 0) {
+		// Playable character
+		tonccpy(&ss4CharacterData, (char*)ss3Save+(0x54A22), 0x36);
+	} else {
+		// Non-playable character
+		tonccpy(&ss4CharacterData, (char*)ss3Save+(0x55EFE + (0x110*id)), 0x36);
+	}
+}
+
+void writeSS3Character(u16 id) {
+	if (id == 0) {
+		// Playable character
+		tonccpy((char*)ss3Save+(0x54A22), &ss4CharacterData, 0x36);
+	} else {
+		// Non-playable character
+		tonccpy((char*)ss3Save+(0x55EFE + (0x110*id)), &ss4CharacterData, 0x36);
+	}
+}
+
+void readSS3CharacterFile(u16 id, const char* filename) {
+	FILE* characterData = fopen(filename, "rb");
+	if (!characterData) return;
+
+	if (id == 0) {
+		// Playable character
+		fread((char*)ss3Save+(0x54A22), 0x36, 1, characterData);
+	} else {
+		// Non-playable character
+		fread((char*)ss3Save+(0x55EFE + (0x110*id)), 0x36, 1, characterData);
+	}
+	fclose(characterData);
+}
+
+bool getSS3CharacterGender(u16 id) {
+	readSS3Character(id);
+
+	if ((id == 0) && (strcmp(ss3PlayerName, "Robz") == 0)) {
+		return true;	// Robz is male, so return male
+	}
+
+	// true = male, false = female
+	return (ss4CharacterData.gender == 2);
+}
+
+
+/*
+	Style Savvy: Styling Star
+*/
 void readSS4Save(void) {
 	if (ss4SaveRead) return;
 
@@ -36,7 +143,6 @@ void writeSS4Save(void) {
 	fwrite(ss4Save, (int)sizeof(ss4Save), 1, saveData);
 	fclose(saveData);
 }
-
 
 void readSS4Character(u16 id) {
 	if (id == 0) {
