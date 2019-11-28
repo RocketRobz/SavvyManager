@@ -3,6 +3,7 @@ const char* import_ss3CharacterNames[] {
 	"Callie",
 	"Laurie",
 	"Noor",
+	"Yuzu",			// Noor (JAP)
 	"Arabella",
 	"Sasha",
 	"Zoey",
@@ -19,6 +20,7 @@ const char* import_ss3CharacterNames[] {
 };
 
 bool import_ss3CharacterGenders[] {
+	false,			// Female
 	false,			// Female
 	false,			// Female
 	false,			// Female

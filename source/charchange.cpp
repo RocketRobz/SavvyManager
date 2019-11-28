@@ -85,7 +85,7 @@ void changeCharacter(void) {
 	if (import_highlightedGame == 3) {
 		import_totalCharacters = 0xC;
 	} else if (import_highlightedGame == 2) {
-		import_totalCharacters = (highlightedGame==3 ? 0xF : 0x10);
+		import_totalCharacters = (highlightedGame==3 ? 0x10 : 0x11);
 	} else if (import_highlightedGame == 1) {
 		import_totalCharacters = 0xF;
 	} else if (import_highlightedGame == 0) {

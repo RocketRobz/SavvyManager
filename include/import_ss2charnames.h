@@ -1,7 +1,7 @@
 const char* import_ss2CharacterNames[] {
 	"Michaela",
 	"Evie",
-	"Emmylou",
+	"Emmylou",		// aka Harriet (EUR)
 	"Avery",
 	"India",
 	"Daphne",
