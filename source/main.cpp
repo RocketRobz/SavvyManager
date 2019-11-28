@@ -120,6 +120,10 @@ void drawCursor(void) {
 
 u32 hDown = 0;
 
+static bool ss2SaveFound = false;
+static bool ss3SaveFound = false;
+static bool ss4SaveFound = false;
+
 int main()
 {
 	screenoff();
@@ -171,6 +175,10 @@ int main()
 		sfx_back = new sound("romfs:/sounds/back.wav", 3, false);
 		sfx_highlight = new sound("romfs:/sounds/highlight.wav", 4, false);
 	}
+	
+	ss2SaveFound = (access(ss2SavePath, F_OK) == 0);
+	ss3SaveFound = (access(ss3SavePath, F_OK) == 0);
+	ss4SaveFound = (access(ss4SavePath, F_OK) == 0);
 
 	screenon();
 
@@ -280,9 +288,17 @@ int main()
 				}
 
 				if (hDown & KEY_A) {
+				  if (highlightedGame==0
+				  || (highlightedGame==1 && ss2SaveFound)
+				  || (highlightedGame==2 && ss3SaveFound)
+				  || (highlightedGame==3 && ss4SaveFound))
+				  {
 					sndSelect();
 					screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
 					fadeout = true;
+				  } else {
+					sndBack();
+				  }
 				}
 			}
 		} else if(screenmode == SCREEN_MODE_WHAT_TO_DO) {

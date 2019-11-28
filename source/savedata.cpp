@@ -4,10 +4,6 @@
 #include "savedata.h"
 #include "tonccpy.h"
 
-#define ss2SavePath	"sdmc:/3ds/Checkpoint/saves/0x00A91 Style Savvy  Trendsetters/SavvyManager/record_card.bin"
-#define ss3SavePath	"sdmc:/3ds/Checkpoint/saves/0x01965 Style Savvy  Fashion Forward/SavvyManager/savedata.dat"
-#define ss4SavePath	"sdmc:/3ds/Checkpoint/extdata/0x01C25 Style Savvy  Styling Star/SavvyManager/savedata.dat"
-
 ss3to4character ss4CharacterData;
 
 char ss2Save[0x31736];
