@@ -88,6 +88,9 @@ void changeCharacter(void) {
 	} else if (highlightedGame == 2) {
 		totalCharacters = 0xE;
 		readSS3Save();
+	} else if (highlightedGame == 1) {
+		totalCharacters = 0;
+		readSS2Save();
 	}
 
 	if (import_highlightedGame == 3) {
@@ -170,7 +173,7 @@ void changeCharacter(void) {
 			Draw_Text(64, i2, 0.65, BLACK, "Change bow placement");
 		}
 		i2 += 48;
-		Draw_Text(64, i2, 0.65, BLACK, "Inport character");
+		Draw_Text(64, i2, 0.65, BLACK, "Import character");
 	} else {
 		cursorX = 256;
 		cursorY = 64+(48*characterList_cursorPositionOnScreen);
@@ -195,6 +198,10 @@ void changeCharacter(void) {
 					Gui::sprite((getSS3CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 					Draw_Text(64, i2, 0.65, BLACK, ss3CharacterNames[i]);
 				}
+			} else if (highlightedGame == 1) {
+				Gui::sprite((getSS2CharacterGender() ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				Draw_Text(64, i2, 0.65, BLACK, ss2PlayerName);
+				break;
 			}
 			i2 += 48;
 		}
@@ -277,6 +284,22 @@ void changeCharacter(void) {
 						}
 						readSS3CharacterFile(characterList_cursorPosition, chrFilePath);
 						break;
+					case 1:
+						sprintf(chrFilePath, "romfs:/character/Trendsetters/All Seasons/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Trendsetters/Spring/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						}
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Trendsetters/Summer/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						}
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Trendsetters/Fall/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						}
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Trendsetters/Winter/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						}
+						readSS2CharacterFile(chrFilePath);
+						break;
 				}
 				characterChanged = true;
 				subScreenMode = 1;
@@ -330,7 +353,7 @@ void changeCharacter(void) {
 			}
 		} else {
 			if (showCursor) {
-				if (hDown & KEY_UP) {
+				if ((hDown & KEY_UP) && (highlightedGame > 1)) {
 					sndHighlight();
 					characterList_cursorPosition--;
 					characterList_cursorPositionOnScreen--;
@@ -344,7 +367,7 @@ void changeCharacter(void) {
 						characterList_cursorPositionOnScreen = 0;
 					}
 				}
-				if (hDown & KEY_DOWN) {
+				if ((hDown & KEY_DOWN) && (highlightedGame > 1)) {
 					sndHighlight();
 					characterList_cursorPosition++;
 					characterList_cursorPositionOnScreen++;
@@ -372,6 +395,9 @@ void changeCharacter(void) {
 							break;
 						case 2:
 							writeSS3Save();
+							break;
+						case 1:
+							writeSS2Save();
 							break;
 					}
 					characterChanged = false;

@@ -4,6 +4,7 @@
 #include "savedata.h"
 #include "tonccpy.h"
 
+ss2character ss2CharacterData;
 ss3to4character ss4CharacterData;
 
 char ss2Save[0x31736];
@@ -41,6 +42,46 @@ void writeSS2Save(void) {
 	FILE* saveData = fopen(ss2SavePath, "wb");
 	fwrite(ss2Save, (int)sizeof(ss2Save), 1, saveData);
 	fclose(saveData);
+}
+
+void readSS2Character(void) {
+	// Playable character
+	tonccpy(&ss2CharacterData, (char*)ss2Save+(0x102), 0x3);
+	tonccpy((char*)&ss2CharacterData+0x3, (char*)ss2Save+(0x106), 0x1);
+	tonccpy((char*)&ss2CharacterData+0x4, (char*)ss2Save+(0x130), 0x18);
+	tonccpy((char*)&ss2CharacterData+0x1C, (char*)ss2Save+(0x188), 0x20);
+}
+
+void writeSS2Character(void) {
+	// Playable character
+	tonccpy((char*)ss2Save+(0x102), &ss2CharacterData, 0x3);
+	tonccpy((char*)ss2Save+(0x106), (char*)&ss2CharacterData+0x3, 0x1);
+	tonccpy((char*)ss2Save+(0x130), (char*)&ss2CharacterData+0x4, 0x18);
+	tonccpy((char*)ss2Save+(0x188), (char*)&ss2CharacterData+0x1C, 0x20);
+}
+
+void readSS2CharacterFile(const char* filename) {
+	FILE* characterData = fopen(filename, "rb");
+	if (!characterData) return;
+
+	// Playable character
+	fseek(characterData, 0, SEEK_SET);
+	fread((char*)ss2Save+(0x102), 0x3, 1, characterData);
+	fseek(characterData, 3, SEEK_SET);
+	fread((char*)ss2Save+(0x106), 0x1, 1, characterData);
+	fread((char*)ss2Save+(0x130), 0x18, 1, characterData);
+	fread((char*)ss2Save+(0x188), 0x20, 1, characterData);
+
+	fclose(characterData);
+}
+
+bool getSS2CharacterGender(void) {
+	if (strcmp(ss2PlayerName, "Robz") == 0) {
+		return true;	// Robz is male, so return male
+	}
+
+	// true = male, false = female
+	return (ss2Save[0x102] == 2);
 }
 
 
