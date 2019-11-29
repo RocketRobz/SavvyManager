@@ -58,6 +58,9 @@ void writeSS2Character(void) {
 	tonccpy((char*)ss2Save+(0x106), (char*)&ss2CharacterData+0x3, 0x1);
 	tonccpy((char*)ss2Save+(0x130), (char*)&ss2CharacterData+0x4, 0x18);
 	tonccpy((char*)ss2Save+(0x188), (char*)&ss2CharacterData+0x1C, 0x20);
+	tonccpy((char*)ss2Save+(0x1C8), (char*)&ss2CharacterData+0x1C, 0x20);
+	tonccpy((char*)ss2Save+(0x208), (char*)&ss2CharacterData+0x1C, 0x20);
+	tonccpy((char*)ss2Save+(0x248), (char*)&ss2CharacterData+0x1C, 0x20);
 }
 
 void readSS2CharacterFile(const char* filename) {
@@ -71,6 +74,9 @@ void readSS2CharacterFile(const char* filename) {
 	fread((char*)ss2Save+(0x106), 0x1, 1, characterData);
 	fread((char*)ss2Save+(0x130), 0x18, 1, characterData);
 	fread((char*)ss2Save+(0x188), 0x20, 1, characterData);
+	tonccpy((char*)ss2Save+(0x1C8), (char*)ss2Save+(0x188), 0x20);
+	tonccpy((char*)ss2Save+(0x208), (char*)ss2Save+(0x188), 0x20);
+	tonccpy((char*)ss2Save+(0x248), (char*)ss2Save+(0x188), 0x20);
 
 	fclose(characterData);
 }
