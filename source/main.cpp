@@ -411,6 +411,8 @@ int main()
 	
 	delete music;
 	delete sfx_select;
+	delete sfx_back;
+	delete sfx_highlight;
 	if (dspfirmfound) {
 		ndspExit();
 	}
