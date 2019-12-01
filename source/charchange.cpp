@@ -100,7 +100,7 @@ void changeCharacter(void) {
 	} else if (import_highlightedGame == 1) {
 		import_totalCharacters = 0xF;
 	} else if (import_highlightedGame == 0) {
-		import_totalCharacters = 0x6;
+		import_totalCharacters = 0x7;
 	}
 
 	C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
