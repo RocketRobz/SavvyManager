@@ -28,22 +28,22 @@ int screenmodebuffer = 0;
 
 static int screenDelay = 0;
 
-sound *music = NULL;
+//sound *music = NULL;
 sound *sfx_select = NULL;
 sound *sfx_back = NULL;
 sound *sfx_highlight = NULL;
 
 bool dspfirmfound = false;
-static bool musicPlaying = false;
+//static bool musicPlaying = false;
 static bool screenoff_ran = false;
 static bool screenon_ran = true;
 
-static void Play_Music(void) {
+/*static void Play_Music(void) {
 	if (!musicPlaying && dspfirmfound) {
 		music->play();
 		musicPlaying = true;
 	}
-}
+}*/
 
 void sndSelect(void) {
 	if (dspfirmfound) {
@@ -170,7 +170,7 @@ int main()
 
 	// Load the sound effects if DSP is available.
 	if (dspfirmfound) {
-		music = new sound("romfs:/sounds/music.wav", 1, true);
+		//music = new sound("romfs:/sounds/music.wav", 1, true);
 		sfx_select = new sound("romfs:/sounds/select.wav", 2, false);
 		sfx_back = new sound("romfs:/sounds/back.wav", 3, false);
 		sfx_highlight = new sound("romfs:/sounds/highlight.wav", 4, false);
@@ -221,7 +221,7 @@ int main()
 				fadeout = true;
 			}
 		} else if(screenmode == SCREEN_MODE_GAME_SELECT) {
-			Play_Music();
+			//Play_Music();
 
 			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 			C2D_TargetClear(top, TRANSPARENT);
@@ -409,7 +409,7 @@ int main()
 	}
 
 	
-	delete music;
+	//delete music;
 	delete sfx_select;
 	delete sfx_back;
 	delete sfx_highlight;
