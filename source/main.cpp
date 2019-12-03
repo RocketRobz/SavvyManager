@@ -119,12 +119,20 @@ void drawCursor(void) {
 }
 
 static bool showMessage = false;
+static int messageNo = 0;
 
 static void drawCannotEditMsg(void) {
 	Gui::spriteScale(sprites_msg_idx, 0, 0, 2, 1);
 	Gui::spriteScale(sprites_msg_idx, 160, 0, -2, 1);
-	Draw_Text(32, 84, 0.65, BLACK, "Cannot edit this");
-	Draw_Text(32, 104, 0.65, BLACK, "game's save yet.");
+	if (messageNo == 1) {
+		Draw_Text(32, 48, 0.60, BLACK, "Save data not found.");
+		Draw_Text(32, 80, 0.60, BLACK, highlightedGame==3 ? "Please back up the extra data using" : "Please back it up using");
+		Draw_Text(32, 100, 0.60, BLACK, "Checkpoint, and name the backup:");
+		Draw_Text(32, 124, 0.60, BLACK, "SavvyManager");
+	} else {
+		Draw_Text(32, 84, 0.60, BLACK, "Cannot edit this");
+		Draw_Text(32, 104, 0.60, BLACK, "game's save yet.");
+	}
 	Draw_Text(32, 160, 0.65, BLACK, "A: OK");
 }
 
@@ -308,6 +316,7 @@ int main()
 				if (hDown & KEY_A) {
 				  if (highlightedGame==0) {
 					sndBack();
+					messageNo = 0;
 					showMessage = true;
 				  } else if ((highlightedGame==1 && ss2SaveFound)
 				  || (highlightedGame==2 && ss3SaveFound)
@@ -318,6 +327,8 @@ int main()
 					fadeout = true;
 				  } else {
 					sndBack();
+					messageNo = 1;
+					showMessage = true;
 				  }
 				}
 			}
