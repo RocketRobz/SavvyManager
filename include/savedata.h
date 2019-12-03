@@ -123,8 +123,11 @@ extern void readSS4Character(u16 id);
 extern void writeSS4Character(u16 id);
 
 extern void readSS2CharacterFile(const char* filename);
+extern void writeSS2CharacterFile(const char* filename);
 extern void readSS3CharacterFile(u16 id, const char* filename);
+extern void writeSS3CharacterFile(u16 id, const char* filename);
 extern void readSS4CharacterFile(u16 id, const char* filename);
+extern void writeSS4CharacterFile(u16 id, const char* filename);
 
 extern bool getSS2CharacterGender(void);
 extern bool getSS3CharacterGender(u16 id);

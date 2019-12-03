@@ -158,8 +158,14 @@ int main()
 	Gui::init();
 
 	// make folders if they don't exist
-	//mkdir("sdmc:/3ds", 0777);
-	//mkdir("sdmc:/3ds/SavvyGameSelect", 0777);
+	mkdir("sdmc:/3ds", 0777);
+	mkdir("sdmc:/3ds/SavvyManager", 0777);
+	mkdir("sdmc:/3ds/SavvyManager/SS2", 0777);
+	mkdir("sdmc:/3ds/SavvyManager/SS2/characters", 0777);
+	mkdir("sdmc:/3ds/SavvyManager/SS3", 0777);
+	mkdir("sdmc:/3ds/SavvyManager/SS3/characters", 0777);
+	mkdir("sdmc:/3ds/SavvyManager/SS4", 0777);
+	mkdir("sdmc:/3ds/SavvyManager/SS4/characters", 0777);
 
  	if( access( "sdmc:/3ds/dspfirm.cdc", F_OK ) != -1 ) {
 		ndspInit();

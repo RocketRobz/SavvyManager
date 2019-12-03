@@ -62,7 +62,6 @@ static const char* seasonName(void) {
 }
 
 static char chrFilePath[256];
-static bool characterChanged = false;
 
 extern int highlightedGame;
 extern bool saveWritten;
@@ -91,6 +90,8 @@ static int characterList_cursorPosition = 0;
 static int characterList_cursorPositionOnScreen = 0;
 
 static int characterChangeMenu_cursorPosition = 0;
+static int characterChangeMenu_cursorPositionOnScreen = 0;
+static int characterChangeMenu_optionShownFirst = 0;
 static int characterChangeMenuOps[4] = {0};
 static int characterChangeMenuOptions = 2;
 
@@ -99,6 +100,31 @@ static int importCharacterList_cursorPositionOnScreen = 0;
 
 static int characterShownFirst = 0;
 static int import_characterShownFirst = 0;
+
+static const char* characterName(bool showPlayerName) {
+	if (characterList_cursorPosition == 0) {
+		if (showPlayerName) {
+			switch (highlightedGame) {
+				case 1:
+					return ss2PlayerName;
+				case 2:
+					return ss3PlayerName;
+				case 3:
+					return ss4PlayerName;
+			}
+		} else {
+			return "Player";
+		}
+	}
+
+	switch (highlightedGame) {
+		case 2:
+			return ss3CharacterNames[characterList_cursorPosition];
+		case 3:
+			return ss4CharacterNames[characterList_cursorPosition];
+	}
+	return "null";
+}
 
 static const char* import_characterName(void) {
 	switch (import_highlightedGame) {
@@ -122,7 +148,14 @@ static char chararacterImported[48];
 static void drawMsg(void) {
 	Gui::spriteScale(sprites_msg_idx, 0, 0, 2, 1);
 	Gui::spriteScale(sprites_msg_idx, 160, 0, -2, 1);
-	if (messageNo == 1) {
+	if (messageNo == 3) {
+		Draw_Text(32, 84, 0.60, BLACK, "Exported character does not exist.");
+	} else if (messageNo == 2) {
+		Draw_Text(32, 48, 0.60, BLACK, "Character exported successfully.");
+		Draw_Text(32, 84, 0.60, BLACK, "You can go to \"Import Characters\"");
+		Draw_Text(32, 104, 0.60, BLACK, "and restore the exported character");
+		Draw_Text(32, 124, 0.60, BLACK, "at any time.");
+	} else if (messageNo == 1) {
 		Draw_Text(32, 48, 0.60, BLACK, chararacterImported);
 		Draw_Text(32, 84, 0.60, BLACK, "Please restore \"SavvyManager\"");
 		Draw_Text(32, 104, 0.60, BLACK, "data for your game in Checkpoint,");
@@ -139,26 +172,29 @@ void changeCharacter(void) {
 		characterChangeMenuOps[0] = 0;
 		characterChangeMenuOps[1] = 0;
 		characterChangeMenuOps[2] = 4;
-		characterChangeMenuOptions = 2;
+		characterChangeMenuOps[3] = 10;
+		characterChangeMenuOptions = 3;
 		totalCharacters = 0x20;
 		readSS4Save();
 	} else if (highlightedGame == 2) {
 		characterChangeMenuOps[0] = 0;
 		characterChangeMenuOps[1] = 4;
-		characterChangeMenuOps[2] = 0;
-		characterChangeMenuOptions = 1;
+		characterChangeMenuOps[2] = 10;
+		characterChangeMenuOptions = 2;
 		totalCharacters = 0xE;
 		readSS3Save();
 	} else if (highlightedGame == 1) {
 		characterChangeMenuOps[0] = 0;
 		characterChangeMenuOps[1] = 4;
-		characterChangeMenuOps[2] = 0;
-		characterChangeMenuOptions = 1;
+		characterChangeMenuOps[2] = 10;
+		characterChangeMenuOptions = 2;
 		totalCharacters = 0;
 		readSS2Save();
 	}
 
-	if (import_highlightedGame == 3) {
+	if (import_highlightedGame == 4) {
+		import_totalCharacters = 0;
+	} else if (import_highlightedGame == 3) {
 		import_totalCharacters = 0xC;
 	} else if (import_highlightedGame == 2) {
 		import_totalCharacters = (highlightedGame==3 ? 0x10 : 0x11);
@@ -210,14 +246,20 @@ void changeCharacter(void) {
 		Draw_Text(8, 8, 0.50, BLACK, "<");
 		Draw_Text(304, 8, 0.50, BLACK, ">");
 
-		// Selected season
-		Draw_Text(116, 208, 0.65, BLACK, "L");
-		Draw_Text(132, 210, 0.50, BLACK, seasonName());
-		Draw_Text(192, 208, 0.65, BLACK, "R");
+		if (import_highlightedGame != 4) {
+			// Selected season
+			Draw_Text(116, 208, 0.65, BLACK, "L");
+			Draw_Text(132, 210, 0.50, BLACK, seasonName());
+			Draw_Text(192, 208, 0.65, BLACK, "R");
+		}
 
 		int i2 = 48;
 		for (int i = import_characterShownFirst; i < import_characterShownFirst+3; i++) {
-			if (import_highlightedGame == 3) {
+			if (import_highlightedGame == 4) {
+				//Gui::sprite((import_ss4CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				Draw_Text(64, i2, 0.65, BLACK, "Exported character");
+				break;
+			} else if (import_highlightedGame == 3) {
 				Gui::sprite((import_ss4CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Draw_Text(64, i2, 0.65, BLACK, import_ss4CharacterNames[i]);
 			} else if (import_highlightedGame == 2) {
@@ -234,18 +276,25 @@ void changeCharacter(void) {
 		}
 	} else if (subScreenMode == 1) {
 		cursorX = 256;
-		cursorY = 64+(48*characterChangeMenu_cursorPosition);
+		cursorY = 64+(48*characterChangeMenu_cursorPositionOnScreen);
 
-		Draw_Text(8, 8, 0.50, BLACK, (characterList_cursorPosition==0 ? ss4PlayerName : ss4CharacterNames[characterList_cursorPosition]));
+		Draw_Text(8, 8, 0.50, BLACK, characterName(true));
 
-		int i2 = 48;
-		Draw_Text(64, i2, 0.65, BLACK, "Change body");
+		int i2 = 0;
+		if (characterChangeMenu_optionShownFirst == 0) {
+			i2 += 48;
+			Draw_Text(64, i2, 0.65, BLACK, "Change body");
+		}
 		if (highlightedGame == 3) {
 			i2 += 48;
 			Draw_Text(64, i2, 0.65, BLACK, "Change bow placement");
 		}
 		i2 += 48;
 		Draw_Text(64, i2, 0.65, BLACK, "Import character");
+		if (highlightedGame < 3 || characterChangeMenu_optionShownFirst == 1) {
+			i2 += 48;
+			Draw_Text(64, i2, 0.65, BLACK, "Export character");
+		}
 	} else {
 		cursorX = 256;
 		cursorY = 64+(48*characterList_cursorPositionOnScreen);
@@ -301,7 +350,7 @@ void changeCharacter(void) {
 			}
 		} else if (subScreenMode == 4) {
 			if (showCursor) {
-				if (hDown & KEY_UP) {
+				if ((hDown & KEY_UP) && import_highlightedGame != 4) {
 					sndHighlight();
 					importCharacterList_cursorPosition--;
 					importCharacterList_cursorPositionOnScreen--;
@@ -315,7 +364,7 @@ void changeCharacter(void) {
 						importCharacterList_cursorPositionOnScreen = 0;
 					}
 				}
-				if (hDown & KEY_DOWN) {
+				if ((hDown & KEY_DOWN) && import_highlightedGame != 4) {
 					sndHighlight();
 					importCharacterList_cursorPosition++;
 					importCharacterList_cursorPositionOnScreen++;
@@ -331,6 +380,46 @@ void changeCharacter(void) {
 				}
 			}
 			if (hDown & KEY_A) {
+				if (import_highlightedGame == 4) {
+					bool exportFound = false;
+					switch (highlightedGame) {
+						case 3:
+							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS4/characters/%s.chr", characterName(false));
+							if (access(chrFilePath, F_OK) == 0) {
+								sndSelect();
+								readSS4CharacterFile(characterList_cursorPosition, chrFilePath);
+								writeSS4Save();
+								exportFound = true;
+							}
+							break;
+						case 2:
+							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS3/characters/%s.chr", characterName(false));
+							if (access(chrFilePath, F_OK) == 0) {
+								sndSelect();
+								readSS3CharacterFile(characterList_cursorPosition, chrFilePath);
+								writeSS3Save();
+								exportFound = true;
+							}
+							break;
+						case 1:
+							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS2/characters/%s.chr", characterName(false));
+							if (access(chrFilePath, F_OK) == 0) {
+								sndSelect();
+								readSS2CharacterFile(chrFilePath);
+								writeSS2Save();
+								exportFound = true;
+							}
+							break;
+					}
+					if (exportFound) {
+						sprintf(chararacterImported, "Imported %s successfully.", characterName(true));
+						messageNo = 1;
+						subScreenMode = 1;
+					} else {
+						sndBack();
+						messageNo = 3;
+					}
+				} else {
 				sndSelect();
 				switch (highlightedGame) {
 					case 3:
@@ -360,9 +449,9 @@ void changeCharacter(void) {
 				}
 				sprintf(chararacterImported, "Imported %s successfully.", import_characterName());
 				messageNo = 1;
-				showMessage = true;
-				characterChanged = true;
 				subScreenMode = 1;
+				}
+				showMessage = true;
 			}
 			if (hDown & KEY_LEFT) {
 				sndHighlight();
@@ -380,13 +469,17 @@ void changeCharacter(void) {
 				importCharacterList_cursorPositionOnScreen = 0;
 				import_characterShownFirst = 0;
 			}
-			if (hDown & KEY_L) {
-				seasonNo--;
-				if (seasonNo < 0) seasonNo = 3;
-			}
-			if (hDown & KEY_R) {
-				seasonNo++;
-				if (seasonNo > 3) seasonNo = 0;
+			if (import_highlightedGame != 4) {
+				if (hDown & KEY_L) {
+					sndHighlight();
+					seasonNo--;
+					if (seasonNo < 0) seasonNo = 3;
+				}
+				if (hDown & KEY_R) {
+					sndHighlight();
+					seasonNo++;
+					if (seasonNo > 3) seasonNo = 0;
+				}
 			}
 			if (hDown & KEY_B) {
 				sndBack();
@@ -397,15 +490,29 @@ void changeCharacter(void) {
 				if (hDown & KEY_UP) {
 					sndHighlight();
 					characterChangeMenu_cursorPosition--;
+					characterChangeMenu_cursorPositionOnScreen--;
 					if (characterChangeMenu_cursorPosition < 0) {
-						characterChangeMenu_cursorPosition = characterChangeMenuOptions;
+						characterChangeMenu_cursorPosition = 0;
+						characterChangeMenu_cursorPositionOnScreen = 0;
+					} else if (characterList_cursorPosition < characterChangeMenu_optionShownFirst) {
+						characterChangeMenu_optionShownFirst--;
+					}
+					if (characterChangeMenu_cursorPositionOnScreen < 0) {
+						characterChangeMenu_cursorPositionOnScreen = 0;
 					}
 				}
 				if (hDown & KEY_DOWN) {
 					sndHighlight();
 					characterChangeMenu_cursorPosition++;
+					characterChangeMenu_cursorPositionOnScreen++;
 					if (characterChangeMenu_cursorPosition > characterChangeMenuOptions) {
-						characterChangeMenu_cursorPosition = 0;
+						characterChangeMenu_cursorPosition = characterChangeMenuOptions;
+						characterChangeMenu_cursorPositionOnScreen = characterChangeMenuOptions;
+					} else if (characterChangeMenu_cursorPosition > characterChangeMenu_optionShownFirst+2) {
+						characterChangeMenu_optionShownFirst++;
+					}
+					if (characterChangeMenu_cursorPositionOnScreen > 2) {
+						characterChangeMenu_cursorPositionOnScreen = 2;
 					}
 				}
 			}
@@ -413,6 +520,24 @@ void changeCharacter(void) {
 				if (characterChangeMenuOps[characterChangeMenu_cursorPosition] == 0) {
 					sndBack();
 					messageNo = 0;
+					showMessage = true;
+				} else if (characterChangeMenuOps[characterChangeMenu_cursorPosition] == 10) {
+					sndSelect();
+					switch (highlightedGame) {
+						case 3:
+							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS4/characters/%s.chr", characterName(false));
+							writeSS4CharacterFile(characterList_cursorPosition, chrFilePath);
+							break;
+						case 2:
+							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS3/characters/%s.chr", characterName(false));
+							writeSS3CharacterFile(characterList_cursorPosition, chrFilePath);
+							break;
+						case 1:
+							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS2/characters/%s.chr", characterName(false));
+							writeSS2CharacterFile(chrFilePath);
+							break;
+					}
+					messageNo = 2;
 					showMessage = true;
 				} else {
 					sndSelect();
@@ -460,10 +585,12 @@ void changeCharacter(void) {
 			}
 			if (hDown & KEY_B) {
 				sndBack();
-				if (characterChanged) {
-					characterChanged = false;
-				}
+				characterList_cursorPosition = 0;
+				characterList_cursorPositionOnScreen = 0;
+				characterShownFirst = 0;
 				characterChangeMenu_cursorPosition = 0;
+				characterChangeMenu_cursorPositionOnScreen = 0;
+				characterChangeMenu_optionShownFirst = 0;
 				screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
 				fadeout = true;
 			}

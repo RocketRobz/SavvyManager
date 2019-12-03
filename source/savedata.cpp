@@ -81,6 +81,19 @@ void readSS2CharacterFile(const char* filename) {
 	fclose(characterData);
 }
 
+void writeSS2CharacterFile(const char* filename) {
+	FILE* characterData = fopen(filename, "wb");
+	if (!characterData) return;
+
+	// Playable character
+	fwrite((char*)ss2Save+(0x102), 0x3, 1, characterData);
+	fwrite((char*)ss2Save+(0x106), 0x1, 1, characterData);
+	fwrite((char*)ss2Save+(0x130), 0x18, 1, characterData);
+	fwrite((char*)ss2Save+(0x188), 0x20, 1, characterData);
+
+	fclose(characterData);
+}
+
 bool getSS2CharacterGender(void) {
 	if (strcmp(ss2PlayerName, "Robz") == 0) {
 		return true;	// Robz is male, so return male
@@ -146,6 +159,20 @@ void readSS3CharacterFile(u16 id, const char* filename) {
 	} else {
 		// Non-playable character
 		fread((char*)ss3Save+(0x55EFE + (0x110*id)), 0x36, 1, characterData);
+	}
+	fclose(characterData);
+}
+
+void writeSS3CharacterFile(u16 id, const char* filename) {
+	FILE* characterData = fopen(filename, "wb");
+	if (!characterData) return;
+
+	if (id == 0) {
+		// Playable character
+		fwrite((char*)ss3Save+(0x54A22), 0x36, 1, characterData);
+	} else {
+		// Non-playable character
+		fwrite((char*)ss3Save+(0x55EFE + (0x110*id)), 0x36, 1, characterData);
 	}
 	fclose(characterData);
 }
@@ -217,6 +244,20 @@ void readSS4CharacterFile(u16 id, const char* filename) {
 	} else {
 		// Non-playable character
 		fread((char*)ss4Save+(0x273EE + (0x1F8*id)), 0x3E, 1, characterData);
+	}
+	fclose(characterData);
+}
+
+void writeSS4CharacterFile(u16 id, const char* filename) {
+	FILE* characterData = fopen(filename, "wb");
+	if (!characterData) return;
+
+	if (id == 0) {
+		// Playable character
+		fwrite((char*)ss4Save+(0x2440A), 0x3E, 1, characterData);
+	} else {
+		// Non-playable character
+		fwrite((char*)ss4Save+(0x273EE + (0x1F8*id)), 0x3E, 1, characterData);
 	}
 	fclose(characterData);
 }
