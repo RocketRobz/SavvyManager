@@ -134,6 +134,7 @@ void changeCharacter(void) {
 	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
 	set_screen(bottom);
+	Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
 	for(int w = 0; w < 7; w++) {
 		for(int h = 0; h < 3; h++) {
 			Gui::sprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
