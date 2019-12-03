@@ -50,16 +50,12 @@ static const char* seasonName(void) {
 	switch (seasonNo) {
 		case 0:
 			return "Spring";
-			break;
 		case 1:
 			return "Summer";
-			break;
 		case 2:
 			return "Fall";
-			break;
 		case 3:
 			return "Winter";
-			break;
 	}
 	
 	return "null";
@@ -101,6 +97,35 @@ static int importCharacterList_cursorPositionOnScreen = 0;
 
 static int characterShownFirst = 0;
 static int import_characterShownFirst = 0;
+
+static const char* import_characterName(void) {
+	switch (import_highlightedGame) {
+		case 0:
+			return import_ss1CharacterNames[importCharacterList_cursorPosition];
+		case 1:
+			return import_ss2CharacterNames[importCharacterList_cursorPosition];
+		case 2:
+			return import_ss3CharacterNames[importCharacterList_cursorPosition];
+		case 3:
+			return import_ss4CharacterNames[importCharacterList_cursorPosition];
+	}
+	return "null";
+}
+
+static bool showMessage = false;
+static int messageNo = 0;
+
+static char chararacterImported[48];
+
+static void drawMsg(void) {
+	Gui::spriteScale(sprites_msg_idx, 0, 0, 2, 1);
+	Gui::spriteScale(sprites_msg_idx, 160, 0, -2, 1);
+		Draw_Text(32, 48, 0.60, BLACK, chararacterImported);
+		Draw_Text(32, 84, 0.60, BLACK, "Please restore \"SavvyManager\"");
+		Draw_Text(32, 104, 0.60, BLACK, "data for your game in Checkpoint,");
+		Draw_Text(32, 124, 0.60, BLACK, "for the change to take effect.");
+	Draw_Text(32, 160, 0.65, BLACK, "A: OK");
+}
 
 void changeCharacter(void) {
 	if (highlightedGame == 3) {
@@ -242,11 +267,19 @@ void changeCharacter(void) {
 
 	drawCursor();
 
+	if (showMessage) {
+		drawMsg();
+	}
+
 	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 	Draw_EndFrame();
 
 	if (!fadein && !fadeout) {
-		if (subScreenMode == 4) {
+		if (showMessage) {
+			if (hDown & KEY_A) {
+				showMessage = false;
+			}
+		} else if (subScreenMode == 4) {
 			if (showCursor) {
 				if (hDown & KEY_UP) {
 					sndHighlight();
@@ -281,30 +314,32 @@ void changeCharacter(void) {
 				sndSelect();
 				switch (highlightedGame) {
 					case 3:
-						sprintf(chrFilePath, "romfs:/character/Styling Star/All Seasons/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						sprintf(chrFilePath, "romfs:/character/Styling Star/All Seasons/%s.chr", import_characterName());
 						if (access(chrFilePath, F_OK) != 0) {
-							sprintf(chrFilePath, "romfs:/character/Styling Star/%s/%s.chr", seasonName(), import_ss4CharacterNames[importCharacterList_cursorPosition]);
+							sprintf(chrFilePath, "romfs:/character/Styling Star/%s/%s.chr", seasonName(), import_characterName());
 						}
 						readSS4CharacterFile(characterList_cursorPosition, chrFilePath);
 						writeSS4Save();
 						break;
 					case 2:
-						sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", import_characterName());
 						if (access(chrFilePath, F_OK) != 0) {
-							sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), import_ss4CharacterNames[importCharacterList_cursorPosition]);
+							sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), import_characterName());
 						}
 						readSS3CharacterFile(characterList_cursorPosition, chrFilePath);
 						writeSS3Save();
 						break;
 					case 1:
-						sprintf(chrFilePath, "romfs:/character/Trendsetters/All Seasons/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+						sprintf(chrFilePath, "romfs:/character/Trendsetters/All Seasons/%s.chr", import_characterName());
 						if (access(chrFilePath, F_OK) != 0) {
-							sprintf(chrFilePath, "romfs:/character/Trendsetters/%s/%s.chr", seasonName(), import_ss4CharacterNames[importCharacterList_cursorPosition]);
+							sprintf(chrFilePath, "romfs:/character/Trendsetters/%s/%s.chr", seasonName(), import_characterName());
 						}
 						readSS2CharacterFile(chrFilePath);
 						writeSS2Save();
 						break;
 				}
+				sprintf(chararacterImported, "Imported %s successfully.", import_characterName());
+				showMessage = true;
 				characterChanged = true;
 				subScreenMode = 1;
 			}
