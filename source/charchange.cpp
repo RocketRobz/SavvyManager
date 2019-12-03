@@ -44,6 +44,27 @@ static int subScreenMode = 0;
 
 static int import_highlightedGame = 0;
 
+static int seasonNo = 0;
+
+static const char* seasonName(void) {
+	switch (seasonNo) {
+		case 0:
+			return "Spring";
+			break;
+		case 1:
+			return "Summer";
+			break;
+		case 2:
+			return "Fall";
+			break;
+		case 3:
+			return "Winter";
+			break;
+	}
+	
+	return "null";
+}
+
 static char chrFilePath[256];
 static bool characterChanged = false;
 
@@ -123,6 +144,7 @@ void changeCharacter(void) {
 		cursorX = 256;
 		cursorY = 64+(48*importCharacterList_cursorPositionOnScreen);
 
+		// Game name
 		switch (import_highlightedGame) {
 			case 4:
 				Draw_Text(32, 8, 0.50, BLACK, "Savvy Manager");
@@ -142,6 +164,11 @@ void changeCharacter(void) {
 		}
 		Draw_Text(8, 8, 0.50, BLACK, "<");
 		Draw_Text(304, 8, 0.50, BLACK, ">");
+
+		// Selected season
+		Draw_Text(116, 208, 0.65, BLACK, "L");
+		Draw_Text(132, 210, 0.50, BLACK, seasonName());
+		Draw_Text(192, 208, 0.65, BLACK, "R");
 
 		int i2 = 48;
 		for (int i = import_characterShownFirst; i < import_characterShownFirst+3; i++) {
@@ -255,48 +282,21 @@ void changeCharacter(void) {
 					case 3:
 						sprintf(chrFilePath, "romfs:/character/Styling Star/All Seasons/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
 						if (access(chrFilePath, F_OK) != 0) {
-							sprintf(chrFilePath, "romfs:/character/Styling Star/Spring/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
-						}
-						if (access(chrFilePath, F_OK) != 0) {
-							sprintf(chrFilePath, "romfs:/character/Styling Star/Summer/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
-						}
-						if (access(chrFilePath, F_OK) != 0) {
-							sprintf(chrFilePath, "romfs:/character/Styling Star/Fall/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
-						}
-						if (access(chrFilePath, F_OK) != 0) {
-							sprintf(chrFilePath, "romfs:/character/Styling Star/Winter/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+							sprintf(chrFilePath, "romfs:/character/Styling Star/%s/%s.chr", seasonName(), import_ss4CharacterNames[importCharacterList_cursorPosition]);
 						}
 						readSS4CharacterFile(characterList_cursorPosition, chrFilePath);
 						break;
 					case 2:
 						sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
 						if (access(chrFilePath, F_OK) != 0) {
-							sprintf(chrFilePath, "romfs:/character/Fashion Forward/Spring/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
-						}
-						if (access(chrFilePath, F_OK) != 0) {
-							sprintf(chrFilePath, "romfs:/character/Fashion Forward/Summer/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
-						}
-						if (access(chrFilePath, F_OK) != 0) {
-							sprintf(chrFilePath, "romfs:/character/Fashion Forward/Fall/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
-						}
-						if (access(chrFilePath, F_OK) != 0) {
-							sprintf(chrFilePath, "romfs:/character/Fashion Forward/Winter/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+							sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), import_ss4CharacterNames[importCharacterList_cursorPosition]);
 						}
 						readSS3CharacterFile(characterList_cursorPosition, chrFilePath);
 						break;
 					case 1:
 						sprintf(chrFilePath, "romfs:/character/Trendsetters/All Seasons/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
 						if (access(chrFilePath, F_OK) != 0) {
-							sprintf(chrFilePath, "romfs:/character/Trendsetters/Spring/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
-						}
-						if (access(chrFilePath, F_OK) != 0) {
-							sprintf(chrFilePath, "romfs:/character/Trendsetters/Summer/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
-						}
-						if (access(chrFilePath, F_OK) != 0) {
-							sprintf(chrFilePath, "romfs:/character/Trendsetters/Fall/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
-						}
-						if (access(chrFilePath, F_OK) != 0) {
-							sprintf(chrFilePath, "romfs:/character/Trendsetters/Winter/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
+							sprintf(chrFilePath, "romfs:/character/Trendsetters/%s/%s.chr", seasonName(), import_ss4CharacterNames[importCharacterList_cursorPosition]);
 						}
 						readSS2CharacterFile(chrFilePath);
 						break;
@@ -304,8 +304,7 @@ void changeCharacter(void) {
 				characterChanged = true;
 				subScreenMode = 1;
 			}
-			if ((hDown & KEY_L)
-			|| (hDown & KEY_LEFT)) {
+			if (hDown & KEY_LEFT) {
 				sndHighlight();
 				import_highlightedGame--;
 				if (import_highlightedGame < 0) import_highlightedGame = 4;
@@ -313,14 +312,21 @@ void changeCharacter(void) {
 				importCharacterList_cursorPositionOnScreen = 0;
 				import_characterShownFirst = 0;
 			}
-			if ((hDown & KEY_R)
-			|| (hDown & KEY_RIGHT)) {
+			if (hDown & KEY_RIGHT) {
 				sndHighlight();
 				import_highlightedGame++;
 				if (import_highlightedGame > 4) import_highlightedGame = 0;
 				importCharacterList_cursorPosition = 0;
 				importCharacterList_cursorPositionOnScreen = 0;
 				import_characterShownFirst = 0;
+			}
+			if (hDown & KEY_L) {
+				seasonNo--;
+				if (seasonNo < 0) seasonNo = 3;
+			}
+			if (hDown & KEY_R) {
+				seasonNo++;
+				if (seasonNo > 3) seasonNo = 0;
 			}
 			if (hDown & KEY_B) {
 				sndBack();
