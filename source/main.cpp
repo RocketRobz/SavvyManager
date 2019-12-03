@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <dirent.h>
 #include <string.h>
 #include <3ds.h>
@@ -133,7 +133,7 @@ static void drawCannotEditMsg(void) {
 		Draw_Text(32, 84, 0.60, BLACK, "Cannot edit this");
 		Draw_Text(32, 104, 0.60, BLACK, "game's save yet.");
 	}
-	Draw_Text(32, 160, 0.65, BLACK, "A: OK");
+	Draw_Text(32, 160, 0.65, BLACK, " OK");
 }
 
 u32 hDown = 0;

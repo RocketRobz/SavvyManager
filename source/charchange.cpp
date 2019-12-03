@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <dirent.h>
 #include <string.h>
 #include <3ds.h>
@@ -124,7 +124,7 @@ static void drawMsg(void) {
 		Draw_Text(32, 84, 0.60, BLACK, "Please restore \"SavvyManager\"");
 		Draw_Text(32, 104, 0.60, BLACK, "data for your game in Checkpoint,");
 		Draw_Text(32, 124, 0.60, BLACK, "for the change to take effect.");
-	Draw_Text(32, 160, 0.65, BLACK, "A: OK");
+	Draw_Text(32, 160, 0.65, BLACK, " OK");
 }
 
 void changeCharacter(void) {
