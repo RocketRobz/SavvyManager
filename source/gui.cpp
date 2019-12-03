@@ -66,7 +66,7 @@ void set_screen(C3D_RenderTarget * screen) {
 	C2D_SceneBegin(screen);
 }
 
-void Gui::sprite(int key, int x, int y) {
+void Gui::sprite(int key, float x, float y) {
 	if (key == sprites_res_null_idx) {
 		return;
 	} else { // standard case
@@ -74,7 +74,15 @@ void Gui::sprite(int key, int x, int y) {
 	}
 }
 
-void Gui::Draw_ImageBlend(int key, int x, int y, u32 color) {
+void Gui::spriteScale(int key, float x, float y, float scaleX, float scaleY) {
+	if (key == sprites_res_null_idx) {
+		return;
+	} else { // standard case
+		C2D_DrawImageAt(C2D_SpriteSheetGetImage(sprites, key), x, y, 0.5f, NULL, scaleX, scaleY);
+	}
+}
+
+void Gui::Draw_ImageBlend(int key, float x, float y, u32 color) {
 	C2D_ImageTint tint;
 	C2D_SetImageTint(&tint, C2D_TopLeft, color, 1);
 	C2D_SetImageTint(&tint, C2D_TopRight, color, 1);

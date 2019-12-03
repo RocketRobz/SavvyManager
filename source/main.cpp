@@ -118,6 +118,16 @@ void drawCursor(void) {
 	}
 }
 
+static bool showMessage = false;
+
+static void drawCannotEditMsg(void) {
+	Gui::spriteScale(sprites_msg_idx, 0, 0, 2, 1);
+	Gui::spriteScale(sprites_msg_idx, 160, 0, -2, 1);
+	Draw_Text(32, 84, 0.65, BLACK, "Cannot edit this");
+	Draw_Text(32, 104, 0.65, BLACK, "game's save yet.");
+	Draw_Text(32, 160, 0.65, BLACK, "A: OK");
+}
+
 u32 hDown = 0;
 
 static bool ss2SaveFound = false;
@@ -273,10 +283,18 @@ int main()
 					Gui::sprite(sprites_title4_idx, 0, 56);
 					break;
 			}
+			if (showMessage) {
+				drawCannotEditMsg();
+			}
 			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 			Draw_EndFrame();
 
-			if (!fadein) {
+			if (showMessage) {
+				if (hDown & KEY_A) {
+					sndSelect();
+					showMessage = false;
+				}
+			} else if (!fadein) {
 				if (hDown & KEY_LEFT) {
 					sndHighlight();
 					highlightedGame--;
@@ -288,8 +306,10 @@ int main()
 				}
 
 				if (hDown & KEY_A) {
-				  if (highlightedGame==0
-				  || (highlightedGame==1 && ss2SaveFound)
+				  if (highlightedGame==0) {
+					sndBack();
+					showMessage = true;
+				  } else if ((highlightedGame==1 && ss2SaveFound)
 				  || (highlightedGame==2 && ss3SaveFound)
 				  || (highlightedGame==3 && ss4SaveFound))
 				  {

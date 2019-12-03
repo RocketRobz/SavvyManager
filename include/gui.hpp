@@ -61,9 +61,10 @@ namespace Gui {
 
 	void clearTextBufs(void);
 	
-	void sprite(int key, int x, int y);
+	void sprite(int key, float x, float y);
+	void spriteScale(int key, float x, float y, float scaleX, float scaleY);
 
-	void Draw_ImageBlend(int key, int x, int y, u32 color);
+	void Draw_ImageBlend(int key, float x, float y, u32 color);
 }
 
 	void set_screen(C3D_RenderTarget * screen);
