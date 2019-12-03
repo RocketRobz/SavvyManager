@@ -286,6 +286,7 @@ void changeCharacter(void) {
 							sprintf(chrFilePath, "romfs:/character/Styling Star/%s/%s.chr", seasonName(), import_ss4CharacterNames[importCharacterList_cursorPosition]);
 						}
 						readSS4CharacterFile(characterList_cursorPosition, chrFilePath);
+						writeSS4Save();
 						break;
 					case 2:
 						sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
@@ -293,6 +294,7 @@ void changeCharacter(void) {
 							sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), import_ss4CharacterNames[importCharacterList_cursorPosition]);
 						}
 						readSS3CharacterFile(characterList_cursorPosition, chrFilePath);
+						writeSS3Save();
 						break;
 					case 1:
 						sprintf(chrFilePath, "romfs:/character/Trendsetters/All Seasons/%s.chr", import_ss4CharacterNames[importCharacterList_cursorPosition]);
@@ -300,6 +302,7 @@ void changeCharacter(void) {
 							sprintf(chrFilePath, "romfs:/character/Trendsetters/%s/%s.chr", seasonName(), import_ss4CharacterNames[importCharacterList_cursorPosition]);
 						}
 						readSS2CharacterFile(chrFilePath);
+						writeSS2Save();
 						break;
 				}
 				characterChanged = true;
@@ -396,17 +399,6 @@ void changeCharacter(void) {
 			if (hDown & KEY_B) {
 				sndBack();
 				if (characterChanged) {
-					switch (highlightedGame) {
-						case 3:
-							writeSS4Save();
-							break;
-						case 2:
-							writeSS3Save();
-							break;
-						case 1:
-							writeSS2Save();
-							break;
-					}
 					characterChanged = false;
 				}
 				screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
