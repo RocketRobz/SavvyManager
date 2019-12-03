@@ -91,6 +91,8 @@ static int characterList_cursorPosition = 0;
 static int characterList_cursorPositionOnScreen = 0;
 
 static int characterChangeMenu_cursorPosition = 0;
+static int characterChangeMenuOps[4] = {0};
+static int characterChangeMenuOptions = 2;
 
 static int importCharacterList_cursorPosition = 0;
 static int importCharacterList_cursorPositionOnScreen = 0;
@@ -120,21 +122,38 @@ static char chararacterImported[48];
 static void drawMsg(void) {
 	Gui::spriteScale(sprites_msg_idx, 0, 0, 2, 1);
 	Gui::spriteScale(sprites_msg_idx, 160, 0, -2, 1);
+	if (messageNo == 1) {
 		Draw_Text(32, 48, 0.60, BLACK, chararacterImported);
 		Draw_Text(32, 84, 0.60, BLACK, "Please restore \"SavvyManager\"");
 		Draw_Text(32, 104, 0.60, BLACK, "data for your game in Checkpoint,");
 		Draw_Text(32, 124, 0.60, BLACK, "for the change to take effect.");
+	} else {
+		Draw_Text(32, 84, 0.60, BLACK, "This feature is not available yet.");
+		//Draw_Text(32, 104, 0.60, BLACK, "yet.");
+	}
 	Draw_Text(32, 160, 0.65, BLACK, " OK");
 }
 
 void changeCharacter(void) {
 	if (highlightedGame == 3) {
+		characterChangeMenuOps[0] = 0;
+		characterChangeMenuOps[1] = 0;
+		characterChangeMenuOps[2] = 4;
+		characterChangeMenuOptions = 2;
 		totalCharacters = 0x20;
 		readSS4Save();
 	} else if (highlightedGame == 2) {
+		characterChangeMenuOps[0] = 0;
+		characterChangeMenuOps[1] = 4;
+		characterChangeMenuOps[2] = 0;
+		characterChangeMenuOptions = 1;
 		totalCharacters = 0xE;
 		readSS3Save();
 	} else if (highlightedGame == 1) {
+		characterChangeMenuOps[0] = 0;
+		characterChangeMenuOps[1] = 4;
+		characterChangeMenuOps[2] = 0;
+		characterChangeMenuOptions = 1;
 		totalCharacters = 0;
 		readSS2Save();
 	}
@@ -277,6 +296,7 @@ void changeCharacter(void) {
 	if (!fadein && !fadeout) {
 		if (showMessage) {
 			if (hDown & KEY_A) {
+				sndSelect();
 				showMessage = false;
 			}
 		} else if (subScreenMode == 4) {
@@ -339,6 +359,7 @@ void changeCharacter(void) {
 						break;
 				}
 				sprintf(chararacterImported, "Imported %s successfully.", import_characterName());
+				messageNo = 1;
 				showMessage = true;
 				characterChanged = true;
 				subScreenMode = 1;
@@ -377,20 +398,26 @@ void changeCharacter(void) {
 					sndHighlight();
 					characterChangeMenu_cursorPosition--;
 					if (characterChangeMenu_cursorPosition < 0) {
-						characterChangeMenu_cursorPosition = 2;
+						characterChangeMenu_cursorPosition = characterChangeMenuOptions;
 					}
 				}
 				if (hDown & KEY_DOWN) {
 					sndHighlight();
 					characterChangeMenu_cursorPosition++;
-					if (characterChangeMenu_cursorPosition > 2) {
+					if (characterChangeMenu_cursorPosition > characterChangeMenuOptions) {
 						characterChangeMenu_cursorPosition = 0;
 					}
 				}
 			}
 			if (hDown & KEY_A) {
-				sndSelect();
-				subScreenMode = 4;
+				if (characterChangeMenuOps[characterChangeMenu_cursorPosition] == 0) {
+					sndBack();
+					messageNo = 0;
+					showMessage = true;
+				} else {
+					sndSelect();
+					subScreenMode = characterChangeMenuOps[characterChangeMenu_cursorPosition];
+				}
 			}
 			if (hDown & KEY_B) {
 				sndBack();
@@ -436,6 +463,7 @@ void changeCharacter(void) {
 				if (characterChanged) {
 					characterChanged = false;
 				}
+				characterChangeMenu_cursorPosition = 0;
 				screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
 				fadeout = true;
 			}
