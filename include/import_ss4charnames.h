@@ -9,7 +9,7 @@ const char* import_ss4CharacterNames[] {
 	"Margot",
 	"Niamh",
 	"Pippa",
-	"Angélique",
+	"Angelique",
 	"Abigail",
 	"Madeira",
 };

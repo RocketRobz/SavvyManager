@@ -1,6 +1,6 @@
 const char* import_ss1CharacterNames[] {
 	"Grace",
-	"Renée",
+	"Renee",
 	"Dominic",
 	"Eunice",
 	"Felicity",
