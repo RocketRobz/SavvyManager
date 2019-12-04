@@ -357,7 +357,18 @@ void changeCharacter(void) {
 				cheatKeys[cheatKeyPosition] = hDown;
 				cheatKeyPosition++;
 			}
-			if (((cheatKeys[0] != 0) && !(cheatKeys[0] & KEY_UP))
+			robzAction =  ((cheatKeys[0] & KEY_UP)
+						&& (cheatKeys[1] & KEY_UP)
+						&& (cheatKeys[2] & KEY_DOWN)
+						&& (cheatKeys[3] & KEY_DOWN)
+						&& (cheatKeys[4] & KEY_LEFT)
+						&& (cheatKeys[5] & KEY_RIGHT)
+						&& (cheatKeys[6] & KEY_LEFT)
+						&& (cheatKeys[7] & KEY_RIGHT)
+						&& (cheatKeys[8] & KEY_B)
+						&& (cheatKeys[9] & KEY_A));
+			if (cheatKeyPosition==10
+			|| ((cheatKeys[0] != 0) && !(cheatKeys[0] & KEY_UP))
 			|| ((cheatKeys[1] != 0) && !(cheatKeys[1] & KEY_UP))
 			|| ((cheatKeys[2] != 0) && !(cheatKeys[2] & KEY_DOWN))
 			|| ((cheatKeys[3] != 0) && !(cheatKeys[3] & KEY_DOWN))
@@ -372,16 +383,6 @@ void changeCharacter(void) {
 				}
 				cheatKeyPosition = 0;
 			}
-			robzAction =  ((cheatKeys[0] & KEY_UP)
-						&& (cheatKeys[1] & KEY_UP)
-						&& (cheatKeys[2] & KEY_DOWN)
-						&& (cheatKeys[3] & KEY_DOWN)
-						&& (cheatKeys[4] & KEY_LEFT)
-						&& (cheatKeys[5] & KEY_RIGHT)
-						&& (cheatKeys[6] & KEY_LEFT)
-						&& (cheatKeys[7] & KEY_RIGHT)
-						&& (cheatKeys[8] & KEY_B)
-						&& (cheatKeys[9] & KEY_A));
 			if (showCursor) {
 				if ((hDown & KEY_UP) && import_highlightedGame != 4) {
 					sndHighlight();
