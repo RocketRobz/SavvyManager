@@ -1,4 +1,9 @@
-# Savvy Manager
+<p align="center">
+ <img src="https://github.com/RocketRobz/SavvyManager/blob/master/resources/title.png"><br>
+  <a href="https://gbatemp.net/threads/release-savvy-manager-girls-mode-style-savvy-style-boutique-save-editor.553576/">
+   <img src="https://img.shields.io/badge/GBATemp-Thread-blue.svg">
+  </a>
+</p>
 For Style Savvy's 10th Anniversary, a new save editor is here!
 
 **Features**
