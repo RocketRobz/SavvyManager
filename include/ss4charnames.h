@@ -11,8 +11,8 @@ const char* ss4CharacterNames[] {
 	"Niamh",
 	"Pippa",
 	"Evie",             // Unused
-	"Angélique",
-	"Angélique #2",     // Unused?
+	"Angelique",
+	"Angelique #2",     // Unused?
 	"???",
 	"???",
 	"???",
