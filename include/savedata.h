@@ -59,7 +59,8 @@ typedef struct ss3to4character {
     u8 eyes;
     u8 mouthShape;
     u8 eyebrows;
-    u8 faceMole;			// Face mole (Female), Facial hair (Male)
+    u8 facialHair;			// Facial hair (Male)
+    u8 faceMole;			// Face mole (Female)
     u8 freckles;			// Unknown for Styling Star
     u8 mascaraColor;
     u8 unknownC;
