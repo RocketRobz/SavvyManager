@@ -6,7 +6,7 @@
 </p>
 For Style Savvy's 10th Anniversary, a new save editor is here!
 
-**Features**
+# Features
 
 * Edit save data from all four Style Savvy games.
 * As of currently, only USA region games and 2-4 are supported.
