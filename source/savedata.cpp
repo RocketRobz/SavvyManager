@@ -95,7 +95,7 @@ void writeSS2CharacterFile(const char* filename) {
 }
 
 bool getSS2CharacterGender(void) {
-	if (strcmp(ss2PlayerName, "Robz") == 0) {
+	if ((strcmp(ss2PlayerName, "Robz") == 0) && (ss2CharacterData.hairStyle == 0x07)) {
 		return true;	// Robz is male, so return male
 	}
 
@@ -180,7 +180,7 @@ void writeSS3CharacterFile(u16 id, const char* filename) {
 bool getSS3CharacterGender(u16 id) {
 	readSS3Character(id);
 
-	if ((id == 0) && (strcmp(ss3PlayerName, "Robz") == 0)) {
+	if ((id == 0) && (strcmp(ss3PlayerName, "Robz") == 0) && (ss4CharacterData.hairStyle == 0x27)) {
 		return true;	// Robz is male, so return male
 	}
 
@@ -265,7 +265,7 @@ void writeSS4CharacterFile(u16 id, const char* filename) {
 bool getSS4CharacterGender(u16 id) {
 	readSS4Character(id);
 
-	if ((id == 0) && (strcmp(ss4PlayerName, "Robz") == 0)) {
+	if ((id == 0) && (strcmp(ss4PlayerName, "Robz") == 0) && (ss4CharacterData.hairStyle == 0x6D)) {
 		return true;	// Robz is male, so return male
 	}
 

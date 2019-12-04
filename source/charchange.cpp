@@ -83,6 +83,9 @@ extern void drawCursor(void);
 
 extern u32 hDown;
 
+static int cheatKeys[10] = {0};
+static int cheatKeyPosition = 0;
+
 static u16 totalCharacters = 0;
 static u16 import_totalCharacters = 0;
 
@@ -349,6 +352,36 @@ void changeCharacter(void) {
 				showMessage = false;
 			}
 		} else if (subScreenMode == 4) {
+			bool robzAction = false;
+			if (hDown) {
+				cheatKeys[cheatKeyPosition] = hDown;
+				cheatKeyPosition++;
+			}
+			if (((cheatKeys[0] != 0) && !(cheatKeys[0] & KEY_UP))
+			|| ((cheatKeys[1] != 0) && !(cheatKeys[1] & KEY_UP))
+			|| ((cheatKeys[2] != 0) && !(cheatKeys[2] & KEY_DOWN))
+			|| ((cheatKeys[3] != 0) && !(cheatKeys[3] & KEY_DOWN))
+			|| ((cheatKeys[4] != 0) && !(cheatKeys[4] & KEY_LEFT))
+			|| ((cheatKeys[5] != 0) && !(cheatKeys[5] & KEY_RIGHT))
+			|| ((cheatKeys[6] != 0) && !(cheatKeys[6] & KEY_LEFT))
+			|| ((cheatKeys[7] != 0) && !(cheatKeys[7] & KEY_RIGHT))
+			|| ((cheatKeys[8] != 0) && !(cheatKeys[8] & KEY_B))
+			|| ((cheatKeys[9] != 0) && !(cheatKeys[9] & KEY_A))) {
+				for (int i= 0; i < 10; i++) {
+					cheatKeys[i] = 0;
+				}
+				cheatKeyPosition = 0;
+			}
+			robzAction =  ((cheatKeys[0] & KEY_UP)
+						&& (cheatKeys[1] & KEY_UP)
+						&& (cheatKeys[2] & KEY_DOWN)
+						&& (cheatKeys[3] & KEY_DOWN)
+						&& (cheatKeys[4] & KEY_LEFT)
+						&& (cheatKeys[5] & KEY_RIGHT)
+						&& (cheatKeys[6] & KEY_LEFT)
+						&& (cheatKeys[7] & KEY_RIGHT)
+						&& (cheatKeys[8] & KEY_B)
+						&& (cheatKeys[9] & KEY_A));
 			if (showCursor) {
 				if ((hDown & KEY_UP) && import_highlightedGame != 4) {
 					sndHighlight();
@@ -380,7 +413,39 @@ void changeCharacter(void) {
 				}
 			}
 			if (hDown & KEY_A) {
-				if (import_highlightedGame == 4) {
+				if (robzAction) {
+					sndSelect();
+					switch (highlightedGame) {
+						case 3:
+							sprintf(chrFilePath, "romfs:/character/Styling Star/All Seasons/%s.chr", "Robz");
+							if (access(chrFilePath, F_OK) != 0) {
+								sprintf(chrFilePath, "romfs:/character/Styling Star/%s/%s.chr", seasonName(), "Robz");
+							}
+							readSS4CharacterFile(characterList_cursorPosition, chrFilePath);
+							writeSS4Save();
+							break;
+						case 2:
+							sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", "Robz");
+							if (access(chrFilePath, F_OK) != 0) {
+								sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), "Robz");
+							}
+							readSS3CharacterFile(characterList_cursorPosition, chrFilePath);
+							writeSS3Save();
+							break;
+						case 1:
+							sprintf(chrFilePath, "romfs:/character/Trendsetters/All Seasons/%s.chr", "Robz");
+							if (access(chrFilePath, F_OK) != 0) {
+								sprintf(chrFilePath, "romfs:/character/Trendsetters/%s/%s.chr", seasonName(), "Robz");
+							}
+							readSS2CharacterFile(chrFilePath);
+							writeSS2Save();
+							break;
+					}
+					sprintf(chararacterImported, "Imported %s successfully.", "Robz");
+					messageNo = 1;
+					subScreenMode = 1;
+					showMessage = true;
+				} else if (import_highlightedGame == 4) {
 					bool exportFound = false;
 					switch (highlightedGame) {
 						case 3:
@@ -481,7 +546,7 @@ void changeCharacter(void) {
 					if (seasonNo > 3) seasonNo = 0;
 				}
 			}
-			if (hDown & KEY_B) {
+			if ((hDown & KEY_B) && !(cheatKeys[8] & KEY_B)) {
 				sndBack();
 				subScreenMode = 1;
 			}
