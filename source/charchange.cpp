@@ -286,7 +286,7 @@ void changeCharacter(void) {
 		int i2 = 0;
 		if (characterChangeMenu_optionShownFirst == 0) {
 			i2 += 48;
-			Draw_Text(64, i2, 0.65, BLACK, "Change body");
+			Draw_Text(64, i2, 0.65, BLACK, "Change attributes");
 		}
 		if (highlightedGame == 3) {
 			i2 += 48;
