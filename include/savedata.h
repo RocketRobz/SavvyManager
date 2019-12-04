@@ -21,7 +21,7 @@ typedef struct ss2character {
     u8 eyes;
     u8 eyebrows;
     u8 mouthShape;
-    u8 unknown8;
+    u8 facialHair;			// Facial hair (Male)
     u8 hairStyle;
     u8 hairColorMain;
     u8 hairColorHighlights;
