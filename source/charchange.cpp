@@ -559,8 +559,8 @@ void changeCharacter(void) {
 					characterChangeMenu_cursorPositionOnScreen--;
 					if (characterChangeMenu_cursorPosition < 0) {
 						characterChangeMenu_cursorPosition = 0;
-						characterChangeMenu_cursorPositionOnScreen = 0;
-					} else if (characterList_cursorPosition < characterChangeMenu_optionShownFirst) {
+						characterChangeMenu_optionShownFirst = 0;
+					} else if (characterChangeMenu_cursorPosition < characterChangeMenu_optionShownFirst) {
 						characterChangeMenu_optionShownFirst--;
 					}
 					if (characterChangeMenu_cursorPositionOnScreen < 0) {
@@ -573,7 +573,7 @@ void changeCharacter(void) {
 					characterChangeMenu_cursorPositionOnScreen++;
 					if (characterChangeMenu_cursorPosition > characterChangeMenuOptions) {
 						characterChangeMenu_cursorPosition = characterChangeMenuOptions;
-						characterChangeMenu_cursorPositionOnScreen = characterChangeMenuOptions;
+						characterChangeMenu_optionShownFirst = characterChangeMenuOptions-2;
 					} else if (characterChangeMenu_cursorPosition > characterChangeMenu_optionShownFirst+2) {
 						characterChangeMenu_optionShownFirst++;
 					}
