@@ -222,7 +222,7 @@ all: $(OUTPUT).cia $(OUTPUT).elf $(OUTPUT).3dsx
 $(OUTPUT).elf	:	$(OFILES)
 
 $(OUTPUT).cia	:	$(OUTPUT).elf $(OUTPUT).smdh
-	$(BANNERTOOL) makebanner -i "../app/banner.png" -ca "../app/BannerAudio.bcwav" -o "../app/banner.bin"
+	$(BANNERTOOL) makebanner -i "../app/banner.png" -a "../app/BannerAudio.wav" -o "../app/banner.bin"
 
 	$(BANNERTOOL) makesmdh -i "../app/icon.png" -s "$(APP_NAME)" -l "$(APP_NAME)" -p "$(APP_AUTHOR)" -o "../app/icon.bin"
 
