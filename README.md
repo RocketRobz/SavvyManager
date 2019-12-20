@@ -30,4 +30,5 @@ As such features are not normally available in-game, you may risk a possible ban
 
 # Credits
 * devkitPro: libctru, citro2d/3d
+* Pixel Perfect: [Music icon](https://www.flaticon.com/free-icon/musical-note_727218)
 * rog9001: His New Style Boutique 3 Save Editor tool has motivated me to work on this further.
