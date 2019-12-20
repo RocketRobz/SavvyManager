@@ -7,17 +7,53 @@
 ss2character ss2CharacterData;
 ss3to4character ss4CharacterData;
 
+const char* ss1SavePath;
+
+char ss1Save[0x100000];
 char ss2Save[0x31736];
 char ss3Save[0x174000];
 char ss4Save[0xF0000];
 
+char ss1PlayerName[10] = {0};
 char ss2PlayerName[10] = {0};
 char ss3PlayerName[10] = {0};
 char ss4PlayerName[10] = {0};
 
+static bool ss1SaveRead = false;
 static bool ss2SaveRead = false;
 static bool ss3SaveRead = false;
 static bool ss4SaveRead = false;
+
+/*
+	Style Savvy
+*/
+void readSS1Save(void) {
+	if (ss1SaveRead) return;
+
+	FILE* saveData = fopen(ss1SavePath, "rb");
+	fread(ss1Save, (int)sizeof(ss1Save), 1, saveData);
+	fclose(saveData);
+
+	// Get playable character's name
+	if (ss1Save[0x204] == 0x86 || ss1Save[0x204] == 0x87) {
+		for (int i = 0; i < 9; i++) {
+			ss1PlayerName[i] = ss1Save[0x3AB8+(i)];
+		}
+	} else {
+		for (int i = 0; i < 9; i++) {
+			ss1PlayerName[i] = ss1Save[0x63B8+(i)];
+		}
+	}
+
+	ss2SaveRead = true;
+}
+
+void writeSS1Save(void) {
+	remove(ss1SavePath);
+	FILE* saveData = fopen(ss1SavePath, "wb");
+	fwrite(ss1Save, (int)sizeof(ss1Save), 1, saveData);
+	fclose(saveData);
+}
 
 /*
 	Style Savvy: Trendsetters

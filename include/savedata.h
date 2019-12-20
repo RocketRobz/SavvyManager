@@ -102,6 +102,8 @@ typedef struct ss3to4character {
 
 //extern ss3to4character ss4CharacterData;
 
+extern const char* ss1SavePath;
+
 //extern char ss3Save[0x174000];
 //extern char ss4Save[0xF0000];
 
