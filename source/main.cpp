@@ -313,6 +313,8 @@ int main()
 					Gui::sprite(sprites_title4_idx, 0, 56);
 					break;
 			}
+			Draw_Text(8, 112, 0.55, BLACK, "<");
+			Draw_Text(304, 112, 0.55, BLACK, ">");
 			if (showMessage) {
 				drawCannotEditMsg();
 			}
