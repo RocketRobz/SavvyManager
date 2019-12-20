@@ -22,6 +22,7 @@ enum ScreenMode {
 	SCREEN_MODE_GAME_SELECT = 1,		// Game select
 	SCREEN_MODE_WHAT_TO_DO = 2,			// What to do?
 	SCREEN_MODE_CHANGE_CHARACTER = 3,	// Change character
+	SCREEN_MODE_CHANGE_MUSIC = 4,		// Change music
 };
 static int screenmode = 0;
 int screenmodebuffer = 0;
@@ -90,7 +91,7 @@ void screenon(void)
 	}
 }
 
-int highlightedGame = 0;
+int highlightedGame = 1;
 
 int fadealpha = 255;
 int fadecolor = 0;
@@ -162,12 +163,26 @@ int main()
 	mkdir("sdmc:/3ds/SavvyManager", 0777);
 	mkdir("sdmc:/3ds/SavvyManager/SS2", 0777);
 	mkdir("sdmc:/3ds/SavvyManager/SS2/characters", 0777);
+	mkdir("sdmc:/3ds/SavvyManager/SS2/musicPacks", 0777);
 	mkdir("sdmc:/3ds/SavvyManager/SS3", 0777);
 	mkdir("sdmc:/3ds/SavvyManager/SS3/characters", 0777);
 	mkdir("sdmc:/3ds/SavvyManager/SS4", 0777);
 	mkdir("sdmc:/3ds/SavvyManager/SS4/characters", 0777);
 
- 	if( access( "sdmc:/3ds/dspfirm.cdc", F_OK ) != -1 ) {
+	mkdir("sdmc:/luma", 0777);
+	mkdir("sdmc:/luma/titles", 0777);
+
+	// Style Savvy: Trendsetters folders
+	mkdir("sdmc:/luma/titles/00040000000A9100", 0777);
+	mkdir("sdmc:/luma/titles/00040000000A9100/romfs", 0777);
+	mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common", 0777);
+	mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound", 0777);
+	mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound/stream", 0777);
+
+ 	// Style Savvy: Fashion Forward folders
+	mkdir("sdmc:/luma/titles/0004000000196500", 0777);
+
+	if( access( "sdmc:/3ds/dspfirm.cdc", F_OK ) != -1 ) {
 		ndspInit();
 		dspfirmfound = true;
 	}else{
@@ -214,11 +229,11 @@ int main()
 		hDown = hidKeysDown();
 		//const u32 hHeld = hidKeysHeld();
 
-		if(screenmode != SCREEN_MODE_ROCKETROBZ) {
+		if (screenmode != SCREEN_MODE_ROCKETROBZ) {
 			screenDelay = 0;
 		}
 
-		if(screenmode == SCREEN_MODE_ROCKETROBZ) {
+		if (screenmode == SCREEN_MODE_ROCKETROBZ) {
 			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 			C2D_TargetClear(top, TRANSPARENT);
 			C2D_TargetClear(bottom, TRANSPARENT);
@@ -244,7 +259,7 @@ int main()
 				screenmodebuffer = SCREEN_MODE_GAME_SELECT;
 				fadeout = true;
 			}
-		} else if(screenmode == SCREEN_MODE_GAME_SELECT) {
+		} else if (screenmode == SCREEN_MODE_GAME_SELECT) {
 			//Play_Music();
 
 			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
@@ -325,7 +340,7 @@ int main()
 					sndBack();
 					messageNo = 0;
 					showMessage = true;
-				  } else if ((highlightedGame==1 && ss2SaveFound)
+				  } else if ((highlightedGame==1)
 				  || (highlightedGame==2 && ss3SaveFound)
 				  || (highlightedGame==3 && ss4SaveFound))
 				  {
@@ -339,7 +354,11 @@ int main()
 				  }
 				}
 			}
-		} else if(screenmode == SCREEN_MODE_WHAT_TO_DO) {
+		} else if (screenmode == SCREEN_MODE_WHAT_TO_DO) {
+			if (highlightedGame != 1) {
+				whatToChange_cursorPosition = 0;
+			}
+
 			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 			C2D_TargetClear(top, TRANSPARENT);
 			C2D_TargetClear(bottom, TRANSPARENT);
@@ -362,9 +381,17 @@ int main()
 				}
 			}
 			Draw_Text(8, 8, 0.50, BLACK, "What do you want to change?");
-			Gui::Draw_ImageBlend(sprites_icon_shadow_idx, 64, 86, C2D_Color32(0, 0, 0, 63));
-			Gui::sprite(sprites_icon_profile_idx, 64, 80);
-			Draw_Text(62, 140, 0.50, RED, "Characters");
+			int iconXpos = 64;
+			Gui::Draw_ImageBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
+			Gui::sprite(sprites_icon_profile_idx, iconXpos, 80);
+			Draw_Text(iconXpos-2, 140, 0.50, RED, "Characters");
+			if (highlightedGame == 1) {
+				iconXpos += 64;
+				// Show music pack option for Trendsetters
+				Gui::Draw_ImageBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
+				Gui::sprite(sprites_icon_music_idx, iconXpos, 80);
+				Draw_Text(iconXpos+14, 140, 0.50, RED, "Music");
+			}
 			Gui::sprite(sprites_button_shadow_idx, 5, 199);
 			Gui::sprite(sprites_button_red_idx, 5, 195);
 			Gui::sprite(sprites_arrow_back_idx, 19, 195);
@@ -375,10 +402,42 @@ int main()
 			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 			Draw_EndFrame();
 
-			if (!fadein) {
+			if (showMessage) {
 				if (hDown & KEY_A) {
 					sndSelect();
-					screenmodebuffer = SCREEN_MODE_CHANGE_CHARACTER;
+					showMessage = false;
+				}
+			} else if (!fadein) {
+				if (highlightedGame == 1) {
+					if (hDown & KEY_LEFT) {
+						sndHighlight();
+						whatToChange_cursorPosition--;
+						if (whatToChange_cursorPosition < 0) whatToChange_cursorPosition = 1;
+					} else if (hDown & KEY_RIGHT) {
+						sndHighlight();
+						whatToChange_cursorPosition++;
+						if (whatToChange_cursorPosition > 1) whatToChange_cursorPosition = 0;
+					}
+				}
+				if (hDown & KEY_A) {
+					sndSelect();
+					switch (whatToChange_cursorPosition) {
+						case 0:
+							if ((highlightedGame==1 && ss2SaveFound)
+							  || (highlightedGame==2 && ss3SaveFound)
+							  || (highlightedGame==3 && ss4SaveFound))
+							  {
+								screenmodebuffer = SCREEN_MODE_CHANGE_CHARACTER;
+							  } else {
+							  	sndBack();
+								messageNo = 1;
+								showMessage = true;
+							  }
+							break;
+						case 1:
+							screenmodebuffer = SCREEN_MODE_CHANGE_MUSIC;
+							break;
+					}
 					fadeout = true;
 				}
 				if (hDown & KEY_B) {
@@ -394,10 +453,17 @@ int main()
 					cursorX = 80;
 					cursorY = 104;
 					break;
+				case 1:
+					cursorX = 148;
+					cursorY = 104;
+					break;
 			}
-		} else if(screenmode == SCREEN_MODE_CHANGE_CHARACTER) {
+		} else if (screenmode == SCREEN_MODE_CHANGE_CHARACTER) {
 			extern void changeCharacter(void);
 			changeCharacter();
+		} else if (screenmode == SCREEN_MODE_CHANGE_MUSIC) {
+			extern void changeMusic(void);
+			changeMusic();
 		}
 
 		if ((hDown & KEY_UP)
