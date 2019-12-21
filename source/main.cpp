@@ -177,7 +177,7 @@ int main()
 	mkdir("sdmc:/luma/titles/00040000000A9100/romfs", 0777);
 	mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common", 0777);
 	mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound", 0777);
-	mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound/stream", 0777);
+	//mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound/stream", 0777);
 
  	// Style Savvy: Fashion Forward folders
 	mkdir("sdmc:/luma/titles/0004000000196500", 0777);
