@@ -5,7 +5,12 @@
 extern "C" {
 #endif
 
+extern int numberOfExportedCharacters;
 extern int numberOfMusicPacks;
+
+void getExportedCharacterContents (void);
+const char* getExportedCharacterName (int num);
+bool getExportedCharacterGender (int num);
 
 void getMusicPackContents (void);
 const char* getMusicPackName (int num);

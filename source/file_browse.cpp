@@ -31,15 +31,20 @@
 
 #include <3ds.h>
 
+int numberOfExportedCharacters = 0;
 int numberOfMusicPacks = 0;
+
+extern int highlightedGame;
 
 using namespace std;
 
 struct DirEntry {
 	string name;
 	bool isDirectory;
+	bool gender;
 } ;
 
+vector<DirEntry> exportedCharacterContents;
 vector<DirEntry> musicDirContents;
 
 bool nameEndsWith (const string& name, const vector<string> extensionList) {
@@ -103,6 +108,59 @@ void getDirectoryContents (vector<DirEntry>& dirContents, const vector<string> e
 	vector<string> extensionList;
 	getDirectoryContents (dirContents, extensionList);
 }*/
+
+void getExportedCharacterContents (void) {
+	vector<string> extensionList;
+	extensionList.emplace_back(".chr");
+	switch (highlightedGame) {
+		case 3:
+			getDirectoryContents (exportedCharacterContents, extensionList, false, "sdmc:/3ds/SavvyManager/SS4/characters");
+			break;
+		case 2:
+			getDirectoryContents (exportedCharacterContents, extensionList, false, "sdmc:/3ds/SavvyManager/SS3/characters");
+			break;
+		case 1:
+			getDirectoryContents (exportedCharacterContents, extensionList, false, "sdmc:/3ds/SavvyManager/SS2/characters");
+			break;
+	}
+	numberOfExportedCharacters = exportedCharacterContents.size();
+
+	// Get genders from .chr files
+	char chrPath[256];
+	for (int i = 0; i < numberOfExportedCharacters; i++) {
+		DirEntry* entry = &exportedCharacterContents.at(i);
+
+		switch (highlightedGame) {
+			case 3:
+				sprintf(chrPath, "sdmc:/3ds/SavvyManager/SS4/characters/%s", entry->name.c_str());
+				break;
+			case 2:
+				sprintf(chrPath, "sdmc:/3ds/SavvyManager/SS3/characters/%s", entry->name.c_str());
+				break;
+			case 1:
+				sprintf(chrPath, "sdmc:/3ds/SavvyManager/SS2/characters/%s", entry->name.c_str());
+				break;
+		}
+
+		u8 result = 0;
+
+		FILE* chrFile = fopen(chrPath, "rb");
+		fread(&result, 1, 1, chrFile);
+		fclose(chrFile);
+
+		entry->gender = (result == 2);
+	}
+}
+
+const char* getExportedCharacterName (int num) {
+	const DirEntry* entry = &exportedCharacterContents.at(num);
+	return entry->name.c_str();
+}
+
+bool getExportedCharacterGender (int num) {
+	const DirEntry* entry = &exportedCharacterContents.at(num);
+	return entry->gender;
+}
 
 void getMusicPackContents (void) {
 	vector<string> extensionList;

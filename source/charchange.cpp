@@ -8,6 +8,7 @@
 
 #include "gui.hpp"
 #include "savedata.h"
+#include "file_browse.h"
 
 #include "ss3charnames.h"
 #include "ss4charnames.h"
@@ -197,7 +198,7 @@ void changeCharacter(void) {
 	}
 
 	if (import_highlightedGame == 4) {
-		import_totalCharacters = 0;
+		import_totalCharacters = numberOfExportedCharacters;
 	} else if (import_highlightedGame == 3) {
 		import_totalCharacters = 0xC;
 	} else if (import_highlightedGame == 2) {
@@ -260,9 +261,9 @@ void changeCharacter(void) {
 		int i2 = 48;
 		for (int i = import_characterShownFirst; i < import_characterShownFirst+3; i++) {
 			if (import_highlightedGame == 4) {
-				//Gui::sprite((import_ss4CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Draw_Text(64, i2, 0.65, BLACK, "Exported character");
-				break;
+				if (i >= numberOfExportedCharacters) break;
+				Gui::sprite((getExportedCharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				Draw_Text(64, i2, 0.65, BLACK, getExportedCharacterName(i));
 			} else if (import_highlightedGame == 3) {
 				Gui::sprite((import_ss4CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Draw_Text(64, i2, 0.65, BLACK, import_ss4CharacterNames[i]);
@@ -385,7 +386,7 @@ void changeCharacter(void) {
 				cheatKeyPosition = 0;
 			}
 			if (showCursor) {
-				if ((hDown & KEY_UP) && import_highlightedGame != 4) {
+				if (hDown & KEY_UP) {
 					sndHighlight();
 					importCharacterList_cursorPosition--;
 					importCharacterList_cursorPositionOnScreen--;
@@ -399,13 +400,17 @@ void changeCharacter(void) {
 						importCharacterList_cursorPositionOnScreen = 0;
 					}
 				}
-				if ((hDown & KEY_DOWN) && import_highlightedGame != 4) {
+				if (hDown & KEY_DOWN) {
 					sndHighlight();
 					importCharacterList_cursorPosition++;
 					importCharacterList_cursorPositionOnScreen++;
 					if (importCharacterList_cursorPosition > import_totalCharacters) {
 						importCharacterList_cursorPosition = import_totalCharacters;
 						import_characterShownFirst = import_totalCharacters-2;
+						if (import_characterShownFirst < 0) import_characterShownFirst = 0;
+						if (importCharacterList_cursorPositionOnScreen > import_totalCharacters) {
+							importCharacterList_cursorPositionOnScreen = import_totalCharacters;
+						}
 					} else if (importCharacterList_cursorPosition > import_characterShownFirst+2) {
 						import_characterShownFirst++;
 					}
@@ -451,7 +456,7 @@ void changeCharacter(void) {
 					bool exportFound = false;
 					switch (highlightedGame) {
 						case 3:
-							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS4/characters/%s.chr", characterName(false));
+							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS4/characters/%s", getExportedCharacterName(importCharacterList_cursorPosition));
 							if (access(chrFilePath, F_OK) == 0) {
 								sndSelect();
 								readSS4CharacterFile(characterList_cursorPosition, chrFilePath);
@@ -460,7 +465,7 @@ void changeCharacter(void) {
 							}
 							break;
 						case 2:
-							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS3/characters/%s.chr", characterName(false));
+							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS3/characters/%s", getExportedCharacterName(importCharacterList_cursorPosition));
 							if (access(chrFilePath, F_OK) == 0) {
 								sndSelect();
 								readSS3CharacterFile(characterList_cursorPosition, chrFilePath);
@@ -469,7 +474,7 @@ void changeCharacter(void) {
 							}
 							break;
 						case 1:
-							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS2/characters/%s.chr", characterName(false));
+							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS2/characters/%s", getExportedCharacterName(importCharacterList_cursorPosition));
 							if (access(chrFilePath, F_OK) == 0) {
 								sndSelect();
 								readSS2CharacterFile(chrFilePath);
@@ -479,7 +484,7 @@ void changeCharacter(void) {
 							break;
 					}
 					if (exportFound) {
-						sprintf(chararacterImported, "Imported %s successfully.", characterName(true));
+						sprintf(chararacterImported, "Imported %s successfully.", getExportedCharacterName(importCharacterList_cursorPosition));
 						messageNo = 1;
 						subScreenMode = 1;
 					} else {
@@ -527,6 +532,9 @@ void changeCharacter(void) {
 				importCharacterList_cursorPosition = 0;
 				importCharacterList_cursorPositionOnScreen = 0;
 				import_characterShownFirst = 0;
+				if (import_highlightedGame == 4) {
+					getExportedCharacterContents();
+				}
 			}
 			if (hDown & KEY_RIGHT) {
 				sndHighlight();
@@ -535,6 +543,9 @@ void changeCharacter(void) {
 				importCharacterList_cursorPosition = 0;
 				importCharacterList_cursorPositionOnScreen = 0;
 				import_characterShownFirst = 0;
+				if (import_highlightedGame == 4) {
+					getExportedCharacterContents();
+				}
 			}
 			if (import_highlightedGame != 4) {
 				if (hDown & KEY_L) {
@@ -609,6 +620,9 @@ void changeCharacter(void) {
 				} else {
 					sndSelect();
 					subScreenMode = characterChangeMenuOps[characterChangeMenu_cursorPosition];
+					if ((subScreenMode == 4) && (import_highlightedGame == 4)) {
+						getExportedCharacterContents();
+					}
 				}
 			}
 			if (hDown & KEY_B) {
