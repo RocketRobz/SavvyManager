@@ -7,7 +7,8 @@
 
 #include "gui.hpp"
 #include "savedata.h"
-#include "file_browse.hpp"
+#include "settings.h"
+#include "file_browse.h"
 
 extern C3D_RenderTarget* top;
 extern C3D_RenderTarget* bottom;
@@ -27,7 +28,7 @@ enum ScreenMode {
 //static int screenmode = 0;
 extern int screenmodebuffer;
 
-static int subScreenMode = 0;
+//static int subScreenMode = 0;
 /*
 */
 
@@ -63,22 +64,11 @@ static int messageNo = 0;
 static void drawMsg(void) {
 	Gui::spriteScale(sprites_msg_idx, 0, 0, 2, 1);
 	Gui::spriteScale(sprites_msg_idx, 160, 0, -2, 1);
-	/*if (messageNo == 3) {
-		Draw_Text(32, 84, 0.60, BLACK, "Exported character does not exist.");
-	} else if (messageNo == 2) {
-		Draw_Text(32, 48, 0.60, BLACK, "Character exported successfully.");
-		Draw_Text(32, 84, 0.60, BLACK, "You can go to \"Import Characters\"");
-		Draw_Text(32, 104, 0.60, BLACK, "and restore the exported character");
-		Draw_Text(32, 124, 0.60, BLACK, "at any time.");
-	} else if (messageNo == 1) {
-		Draw_Text(32, 48, 0.60, BLACK, chararacterImported);
-		Draw_Text(32, 84, 0.60, BLACK, "Please restore \"SavvyManager\"");
-		Draw_Text(32, 104, 0.60, BLACK, "data for your game in Checkpoint,");
-		Draw_Text(32, 124, 0.60, BLACK, "for the change to take effect.");
+	if (messageNo == 1) {
+		Draw_Text(32, 84, 0.60, BLACK, "Failed to apply music pack.");
 	} else {
-		Draw_Text(32, 84, 0.60, BLACK, "This feature is not available yet.");
-		//Draw_Text(32, 104, 0.60, BLACK, "yet.");
-	}*/
+		Draw_Text(32, 84, 0.60, BLACK, "Successfully applied music pack.");
+	}
 	Draw_Text(32, 160, 0.65, BLACK, " OK");
 }
 
@@ -100,6 +90,10 @@ void changeMusic(void) {
 			Gui::sprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
 		}
 	}
+
+	Draw_Text(8, 216, 0.50, BLACK, "Current music pack:");
+	Draw_Text(8, 226, 0.50, BLACK, (currentMusicPack=="" ? "Original" : currentMusicPack.c_str()));
+
 	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
 	set_screen(bottom);
@@ -142,6 +136,12 @@ void changeMusic(void) {
 	Draw_EndFrame();
 
 	if (!fadein && !fadeout) {
+		if (showMessage) {
+			if (hDown & KEY_A) {
+				sndSelect();
+				showMessage = false;
+			}
+		} else {
 		if (showCursor) {
 			if (hDown & KEY_UP) {
 				sndHighlight();
@@ -176,10 +176,27 @@ void changeMusic(void) {
 				}
 			}
 		}
+		if (hDown & KEY_A) {
+			sndSelect();
+			char prevMusicPackPath[256];
+			char musicPackPath[256];
+			sprintf(prevMusicPackPath, "sdmc:/3ds/SavvyManager/SS2/musicPacks/%s", currentMusicPack.c_str());
+			sprintf(musicPackPath, "sdmc:/3ds/SavvyManager/SS2/musicPacks/%s", getMusicPackName(cursorPosition-1));
+			rename("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound/stream", prevMusicPackPath);
+			if (cursorPosition==0 || rename(musicPackPath, "sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound/stream") == 0) {
+				messageNo = 0;
+			} else {
+				messageNo = 1;
+			}
+			showMessage = true;
+			currentMusicPack = getMusicPackName(cursorPosition-1);
+			saveSettings();
+		}
 		if (hDown & KEY_B) {
 			sndBack();
 			screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
 			fadeout = true;
+		}
 		}
 	}
 }

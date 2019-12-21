@@ -9,6 +9,7 @@
 #include "dumpdsp.h"
 #include "gui.hpp"
 #include "savedata.h"
+#include "settings.h"
 #include "sound.h"
 
 #define CONFIG_3D_SLIDERSTATE (*(float *)0x1FF81080)
@@ -218,6 +219,8 @@ int main()
 	ss2SaveFound = (access(ss2SavePath, F_OK) == 0);
 	ss3SaveFound = (access(ss3SavePath, F_OK) == 0);
 	ss4SaveFound = (access(ss4SavePath, F_OK) == 0);
+
+	loadSettings();
 
 	screenon();
 
