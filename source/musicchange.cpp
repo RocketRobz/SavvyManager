@@ -179,7 +179,7 @@ void changeMusic(void) {
 				}
 			}
 		}
-		if (hDown & KEY_A) {
+		if ((hDown & KEY_A) && (cursorPosition <= numberOfMusicPacks)) {
 			sndSelect();
 			char prevMusicPackPath[256];
 			char musicPackPath[256];
