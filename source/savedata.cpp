@@ -7,6 +7,8 @@
 ss2character ss2CharacterData;
 ss3to4character ss4CharacterData;
 
+ss3to4emblem emblemData;
+
 const char* ss1SavePath;
 
 char ss1Save[0x100000];
@@ -224,6 +226,14 @@ bool getSS3CharacterGender(u16 id) {
 	return (ss4CharacterData.gender == 2);
 }
 
+void readSS3Emblem(void) {
+	tonccpy(&emblemData, (char*)ss3Save+(0x2ABB8), 0x804);
+}
+
+void writeSS3Emblem(void) {
+	tonccpy((char*)ss3Save+(0x2ABB8), &emblemData, 0x804);
+}
+
 
 /*
 	Style Savvy: Styling Star
@@ -307,4 +317,32 @@ bool getSS4CharacterGender(u16 id) {
 
 	// true = male, false = female
 	return (ss4CharacterData.gender == 2);
+}
+
+void readSS4Emblem(int id) {
+	switch (id) {
+		case 0:
+			tonccpy(&emblemData, (char*)ss4Save+(0x228FC), 0x804);
+			break;
+		case 1:
+			tonccpy(&emblemData, (char*)ss4Save+(0x23100), 0x804);
+			break;
+		case 2:
+			tonccpy(&emblemData, (char*)ss4Save+(0x23904), 0x804);
+			break;
+	}
+}
+
+void writeSS4Emblem(int id) {
+	switch (id) {
+		case 0:
+			tonccpy((char*)ss4Save+(0x228FC), &emblemData, 0x804);
+			break;
+		case 1:
+			tonccpy((char*)ss4Save+(0x23100), &emblemData, 0x804);
+			break;
+		case 2:
+			tonccpy((char*)ss4Save+(0x23904), &emblemData, 0x804);
+			break;
+	}
 }

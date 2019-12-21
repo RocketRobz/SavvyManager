@@ -7,11 +7,7 @@
 
 #include "gui.hpp"
 #include "savedata.h"
-//#include "settings.h"
 #include "file_browse.h"
-
-extern std::string currentMusicPack;
-extern void saveSettings(void);
 
 extern C3D_RenderTarget* top;
 extern C3D_RenderTarget* bottom;
@@ -56,9 +52,8 @@ extern void drawCursor(void);
 extern u32 hDown;
 
 static int cursorPosition = 0;
-static int cursorPositionOnScreen = 0;
 
-static int musicPackShownFirst = 0;
+static int totalEmblems = 0;
 
 static bool modeInited = false;
 
@@ -69,19 +64,14 @@ static void drawMsg(void) {
 	Gui::spriteScale(sprites_msg_idx, 0, 0, 2, 1);
 	Gui::spriteScale(sprites_msg_idx, 160, 0, -2, 1);
 	if (messageNo == 1) {
-		Draw_Text(32, 84, 0.60, BLACK, "Failed to apply music pack.");
+		Draw_Text(32, 84, 0.60, BLACK, "Failed to apply emblem.");
 	} else {
-		Draw_Text(32, 84, 0.60, BLACK, "Successfully applied music pack.");
+		Draw_Text(32, 84, 0.60, BLACK, "Successfully applied emblem.");
 	}
 	Draw_Text(32, 160, 0.65, BLACK, " OK");
 }
 
-void changeMusic(void) {
-	if (!modeInited) {
-		getMusicPackContents();
-		modeInited = true;
-	}
-
+void changeEmblem(void) {
 	C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 	C2D_TargetClear(top, TRANSPARENT);
 	C2D_TargetClear(bottom, TRANSPARENT);
@@ -94,9 +84,7 @@ void changeMusic(void) {
 			Gui::sprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
 		}
 	}
-
-	Draw_Text(8, 206, 0.50, BLACK, "Current music pack:");
-	Draw_Text(8, 220, 0.50, BLACK, (currentMusicPack=="" ? "Original" : currentMusicPack.c_str()));
+	Gui::spriteScale(sprites_emblem_back_idx, 100, 20, 2, 2);
 
 	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
@@ -109,19 +97,13 @@ void changeMusic(void) {
 	}
 
 	cursorX = 256;
-	cursorY = 64+(48*cursorPositionOnScreen);
+	cursorY = 64+(48*cursorPosition);
 
-	Draw_Text(8, 8, 0.50, BLACK, "Select the music pack you want to use.");
+	Draw_Text(8, 8, 0.50, BLACK, "Select the emblem to change.");
 
 	int i2 = 48;
-	for (int i = musicPackShownFirst; i < musicPackShownFirst+3; i++) {
-		if (i > numberOfMusicPacks) break;
-	
-		if (i == 0) {
-			Draw_Text(32, i2, 0.65, BLACK, "Original/Revert");
-		} else {
-			Draw_Text(32, i2, 0.65, BLACK, getMusicPackName(i-1));
-		}
+	for (int i = 0; i <= totalEmblems; i++) {
+		Draw_Text(64, i2, 0.65, BLACK, "Emblem");
 		i2 += 48;
 	}
 
@@ -150,54 +132,17 @@ void changeMusic(void) {
 			if (hDown & KEY_UP) {
 				sndHighlight();
 				cursorPosition--;
-				cursorPositionOnScreen--;
 				if (cursorPosition < 0) {
 					cursorPosition = 0;
-					musicPackShownFirst = 0;
-				} else if (cursorPosition < musicPackShownFirst) {
-					musicPackShownFirst--;
-				}
-				if (cursorPositionOnScreen < 0) {
-					cursorPositionOnScreen = 0;
 				}
 			}
 			if (hDown & KEY_DOWN) {
 				sndHighlight();
 				cursorPosition++;
-				cursorPositionOnScreen++;
-				if (cursorPosition > numberOfMusicPacks) {
-					cursorPosition = numberOfMusicPacks;
-					musicPackShownFirst = numberOfMusicPacks-2;
-					if (musicPackShownFirst < 0) musicPackShownFirst = 0;
-					if (cursorPositionOnScreen > numberOfMusicPacks) {
-						cursorPositionOnScreen = numberOfMusicPacks;
-					}
-				} else if (cursorPosition > musicPackShownFirst+2) {
-					musicPackShownFirst++;
-				}
-				if (cursorPositionOnScreen > 2) {
-					cursorPositionOnScreen = 2;
+				if (cursorPosition > totalEmblems) {
+					cursorPosition = totalEmblems;
 				}
 			}
-		}
-		if ((hDown & KEY_A) && (cursorPosition <= numberOfMusicPacks)) {
-			sndSelect();
-			char prevMusicPackPath[256];
-			char musicPackPath[256];
-			sprintf(prevMusicPackPath, "sdmc:/3ds/SavvyManager/SS2/musicPacks/%s", currentMusicPack.c_str());
-			if (cursorPosition > 0) {
-				sprintf(musicPackPath, "sdmc:/3ds/SavvyManager/SS2/musicPacks/%s", getMusicPackName(cursorPosition-1));
-			}
-			rename("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound/stream", prevMusicPackPath);
-			if (cursorPosition==0 || rename(musicPackPath, "sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound/stream") == 0) {
-				messageNo = 0;
-			} else {
-				messageNo = 1;
-			}
-			showMessage = true;
-			currentMusicPack = (cursorPosition==0 ? "" : getMusicPackName(cursorPosition-1));
-			saveSettings();
-			modeInited = false;
 		}
 		if (hDown & KEY_B) {
 			sndBack();

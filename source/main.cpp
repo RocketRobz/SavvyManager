@@ -26,6 +26,7 @@ enum ScreenMode {
 	SCREEN_MODE_WHAT_TO_DO = 2,			// What to do?
 	SCREEN_MODE_CHANGE_CHARACTER = 3,	// Change character
 	SCREEN_MODE_CHANGE_MUSIC = 4,		// Change music
+	SCREEN_MODE_CHANGE_EMBLEM = 5,		// Change emblem
 };
 static int screenmode = 0;
 int screenmodebuffer = 0;
@@ -362,7 +363,8 @@ int main()
 				}
 			}
 		} else if (screenmode == SCREEN_MODE_WHAT_TO_DO) {
-			if (highlightedGame != 1) {
+			if ((highlightedGame == 0)
+			|| (highlightedGame > 1 && whatToChange_cursorPosition == 1)) {
 				whatToChange_cursorPosition = 0;
 			}
 
@@ -392,12 +394,19 @@ int main()
 			Gui::Draw_ImageBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
 			Gui::sprite(sprites_icon_profile_idx, iconXpos, 80);
 			Draw_Text(iconXpos-2, 140, 0.50, RED, "Characters");
+			iconXpos += 64;
 			if (highlightedGame == 1) {
-				iconXpos += 64;
 				// Show music pack option for Trendsetters
 				Gui::Draw_ImageBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
 				Gui::sprite(sprites_icon_music_idx, iconXpos, 80);
 				Draw_Text(iconXpos+14, 140, 0.50, RED, "Music");
+			}
+			iconXpos += 64;
+			if (highlightedGame > 1) {
+				// Show emblem option for Fashion Forward and Styling Star
+				Gui::Draw_ImageBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
+				Gui::sprite(sprites_icon_emblem_idx, iconXpos, 80);
+				Draw_Text(iconXpos+8, 140, 0.50, RED, "Emblem");
 			}
 			Gui::sprite(sprites_button_shadow_idx, 5, 199);
 			Gui::sprite(sprites_button_red_idx, 5, 195);
@@ -415,15 +424,25 @@ int main()
 					showMessage = false;
 				}
 			} else if (!fadein) {
-				if (highlightedGame == 1 && showCursor) {
+				if (highlightedGame > 0 && showCursor) {
 					if (hDown & KEY_LEFT) {
 						sndHighlight();
-						whatToChange_cursorPosition--;
-						if (whatToChange_cursorPosition < 0) whatToChange_cursorPosition = 1;
+						if (highlightedGame > 1) {
+							if (whatToChange_cursorPosition == 2) whatToChange_cursorPosition = 0;
+							else if (whatToChange_cursorPosition == 0) whatToChange_cursorPosition = 2;
+						} else {
+							whatToChange_cursorPosition--;
+							if (whatToChange_cursorPosition < 0) whatToChange_cursorPosition = 1;
+						}
 					} else if (hDown & KEY_RIGHT) {
 						sndHighlight();
-						whatToChange_cursorPosition++;
-						if (whatToChange_cursorPosition > 1) whatToChange_cursorPosition = 0;
+						if (highlightedGame > 1) {
+							if (whatToChange_cursorPosition == 0) whatToChange_cursorPosition = 2;
+							else if (whatToChange_cursorPosition == 2) whatToChange_cursorPosition = 0;
+						} else {
+							whatToChange_cursorPosition++;
+							if (whatToChange_cursorPosition > 1) whatToChange_cursorPosition = 0;
+						}
 					}
 				}
 				if (hDown & KEY_A) {
@@ -443,6 +462,9 @@ int main()
 							break;
 						case 1:
 							screenmodebuffer = SCREEN_MODE_CHANGE_MUSIC;
+							break;
+						case 2:
+							screenmodebuffer = SCREEN_MODE_CHANGE_EMBLEM;
 							break;
 					}
 					fadeout = true;
@@ -464,6 +486,10 @@ int main()
 					cursorX = 148;
 					cursorY = 104;
 					break;
+				case 2:
+					cursorX = 212;
+					cursorY = 104;
+					break;
 			}
 		} else if (screenmode == SCREEN_MODE_CHANGE_CHARACTER) {
 			extern void changeCharacter(void);
@@ -471,6 +497,9 @@ int main()
 		} else if (screenmode == SCREEN_MODE_CHANGE_MUSIC) {
 			extern void changeMusic(void);
 			changeMusic();
+		} else if (screenmode == SCREEN_MODE_CHANGE_EMBLEM) {
+			extern void changeEmblem(void);
+			changeEmblem();
 		}
 
 		if ((hDown & KEY_UP)

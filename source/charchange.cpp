@@ -31,6 +31,7 @@ enum ScreenMode {
 	SCREEN_MODE_WHAT_TO_DO = 2,			// What to do?
 	SCREEN_MODE_CHANGE_CHARACTER = 3,	// Change character
 	SCREEN_MODE_CHANGE_MUSIC = 4,		// Change music
+	SCREEN_MODE_CHANGE_EMBLEM = 5,		// Change emblem
 };
 //static int screenmode = 0;
 extern int screenmodebuffer;

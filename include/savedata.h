@@ -100,7 +100,14 @@ typedef struct ss3to4character {
     u8 unknown3D;
 } ss3to4character;
 
+typedef struct ss3to4emblem {
+    u32 palLine;
+	u8 sprite[0x800];
+} ss3to4emblem;
+
 //extern ss3to4character ss4CharacterData;
+
+extern ss3to4emblem emblemData;
 
 extern const char* ss1SavePath;
 
@@ -135,6 +142,11 @@ extern void writeSS4CharacterFile(u16 id, const char* filename);
 extern bool getSS2CharacterGender(void);
 extern bool getSS3CharacterGender(u16 id);
 extern bool getSS4CharacterGender(u16 id);
+
+extern void readSS3Emblem(void);
+extern void writeSS3Emblem(void);
+extern void readSS4Emblem(int id);
+extern void writeSS4Emblem(int id);
 
 #ifdef __cplusplus
 }
