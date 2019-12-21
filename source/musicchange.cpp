@@ -7,8 +7,11 @@
 
 #include "gui.hpp"
 #include "savedata.h"
-#include "settings.h"
+//#include "settings.h"
 #include "file_browse.h"
+
+extern std::string currentMusicPack;
+extern void saveSettings(void);
 
 extern C3D_RenderTarget* top;
 extern C3D_RenderTarget* bottom;

@@ -9,10 +9,12 @@
 #include "dumpdsp.h"
 #include "gui.hpp"
 #include "savedata.h"
-#include "settings.h"
+//#include "settings.h"
 #include "sound.h"
 
 #define CONFIG_3D_SLIDERSTATE (*(float *)0x1FF81080)
+
+extern void loadSettings(void);
 
 extern C3D_RenderTarget* top;
 extern C3D_RenderTarget* bottom;
