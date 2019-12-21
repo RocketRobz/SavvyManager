@@ -108,7 +108,7 @@ float bg_yPos = 0.0f;
 bool showCursor = false;
 int cursorX = 0;
 int cursorY = 0;
-int whatToChange_cursorPosition = 0;
+static int whatToChange_cursorPosition = 0;
 int cursorAlpha = 0;
 
 void drawCursor(void) {
@@ -410,7 +410,7 @@ int main()
 					showMessage = false;
 				}
 			} else if (!fadein) {
-				if (highlightedGame == 1) {
+				if (highlightedGame == 1 && showCursor) {
 					if (hDown & KEY_LEFT) {
 						sndHighlight();
 						whatToChange_cursorPosition--;

@@ -29,6 +29,6 @@ Styling Star players, if you're playing as a male character, or as a female char
 As such features are not normally available in-game, you may risk a possible ban when doing so, as the character data will be part of your Shopdo.
 
 # Credits
-* devkitPro: libctru, citro2d/3d
+* devkitPro: libctru, citro2d/3d, nds-hb-menu's file/folder browsing code
 * Pixel Perfect: [Music icon](https://www.flaticon.com/free-icon/musical-note_727218)
 * rog9001: His New Style Boutique 3 Save Editor tool has motivated me to work on this further.
