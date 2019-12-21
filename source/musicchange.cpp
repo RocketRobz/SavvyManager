@@ -94,8 +94,8 @@ void changeMusic(void) {
 		}
 	}
 
-	Draw_Text(8, 216, 0.50, BLACK, "Current music pack:");
-	Draw_Text(8, 226, 0.50, BLACK, (currentMusicPack=="" ? "Original" : currentMusicPack.c_str()));
+	Draw_Text(8, 206, 0.50, BLACK, "Current music pack:");
+	Draw_Text(8, 220, 0.50, BLACK, (currentMusicPack=="" ? "Original" : currentMusicPack.c_str()));
 
 	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
@@ -117,9 +117,9 @@ void changeMusic(void) {
 		if (i > numberOfMusicPacks) break;
 	
 		if (i == 0) {
-			Draw_Text(64, i2, 0.65, BLACK, "Original/Revert");
+			Draw_Text(32, i2, 0.65, BLACK, "Original/Revert");
 		} else {
-			Draw_Text(64, i2, 0.65, BLACK, getMusicPackName(i-1));
+			Draw_Text(32, i2, 0.65, BLACK, getMusicPackName(i-1));
 		}
 		i2 += 48;
 	}
@@ -184,7 +184,9 @@ void changeMusic(void) {
 			char prevMusicPackPath[256];
 			char musicPackPath[256];
 			sprintf(prevMusicPackPath, "sdmc:/3ds/SavvyManager/SS2/musicPacks/%s", currentMusicPack.c_str());
-			sprintf(musicPackPath, "sdmc:/3ds/SavvyManager/SS2/musicPacks/%s", getMusicPackName(cursorPosition-1));
+			if (cursorPosition > 0) {
+				sprintf(musicPackPath, "sdmc:/3ds/SavvyManager/SS2/musicPacks/%s", getMusicPackName(cursorPosition-1));
+			}
 			rename("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound/stream", prevMusicPackPath);
 			if (cursorPosition==0 || rename(musicPackPath, "sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound/stream") == 0) {
 				messageNo = 0;
@@ -192,8 +194,9 @@ void changeMusic(void) {
 				messageNo = 1;
 			}
 			showMessage = true;
-			currentMusicPack = getMusicPackName(cursorPosition-1);
+			currentMusicPack = (cursorPosition==0 ? "" : getMusicPackName(cursorPosition-1));
 			saveSettings();
+			modeInited = false;
 		}
 		if (hDown & KEY_B) {
 			sndBack();
