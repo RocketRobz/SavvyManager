@@ -452,7 +452,7 @@ void changeCharacter(void) {
 					messageNo = 1;
 					subScreenMode = 1;
 					showMessage = true;
-				} else if (import_highlightedGame == 4) {
+				} else if (import_highlightedGame == 4 && import_totalCharacters > 0) {
 					bool exportFound = false;
 					switch (highlightedGame) {
 						case 3:
@@ -491,7 +491,8 @@ void changeCharacter(void) {
 						sndBack();
 						messageNo = 3;
 					}
-				} else {
+					showMessage = true;
+				} else if (import_highlightedGame != 4) {
 				sndSelect();
 				switch (highlightedGame) {
 					case 3:
@@ -522,8 +523,8 @@ void changeCharacter(void) {
 				sprintf(chararacterImported, "Imported %s successfully.", import_characterName());
 				messageNo = 1;
 				subScreenMode = 1;
-				}
 				showMessage = true;
+				}
 			}
 			if (hDown & KEY_LEFT) {
 				sndHighlight();
