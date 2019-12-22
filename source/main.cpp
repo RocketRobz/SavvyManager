@@ -370,7 +370,8 @@ int main()
 			}
 		} else if (screenmode == SCREEN_MODE_WHAT_TO_DO) {
 			if ((highlightedGame == 0)
-			|| (highlightedGame > 1 && whatToChange_cursorPosition == 1)) {
+			|| (highlightedGame > 1 && whatToChange_cursorPosition == 1)
+			|| (highlightedGame < 2 && whatToChange_cursorPosition == 2)) {
 				whatToChange_cursorPosition = 0;
 			}
 

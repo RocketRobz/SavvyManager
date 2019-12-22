@@ -227,8 +227,8 @@ void changeCharacter(void) {
 		}
 	}
 
+	cursorX = 248;
 	if (subScreenMode == 4) {
-		cursorX = 256;
 		cursorY = 64+(48*importCharacterList_cursorPositionOnScreen);
 
 		// Game name
@@ -263,25 +263,29 @@ void changeCharacter(void) {
 		for (int i = import_characterShownFirst; i < import_characterShownFirst+3; i++) {
 			if (import_highlightedGame == 4) {
 				if (i >= numberOfExportedCharacters) break;
+				Gui::sprite(sprites_item_button_idx, 16, i2-20);
 				Gui::sprite((getExportedCharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Draw_Text(64, i2, 0.65, BLACK, getExportedCharacterName(i));
 			} else if (import_highlightedGame == 3) {
+				Gui::sprite(sprites_item_button_idx, 16, i2-20);
 				Gui::sprite((import_ss4CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Draw_Text(64, i2, 0.65, BLACK, import_ss4CharacterNames[i]);
 			} else if (import_highlightedGame == 2) {
+				Gui::sprite(sprites_item_button_idx, 16, i2-20);
 				Gui::sprite((import_ss3CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Draw_Text(64, i2, 0.65, BLACK, import_ss3CharacterNames[i]);
 			} else if (import_highlightedGame == 1) {
+				Gui::sprite(sprites_item_button_idx, 16, i2-20);
 				Gui::sprite((import_ss2CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Draw_Text(64, i2, 0.65, BLACK, import_ss2CharacterNames[i]);
 			} else if (import_highlightedGame == 0) {
+				Gui::sprite(sprites_item_button_idx, 16, i2-20);
 				Gui::sprite((import_ss1CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Draw_Text(64, i2, 0.65, BLACK, import_ss1CharacterNames[i]);
 			}
 			i2 += 48;
 		}
 	} else if (subScreenMode == 1) {
-		cursorX = 256;
 		cursorY = 64+(48*characterChangeMenu_cursorPositionOnScreen);
 
 		Draw_Text(8, 8, 0.50, BLACK, characterName(true));
@@ -289,26 +293,30 @@ void changeCharacter(void) {
 		int i2 = 0;
 		if (characterChangeMenu_optionShownFirst == 0) {
 			i2 += 48;
+			Gui::sprite(sprites_item_button_idx, 16, i2-20);
 			Draw_Text(32, i2, 0.65, BLACK, "Change attributes");
 		}
 		if (highlightedGame == 3) {
 			i2 += 48;
+			Gui::sprite(sprites_item_button_idx, 16, i2-20);
 			Draw_Text(32, i2, 0.65, BLACK, "Change bow placement");
 		}
 		i2 += 48;
+		Gui::sprite(sprites_item_button_idx, 16, i2-20);
 		Draw_Text(32, i2, 0.65, BLACK, "Import character");
 		if (highlightedGame < 3 || characterChangeMenu_optionShownFirst == 1) {
 			i2 += 48;
+			Gui::sprite(sprites_item_button_idx, 16, i2-20);
 			Draw_Text(32, i2, 0.65, BLACK, "Export character");
 		}
 	} else {
-		cursorX = 256;
 		cursorY = 64+(48*characterList_cursorPositionOnScreen);
 
 		Draw_Text(8, 8, 0.50, BLACK, "Select the character you want to change.");
 
 		int i2 = 48;
 		for (int i = characterShownFirst; i < characterShownFirst+3; i++) {
+			Gui::sprite(sprites_item_button_idx, 16, i2-20);
 			if (highlightedGame == 3) {
 				if (i==0) {
 					Gui::sprite((getSS4CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);

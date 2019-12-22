@@ -108,7 +108,7 @@ void changeMusic(void) {
 		}
 	}
 
-	cursorX = 256;
+	cursorX = 248;
 	cursorY = 64+(48*cursorPositionOnScreen);
 
 	Draw_Text(8, 8, 0.50, BLACK, "Select the music pack you want to use.");
@@ -117,6 +117,7 @@ void changeMusic(void) {
 	for (int i = musicPackShownFirst; i < musicPackShownFirst+3; i++) {
 		if (i > numberOfMusicPacks) break;
 	
+		Gui::sprite(sprites_item_button_idx, 16, i2-20);
 		if (i == 0) {
 			Draw_Text(32, i2, 0.65, BLACK, "Original/Revert");
 		} else {

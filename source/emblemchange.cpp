@@ -70,7 +70,7 @@ static int totalEmblems = 0;
 
 static int import_emblemShownFirst = 0;
 
-static u32 emblemPalette[16] = 
+/*static u32 emblemPalette[16] = 
 {
 	C2D_Color32(0, 0, 0, 0),
 	C2D_Color32(16, 16, 16, 255),
@@ -187,7 +187,7 @@ static void drawEmblem(int x, int y, bool big) {
 		}
 	}
 	emblemHalf = !emblemHalf;
-}
+}*/
 
 static bool modeInited = false;
 
@@ -266,8 +266,8 @@ void changeEmblem(void) {
 	}
 
 	char emblemText[32];
+	cursorX = 248;
 	if (subScreenMode == 2) {
-		cursorX = 256;
 		cursorY = 64+(48*importEmblemList_cursorPositionOnScreen);
 
 		// Game name
@@ -289,6 +289,7 @@ void changeEmblem(void) {
 			} else {
 				if (i > totalEmblems) break;
 			}
+			Gui::sprite(sprites_item_button_idx, 16, i2-20);
 			if (importPage == 1) {
 				Draw_Text(32, i2, 0.65, BLACK, getExportedEmblemName(i));
 			} else {
@@ -303,23 +304,24 @@ void changeEmblem(void) {
 			sprintf(emblemText, "Emblem %i", cursorPosition+1);
 		}
 
-		cursorX = 256;
 		cursorY = 64+(48*emblemChangeMenu_cursorPosition);
 
 		Draw_Text(8, 8, 0.50, BLACK, emblemText);
 
 		int i2 = 48;
+		Gui::sprite(sprites_item_button_idx, 16, i2-20);
 		Draw_Text(32, i2, 0.65, BLACK, "Import emblem");
 		i2 += 48;
+		Gui::sprite(sprites_item_button_idx, 16, i2-20);
 		Draw_Text(32, i2, 0.65, BLACK, "Export emblem");
 	} else {
-		cursorX = 256;
 		cursorY = 64+(48*cursorPosition);
 
 		Draw_Text(8, 8, 0.50, BLACK, "Select the emblem to change.");
 
 		int i2 = 48;
 		for (int i = 0; i <= totalEmblems; i++) {
+			Gui::sprite(sprites_item_button_idx, 16, i2-20);
 			if (highlightedGame == 2) {
 				sprintf(emblemText, "Emblem");
 			} else {
