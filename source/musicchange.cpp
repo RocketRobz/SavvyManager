@@ -68,6 +68,7 @@ static int messageNo = 0;
 static void drawMsg(void) {
 	Gui::spriteScale(sprites_msg_idx, 0, 0, 2, 1);
 	Gui::spriteScale(sprites_msg_idx, 160, 0, -2, 1);
+	Gui::sprite(sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 1) {
 		Draw_Text(32, 84, 0.60, BLACK, "Failed to apply music pack.");
 	} else {

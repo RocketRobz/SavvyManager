@@ -131,6 +131,7 @@ static int messageNo = 0;
 static void drawCannotEditMsg(void) {
 	Gui::spriteScale(sprites_msg_idx, 0, 0, 2, 1);
 	Gui::spriteScale(sprites_msg_idx, 160, 0, -2, 1);
+	Gui::sprite(sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 1) {
 		Draw_Text(32, 48, 0.60, BLACK, "Save data not found.");
 		Draw_Text(32, 80, 0.60, BLACK, highlightedGame==3 ? "Please back up the extra data using" : "Please back it up using");

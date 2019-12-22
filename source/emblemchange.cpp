@@ -199,6 +199,7 @@ static char emblemImported[48];
 static void drawMsg(void) {
 	Gui::spriteScale(sprites_msg_idx, 0, 0, 2, 1);
 	Gui::spriteScale(sprites_msg_idx, 160, 0, -2, 1);
+	Gui::sprite(sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 3) {
 		Draw_Text(32, 84, 0.60, BLACK, "Failed to import emblem.");
 	} else if (messageNo == 2) {
