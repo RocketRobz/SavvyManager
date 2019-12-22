@@ -55,6 +55,53 @@ static int cursorPosition = 0;
 
 static int totalEmblems = 0;
 
+/*static u32 emblemPalette[16] = 
+{
+	C2D_Color32(0, 0, 0, 255),
+	C2D_Color32(16, 16, 16, 255),
+	C2D_Color32(32, 32, 32, 255),
+	C2D_Color32(48, 48, 48, 255),
+	C2D_Color32(64, 64, 64, 255),
+	C2D_Color32(80, 80, 80, 255),
+	C2D_Color32(96, 96, 96, 255),
+	C2D_Color32(112, 112, 112, 255),
+	C2D_Color32(128, 128, 128, 255),
+	C2D_Color32(144, 144, 144, 255),
+	C2D_Color32(160, 160, 160, 255),
+	C2D_Color32(176, 176, 176, 255),
+	C2D_Color32(192, 192, 192, 255),
+	C2D_Color32(208, 208, 208, 255),
+	C2D_Color32(224, 224, 224, 255),
+	C2D_Color32(240, 240, 240, 255)
+};
+
+static u32 emblemPixel(int pixel, bool secondPixel) {
+	pixel = pixel/2;
+	if (secondPixel) {
+		return emblemPalette[emblemData.sprite[pixel & 0x0F]];
+	} else {
+		return emblemPalette[emblemData.sprite[pixel & 0xF0]];
+	}
+}
+
+static u32 emblemImage[64*64];
+
+static void renderEmblem(void) {
+	bool secondPixel = false;
+	for (int i = 0; i < 64*64; i++) {
+		emblemImage[i] = emblemPixel(i, secondPixel);
+		secondPixel = !secondPixel;
+	}
+}
+
+static void drawEmblem(int x, int y) {
+	for (int h = 0; h < 64; h++) {
+		for (int w = 0; w < 64; w++) {
+			Draw_Rect(x+w, y+h, 1, 1, emblemImage[w*h]);
+		}
+	}
+}*/
+
 static bool modeInited = false;
 
 static bool showMessage = false;
@@ -72,6 +119,12 @@ static void drawMsg(void) {
 }
 
 void changeEmblem(void) {
+	if (!modeInited) {
+		//(highlightedGame==3) ? readSS4Emblem(0) : readSS3Emblem();
+		//renderEmblem();
+		modeInited = true;
+	}
+
 	C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 	C2D_TargetClear(top, TRANSPARENT);
 	C2D_TargetClear(bottom, TRANSPARENT);
@@ -85,6 +138,7 @@ void changeEmblem(void) {
 		}
 	}
 	Gui::spriteScale(sprites_emblem_back_idx, 100, 20, 2, 2);
+	//drawEmblem(128, 32);
 
 	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
@@ -102,8 +156,14 @@ void changeEmblem(void) {
 	Draw_Text(8, 8, 0.50, BLACK, "Select the emblem to change.");
 
 	int i2 = 48;
+	char emblemText[10];
 	for (int i = 0; i <= totalEmblems; i++) {
-		Draw_Text(64, i2, 0.65, BLACK, "Emblem");
+		if (highlightedGame == 2) {
+			sprintf(emblemText, "Emblem");
+		} else {
+			sprintf(emblemText, "Emblem %i", i);
+		}
+		Draw_Text(64, i2, 0.65, BLACK, emblemText);
 		i2 += 48;
 	}
 
