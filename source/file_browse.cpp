@@ -32,6 +32,7 @@
 #include <3ds.h>
 
 int numberOfExportedCharacters = 0;
+int numberOfExportedEmblems = 0;
 int numberOfMusicPacks = 0;
 
 extern int highlightedGame;
@@ -45,6 +46,7 @@ struct DirEntry {
 } ;
 
 vector<DirEntry> exportedCharacterContents;
+vector<DirEntry> exportedEmblemContents;
 vector<DirEntry> musicDirContents;
 
 bool nameEndsWith (const string& name, const vector<string> extensionList) {
@@ -160,6 +162,18 @@ const char* getExportedCharacterName (int num) {
 bool getExportedCharacterGender (int num) {
 	const DirEntry* entry = &exportedCharacterContents.at(num);
 	return entry->gender;
+}
+
+void getExportedEmblemContents (void) {
+	vector<string> extensionList;
+	extensionList.emplace_back(".emb");
+	getDirectoryContents (exportedEmblemContents, extensionList, false, "sdmc:/3ds/SavvyManager/emblems");
+	numberOfExportedEmblems = exportedEmblemContents.size();
+}
+
+const char* getExportedEmblemName (int num) {
+	const DirEntry* entry = &exportedEmblemContents.at(num);
+	return entry->name.c_str();
 }
 
 void getMusicPackContents (void) {

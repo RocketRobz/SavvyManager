@@ -155,7 +155,7 @@ static void drawMsg(void) {
 	Gui::spriteScale(sprites_msg_idx, 0, 0, 2, 1);
 	Gui::spriteScale(sprites_msg_idx, 160, 0, -2, 1);
 	if (messageNo == 3) {
-		Draw_Text(32, 84, 0.60, BLACK, "Exported character does not exist.");
+		Draw_Text(32, 84, 0.60, BLACK, "Failed to import character.");
 	} else if (messageNo == 2) {
 		Draw_Text(32, 48, 0.60, BLACK, "Character exported successfully.");
 		Draw_Text(32, 84, 0.60, BLACK, "You can go to \"Import Characters\"");
@@ -199,7 +199,7 @@ void changeCharacter(void) {
 	}
 
 	if (import_highlightedGame == 4) {
-		import_totalCharacters = numberOfExportedCharacters;
+		import_totalCharacters = numberOfExportedCharacters-1;
 	} else if (import_highlightedGame == 3) {
 		import_totalCharacters = 0xC;
 	} else if (import_highlightedGame == 2) {
@@ -234,7 +234,7 @@ void changeCharacter(void) {
 		// Game name
 		switch (import_highlightedGame) {
 			case 4:
-				Draw_Text(32, 8, 0.50, BLACK, "Savvy Manager");
+				Draw_Text(32, 8, 0.50, BLACK, "Your character files");
 				break;
 			case 3:
 				Draw_Text(32, 8, 0.50, BLACK, "Style Savvy: Styling Star");
@@ -289,17 +289,17 @@ void changeCharacter(void) {
 		int i2 = 0;
 		if (characterChangeMenu_optionShownFirst == 0) {
 			i2 += 48;
-			Draw_Text(64, i2, 0.65, BLACK, "Change attributes");
+			Draw_Text(32, i2, 0.65, BLACK, "Change attributes");
 		}
 		if (highlightedGame == 3) {
 			i2 += 48;
-			Draw_Text(64, i2, 0.65, BLACK, "Change bow placement");
+			Draw_Text(32, i2, 0.65, BLACK, "Change bow placement");
 		}
 		i2 += 48;
-		Draw_Text(64, i2, 0.65, BLACK, "Import character");
+		Draw_Text(32, i2, 0.65, BLACK, "Import character");
 		if (highlightedGame < 3 || characterChangeMenu_optionShownFirst == 1) {
 			i2 += 48;
-			Draw_Text(64, i2, 0.65, BLACK, "Export character");
+			Draw_Text(32, i2, 0.65, BLACK, "Export character");
 		}
 	} else {
 		cursorX = 256;

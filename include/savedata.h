@@ -148,6 +148,11 @@ extern void writeSS3Emblem(void);
 extern void readSS4Emblem(int id);
 extern void writeSS4Emblem(int id);
 
+void readSS3EmblemFile(const char* filename);
+void writeSS3EmblemFile(const char* filename);
+void readSS4EmblemFile(int id, const char* filename);
+void writeSS4EmblemFile(int id, const char* filename);
+
 #ifdef __cplusplus
 }
 #endif

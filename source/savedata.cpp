@@ -234,6 +234,22 @@ void writeSS3Emblem(void) {
 	tonccpy((char*)ss3Save+(0x2ABB8), &emblemData, 0x804);
 }
 
+void readSS3EmblemFile(const char* filename) {
+	FILE* emblemData = fopen(filename, "rb");
+	if (!emblemData) return;
+
+	fread((char*)ss3Save+(0x2ABB8), 0x804, 1, emblemData);
+	fclose(emblemData);
+}
+
+void writeSS3EmblemFile(const char* filename) {
+	FILE* emblemData = fopen(filename, "wb");
+	if (!emblemData) return;
+
+	fwrite((char*)ss3Save+(0x2ABB8), 0x804, 1, emblemData);
+	fclose(emblemData);
+}
+
 
 /*
 	Style Savvy: Styling Star
@@ -345,4 +361,40 @@ void writeSS4Emblem(int id) {
 			tonccpy((char*)ss4Save+(0x23904), &emblemData, 0x804);
 			break;
 	}
+}
+
+void readSS4EmblemFile(int id, const char* filename) {
+	FILE* emblemData = fopen(filename, "rb");
+	if (!emblemData) return;
+
+	switch (id) {
+		case 0:
+			fread((char*)ss4Save+(0x228FC), 0x804, 1, emblemData);
+			break;
+		case 1:
+			fread((char*)ss4Save+(0x23100), 0x804, 1, emblemData);
+			break;
+		case 2:
+			fread((char*)ss4Save+(0x23904), 0x804, 1, emblemData);
+			break;
+	}
+	fclose(emblemData);
+}
+
+void writeSS4EmblemFile(int id, const char* filename) {
+	FILE* emblemData = fopen(filename, "wb");
+	if (!emblemData) return;
+
+	switch (id) {
+		case 0:
+			fwrite((char*)ss4Save+(0x228FC), 0x804, 1, emblemData);
+			break;
+		case 1:
+			fwrite((char*)ss4Save+(0x23100), 0x804, 1, emblemData);
+			break;
+		case 2:
+			fwrite((char*)ss4Save+(0x23904), 0x804, 1, emblemData);
+			break;
+	}
+	fclose(emblemData);
 }

@@ -165,6 +165,7 @@ int main()
 	// make folders if they don't exist
 	mkdir("sdmc:/3ds", 0777);
 	mkdir("sdmc:/3ds/SavvyManager", 0777);
+	mkdir("sdmc:/3ds/SavvyManager/emblems", 0777);
 	mkdir("sdmc:/3ds/SavvyManager/SS2", 0777);
 	mkdir("sdmc:/3ds/SavvyManager/SS2/characters", 0777);
 	mkdir("sdmc:/3ds/SavvyManager/SS2/musicPacks", 0777);

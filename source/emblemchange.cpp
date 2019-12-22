@@ -3,11 +3,14 @@
 #include <string.h>
 #include <3ds.h>
 #include <malloc.h>
+#include <unistd.h>		// access
 #include <sys/stat.h>
 
 #include "gui.hpp"
 #include "savedata.h"
 #include "file_browse.h"
+
+#include "import_emblemnames.h"
 
 extern C3D_RenderTarget* top;
 extern C3D_RenderTarget* bottom;
@@ -28,9 +31,16 @@ enum ScreenMode {
 //static int screenmode = 0;
 extern int screenmodebuffer;
 
-//static int subScreenMode = 0;
+static int subScreenMode = 0;
 /*
+	0: Emblem list
+	1: What to change
+	2: Import emblem
 */
+
+static int importPage = 0;
+
+static char embFilePath[256];
 
 extern int highlightedGame;
 
@@ -52,12 +62,17 @@ extern void drawCursor(void);
 extern u32 hDown;
 
 static int cursorPosition = 0;
+static int emblemChangeMenu_cursorPosition = 0;
+static int importEmblemList_cursorPosition = 0;
+static int importEmblemList_cursorPositionOnScreen = 0;
 
 static int totalEmblems = 0;
 
-/*static u32 emblemPalette[16] = 
+static int import_emblemShownFirst = 0;
+
+static u32 emblemPalette[16] = 
 {
-	C2D_Color32(0, 0, 0, 255),
+	C2D_Color32(0, 0, 0, 0),
 	C2D_Color32(16, 16, 16, 255),
 	C2D_Color32(32, 32, 32, 255),
 	C2D_Color32(48, 48, 48, 255),
@@ -75,13 +90,82 @@ static int totalEmblems = 0;
 	C2D_Color32(240, 240, 240, 255)
 };
 
+static int getPalNumber(u8 byte, bool secondPixel) {
+	if (secondPixel) {
+		if ((byte & 0x0F) == 0x0) {
+			return 0;
+		} else if ((byte & 0x0F) == 0x1) {
+			return 1;
+		} else if ((byte & 0x0F) == 0x2) {
+			return 2;
+		} else if ((byte & 0x0F) == 0x3) {
+			return 3;
+		} else if ((byte & 0x0F) == 0x4) {
+			return 4;
+		} else if ((byte & 0x0F) == 0x5) {
+			return 5;
+		} else if ((byte & 0x0F) == 0x6) {
+			return 6;
+		} else if ((byte & 0x0F) == 0x7) {
+			return 7;
+		} else if ((byte & 0x0F) == 0x8) {
+			return 8;
+		} else if ((byte & 0x0F) == 0x9) {
+			return 9;
+		} else if ((byte & 0x0F) == 0xA) {
+			return 10;
+		} else if ((byte & 0x0F) == 0xB) {
+			return 11;
+		} else if ((byte & 0x0F) == 0xC) {
+			return 12;
+		} else if ((byte & 0x0F) == 0xD) {
+			return 13;
+		} else if ((byte & 0x0F) == 0xE) {
+			return 14;
+		} else if ((byte & 0x0F) == 0xF) {
+			return 15;
+		}
+	} else {
+		if (byte >= 0x00 && byte < 0x10) {
+			return 0;
+		} else if (byte >= 0x10 && byte < 0x20) {
+			return 1;
+		} else if (byte >= 0x20 && byte < 0x30) {
+			return 2;
+		} else if (byte >= 0x30 && byte < 0x40) {
+			return 3;
+		} else if (byte >= 0x40 && byte < 0x50) {
+			return 4;
+		} else if (byte >= 0x50 && byte < 0x60) {
+			return 5;
+		} else if (byte >= 0x60 && byte < 0x70) {
+			return 6;
+		} else if (byte >= 0x70 && byte < 0x80) {
+			return 7;
+		} else if (byte >= 0x80 && byte < 0x90) {
+			return 8;
+		} else if (byte >= 0x90 && byte < 0xA0) {
+			return 9;
+		} else if (byte >= 0xA0 && byte < 0xB0) {
+			return 10;
+		} else if (byte >= 0xB0 && byte < 0xC0) {
+			return 11;
+		} else if (byte >= 0xC0 && byte < 0xD0) {
+			return 12;
+		} else if (byte >= 0xD0 && byte < 0xE0) {
+			return 13;
+		} else if (byte >= 0xE0 && byte < 0xF0) {
+			return 14;
+		} else if (byte >= 0xF0 && byte < 0x100) {
+			return 15;
+		}
+	}
+	return 0;
+}
+
 static u32 emblemPixel(int pixel, bool secondPixel) {
 	pixel = pixel/2;
-	if (secondPixel) {
-		return emblemPalette[emblemData.sprite[pixel & 0x0F]];
-	} else {
-		return emblemPalette[emblemData.sprite[pixel & 0xF0]];
-	}
+	return emblemPalette[getPalNumber(emblemData.sprite[pixel], secondPixel)];
 }
 
 static u32 emblemImage[64*64];
@@ -94,33 +178,64 @@ static void renderEmblem(void) {
 	}
 }
 
-static void drawEmblem(int x, int y) {
-	for (int h = 0; h < 64; h++) {
+static bool emblemHalf = false;
+
+static void drawEmblem(int x, int y, bool big) {
+	for (int h = (emblemHalf ? 32: 0); h < (emblemHalf ? 64: 32); h++) {
 		for (int w = 0; w < 64; w++) {
-			Draw_Rect(x+w, y+h, 1, 1, emblemImage[w*h]);
+			Draw_Rect(x+(w*(big*2)), y+(h*(big*2)), 1+big, 1+big, emblemImage[(h*64)+w]);
 		}
 	}
-}*/
+	emblemHalf = !emblemHalf;
+}
 
 static bool modeInited = false;
 
 static bool showMessage = false;
 static int messageNo = 0;
 
+static char emblemImported[48];
+
 static void drawMsg(void) {
 	Gui::spriteScale(sprites_msg_idx, 0, 0, 2, 1);
 	Gui::spriteScale(sprites_msg_idx, 160, 0, -2, 1);
-	if (messageNo == 1) {
-		Draw_Text(32, 84, 0.60, BLACK, "Failed to apply emblem.");
+	if (messageNo == 3) {
+		Draw_Text(32, 84, 0.60, BLACK, "Failed to import emblem.");
+	} else if (messageNo == 2) {
+		Draw_Text(32, 48, 0.60, BLACK, "Emblem exported successfully.");
+		Draw_Text(32, 84, 0.60, BLACK, "You can go to \"Import Emblems\"");
+		Draw_Text(32, 104, 0.60, BLACK, "and restore the exported emblem");
+		Draw_Text(32, 124, 0.60, BLACK, "at any time.");
+	} else if (messageNo == 1) {
+		Draw_Text(32, 48, 0.60, BLACK, emblemImported);
+		Draw_Text(32, 84, 0.60, BLACK, "Please restore \"SavvyManager\"");
+		Draw_Text(32, 104, 0.60, BLACK, "data for your game in Checkpoint,");
+		Draw_Text(32, 124, 0.60, BLACK, "for the change to take effect.");
 	} else {
-		Draw_Text(32, 84, 0.60, BLACK, "Successfully applied emblem.");
+		Draw_Text(32, 84, 0.60, BLACK, "This feature is not available yet.");
+		//Draw_Text(32, 104, 0.60, BLACK, "yet.");
 	}
 	Draw_Text(32, 160, 0.65, BLACK, " OK");
 }
 
 void changeEmblem(void) {
+	if (subScreenMode == 2) {
+		if (importPage == 1) {
+			totalEmblems = numberOfExportedEmblems-1;
+		} else {
+			totalEmblems = 10;
+		}
+	} else if (highlightedGame == 3) {
+		totalEmblems = 2;
+		readSS4Save();
+		//readSS4Emblem(cursorPosition);
+	} else {
+		totalEmblems = 0;
+		readSS3Save();
+		//readSS3Emblem();
+	}
+
 	if (!modeInited) {
-		//(highlightedGame==3) ? readSS4Emblem(0) : readSS3Emblem();
 		//renderEmblem();
 		modeInited = true;
 	}
@@ -138,7 +253,7 @@ void changeEmblem(void) {
 		}
 	}
 	Gui::spriteScale(sprites_emblem_back_idx, 100, 20, 2, 2);
-	//drawEmblem(128, 32);
+	//drawEmblem(136, 56, true);
 
 	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
@@ -150,21 +265,69 @@ void changeEmblem(void) {
 		}
 	}
 
-	cursorX = 256;
-	cursorY = 64+(48*cursorPosition);
+	char emblemText[32];
+	if (subScreenMode == 2) {
+		cursorX = 256;
+		cursorY = 64+(48*importEmblemList_cursorPositionOnScreen);
 
-	Draw_Text(8, 8, 0.50, BLACK, "Select the emblem to change.");
+		// Game name
+		switch (importPage) {
+			case 1:
+				Draw_Text(32, 8, 0.50, BLACK, "Your emblem files");
+				break;
+			case 0:
+				Draw_Text(32, 8, 0.50, BLACK, "Savvy Manager");
+				break;
+		}
+		Draw_Text(8, 8, 0.50, BLACK, "<");
+		Draw_Text(304, 8, 0.50, BLACK, ">");
 
-	int i2 = 48;
-	char emblemText[10];
-	for (int i = 0; i <= totalEmblems; i++) {
+		int i2 = 48;
+		for (int i = import_emblemShownFirst; i < import_emblemShownFirst+3; i++) {
+			if (importPage == 1) {
+				if (i >= numberOfExportedEmblems) break;
+			} else {
+				if (i > totalEmblems) break;
+			}
+			if (importPage == 1) {
+				Draw_Text(32, i2, 0.65, BLACK, getExportedEmblemName(i));
+			} else {
+				Draw_Text(32, i2, 0.65, BLACK, import_emblemNames[i]);
+			}
+			i2 += 48;
+		}
+	} else if (subScreenMode == 1) {
 		if (highlightedGame == 2) {
 			sprintf(emblemText, "Emblem");
 		} else {
-			sprintf(emblemText, "Emblem %i", i);
+			sprintf(emblemText, "Emblem %i", cursorPosition+1);
 		}
-		Draw_Text(64, i2, 0.65, BLACK, emblemText);
+
+		cursorX = 256;
+		cursorY = 64+(48*emblemChangeMenu_cursorPosition);
+
+		Draw_Text(8, 8, 0.50, BLACK, emblemText);
+
+		int i2 = 48;
+		Draw_Text(32, i2, 0.65, BLACK, "Import emblem");
 		i2 += 48;
+		Draw_Text(32, i2, 0.65, BLACK, "Export emblem");
+	} else {
+		cursorX = 256;
+		cursorY = 64+(48*cursorPosition);
+
+		Draw_Text(8, 8, 0.50, BLACK, "Select the emblem to change.");
+
+		int i2 = 48;
+		for (int i = 0; i <= totalEmblems; i++) {
+			if (highlightedGame == 2) {
+				sprintf(emblemText, "Emblem");
+			} else {
+				sprintf(emblemText, "Emblem %i", i+1);
+			}
+			Draw_Text(32, i2, 0.65, BLACK, emblemText);
+			i2 += 48;
+		}
 	}
 
 	Gui::sprite(sprites_button_shadow_idx, 5, 199);
@@ -187,28 +350,194 @@ void changeEmblem(void) {
 				sndSelect();
 				showMessage = false;
 			}
+		} else if (subScreenMode == 2) {
+			if (showCursor) {
+				if (hDown & KEY_UP) {
+					sndHighlight();
+					importEmblemList_cursorPosition--;
+					importEmblemList_cursorPositionOnScreen--;
+					if (importEmblemList_cursorPosition < 0) {
+						importEmblemList_cursorPosition = 0;
+						import_emblemShownFirst = 0;
+					} else if (importEmblemList_cursorPosition < import_emblemShownFirst) {
+						import_emblemShownFirst--;
+					}
+					if (importEmblemList_cursorPositionOnScreen < 0) {
+						importEmblemList_cursorPositionOnScreen = 0;
+					}
+				}
+				if (hDown & KEY_DOWN) {
+					sndHighlight();
+					importEmblemList_cursorPosition++;
+					importEmblemList_cursorPositionOnScreen++;
+					if (importEmblemList_cursorPosition > totalEmblems) {
+						importEmblemList_cursorPosition = totalEmblems;
+						import_emblemShownFirst = totalEmblems-2;
+						if (import_emblemShownFirst < 0) import_emblemShownFirst = 0;
+						if (importEmblemList_cursorPositionOnScreen > totalEmblems) {
+							importEmblemList_cursorPositionOnScreen = totalEmblems;
+						}
+					} else if (importEmblemList_cursorPosition > import_emblemShownFirst+2) {
+						import_emblemShownFirst++;
+					}
+					if (importEmblemList_cursorPositionOnScreen > 2) {
+						importEmblemList_cursorPositionOnScreen = 2;
+					}
+				}
+			}
+			if (hDown & KEY_A) {
+				bool exportFound = false;
+				if (importPage == 1 && totalEmblems > 0) {
+					switch (highlightedGame) {
+						case 3:
+							sprintf(embFilePath, "sdmc:/3ds/SavvyManager/emblems/%s", getExportedEmblemName(importEmblemList_cursorPosition));
+							if (access(embFilePath, F_OK) == 0) {
+								sndSelect();
+								readSS4EmblemFile(cursorPosition, embFilePath);
+								writeSS4Save();
+								exportFound = true;
+							}
+							break;
+						case 2:
+							sprintf(embFilePath, "sdmc:/3ds/SavvyManager/emblems/%s", getExportedEmblemName(importEmblemList_cursorPosition));
+							if (access(embFilePath, F_OK) == 0) {
+								sndSelect();
+								readSS3EmblemFile(embFilePath);
+								writeSS3Save();
+								exportFound = true;
+							}
+							break;
+					}
+					if (exportFound) {
+						sprintf(emblemImported, "Imported %s successfully.", getExportedEmblemName(importEmblemList_cursorPosition));
+						messageNo = 1;
+						subScreenMode = 1;
+					} else {
+						sndBack();
+						messageNo = 3;
+					}
+					showMessage = true;
+				} else if (importPage == 0) {
+					sndSelect();
+					switch (highlightedGame) {
+						case 3:
+							sprintf(embFilePath, "romfs:/emblems/%s.emb", import_emblemNames[importEmblemList_cursorPosition]);
+							if (access(embFilePath, F_OK) == 0) {
+								readSS4EmblemFile(cursorPosition, embFilePath);
+								writeSS4Save();
+								exportFound = true;
+							}
+							break;
+						case 2:
+							sprintf(embFilePath, "romfs:/emblems/%s.emb", import_emblemNames[importEmblemList_cursorPosition]);
+							if (access(embFilePath, F_OK) == 0) {
+								readSS3EmblemFile(embFilePath);
+								writeSS3Save();
+								exportFound = true;
+							}
+							break;
+					}
+					if (exportFound) {
+						sprintf(emblemImported, "Imported %s successfully.", import_emblemNames[importEmblemList_cursorPosition]);
+						messageNo = 1;
+						subScreenMode = 1;
+					} else {
+						sndBack();
+						messageNo = 3;
+					}
+					showMessage = true;
+				}
+			}
+			if (hDown & KEY_LEFT) {
+				sndHighlight();
+				importPage--;
+				if (importPage < 0) importPage = 1;
+				importEmblemList_cursorPosition = 0;
+				importEmblemList_cursorPositionOnScreen = 0;
+				import_emblemShownFirst = 0;
+			}
+			if (hDown & KEY_RIGHT) {
+				sndHighlight();
+				importPage++;
+				if (importPage > 1) importPage = 0;
+				importEmblemList_cursorPosition = 0;
+				importEmblemList_cursorPositionOnScreen = 0;
+				import_emblemShownFirst = 0;
+			}
+			if (hDown & KEY_B) {
+				sndBack();
+				subScreenMode = 1;
+			}
+		} else if (subScreenMode == 1) {
+			if (showCursor) {
+				if (hDown & KEY_UP) {
+					sndHighlight();
+					emblemChangeMenu_cursorPosition--;
+					if (emblemChangeMenu_cursorPosition < 0) {
+						emblemChangeMenu_cursorPosition = 0;
+					}
+				}
+				if (hDown & KEY_DOWN) {
+					sndHighlight();
+					emblemChangeMenu_cursorPosition++;
+					if (emblemChangeMenu_cursorPosition > 1) {
+						emblemChangeMenu_cursorPosition = 1;
+					}
+				}
+			}
+			if (hDown & KEY_A) {
+				if (emblemChangeMenu_cursorPosition == 1) {
+					sndSelect();
+					switch (highlightedGame) {
+						case 3:
+							sprintf(embFilePath, "sdmc:/3ds/SavvyManager/emblems/Emblem %i.chr", cursorPosition);
+							writeSS4EmblemFile(cursorPosition, embFilePath);
+							break;
+						case 2:
+							sprintf(embFilePath, "sdmc:/3ds/SavvyManager/emblems/Emblem.chr");
+							writeSS3EmblemFile(embFilePath);
+							break;
+					}
+					messageNo = 2;
+					showMessage = true;
+				} else {
+					sndSelect();
+					subScreenMode = 2;
+					getExportedEmblemContents();
+				}
+			}
+			if (hDown & KEY_B) {
+				sndBack();
+				subScreenMode = 0;
+			}
 		} else {
-		if (showCursor) {
-			if (hDown & KEY_UP) {
-				sndHighlight();
-				cursorPosition--;
-				if (cursorPosition < 0) {
-					cursorPosition = 0;
+			if (showCursor) {
+				if (hDown & KEY_UP) {
+					sndHighlight();
+					cursorPosition--;
+					if (cursorPosition < 0) {
+						cursorPosition = 0;
+					}
+					modeInited = false;
+				}
+				if (hDown & KEY_DOWN) {
+					sndHighlight();
+					cursorPosition++;
+					if (cursorPosition > totalEmblems) {
+						cursorPosition = totalEmblems;
+					}
+					modeInited = false;
 				}
 			}
-			if (hDown & KEY_DOWN) {
-				sndHighlight();
-				cursorPosition++;
-				if (cursorPosition > totalEmblems) {
-					cursorPosition = totalEmblems;
-				}
+			if (hDown & KEY_A) {
+				sndSelect();
+				subScreenMode = 1;
 			}
-		}
-		if (hDown & KEY_B) {
-			sndBack();
-			screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
-			fadeout = true;
-		}
+			if (hDown & KEY_B) {
+				sndBack();
+				screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
+				fadeout = true;
+			}
 		}
 	}
 }
