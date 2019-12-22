@@ -66,15 +66,17 @@ static bool showMessage = false;
 static int messageNo = 0;
 
 static void drawMsg(void) {
-	Gui::spriteScale(sprites_msg_idx, 0, 0, 2, 1);
-	Gui::spriteScale(sprites_msg_idx, 160, 0, -2, 1);
+	Gui::spriteScale(sprites_msg_idx, 0, 8, 2, 1);
+	Gui::spriteScale(sprites_msg_idx, 160, 8, -2, 1);
 	Gui::sprite(sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 1) {
 		Draw_Text(32, 84, 0.60, BLACK, "Failed to apply music pack.");
 	} else {
 		Draw_Text(32, 84, 0.60, BLACK, "Successfully applied music pack.");
 	}
-	Draw_Text(32, 160, 0.65, BLACK, " OK");
+	Gui::sprite(sprites_button_msg_shadow_idx, 114, 197);
+	Gui::sprite(sprites_button_msg_idx, 115, 188);
+	Draw_Text(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
 }
 
 void changeMusic(void) {

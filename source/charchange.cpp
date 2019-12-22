@@ -152,8 +152,8 @@ static int messageNo = 0;
 static char chararacterImported[48];
 
 static void drawMsg(void) {
-	Gui::spriteScale(sprites_msg_idx, 0, 0, 2, 1);
-	Gui::spriteScale(sprites_msg_idx, 160, 0, -2, 1);
+	Gui::spriteScale(sprites_msg_idx, 0, 8, 2, 1);
+	Gui::spriteScale(sprites_msg_idx, 160, 8, -2, 1);
 	Gui::sprite(sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 3) {
 		Draw_Text(32, 84, 0.60, BLACK, "Failed to import character.");
@@ -171,7 +171,9 @@ static void drawMsg(void) {
 		Draw_Text(32, 84, 0.60, BLACK, "This feature is not available yet.");
 		//Draw_Text(32, 104, 0.60, BLACK, "yet.");
 	}
-	Draw_Text(32, 160, 0.65, BLACK, " OK");
+	Gui::sprite(sprites_button_msg_shadow_idx, 114, 197);
+	Gui::sprite(sprites_button_msg_idx, 115, 188);
+	Draw_Text(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
 }
 
 void changeCharacter(void) {
