@@ -27,7 +27,7 @@ endif
 # Version number
 #---------------------------------------------------------------------------------
 
-VERSION_MAJOR := 1
+VERSION_MAJOR := 2
 VERSION_MINOR := 0
 VERSION_MICRO := 0
 #---------------------------------------------------------------------------------
@@ -72,7 +72,8 @@ CFLAGS	:=	-g -Wall -O2 -mword-relocations \
 		-ffunction-sections \
 		$(ARCH)
 
-CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS
+CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS -DVERSION_MAJOR=$(VERSION_MAJOR) \
+									-DVERSION_MINOR=$(VERSION_MINOR) -DVERSION_MICRO=$(VERSION_MICRO)
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=c++11 -std=gnu++11
 

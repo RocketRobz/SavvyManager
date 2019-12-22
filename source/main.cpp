@@ -14,6 +14,8 @@
 
 #define CONFIG_3D_SLIDERSTATE (*(float *)0x1FF81080)
 
+static char verText[32];
+
 extern void loadSettings(void);
 
 extern C3D_RenderTarget* top;
@@ -135,8 +137,8 @@ static void drawCannotEditMsg(void) {
 		Draw_Text(32, 100, 0.60, BLACK, "Checkpoint, and name the backup:");
 		Draw_Text(32, 124, 0.60, BLACK, "SavvyManager");
 	} else {
-		Draw_Text(32, 84, 0.60, BLACK, "Cannot edit this");
-		Draw_Text(32, 104, 0.60, BLACK, "game's save yet.");
+		Draw_Text(32, 84, 0.60, BLACK, "Cannot edit Style Savvy's");
+		Draw_Text(32, 104, 0.60, BLACK, "save data yet.");
 	}
 	Draw_Text(32, 160, 0.65, BLACK, " OK");
 }
@@ -223,6 +225,8 @@ int main()
 	ss2SaveFound = (access(ss2SavePath, F_OK) == 0);
 	ss3SaveFound = (access(ss3SavePath, F_OK) == 0);
 	ss4SaveFound = (access(ss4SavePath, F_OK) == 0);
+	
+	sprintf(verText, "Ver. %i.%i.%i", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
 
 	loadSettings();
 
@@ -322,6 +326,7 @@ int main()
 			}
 			Draw_Text(8, 112, 0.55, BLACK, "<");
 			Draw_Text(304, 112, 0.55, BLACK, ">");
+			Draw_Text(248, 220, 0.50, BLACK, verText);
 			if (showMessage) {
 				drawCannotEditMsg();
 			}
