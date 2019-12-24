@@ -550,7 +550,7 @@ void changeCharacter(void) {
 					messageNo = 1;
 					subScreenMode = 1;
 					showMessage = true;
-				} else if (import_highlightedGame == 4 && import_totalCharacters > 0) {
+				} else if (import_highlightedGame == 4 && numberOfExportedCharacters > 0) {
 					bool exportFound = false;
 					switch (highlightedGame) {
 						case 3:
