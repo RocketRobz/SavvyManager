@@ -70,9 +70,9 @@ static void drawMsg(void) {
 	Gui::spriteScale(sprites_msg_idx, 160, 8, -2, 1);
 	Gui::sprite(sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 1) {
-		Draw_Text(32, 84, 0.60, BLACK, "Failed to apply music pack.");
+		Draw_Text(32, 94, 0.60, BLACK, "Failed to apply music pack.");
 	} else {
-		Draw_Text(32, 84, 0.60, BLACK, "Successfully applied music pack.");
+		Draw_Text(32, 94, 0.60, BLACK, "Successfully applied music pack.");
 	}
 	Gui::sprite(sprites_button_msg_shadow_idx, 114, 197);
 	Gui::sprite(sprites_button_msg_idx, 115, 188);

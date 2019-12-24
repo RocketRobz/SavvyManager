@@ -201,19 +201,19 @@ static void drawMsg(void) {
 	Gui::spriteScale(sprites_msg_idx, 160, 8, -2, 1);
 	Gui::sprite(sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 3) {
-		Draw_Text(32, 84, 0.60, BLACK, "Failed to import emblem.");
+		Draw_Text(32, 94, 0.60, BLACK, "Failed to import emblem.");
 	} else if (messageNo == 2) {
-		Draw_Text(32, 48, 0.60, BLACK, "Emblem exported successfully.");
-		Draw_Text(32, 84, 0.60, BLACK, "You can go to \"Import Emblems\"");
-		Draw_Text(32, 104, 0.60, BLACK, "and restore the exported emblem");
-		Draw_Text(32, 124, 0.60, BLACK, "at any time.");
+		Draw_Text(32, 58, 0.60, BLACK, "Emblem exported successfully.");
+		Draw_Text(32, 94, 0.60, BLACK, "You can go to \"Import Emblems\"");
+		Draw_Text(32, 114, 0.60, BLACK, "and restore the exported emblem");
+		Draw_Text(32, 134, 0.60, BLACK, "at any time.");
 	} else if (messageNo == 1) {
-		Draw_Text(32, 48, 0.60, BLACK, emblemImported);
-		Draw_Text(32, 84, 0.60, BLACK, "Please restore \"SavvyManager\"");
-		Draw_Text(32, 104, 0.60, BLACK, "data for your game in Checkpoint,");
-		Draw_Text(32, 124, 0.60, BLACK, "for the change to take effect.");
+		Draw_Text(32, 58, 0.60, BLACK, emblemImported);
+		Draw_Text(32, 94, 0.60, BLACK, "Please restore \"SavvyManager\"");
+		Draw_Text(32, 114, 0.60, BLACK, "data for your game in Checkpoint,");
+		Draw_Text(32, 134, 0.60, BLACK, "for the change to take effect.");
 	} else {
-		Draw_Text(32, 84, 0.60, BLACK, "This feature is not available yet.");
+		Draw_Text(32, 94, 0.60, BLACK, "This feature is not available yet.");
 		//Draw_Text(32, 104, 0.60, BLACK, "yet.");
 	}
 	Gui::sprite(sprites_button_msg_shadow_idx, 114, 197);

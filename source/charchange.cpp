@@ -16,6 +16,7 @@
 #include "import_ss2charnames.h"
 #include "import_ss3charnames.h"
 #include "import_ss4charnames.h"
+#include "import_everycharnames.h"
 
 extern C3D_RenderTarget* top;
 extern C3D_RenderTarget* bottom;
@@ -154,26 +155,62 @@ static char chararacterImported[48];
 static void drawMsg(void) {
 	Gui::spriteScale(sprites_msg_idx, 0, 8, 2, 1);
 	Gui::spriteScale(sprites_msg_idx, 160, 8, -2, 1);
-	Gui::sprite(sprites_icon_msg_idx, 132, -2);
-	if (messageNo == 3) {
-		Draw_Text(32, 84, 0.60, BLACK, "Failed to import character.");
+	Gui::sprite(messageNo==4 ? sprites_icon_question_idx : sprites_icon_msg_idx, 132, -2);
+	if (messageNo == 5) {
+		Draw_Text(32, 68, 0.60, BLACK, "Everyone is now in Fashion Forward!");
+		Draw_Text(32, 88, 0.60, BLACK, "(Except for customers and reps.)");
+		Draw_Text(32, 114, 0.60, BLACK, "Invite them over for photo shoots,");
+		Draw_Text(32, 134, 0.60, BLACK, "as well as AR photo shoots!");
+	} else if (messageNo == 4) {
+		Draw_Text(32, 58, 0.60, BLACK, "Characters from the 1st, 2nd, and");
+		Draw_Text(32, 78, 0.60, BLACK, "4th games, will be added to the 3rd.");
+		Draw_Text(32, 104, 0.60, BLACK, "Characters part of downloaded");
+		Draw_Text(32, 124, 0.60, BLACK, "Caprice Chalet rooms will be");
+		Draw_Text(32, 144, 0.60, BLACK, "overwritten. Is this OK?");
+	} else if (messageNo == 3) {
+		Draw_Text(32, 94, 0.60, BLACK, "Failed to import character.");
 	} else if (messageNo == 2) {
-		Draw_Text(32, 48, 0.60, BLACK, "Character exported successfully.");
-		Draw_Text(32, 84, 0.60, BLACK, "You can go to \"Import Characters\"");
-		Draw_Text(32, 104, 0.60, BLACK, "and restore the exported character");
-		Draw_Text(32, 124, 0.60, BLACK, "at any time.");
+		Draw_Text(32, 58, 0.60, BLACK, "Character exported successfully.");
+		Draw_Text(32, 94, 0.60, BLACK, "You can go to \"Import Characters\"");
+		Draw_Text(32, 114, 0.60, BLACK, "and restore the exported character");
+		Draw_Text(32, 134, 0.60, BLACK, "at any time.");
 	} else if (messageNo == 1) {
-		Draw_Text(32, 48, 0.60, BLACK, chararacterImported);
-		Draw_Text(32, 84, 0.60, BLACK, "Please restore \"SavvyManager\"");
-		Draw_Text(32, 104, 0.60, BLACK, "data for your game in Checkpoint,");
-		Draw_Text(32, 124, 0.60, BLACK, "for the change to take effect.");
+		Draw_Text(32, 58, 0.60, BLACK, chararacterImported);
+		Draw_Text(32, 94, 0.60, BLACK, "Please restore \"SavvyManager\"");
+		Draw_Text(32, 114, 0.60, BLACK, "data for your game in Checkpoint,");
+		Draw_Text(32, 134, 0.60, BLACK, "for the change to take effect.");
 	} else {
 		Draw_Text(32, 84, 0.60, BLACK, "This feature is not available yet.");
 		//Draw_Text(32, 104, 0.60, BLACK, "yet.");
 	}
-	Gui::sprite(sprites_button_msg_shadow_idx, 114, 197);
-	Gui::sprite(sprites_button_msg_idx, 115, 188);
-	Draw_Text(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
+	if (messageNo == 4) {
+		Gui::sprite(sprites_button_msg_shadow_idx, 52, 197);
+		Gui::sprite(sprites_button_msg_idx, 53, 188);
+		Gui::sprite(sprites_button_msg_shadow_idx, 176, 197);
+		Gui::sprite(sprites_button_msg_idx, 177, 188);
+		Draw_Text(72, 196, 0.70, MSG_BUTTONTEXT, " No");
+		Draw_Text(196, 196, 0.70, MSG_BUTTONTEXT, " Yes");
+	} else {
+		Gui::sprite(sprites_button_msg_shadow_idx, 114, 197);
+		Gui::sprite(sprites_button_msg_idx, 115, 188);
+		Draw_Text(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
+	}
+}
+
+void addEveryone(void) {
+//	if (highlightedGame != 2) return;
+	
+	for (int i = 0; i < 46; i++) {
+		sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", import_everyCharacterNames[i]);
+		if (access(chrFilePath, F_OK) != 0) {
+			sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), import_everyCharacterNames[i]);
+		}
+		readSS3CharacterFile(0x0BB9+i, chrFilePath);
+		sprintf(chrFilePath, "romfs:/character/Fashion Forward/Profiles/%s.cprf", import_everyCharacterNames[i]);
+		readSS3ProfileFile(0x0BB9+i, chrFilePath);
+		toggleSS3Character(0x0BB9+i, true);
+	}
+	writeSS3Save();
 }
 
 void changeCharacter(void) {
@@ -220,6 +257,14 @@ void changeCharacter(void) {
 	set_screen(top);
 
 	Gui::sprite(sprites_blue_bg_idx, 0, 0);
+
+	if (messageNo == 4) {
+		// Selected season
+		Draw_Text(156, 208, 0.65, WHITE, "L");
+		Draw_Text(172, 210, 0.50, WHITE, seasonName());
+		Draw_Text(232, 208, 0.65, WHITE, "R");
+	}
+
 	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
 	set_screen(bottom);
@@ -317,6 +362,10 @@ void changeCharacter(void) {
 
 		Draw_Text(8, 8, 0.50, BLACK, "Select the character you want to change.");
 
+		if (highlightedGame == 2) {
+			Draw_Text(116, 210, 0.50, BLACK, "START: Expand contacts");
+		}
+
 		int i2 = 48;
 		for (int i = characterShownFirst; i < characterShownFirst+3; i++) {
 			Gui::sprite(sprites_item_button_idx, 16, i2-20);
@@ -361,9 +410,31 @@ void changeCharacter(void) {
 
 	if (!fadein && !fadeout) {
 		if (showMessage) {
-			if (hDown & KEY_A) {
-				sndSelect();
-				showMessage = false;
+			if (messageNo == 4) {
+				if (hDown & KEY_A) {
+					sndSelect();
+					addEveryone();
+					messageNo = 5;
+				}
+				if (hDown & KEY_B) {
+					sndBack();
+					showMessage = false;
+				}
+				if (hDown & KEY_L) {
+					sndHighlight();
+					seasonNo--;
+					if (seasonNo < 0) seasonNo = 3;
+				}
+				if (hDown & KEY_R) {
+					sndHighlight();
+					seasonNo++;
+					if (seasonNo > 3) seasonNo = 0;
+				}
+			} else {
+				if (hDown & KEY_A) {
+					sndSelect();
+					showMessage = false;
+				}
 			}
 		} else if (subScreenMode == 4) {
 			bool robzAction = false;
@@ -687,6 +758,11 @@ void changeCharacter(void) {
 				characterChangeMenu_optionShownFirst = 0;
 				screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
 				fadeout = true;
+			}
+			if ((hDown & KEY_START) && (highlightedGame == 2)) {
+				sndSelect();
+				messageNo = 4;
+				showMessage = true;
 			}
 		}
 	}

@@ -133,10 +133,10 @@ static void drawCannotEditMsg(void) {
 	Gui::spriteScale(sprites_msg_idx, 160, 8, -2, 1);
 	Gui::sprite(sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 1) {
-		Draw_Text(32, 48, 0.60, BLACK, "Save data not found.");
-		Draw_Text(32, 80, 0.60, BLACK, highlightedGame==3 ? "Please back up the extra data using" : "Please back it up using");
-		Draw_Text(32, 100, 0.60, BLACK, "Checkpoint, and name the backup:");
-		Draw_Text(32, 124, 0.60, BLACK, "SavvyManager");
+		Draw_Text(32, 58, 0.60, BLACK, "Save data not found.");
+		Draw_Text(32, 90, 0.60, BLACK, highlightedGame==3 ? "Please back up the extra data using" : "Please back it up using");
+		Draw_Text(32, 110, 0.60, BLACK, "Checkpoint, and name the backup:");
+		Draw_Text(32, 134, 0.60, BLACK, "SavvyManager");
 	} else {
 		Draw_Text(32, 84, 0.60, BLACK, "Cannot edit Style Savvy's");
 		Draw_Text(32, 104, 0.60, BLACK, "save data yet.");

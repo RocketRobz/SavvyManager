@@ -171,6 +171,10 @@ void readSS3Character(u16 id) {
 	if (id == 0) {
 		// Playable character
 		tonccpy(&ss4CharacterData, (char*)ss3Save+(0x54A22), 0x36);
+	} else if (id >= 0x0BB9) {
+		// Downloaded character
+		id -= 0x0BB9;
+		tonccpy(&ss4CharacterData, (char*)ss3Save+(0x8427E + (0x110*id)), 0x36);
 	} else {
 		// Non-playable character
 		tonccpy(&ss4CharacterData, (char*)ss3Save+(0x55EFE + (0x110*id)), 0x36);
@@ -181,9 +185,21 @@ void writeSS3Character(u16 id) {
 	if (id == 0) {
 		// Playable character
 		tonccpy((char*)ss3Save+(0x54A22), &ss4CharacterData, 0x36);
+	} else if (id >= 0x0BB9) {
+		// Downloaded character
+		id -= 0x0BB9;
+		tonccpy((char*)ss3Save+(0x8427E + (0x110*id)), &ss4CharacterData, 0x36);
 	} else {
 		// Non-playable character
 		tonccpy((char*)ss3Save+(0x55EFE + (0x110*id)), &ss4CharacterData, 0x36);
+	}
+}
+
+void toggleSS3Character(u16 id, bool enable) {
+	if (id >= 0x0BB9) {
+		// Downloaded character
+		id -= 0x0BB9;
+		*(u16*)(ss3Save+(0x8432E + (0x110*id))) = (enable ? 0x4013 : 0x0000);
 	}
 }
 
@@ -194,6 +210,10 @@ void readSS3CharacterFile(u16 id, const char* filename) {
 	if (id == 0) {
 		// Playable character
 		fread((char*)ss3Save+(0x54A22), 0x36, 1, characterData);
+	} else if (id >= 0x0BB9) {
+		// Downloaded character
+		id -= 0x0BB9;
+		fread((char*)ss3Save+(0x8427E + (0x110*id)), 0x36, 1, characterData);
 	} else {
 		// Non-playable character
 		fread((char*)ss3Save+(0x55EFE + (0x110*id)), 0x36, 1, characterData);
@@ -208,7 +228,11 @@ void writeSS3CharacterFile(u16 id, const char* filename) {
 	if (id == 0) {
 		// Playable character
 		fwrite((char*)ss3Save+(0x54A22), 0x36, 1, characterData);
-	} else {
+	} else if (id >= 0x0BB9) {
+		// Downloaded character
+		id -= 0x0BB9;
+		fwrite((char*)ss3Save+(0x8427E + (0x110*id)), 0x36, 1, characterData);
+	} else  {
 		// Non-playable character
 		fwrite((char*)ss3Save+(0x55EFE + (0x110*id)), 0x36, 1, characterData);
 	}
@@ -224,6 +248,30 @@ bool getSS3CharacterGender(u16 id) {
 
 	// true = male, false = female
 	return (ss4CharacterData.gender == 2);
+}
+
+void readSS3ProfileFile(u16 id, const char* filename) {
+	FILE* profileData = fopen(filename, "rb");
+	if (!profileData) return;
+
+	if (id >= 0x0BB9) {
+		// Downloaded character
+		id -= 0x0BB9;
+		fread((char*)ss3Save+(0x88C5C + (0x2B4*id)), 0x224, 1, profileData);
+	}
+	fclose(profileData);
+}
+
+void writeSS3ProfileFile(u16 id, const char* filename) {
+	FILE* profileData = fopen(filename, "wb");
+	if (!profileData) return;
+
+	if (id >= 0x0BB9) {
+		// Downloaded character
+		id -= 0x0BB9;
+		fwrite((char*)ss3Save+(0x88C5C + (0x2B4*id)), 0x224, 1, profileData);
+	}
+	fclose(profileData);
 }
 
 void readSS3Emblem(void) {
