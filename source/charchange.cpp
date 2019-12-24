@@ -433,7 +433,12 @@ void changeCharacter(void) {
 			} else {
 				if (hDown & KEY_A) {
 					sndSelect();
-					showMessage = false;
+					if (messageNo == 5) {
+						messageNo = 1;
+						sprintf(chararacterImported, "Characters imported successfully.");
+					} else {
+						showMessage = false;
+					}
 				}
 			}
 		} else if (subScreenMode == 4) {
