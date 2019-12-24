@@ -176,6 +176,7 @@ void readSS3Character(u16 id) {
 		id -= 0x0BB9;
 		tonccpy(&ss4CharacterData, (char*)ss3Save+(0x8427E + (0x110*id)), 0x36);
 	} else {
+		id--;
 		// Non-playable character
 		tonccpy(&ss4CharacterData, (char*)ss3Save+(0x55EFE + (0x110*id)), 0x36);
 	}
@@ -190,6 +191,7 @@ void writeSS3Character(u16 id) {
 		id -= 0x0BB9;
 		tonccpy((char*)ss3Save+(0x8427E + (0x110*id)), &ss4CharacterData, 0x36);
 	} else {
+		id--;
 		// Non-playable character
 		tonccpy((char*)ss3Save+(0x55EFE + (0x110*id)), &ss4CharacterData, 0x36);
 	}
@@ -215,6 +217,7 @@ void readSS3CharacterFile(u16 id, const char* filename) {
 		id -= 0x0BB9;
 		fread((char*)ss3Save+(0x8427E + (0x110*id)), 0x36, 1, characterData);
 	} else {
+		id--;
 		// Non-playable character
 		fread((char*)ss3Save+(0x55EFE + (0x110*id)), 0x36, 1, characterData);
 	}
@@ -233,6 +236,7 @@ void writeSS3CharacterFile(u16 id, const char* filename) {
 		id -= 0x0BB9;
 		fwrite((char*)ss3Save+(0x8427E + (0x110*id)), 0x36, 1, characterData);
 	} else  {
+		id--;
 		// Non-playable character
 		fwrite((char*)ss3Save+(0x55EFE + (0x110*id)), 0x36, 1, characterData);
 	}
@@ -329,6 +333,7 @@ void readSS4Character(u16 id) {
 		// Playable character
 		tonccpy(&ss4CharacterData, (char*)ss4Save+(0x2440A), 0x3E);
 	} else {
+		id--;
 		// Non-playable character
 		tonccpy(&ss4CharacterData, (char*)ss4Save+(0x273EE + (0x1F8*id)), 0x3E);
 	}
@@ -339,6 +344,7 @@ void writeSS4Character(u16 id) {
 		// Playable character
 		tonccpy((char*)ss4Save+(0x2440A), &ss4CharacterData, 0x3E);
 	} else {
+		id--;
 		// Non-playable character
 		tonccpy((char*)ss4Save+(0x273EE + (0x1F8*id)), &ss4CharacterData, 0x3E);
 	}
@@ -352,6 +358,7 @@ void readSS4CharacterFile(u16 id, const char* filename) {
 		// Playable character
 		fread((char*)ss4Save+(0x2440A), 0x3E, 1, characterData);
 	} else {
+		id--;
 		// Non-playable character
 		fread((char*)ss4Save+(0x273EE + (0x1F8*id)), 0x3E, 1, characterData);
 	}
@@ -366,6 +373,7 @@ void writeSS4CharacterFile(u16 id, const char* filename) {
 		// Playable character
 		fwrite((char*)ss4Save+(0x2440A), 0x3E, 1, characterData);
 	} else {
+		id--;
 		// Non-playable character
 		fwrite((char*)ss4Save+(0x273EE + (0x1F8*id)), 0x3E, 1, characterData);
 	}
