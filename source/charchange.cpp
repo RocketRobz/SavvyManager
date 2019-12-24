@@ -204,9 +204,9 @@ void changeCharacter(void) {
 	if (import_highlightedGame == 4) {
 		import_totalCharacters = numberOfExportedCharacters-1;
 	} else if (import_highlightedGame == 3) {
-		import_totalCharacters = 0xC;
+		import_totalCharacters = 0xD;
 	} else if (import_highlightedGame == 2) {
-		import_totalCharacters = (highlightedGame==3 ? 0x10 : 0x11);
+		import_totalCharacters = 0x10;
 	} else if (import_highlightedGame == 1) {
 		import_totalCharacters = 0xF;
 	} else if (import_highlightedGame == 0) {

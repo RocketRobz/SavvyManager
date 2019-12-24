@@ -16,7 +16,7 @@ const char* import_ss3CharacterNames[] {
 	"Sapphire",
 	"Amber",
 	"Mickey",
-	"Ricky",
+	"Ricky",		// File does not exist, so he's not shown
 };
 
 bool import_ss3CharacterGenders[] {

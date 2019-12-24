@@ -37,6 +37,7 @@
 #define BLUE C2D_Color32(0, 0, 255, 255)
 #define GREEN C2D_Color32(0, 255, 0, 255)
 #define RED C2D_Color32(255, 0, 0, 255)
+#define MSG_BUTTONTEXT C2D_Color32(181, 48, 0, 255)
 
 #define TIME C2D_Color32(16, 0, 0, 223)
 
