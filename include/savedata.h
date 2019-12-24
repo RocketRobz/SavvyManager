@@ -133,6 +133,7 @@ extern void readSS4Character(u16 id);
 extern void writeSS4Character(u16 id);
 
 extern void toggleSS3Character(u16 id, bool enable);
+extern void removeSS3CharacterBag(u16 id);
 
 extern void readSS2CharacterFile(const char* filename);
 extern void writeSS2CharacterFile(const char* filename);

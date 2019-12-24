@@ -197,6 +197,8 @@ static void drawMsg(void) {
 	}
 }
 
+static bool removeBags = false;
+
 void addEveryone(void) {
 //	if (highlightedGame != 2) return;
 	
@@ -206,6 +208,9 @@ void addEveryone(void) {
 			sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), import_everyCharacterNames[i]);
 		}
 		readSS3CharacterFile(0x0BB9+i, chrFilePath);
+		if (removeBags) {
+			removeSS3CharacterBag(0x0BB9+i);
+		}
 		sprintf(chrFilePath, "romfs:/character/Fashion Forward/Profiles/%s.cprf", import_everyCharacterNames[i]);
 		readSS3ProfileFile(0x0BB9+i, chrFilePath);
 		toggleSS3Character(0x0BB9+i, true);
@@ -259,6 +264,7 @@ void changeCharacter(void) {
 	Gui::sprite(sprites_blue_bg_idx, 0, 0);
 
 	if (messageNo == 4) {
+		Draw_Text(8, 210, 0.50, WHITE, removeBags ? " Keep bags" : " Remove bags");
 		// Selected season
 		Draw_Text(156, 208, 0.65, WHITE, "L");
 		Draw_Text(172, 210, 0.50, WHITE, seasonName());
@@ -419,6 +425,10 @@ void changeCharacter(void) {
 				if (hDown & KEY_B) {
 					sndBack();
 					showMessage = false;
+				}
+				if (hDown & KEY_Y) {
+					sndHighlight();
+					removeBags = !removeBags;
 				}
 				if ((hDown & KEY_L) || (hDown & KEY_ZL)) {
 					sndHighlight();

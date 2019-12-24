@@ -205,6 +205,21 @@ void toggleSS3Character(u16 id, bool enable) {
 	}
 }
 
+void removeSS3CharacterBag(u16 id) {
+	if (id == 0) {
+		// Playable character
+		*(u16*)(ss3Save+(0x54A56)) = 0;
+	} else if (id >= 0x0BB9) {
+		// Downloaded character
+		id -= 0x0BB9;
+		*(u16*)(ss3Save+(0x842B2 + (0x110*id))) = 0;
+	} else {
+		id--;
+		// Non-playable character
+		*(u16*)(ss3Save+(0x55F32 + (0x110*id))) = 0;
+	}
+}
+
 void readSS3CharacterFile(u16 id, const char* filename) {
 	FILE* characterData = fopen(filename, "rb");
 	if (!characterData) return;
