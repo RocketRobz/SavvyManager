@@ -420,12 +420,12 @@ void changeCharacter(void) {
 					sndBack();
 					showMessage = false;
 				}
-				if (hDown & KEY_L) {
+				if ((hDown & KEY_L) || (hDown & KEY_ZL)) {
 					sndHighlight();
 					seasonNo--;
 					if (seasonNo < 0) seasonNo = 3;
 				}
-				if (hDown & KEY_R) {
+				if ((hDown & KEY_R) || (hDown & KEY_ZR)) {
 					sndHighlight();
 					seasonNo++;
 					if (seasonNo > 3) seasonNo = 0;
@@ -632,12 +632,12 @@ void changeCharacter(void) {
 				}
 			}
 			if (import_highlightedGame != 4) {
-				if (hDown & KEY_L) {
+				if ((hDown & KEY_L) || (hDown & KEY_ZL)) {
 					sndHighlight();
 					seasonNo--;
 					if (seasonNo < 0) seasonNo = 3;
 				}
-				if (hDown & KEY_R) {
+				if ((hDown & KEY_R) || (hDown & KEY_ZR)) {
 					sndHighlight();
 					seasonNo++;
 					if (seasonNo > 3) seasonNo = 0;
