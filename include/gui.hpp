@@ -63,6 +63,7 @@ namespace Gui {
 	
 	void sprite(int key, float x, float y);
 	void spriteScale(int key, float x, float y, float scaleX, float scaleY);
+	void charSprite(int key, float x, float y);
 
 	void Draw_ImageBlend(int key, float x, float y, u32 color);
 }

@@ -87,6 +87,8 @@ extern void drawCursor(void);
 
 extern u32 hDown;
 
+static int zoomIn = 0;
+
 static int cheatKeys[10] = {0};
 static int cheatKeyPosition = 0;
 
@@ -261,7 +263,19 @@ void changeCharacter(void) {
 	Gui::clearTextBufs();
 	set_screen(top);
 
-	Gui::sprite(sprites_blue_bg_idx, 0, 0);
+	switch (zoomIn) {
+		case 0:
+		default:
+			Gui::sprite(sprites_blue_bg_idx, 0, 0);
+			break;
+		case 1:
+			Gui::spriteScale(sprites_blue_bg_idx, -100, 0, 1.50, 1.50);
+			break;
+		case 2:
+			Gui::spriteScale(sprites_blue_bg_idx, -150, 0, 1.75, 1.75);
+			break;
+	}
+	//Gui::charSprite(0, 0+(400*zoomIn), 0-(240*seasonNo));
 
 	if (messageNo == 4) {
 		Draw_Text(8, 210, 0.50, WHITE, removeBags ? " Keep bags" : " Remove bags");
@@ -415,6 +429,14 @@ void changeCharacter(void) {
 	Draw_EndFrame();
 
 	if (!fadein && !fadeout) {
+		if (hDown & KEY_CPAD_UP) {
+			zoomIn++;
+			if (zoomIn > 2) zoomIn = 2;
+		}
+		if (hDown & KEY_CPAD_DOWN) {
+			zoomIn--;
+			if (zoomIn < 0) zoomIn = 0;
+		}
 		if (showMessage) {
 			if (messageNo == 4) {
 				if (hDown & KEY_A) {
@@ -457,25 +479,25 @@ void changeCharacter(void) {
 				cheatKeys[cheatKeyPosition] = hDown;
 				cheatKeyPosition++;
 			}
-			robzAction =  ((cheatKeys[0] & KEY_UP)
-						&& (cheatKeys[1] & KEY_UP)
-						&& (cheatKeys[2] & KEY_DOWN)
-						&& (cheatKeys[3] & KEY_DOWN)
-						&& (cheatKeys[4] & KEY_LEFT)
-						&& (cheatKeys[5] & KEY_RIGHT)
-						&& (cheatKeys[6] & KEY_LEFT)
-						&& (cheatKeys[7] & KEY_RIGHT)
+			robzAction =  ((cheatKeys[0] & KEY_DUP)
+						&& (cheatKeys[1] & KEY_DUP)
+						&& (cheatKeys[2] & KEY_DDOWN)
+						&& (cheatKeys[3] & KEY_DDOWN)
+						&& (cheatKeys[4] & KEY_DLEFT)
+						&& (cheatKeys[5] & KEY_DRIGHT)
+						&& (cheatKeys[6] & KEY_DLEFT)
+						&& (cheatKeys[7] & KEY_DRIGHT)
 						&& (cheatKeys[8] & KEY_B)
 						&& (cheatKeys[9] & KEY_A));
 			if (cheatKeyPosition==10
-			|| ((cheatKeys[0] != 0) && !(cheatKeys[0] & KEY_UP))
-			|| ((cheatKeys[1] != 0) && !(cheatKeys[1] & KEY_UP))
-			|| ((cheatKeys[2] != 0) && !(cheatKeys[2] & KEY_DOWN))
-			|| ((cheatKeys[3] != 0) && !(cheatKeys[3] & KEY_DOWN))
-			|| ((cheatKeys[4] != 0) && !(cheatKeys[4] & KEY_LEFT))
-			|| ((cheatKeys[5] != 0) && !(cheatKeys[5] & KEY_RIGHT))
-			|| ((cheatKeys[6] != 0) && !(cheatKeys[6] & KEY_LEFT))
-			|| ((cheatKeys[7] != 0) && !(cheatKeys[7] & KEY_RIGHT))
+			|| ((cheatKeys[0] != 0) && !(cheatKeys[0] & KEY_DUP))
+			|| ((cheatKeys[1] != 0) && !(cheatKeys[1] & KEY_DUP))
+			|| ((cheatKeys[2] != 0) && !(cheatKeys[2] & KEY_DDOWN))
+			|| ((cheatKeys[3] != 0) && !(cheatKeys[3] & KEY_DDOWN))
+			|| ((cheatKeys[4] != 0) && !(cheatKeys[4] & KEY_DLEFT))
+			|| ((cheatKeys[5] != 0) && !(cheatKeys[5] & KEY_DRIGHT))
+			|| ((cheatKeys[6] != 0) && !(cheatKeys[6] & KEY_DLEFT))
+			|| ((cheatKeys[7] != 0) && !(cheatKeys[7] & KEY_DRIGHT))
 			|| ((cheatKeys[8] != 0) && !(cheatKeys[8] & KEY_B))
 			|| ((cheatKeys[9] != 0) && !(cheatKeys[9] & KEY_A))) {
 				for (int i= 0; i < 10; i++) {
@@ -484,7 +506,7 @@ void changeCharacter(void) {
 				cheatKeyPosition = 0;
 			}
 			if (showCursor) {
-				if (hDown & KEY_UP) {
+				if (hDown & KEY_DUP) {
 					sndHighlight();
 					importCharacterList_cursorPosition--;
 					importCharacterList_cursorPositionOnScreen--;
@@ -498,7 +520,7 @@ void changeCharacter(void) {
 						importCharacterList_cursorPositionOnScreen = 0;
 					}
 				}
-				if (hDown & KEY_DOWN) {
+				if (hDown & KEY_DDOWN) {
 					sndHighlight();
 					importCharacterList_cursorPosition++;
 					importCharacterList_cursorPositionOnScreen++;
@@ -624,7 +646,7 @@ void changeCharacter(void) {
 				showMessage = true;
 				}
 			}
-			if (hDown & KEY_LEFT) {
+			if (hDown & KEY_DLEFT) {
 				sndHighlight();
 				import_highlightedGame--;
 				if (import_highlightedGame < 0) import_highlightedGame = 4;
@@ -635,7 +657,7 @@ void changeCharacter(void) {
 					getExportedCharacterContents();
 				}
 			}
-			if (hDown & KEY_RIGHT) {
+			if (hDown & KEY_DRIGHT) {
 				sndHighlight();
 				import_highlightedGame++;
 				if (import_highlightedGame > 4) import_highlightedGame = 0;
@@ -664,7 +686,7 @@ void changeCharacter(void) {
 			}
 		} else if (subScreenMode == 1) {
 			if (showCursor) {
-				if (hDown & KEY_UP) {
+				if (hDown & KEY_DUP) {
 					sndHighlight();
 					characterChangeMenu_cursorPosition--;
 					characterChangeMenu_cursorPositionOnScreen--;
@@ -678,7 +700,7 @@ void changeCharacter(void) {
 						characterChangeMenu_cursorPositionOnScreen = 0;
 					}
 				}
-				if (hDown & KEY_DOWN) {
+				if (hDown & KEY_DDOWN) {
 					sndHighlight();
 					characterChangeMenu_cursorPosition++;
 					characterChangeMenu_cursorPositionOnScreen++;
@@ -730,7 +752,7 @@ void changeCharacter(void) {
 			}
 		} else {
 			if (showCursor) {
-				if ((hDown & KEY_UP) && (highlightedGame > 1)) {
+				if ((hDown & KEY_DUP) && (highlightedGame > 1)) {
 					sndHighlight();
 					characterList_cursorPosition--;
 					characterList_cursorPositionOnScreen--;
@@ -744,7 +766,7 @@ void changeCharacter(void) {
 						characterList_cursorPositionOnScreen = 0;
 					}
 				}
-				if ((hDown & KEY_DOWN) && (highlightedGame > 1)) {
+				if ((hDown & KEY_DDOWN) && (highlightedGame > 1)) {
 					sndHighlight();
 					characterList_cursorPosition++;
 					characterList_cursorPositionOnScreen++;
