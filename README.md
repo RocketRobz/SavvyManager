@@ -16,7 +16,7 @@ For Style Savvy's 10th Anniversary, a new save editor is here!
 * When importing a character from those games, you can press L or R to select the seasonal outfit.     (Note that not all characters will have seasonal outfits.)
 * Add characters from the first game, Trendsetters, and Styling Star, as extra contacts in Fashion Forward!
 * You can also export your current character, in case if you want to restore/import it later.
-* (SS3/SS4): Import/Export brand emblems for custom designed outfits.
+* (SS3/SS4) Import/Export brand emblems for custom designed outfits.
 * Apply music packs to Style Savvy: Trendsetters. (Requires game patching enabled in Luma.)
 * Coming soon: Change attributes of your character (such as gender, skin color, pose set, height, etc.).
 * Coming soon (SS4): Change bow placement on your character, if a bow is being worn.
