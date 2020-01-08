@@ -66,6 +66,7 @@ static const char* seasonName(void) {
 }
 
 static char chrFilePath[256];
+static char chrFilePath2[256];
 
 extern int highlightedGame;
 extern bool saveWritten;
@@ -86,6 +87,8 @@ extern int cursorAlpha;
 extern void drawCursor(void);
 
 extern u32 hDown;
+
+static bool previewCharacter = false;
 
 static int zoomIn = 0;
 
@@ -199,6 +202,19 @@ static void drawMsg(void) {
 	}
 }
 
+void loadChrImage(bool Robz) {
+	if (import_highlightedGame == 4) {
+		if (numberOfExportedCharacters > 0) {
+			sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS%i/characters/previews/%s.t3x", highlightedGame+1, getExportedCharacterName(importCharacterList_cursorPosition));	// All Seasons
+			Gui::loadCharSprite(chrFilePath, chrFilePath);
+		}
+	} else {
+		sprintf(chrFilePath, "romfs:/gfx/ss%i_%s.t3x", highlightedGame+1, (Robz ? "Robz" : import_characterName()));				// All Seasons
+		sprintf(chrFilePath2, "romfs:/gfx/ss%i_%s%i.t3x", highlightedGame+1, (Robz ? "Robz" : import_characterName()), seasonNo);	// One Season
+		Gui::loadCharSprite(chrFilePath, chrFilePath2);
+	}
+}
+
 static bool removeBags = false;
 
 void addEveryone(void) {
@@ -275,7 +291,7 @@ void changeCharacter(void) {
 			Gui::spriteScale(sprites_blue_bg_idx, -150, 0, 1.75, 1.75);
 			break;
 	}
-	if (subScreenMode == 4) {
+	if (previewCharacter) {
 		Gui::charSprite(0, 0-(240*zoomIn));
 	}
 
@@ -471,6 +487,9 @@ void changeCharacter(void) {
 						messageNo = 1;
 						sprintf(chararacterImported, "Characters imported successfully.");
 					} else {
+						if (subScreenMode == 1) {
+							previewCharacter = false;
+						}
 						showMessage = false;
 					}
 				}
@@ -521,6 +540,7 @@ void changeCharacter(void) {
 					if (importCharacterList_cursorPositionOnScreen < 0) {
 						importCharacterList_cursorPositionOnScreen = 0;
 					}
+					loadChrImage(false);
 				}
 				if (hDown & KEY_DDOWN) {
 					sndHighlight();
@@ -539,6 +559,7 @@ void changeCharacter(void) {
 					if (importCharacterList_cursorPositionOnScreen > 2) {
 						importCharacterList_cursorPositionOnScreen = 2;
 					}
+					loadChrImage(false);
 				}
 			}
 			if (hDown & KEY_A) {
@@ -570,6 +591,7 @@ void changeCharacter(void) {
 							writeSS2Save();
 							break;
 					}
+					loadChrImage(true);
 					sprintf(chararacterImported, "Imported %s successfully.", "Robz");
 					messageNo = 1;
 					subScreenMode = 1;
@@ -658,6 +680,7 @@ void changeCharacter(void) {
 				if (import_highlightedGame == 4) {
 					getExportedCharacterContents();
 				}
+				loadChrImage(false);
 			}
 			if (hDown & KEY_DRIGHT) {
 				sndHighlight();
@@ -669,26 +692,26 @@ void changeCharacter(void) {
 				if (import_highlightedGame == 4) {
 					getExportedCharacterContents();
 				}
+				loadChrImage(false);
 			}
 			if (import_highlightedGame != 4) {
 				if ((hDown & KEY_L) || (hDown & KEY_ZL)) {
 					sndHighlight();
 					seasonNo--;
 					if (seasonNo < 0) seasonNo = 3;
-					sprintf(chrFilePath, "romfs:/gfx/ss4_Robz%i.t3x", seasonNo);
-					Gui::loadCharSprite(chrFilePath);
+					loadChrImage(false);
 				}
 				if ((hDown & KEY_R) || (hDown & KEY_ZR)) {
 					sndHighlight();
 					seasonNo++;
 					if (seasonNo > 3) seasonNo = 0;
-					sprintf(chrFilePath, "romfs:/gfx/ss4_Robz%i.t3x", seasonNo);
-					Gui::loadCharSprite(chrFilePath);
+					loadChrImage(false);
 				}
 			}
 			if ((hDown & KEY_B) && !(cheatKeys[8] & KEY_B)) {
 				sndBack();
 				subScreenMode = 1;
+				previewCharacter = false;
 			}
 		} else if (subScreenMode == 1) {
 			if (showCursor) {
@@ -747,11 +770,11 @@ void changeCharacter(void) {
 				} else {
 					sndSelect();
 					subScreenMode = characterChangeMenuOps[characterChangeMenu_cursorPosition];
-					sprintf(chrFilePath, "romfs:/gfx/ss4_Robz%i.t3x", seasonNo);
-					Gui::loadCharSprite(chrFilePath);
+					previewCharacter = true;
 					if ((subScreenMode == 4) && (import_highlightedGame == 4)) {
 						getExportedCharacterContents();
 					}
+					loadChrImage(false);
 				}
 			}
 			if (hDown & KEY_B) {
