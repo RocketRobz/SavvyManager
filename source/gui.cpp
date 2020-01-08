@@ -35,6 +35,7 @@ C3D_RenderTarget* bottom;
 
 static C2D_SpriteSheet sprites;
 static C2D_SpriteSheet chracterSprite;
+static bool dochracterSpriteFree = false;
 C2D_TextBuf sizeBuf;
 C2D_Font systemFont;
 
@@ -50,9 +51,17 @@ Result Gui::init(void) {
 	bottom = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
 	sizeBuf = C2D_TextBufNew(4096);
 	sprites    = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
-	//chracterSprite    = C2D_SpriteSheetLoad("romfs:/gfx/sprites_otherchars_ss4.t3x");
 	systemFont = C2D_FontLoadSystem(CFG_REGION_USA);
 	return 0;
+}
+
+void Gui::loadCharSprite(const char* t3xPath) {
+	if (dochracterSpriteFree) {
+		C2D_SpriteSheetFree(chracterSprite);
+	} else {
+		dochracterSpriteFree = true;
+	}
+	chracterSprite = C2D_SpriteSheetLoad(t3xPath);
 }
 
 void Gui::exit(void) {
@@ -84,12 +93,8 @@ void Gui::spriteScale(int key, float x, float y, float scaleX, float scaleY) {
 	}
 }
 
-void Gui::charSprite(int key, float x, float y) {
-	if (key == sprites_res_null_idx) {
-		return;
-	} else { // standard case
-		C2D_DrawImageAt(C2D_SpriteSheetGetImage(chracterSprite, key), x, y, 0.5f);
-	}
+void Gui::charSprite(float x, float y) {
+	C2D_DrawImageAt(C2D_SpriteSheetGetImage(chracterSprite, 0), x, y, 0.5f);
 }
 
 void Gui::Draw_ImageBlend(int key, float x, float y, u32 color) {

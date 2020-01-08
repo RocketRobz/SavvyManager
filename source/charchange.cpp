@@ -275,9 +275,11 @@ void changeCharacter(void) {
 			Gui::spriteScale(sprites_blue_bg_idx, -150, 0, 1.75, 1.75);
 			break;
 	}
-	//Gui::charSprite(0, 0+(400*zoomIn), 0-(240*seasonNo));
+	if (subScreenMode == 4) {
+		Gui::charSprite(0, 0-(240*zoomIn));
+	}
 
-	if (messageNo == 4) {
+	if (showMessage && messageNo == 4) {
 		Draw_Text(8, 210, 0.50, WHITE, removeBags ? " Keep bags" : " Remove bags");
 		// Selected season
 		Draw_Text(156, 208, 0.65, WHITE, "L");
@@ -673,11 +675,15 @@ void changeCharacter(void) {
 					sndHighlight();
 					seasonNo--;
 					if (seasonNo < 0) seasonNo = 3;
+					sprintf(chrFilePath, "romfs:/gfx/ss4_Robz%i.t3x", seasonNo);
+					Gui::loadCharSprite(chrFilePath);
 				}
 				if ((hDown & KEY_R) || (hDown & KEY_ZR)) {
 					sndHighlight();
 					seasonNo++;
 					if (seasonNo > 3) seasonNo = 0;
+					sprintf(chrFilePath, "romfs:/gfx/ss4_Robz%i.t3x", seasonNo);
+					Gui::loadCharSprite(chrFilePath);
 				}
 			}
 			if ((hDown & KEY_B) && !(cheatKeys[8] & KEY_B)) {
@@ -741,6 +747,8 @@ void changeCharacter(void) {
 				} else {
 					sndSelect();
 					subScreenMode = characterChangeMenuOps[characterChangeMenu_cursorPosition];
+					sprintf(chrFilePath, "romfs:/gfx/ss4_Robz%i.t3x", seasonNo);
+					Gui::loadCharSprite(chrFilePath);
 					if ((subScreenMode == 4) && (import_highlightedGame == 4)) {
 						getExportedCharacterContents();
 					}

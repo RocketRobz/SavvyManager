@@ -55,6 +55,7 @@
 
 namespace Gui {
 	Result init(void);
+	void loadCharSprite(const char* t3xPath);
 	void exit(void);
 
 	C3D_RenderTarget* target(gfxScreen_t t);
@@ -63,7 +64,7 @@ namespace Gui {
 	
 	void sprite(int key, float x, float y);
 	void spriteScale(int key, float x, float y, float scaleX, float scaleY);
-	void charSprite(int key, float x, float y);
+	void charSprite(float x, float y);
 
 	void Draw_ImageBlend(int key, float x, float y, u32 color);
 }
