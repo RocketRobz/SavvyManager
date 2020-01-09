@@ -105,7 +105,7 @@ bool fadein = true;
 bool fadeout = false;
 	
 int text_width = 0;
-const char* yeartext = "2019 RocketRobz";
+const char* yeartext = "2019-2020 RocketRobz";
 //const char* yeartext2 = "Games 2008-2017 Nintendo & syn Sophia";
 	
 float bg_xPos = 0.0f;

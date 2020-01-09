@@ -89,6 +89,7 @@ extern void drawCursor(void);
 extern u32 hDown;
 
 static bool previewCharacter = false;
+static bool previewCharacterFound = false;
 
 static int zoomIn = 0;
 
@@ -206,12 +207,14 @@ void loadChrImage(bool Robz) {
 	if (import_highlightedGame == 4) {
 		if (numberOfExportedCharacters > 0) {
 			sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS%i/characters/previews/%s.t3x", highlightedGame+1, getExportedCharacterName(importCharacterList_cursorPosition));	// All Seasons
-			Gui::loadCharSprite(chrFilePath, chrFilePath);
+		} else {
+			sprintf(chrFilePath, "romfs:/gfx/null.t3x");	// All Seasons
 		}
+		previewCharacterFound = Gui::loadCharSprite(chrFilePath, chrFilePath);
 	} else {
 		sprintf(chrFilePath, "romfs:/gfx/ss%i_%s.t3x", highlightedGame+1, (Robz ? "Robz" : import_characterName()));				// All Seasons
 		sprintf(chrFilePath2, "romfs:/gfx/ss%i_%s%i.t3x", highlightedGame+1, (Robz ? "Robz" : import_characterName()), seasonNo);	// One Season
-		Gui::loadCharSprite(chrFilePath, chrFilePath2);
+		previewCharacterFound = Gui::loadCharSprite(chrFilePath, chrFilePath2);
 	}
 }
 
@@ -292,7 +295,11 @@ void changeCharacter(void) {
 			break;
 	}
 	if (previewCharacter) {
-		Gui::charSprite(0, 0-(240*zoomIn));
+		if (previewCharacterFound) {
+			Gui::charSprite(0, 0-(240*zoomIn));
+		} else {
+			Draw_Text(112, 104, 0.65, WHITE, "Preview not found.");
+		}
 	}
 
 	if (showMessage && messageNo == 4) {

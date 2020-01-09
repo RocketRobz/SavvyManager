@@ -55,23 +55,25 @@ Result Gui::init(void) {
 	return 0;
 }
 
-void Gui::loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
+bool Gui::loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
 	if (dochracterSpriteFree) {
 		C2D_SpriteSheetFree(chracterSprite);
 	}
 	if (access(t3xPathAllSeasons, F_OK) == 0) {
 		chracterSprite = C2D_SpriteSheetLoad(t3xPathAllSeasons);
 		dochracterSpriteFree = true;
-		return;
+		return true;
 	} else {
 		dochracterSpriteFree = false;
 	}
 	if (access(t3xPathOneSeason, F_OK) == 0) {
 		chracterSprite = C2D_SpriteSheetLoad(t3xPathOneSeason);
 		dochracterSpriteFree = true;
+		return true;
 	} else {
 		dochracterSpriteFree = false;
 	}
+	return false;
 }
 
 void Gui::exit(void) {
