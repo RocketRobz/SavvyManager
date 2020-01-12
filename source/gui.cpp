@@ -34,6 +34,7 @@ C3D_RenderTarget* top;
 C3D_RenderTarget* bottom;
 
 static C2D_SpriteSheet sprites;
+static C2D_SpriteSheet bgSprite;
 static C2D_SpriteSheet chracterSprite;
 static bool dochracterSpriteFree = false;
 C2D_TextBuf sizeBuf;
@@ -51,6 +52,7 @@ Result Gui::init(void) {
 	bottom = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
 	sizeBuf = C2D_TextBufNew(4096);
 	sprites    = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
+	bgSprite   = C2D_SpriteSheetLoad("romfs:/gfx/bg_blue.t3x");
 	systemFont = C2D_FontLoadSystem(CFG_REGION_USA);
 	return 0;
 }
@@ -105,8 +107,12 @@ void Gui::spriteScale(int key, float x, float y, float scaleX, float scaleY) {
 	}
 }
 
-void Gui::charSprite(float x, float y) {
-	C2D_DrawImageAt(C2D_SpriteSheetGetImage(chracterSprite, 0), x, y, 0.5f);
+void Gui::showBgSprite(int zoomIn) {
+	C2D_DrawImageAt(C2D_SpriteSheetGetImage(bgSprite, 0), 0, -(240*zoomIn), 0.5f);
+}
+
+void Gui::showCharSprite(int zoomIn) {
+	C2D_DrawImageAt(C2D_SpriteSheetGetImage(chracterSprite, 0), 0, -(240*zoomIn), 0.5f);
 }
 
 void Gui::Draw_ImageBlend(int key, float x, float y, u32 color) {

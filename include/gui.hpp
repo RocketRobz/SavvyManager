@@ -55,7 +55,7 @@
 
 namespace Gui {
 	Result init(void);
-	void loadCharSprite(const char* t3xPath);
+	bool loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSeason);
 	void exit(void);
 
 	C3D_RenderTarget* target(gfxScreen_t t);
@@ -64,7 +64,8 @@ namespace Gui {
 	
 	void sprite(int key, float x, float y);
 	void spriteScale(int key, float x, float y, float scaleX, float scaleY);
-	void charSprite(float x, float y);
+	void showBgSprite(int zoomIn);
+	void showCharSprite(int zoomIn);
 
 	void Draw_ImageBlend(int key, float x, float y, u32 color);
 }

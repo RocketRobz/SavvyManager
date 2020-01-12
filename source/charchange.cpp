@@ -282,21 +282,10 @@ void changeCharacter(void) {
 	Gui::clearTextBufs();
 	set_screen(top);
 
-	switch (zoomIn) {
-		case 0:
-		default:
-			Gui::sprite(sprites_blue_bg_idx, 0, 0);
-			break;
-		case 1:
-			Gui::spriteScale(sprites_blue_bg_idx, -100, 0, 1.50, 1.50);
-			break;
-		case 2:
-			Gui::spriteScale(sprites_blue_bg_idx, -150, 0, 1.75, 1.75);
-			break;
-	}
+	Gui::showBgSprite(zoomIn);
 	if (previewCharacter) {
 		if (previewCharacterFound) {
-			Gui::charSprite(0, 0-(240*zoomIn));
+			Gui::showCharSprite(zoomIn);
 		} else {
 			Draw_Text(112, 104, 0.65, WHITE, "Preview not found.");
 		}
