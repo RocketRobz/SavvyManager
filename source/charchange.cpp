@@ -457,18 +457,19 @@ void changeCharacterGraphics(void) {
 
 	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 	Draw_EndFrame();
+
+	if (hDown & KEY_CPAD_UP) {
+		zoomIn++;
+		if (zoomIn > 2) zoomIn = 2;
+	}
+	if (hDown & KEY_CPAD_DOWN) {
+		zoomIn--;
+		if (zoomIn < 0) zoomIn = 0;
+	}
 }
 
 void changeCharacter(void) {
 	if (!fadein && !fadeout) {
-		if (hDown & KEY_CPAD_UP) {
-			zoomIn++;
-			if (zoomIn > 2) zoomIn = 2;
-		}
-		if (hDown & KEY_CPAD_DOWN) {
-			zoomIn--;
-			if (zoomIn < 0) zoomIn = 0;
-		}
 		if (showMessage) {
 			if (messageNo == 4) {
 				if (hDown & KEY_A) {
