@@ -13,6 +13,8 @@
 #include "sound.h"
 #include "thread.h"
 
+Handle threadRequest;
+
 #define CONFIG_3D_SLIDERSTATE (*(float *)0x1FF81080)
 
 static char verText[32];
@@ -153,10 +155,11 @@ static bool ss2SaveFound = false;
 static bool ss3SaveFound = false;
 static bool ss4SaveFound = false;
 
-static bool controlThreadRunning = false;
+static bool runThreads = true;
 
 void controlThread(void) {
-	controlThreadRunning = true;
+	while (runThreads) {
+		svcWaitSynchronization(threadRequest, U64_MAX);
 
 		if (screenmode == SCREEN_MODE_GAME_SELECT) {
 			//Play_Music();
@@ -264,8 +267,8 @@ void controlThread(void) {
 			extern void changeEmblem(void);
 			changeEmblem();
 		}
-
-	controlThreadRunning = false;
+		svcClearEvent(threadRequest);
+	}
 }
 
 int main()
@@ -350,6 +353,9 @@ int main()
 	loadSettings();
 
 	screenon();
+
+	svcCreateEvent(&threadRequest,(ResetType)0);
+	createThread((ThreadFunc)controlThread);
 
 	// Loop as long as the status is not exit
 	while(aptMainLoop()) {
@@ -537,8 +543,8 @@ int main()
 		bg_yPos -= 0.3;
 		if(bg_yPos <= -136) bg_yPos = 0.0f;
 
-		if (hDown && !controlThreadRunning) {
-			createThread((ThreadFunc)controlThread);
+		if (hDown) {
+			svcSignalEvent(threadRequest);
 		}
 
 		if ((hDown & KEY_UP)
@@ -584,7 +590,9 @@ int main()
 		}
 	}
 
-	
+
+	runThreads = false;
+
 	//delete music;
 	delete sfx_select;
 	delete sfx_back;
@@ -593,7 +601,12 @@ int main()
 		ndspExit();
 	}
 
-	//destroyThreads();
+	// signal the thread and wait for it to exit
+	svcSignalEvent(threadRequest);
+	destroyThreads();
+
+	// close event handle
+	svcCloseHandle(threadRequest);
 
 	Gui::exit();
 
