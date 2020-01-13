@@ -153,7 +153,11 @@ static bool ss2SaveFound = false;
 static bool ss3SaveFound = false;
 static bool ss4SaveFound = false;
 
+static bool controlThreadRunning = false;
+
 void controlThread(void) {
+	controlThreadRunning = true;
+
 		if (screenmode == SCREEN_MODE_GAME_SELECT) {
 			//Play_Music();
 
@@ -260,6 +264,8 @@ void controlThread(void) {
 			extern void changeEmblem(void);
 			changeEmblem();
 		}
+
+	controlThreadRunning = false;
 }
 
 int main()
@@ -531,7 +537,7 @@ int main()
 		bg_yPos -= 0.3;
 		if(bg_yPos <= -136) bg_yPos = 0.0f;
 
-		if (hDown) {
+		if (hDown && !controlThreadRunning) {
 			createThread((ThreadFunc)controlThread);
 		}
 
