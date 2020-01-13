@@ -65,7 +65,7 @@ namespace Gui {
 	void sprite(int key, float x, float y);
 	void spriteScale(int key, float x, float y, float scaleX, float scaleY);
 	void showBgSprite(int zoomIn);
-	void showCharSprite(int zoomIn);
+	void showCharSprite(int zoomIn, int fadeAlpha);
 
 	void Draw_ImageBlend(int key, float x, float y, u32 color);
 }

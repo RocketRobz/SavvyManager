@@ -111,8 +111,17 @@ void Gui::showBgSprite(int zoomIn) {
 	C2D_DrawImageAt(C2D_SpriteSheetGetImage(bgSprite, 0), 0, -(240*zoomIn), 0.5f);
 }
 
-void Gui::showCharSprite(int zoomIn) {
-	C2D_DrawImageAt(C2D_SpriteSheetGetImage(chracterSprite, 0), 0, -(240*zoomIn), 0.5f);
+void Gui::showCharSprite(int zoomIn, int fadeAlpha) {
+	if (fadeAlpha == 255) {
+		C2D_DrawImageAt(C2D_SpriteSheetGetImage(chracterSprite, 0), 0, -(240*zoomIn), 0.5f);
+	} else {
+		C2D_ImageTint tint;
+		C2D_SetImageTint(&tint, C2D_TopLeft, C2D_Color32(255, 255, 255, fadeAlpha), 1);
+		C2D_SetImageTint(&tint, C2D_TopRight, C2D_Color32(255, 255, 255, fadeAlpha), 1);
+		C2D_SetImageTint(&tint, C2D_BotLeft, C2D_Color32(255, 255, 255, fadeAlpha), 1);
+		C2D_SetImageTint(&tint, C2D_BotRight, C2D_Color32(255, 255, 255, fadeAlpha), 1);
+		C2D_DrawImageAt(C2D_SpriteSheetGetImage(chracterSprite, 0), 0, -(240*zoomIn), 0.5f, &tint);
+	}
 }
 
 void Gui::Draw_ImageBlend(int key, float x, float y, u32 color) {

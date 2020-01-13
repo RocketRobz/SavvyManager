@@ -90,6 +90,7 @@ extern u32 hDown;
 
 static bool displayNothing = false;
 
+static int charFadeAlpha = 0;
 static bool previewCharacter = false;
 static bool previewCharacterFound = false;
 
@@ -292,10 +293,14 @@ void changeCharacterGraphics(void) {
 	Gui::showBgSprite(zoomIn);
 	if (previewCharacter) {
 		if (previewCharacterFound) {
-			Gui::showCharSprite(zoomIn);
+			Gui::showCharSprite(zoomIn, charFadeAlpha);
 		} else {
 			Draw_Text(112, 104, 0.65, WHITE, "Preview not found.");
 		}
+		charFadeAlpha += 20;
+		if (charFadeAlpha > 255) charFadeAlpha = 255;
+	} else {
+		charFadeAlpha = 0;
 	}
 
 	if (showMessage && messageNo == 4) {
