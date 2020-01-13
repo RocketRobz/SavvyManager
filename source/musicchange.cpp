@@ -54,6 +54,8 @@ extern int cursorAlpha;
 extern void drawCursor(void);
 
 extern u32 hDown;
+extern touchPosition touch;
+extern bool touchingBackButton(void);
 
 static int cursorPosition = 0;
 static int cursorPositionOnScreen = 0;
@@ -147,7 +149,7 @@ void changeMusicGraphics(void) {
 void changeMusic(void) {
 	if (!fadein && !fadeout) {
 		if (showMessage) {
-			if (hDown & KEY_A) {
+			if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
 				sndSelect();
 				showMessage = false;
 			}
@@ -205,7 +207,7 @@ void changeMusic(void) {
 			saveSettings();
 			modeInited = false;
 		}
-		if (hDown & KEY_B) {
+		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 			sndBack();
 			screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
 			fadeout = true;

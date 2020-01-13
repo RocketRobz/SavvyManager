@@ -87,6 +87,8 @@ extern int cursorAlpha;
 extern void drawCursor(void);
 
 extern u32 hDown;
+extern touchPosition touch;
+extern bool touchingBackButton(void);
 
 static bool displayNothing = false;
 
@@ -472,12 +474,12 @@ void changeCharacter(void) {
 	if (!fadein && !fadeout) {
 		if (showMessage) {
 			if (messageNo == 4) {
-				if (hDown & KEY_A) {
+				if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 176 && touch.px < 176+90 && touch.py >= 188 && touch.py < 188+47)) {
 					sndSelect();
 					addEveryone();
 					messageNo = 5;
 				}
-				if (hDown & KEY_B) {
+				if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touch.px >= 52 && touch.px < 52+90 && touch.py >= 188 && touch.py < 188+47)) {
 					sndBack();
 					showMessage = false;
 				}
@@ -496,7 +498,7 @@ void changeCharacter(void) {
 					if (seasonNo > 3) seasonNo = 0;
 				}
 			} else {
-				if (hDown & KEY_A) {
+				if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
 					sndSelect();
 					if (messageNo == 5) {
 						messageNo = 1;
@@ -737,7 +739,8 @@ void changeCharacter(void) {
 					loadChrImage(false);
 				}
 			}
-			if ((hDown & KEY_B) && !(cheatKeys[8] & KEY_B)) {
+			if (((hDown & KEY_B) && !(cheatKeys[8] & KEY_B))
+			|| ((hDown & KEY_TOUCH) && touchingBackButton())) {
 				sndBack();
 				subScreenMode = 1;
 				previewCharacter = false;
@@ -811,7 +814,7 @@ void changeCharacter(void) {
 					loadChrImage(false);
 				}
 			}
-			if (hDown & KEY_B) {
+			if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 				sndBack();
 				subScreenMode = 0;
 			}
@@ -850,7 +853,7 @@ void changeCharacter(void) {
 				sndSelect();
 				subScreenMode = 1;
 			}
-			if (hDown & KEY_B) {
+			if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 				sndBack();
 				characterList_cursorPosition = 0;
 				characterList_cursorPositionOnScreen = 0;

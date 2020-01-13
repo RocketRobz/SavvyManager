@@ -60,6 +60,8 @@ extern int cursorAlpha;
 extern void drawCursor(void);
 
 extern u32 hDown;
+extern touchPosition touch;
+extern bool touchingBackButton(void);
 
 static bool displayNothing = false;
 
@@ -357,7 +359,7 @@ void changeEmblemGraphics(void) {
 void changeEmblem(void) {
 	if (!fadein && !fadeout) {
 		if (showMessage) {
-			if (hDown & KEY_A) {
+			if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
 				sndSelect();
 				showMessage = false;
 			}
@@ -475,7 +477,7 @@ void changeEmblem(void) {
 				importEmblemList_cursorPositionOnScreen = 0;
 				import_emblemShownFirst = 0;
 			}
-			if (hDown & KEY_B) {
+			if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 				sndBack();
 				subScreenMode = 1;
 			}
@@ -520,7 +522,7 @@ void changeEmblem(void) {
 					displayNothing = false;
 				}
 			}
-			if (hDown & KEY_B) {
+			if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 				sndBack();
 				subScreenMode = 0;
 			}
@@ -547,7 +549,7 @@ void changeEmblem(void) {
 				sndSelect();
 				subScreenMode = 1;
 			}
-			if (hDown & KEY_B) {
+			if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 				sndBack();
 				screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
 				fadeout = true;

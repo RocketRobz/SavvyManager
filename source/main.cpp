@@ -150,6 +150,13 @@ static void drawCannotEditMsg(void) {
 }
 
 u32 hDown = 0;
+touchPosition touch;
+
+bool touchingBackButton(void) {
+	return (touch.px >= 7 && touch.px < 7+40 && touch.py >= 197 && touch.py < 197+44);
+}
+
+static bool runSelection = false;
 
 static bool ss2SaveFound = false;
 static bool ss3SaveFound = false;
@@ -165,22 +172,22 @@ void controlThread(void) {
 			//Play_Music();
 
 			if (showMessage) {
-				if (hDown & KEY_A) {
+				if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
 					sndSelect();
 					showMessage = false;
 				}
 			} else if (!fadein) {
-				if (hDown & KEY_LEFT) {
+				if ((hDown & KEY_LEFT) || ((hDown & KEY_TOUCH) && touch.px >= 0 && touch.px < 32 && touch.py >= 104 && touch.py < 104+32)) {
 					sndHighlight();
 					highlightedGame--;
 					if (highlightedGame < 0) highlightedGame = 3;
-				} else if (hDown & KEY_RIGHT) {
+				} else if ((hDown & KEY_RIGHT) || ((hDown & KEY_TOUCH) && touch.px >= 320-32 && touch.px < 320 && touch.py >= 104 && touch.py < 104+32)) {
 					sndHighlight();
 					highlightedGame++;
 					if (highlightedGame > 3) highlightedGame = 0;
 				}
 
-				if (hDown & KEY_A) {
+				if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 32 && touch.px < 320-32 && touch.py >= 56 && touch.py < 56+128)) {
 				  if (highlightedGame==0) {
 					sndBack();
 					messageNo = 0;
@@ -201,7 +208,7 @@ void controlThread(void) {
 			}
 		} else if (screenmode == SCREEN_MODE_WHAT_TO_DO) {
 			if (showMessage) {
-				if (hDown & KEY_A) {
+				if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
 					sndSelect();
 					showMessage = false;
 				}
@@ -228,6 +235,23 @@ void controlThread(void) {
 					}
 				}
 				if (hDown & KEY_A) {
+					runSelection = true;
+				}
+				if ((hDown & KEY_TOUCH) && touch.px >= 71 && touch.px <= 248 && touch.py >= 91 && touch.py <= 136) {
+					if (touch.px < 120) {
+						whatToChange_cursorPosition = 0;
+						runSelection = true;
+					}
+					if ((touch.px > 134) && (touch.px < 185) && highlightedGame==1) {
+						whatToChange_cursorPosition = 1;
+						runSelection = true;
+					}
+					if ((touch.px > 198) && highlightedGame > 1) {
+						whatToChange_cursorPosition = 2;
+						runSelection = true;
+					}
+				}
+				if (runSelection) {
 					sndSelect();
 					switch (whatToChange_cursorPosition) {
 						case 0:
@@ -250,8 +274,9 @@ void controlThread(void) {
 							break;
 					}
 					fadeout = true;
+					runSelection = false;
 				}
-				if (hDown & KEY_B) {
+				if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 					sndBack();
 					screenmodebuffer = SCREEN_MODE_GAME_SELECT;
 					fadeout = true;
@@ -364,6 +389,8 @@ int main()
 
 		hDown = hidKeysDown();
 		//const u32 hHeld = hidKeysHeld();
+
+		hidTouchRead(&touch);
 
 		if (screenmode != SCREEN_MODE_ROCKETROBZ) {
 			screenDelay = 0;
