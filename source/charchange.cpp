@@ -88,6 +88,8 @@ extern void drawCursor(void);
 
 extern u32 hDown;
 
+static bool displayNothing = false;
+
 static bool previewCharacter = false;
 static bool previewCharacterFound = false;
 
@@ -113,6 +115,8 @@ static int importCharacterList_cursorPositionOnScreen = 0;
 
 static int characterShownFirst = 0;
 static int import_characterShownFirst = 0;
+
+static bool exportedCharListGotten[4] = {false};
 
 static const char* characterName(bool showPlayerName) {
 	if (characterList_cursorPosition == 0) {
@@ -204,6 +208,8 @@ static void drawMsg(void) {
 }
 
 void loadChrImage(bool Robz) {
+	previewCharacter = false;
+	gspWaitForVBlank();
 	if (import_highlightedGame == 4) {
 		if (numberOfExportedCharacters > 0) {
 			sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS%i/characters/previews/%s.t3x", highlightedGame+1, getExportedCharacterName(importCharacterList_cursorPosition));	// All Seasons
@@ -216,6 +222,7 @@ void loadChrImage(bool Robz) {
 		sprintf(chrFilePath2, "romfs:/gfx/ss%i_%s%i.t3x", highlightedGame+1, (Robz ? "Robz" : import_characterName()), seasonNo);	// One Season
 		previewCharacterFound = Gui::loadCharSprite(chrFilePath, chrFilePath2);
 	}
+	previewCharacter = true;
 }
 
 static bool removeBags = false;
@@ -239,7 +246,7 @@ void addEveryone(void) {
 	writeSS3Save();
 }
 
-void changeCharacter(void) {
+void changeCharacterGraphics(void) {
 	if (highlightedGame == 3) {
 		characterChangeMenuOps[0] = 0;
 		characterChangeMenuOps[1] = 0;
@@ -341,6 +348,7 @@ void changeCharacter(void) {
 			Draw_Text(192, 208, 0.65, BLACK, "R");
 		}
 
+	  if (!displayNothing) {
 		int i2 = 48;
 		for (int i = import_characterShownFirst; i < import_characterShownFirst+3; i++) {
 			if (import_highlightedGame == 4) {
@@ -367,6 +375,7 @@ void changeCharacter(void) {
 			}
 			i2 += 48;
 		}
+	  }
 	} else if (subScreenMode == 1) {
 		cursorY = 64+(48*characterChangeMenu_cursorPositionOnScreen);
 
@@ -400,6 +409,7 @@ void changeCharacter(void) {
 			Draw_Text(116, 210, 0.50, BLACK, "START: Expand contacts");
 		}
 
+	  if (!displayNothing) {
 		int i2 = 48;
 		for (int i = characterShownFirst; i < characterShownFirst+3; i++) {
 			Gui::sprite(sprites_item_button_idx, 16, i2-20);
@@ -426,6 +436,7 @@ void changeCharacter(void) {
 			}
 			i2 += 48;
 		}
+	  }
 	}
 
 	Gui::sprite(sprites_button_shadow_idx, 5, 199);
@@ -441,7 +452,9 @@ void changeCharacter(void) {
 
 	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 	Draw_EndFrame();
+}
 
+void changeCharacter(void) {
 	if (!fadein && !fadeout) {
 		if (hDown & KEY_CPAD_UP) {
 			zoomIn++;
@@ -674,7 +687,14 @@ void changeCharacter(void) {
 				importCharacterList_cursorPositionOnScreen = 0;
 				import_characterShownFirst = 0;
 				if (import_highlightedGame == 4) {
-					getExportedCharacterContents();
+					previewCharacter = false;
+					if (!exportedCharListGotten[highlightedGame]) {
+						displayNothing = true;
+						gspWaitForVBlank();
+						getExportedCharacterContents();
+						exportedCharListGotten[highlightedGame] = true;
+						displayNothing = false;
+					}
 				}
 				loadChrImage(false);
 			}
@@ -686,7 +706,14 @@ void changeCharacter(void) {
 				importCharacterList_cursorPositionOnScreen = 0;
 				import_characterShownFirst = 0;
 				if (import_highlightedGame == 4) {
-					getExportedCharacterContents();
+					previewCharacter = false;
+					if (!exportedCharListGotten[highlightedGame]) {
+						displayNothing = true;
+						gspWaitForVBlank();
+						getExportedCharacterContents();
+						exportedCharListGotten[highlightedGame] = true;
+						displayNothing = false;
+					}
 				}
 				loadChrImage(false);
 			}
@@ -746,6 +773,7 @@ void changeCharacter(void) {
 					messageNo = 0;
 					showMessage = true;
 				} else if (characterChangeMenuOps[characterChangeMenu_cursorPosition] == 10) {
+					// Export character
 					sndSelect();
 					switch (highlightedGame) {
 						case 3:
@@ -761,15 +789,19 @@ void changeCharacter(void) {
 							writeSS2CharacterFile(chrFilePath);
 							break;
 					}
+					exportedCharListGotten[highlightedGame] = false;
 					messageNo = 2;
 					showMessage = true;
 				} else {
 					sndSelect();
+					displayNothing = true;
 					subScreenMode = characterChangeMenuOps[characterChangeMenu_cursorPosition];
-					previewCharacter = true;
-					if ((subScreenMode == 4) && (import_highlightedGame == 4)) {
+					if ((subScreenMode == 4) && (import_highlightedGame == 4) && !exportedCharListGotten[highlightedGame]) {
+						gspWaitForVBlank();
 						getExportedCharacterContents();
+						exportedCharListGotten[highlightedGame] = true;
 					}
+					displayNothing = false;
 					loadChrImage(false);
 				}
 			}

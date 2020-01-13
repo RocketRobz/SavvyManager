@@ -79,7 +79,7 @@ static void drawMsg(void) {
 	Draw_Text(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
 }
 
-void changeMusic(void) {
+void changeMusicGraphics(void) {
 	if (!modeInited) {
 		getMusicPackContents();
 		modeInited = true;
@@ -142,7 +142,9 @@ void changeMusic(void) {
 
 	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 	Draw_EndFrame();
+}
 
+void changeMusic(void) {
 	if (!fadein && !fadeout) {
 		if (showMessage) {
 			if (hDown & KEY_A) {

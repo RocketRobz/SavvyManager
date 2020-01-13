@@ -11,6 +11,7 @@
 #include "savedata.h"
 //#include "settings.h"
 #include "sound.h"
+#include "thread.h"
 
 #define CONFIG_3D_SLIDERSTATE (*(float *)0x1FF81080)
 
@@ -152,6 +153,115 @@ static bool ss2SaveFound = false;
 static bool ss3SaveFound = false;
 static bool ss4SaveFound = false;
 
+void controlThread(void) {
+		if (screenmode == SCREEN_MODE_GAME_SELECT) {
+			//Play_Music();
+
+			if (showMessage) {
+				if (hDown & KEY_A) {
+					sndSelect();
+					showMessage = false;
+				}
+			} else if (!fadein) {
+				if (hDown & KEY_LEFT) {
+					sndHighlight();
+					highlightedGame--;
+					if (highlightedGame < 0) highlightedGame = 3;
+				} else if (hDown & KEY_RIGHT) {
+					sndHighlight();
+					highlightedGame++;
+					if (highlightedGame > 3) highlightedGame = 0;
+				}
+
+				if (hDown & KEY_A) {
+				  if (highlightedGame==0) {
+					sndBack();
+					messageNo = 0;
+					showMessage = true;
+				  } else if ((highlightedGame==1)
+				  || (highlightedGame==2 && ss3SaveFound)
+				  || (highlightedGame==3 && ss4SaveFound))
+				  {
+					sndSelect();
+					screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
+					fadeout = true;
+				  } else {
+					sndBack();
+					messageNo = 1;
+					showMessage = true;
+				  }
+				}
+			}
+		} else if (screenmode == SCREEN_MODE_WHAT_TO_DO) {
+			if (showMessage) {
+				if (hDown & KEY_A) {
+					sndSelect();
+					showMessage = false;
+				}
+			} else if (!fadein) {
+				if (highlightedGame > 0 && showCursor) {
+					if (hDown & KEY_LEFT) {
+						sndHighlight();
+						if (highlightedGame > 1) {
+							if (whatToChange_cursorPosition == 2) whatToChange_cursorPosition = 0;
+							else if (whatToChange_cursorPosition == 0) whatToChange_cursorPosition = 2;
+						} else {
+							whatToChange_cursorPosition--;
+							if (whatToChange_cursorPosition < 0) whatToChange_cursorPosition = 1;
+						}
+					} else if (hDown & KEY_RIGHT) {
+						sndHighlight();
+						if (highlightedGame > 1) {
+							if (whatToChange_cursorPosition == 0) whatToChange_cursorPosition = 2;
+							else if (whatToChange_cursorPosition == 2) whatToChange_cursorPosition = 0;
+						} else {
+							whatToChange_cursorPosition++;
+							if (whatToChange_cursorPosition > 1) whatToChange_cursorPosition = 0;
+						}
+					}
+				}
+				if (hDown & KEY_A) {
+					sndSelect();
+					switch (whatToChange_cursorPosition) {
+						case 0:
+							if ((highlightedGame==1 && ss2SaveFound)
+							  || (highlightedGame==2 && ss3SaveFound)
+							  || (highlightedGame==3 && ss4SaveFound))
+							  {
+								screenmodebuffer = SCREEN_MODE_CHANGE_CHARACTER;
+							  } else {
+							  	sndBack();
+								messageNo = 1;
+								showMessage = true;
+							  }
+							break;
+						case 1:
+							screenmodebuffer = SCREEN_MODE_CHANGE_MUSIC;
+							break;
+						case 2:
+							screenmodebuffer = SCREEN_MODE_CHANGE_EMBLEM;
+							break;
+					}
+					fadeout = true;
+				}
+				if (hDown & KEY_B) {
+					sndBack();
+					screenmodebuffer = SCREEN_MODE_GAME_SELECT;
+					fadeout = true;
+				}
+			}
+		} else if (screenmode == SCREEN_MODE_CHANGE_CHARACTER) {
+			extern void changeCharacter(void);
+			changeCharacter();
+		} else if (screenmode == SCREEN_MODE_CHANGE_MUSIC) {
+			extern void changeMusic(void);
+			changeMusic();
+		} else if (screenmode == SCREEN_MODE_CHANGE_EMBLEM) {
+			extern void changeEmblem(void);
+			changeEmblem();
+		}
+}
+
 int main()
 {
 	screenoff();
@@ -274,8 +384,6 @@ int main()
 				fadeout = true;
 			}
 		} else if (screenmode == SCREEN_MODE_GAME_SELECT) {
-			//Play_Music();
-
 			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 			C2D_TargetClear(top, TRANSPARENT);
 			C2D_TargetClear(bottom, TRANSPARENT);
@@ -335,47 +443,27 @@ int main()
 			}
 			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 			Draw_EndFrame();
-
-			if (showMessage) {
-				if (hDown & KEY_A) {
-					sndSelect();
-					showMessage = false;
-				}
-			} else if (!fadein) {
-				if (hDown & KEY_LEFT) {
-					sndHighlight();
-					highlightedGame--;
-					if (highlightedGame < 0) highlightedGame = 3;
-				} else if (hDown & KEY_RIGHT) {
-					sndHighlight();
-					highlightedGame++;
-					if (highlightedGame > 3) highlightedGame = 0;
-				}
-
-				if (hDown & KEY_A) {
-				  if (highlightedGame==0) {
-					sndBack();
-					messageNo = 0;
-					showMessage = true;
-				  } else if ((highlightedGame==1)
-				  || (highlightedGame==2 && ss3SaveFound)
-				  || (highlightedGame==3 && ss4SaveFound))
-				  {
-					sndSelect();
-					screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
-					fadeout = true;
-				  } else {
-					sndBack();
-					messageNo = 1;
-					showMessage = true;
-				  }
-				}
-			}
 		} else if (screenmode == SCREEN_MODE_WHAT_TO_DO) {
 			if ((highlightedGame == 0)
 			|| (highlightedGame > 1 && whatToChange_cursorPosition == 1)
 			|| (highlightedGame < 2 && whatToChange_cursorPosition == 2)) {
 				whatToChange_cursorPosition = 0;
+			}
+
+			switch (whatToChange_cursorPosition) {
+				case 0:
+				default:
+					cursorX = 80;
+					cursorY = 104;
+					break;
+				case 1:
+					cursorX = 148;
+					cursorY = 104;
+					break;
+				case 2:
+					cursorX = 212;
+					cursorY = 104;
+					break;
 			}
 
 			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
@@ -427,89 +515,24 @@ int main()
 			drawCursor();
 			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 			Draw_EndFrame();
-
-			if (showMessage) {
-				if (hDown & KEY_A) {
-					sndSelect();
-					showMessage = false;
-				}
-			} else if (!fadein) {
-				if (highlightedGame > 0 && showCursor) {
-					if (hDown & KEY_LEFT) {
-						sndHighlight();
-						if (highlightedGame > 1) {
-							if (whatToChange_cursorPosition == 2) whatToChange_cursorPosition = 0;
-							else if (whatToChange_cursorPosition == 0) whatToChange_cursorPosition = 2;
-						} else {
-							whatToChange_cursorPosition--;
-							if (whatToChange_cursorPosition < 0) whatToChange_cursorPosition = 1;
-						}
-					} else if (hDown & KEY_RIGHT) {
-						sndHighlight();
-						if (highlightedGame > 1) {
-							if (whatToChange_cursorPosition == 0) whatToChange_cursorPosition = 2;
-							else if (whatToChange_cursorPosition == 2) whatToChange_cursorPosition = 0;
-						} else {
-							whatToChange_cursorPosition++;
-							if (whatToChange_cursorPosition > 1) whatToChange_cursorPosition = 0;
-						}
-					}
-				}
-				if (hDown & KEY_A) {
-					sndSelect();
-					switch (whatToChange_cursorPosition) {
-						case 0:
-							if ((highlightedGame==1 && ss2SaveFound)
-							  || (highlightedGame==2 && ss3SaveFound)
-							  || (highlightedGame==3 && ss4SaveFound))
-							  {
-								screenmodebuffer = SCREEN_MODE_CHANGE_CHARACTER;
-							  } else {
-							  	sndBack();
-								messageNo = 1;
-								showMessage = true;
-							  }
-							break;
-						case 1:
-							screenmodebuffer = SCREEN_MODE_CHANGE_MUSIC;
-							break;
-						case 2:
-							screenmodebuffer = SCREEN_MODE_CHANGE_EMBLEM;
-							break;
-					}
-					fadeout = true;
-				}
-				if (hDown & KEY_B) {
-					sndBack();
-					screenmodebuffer = SCREEN_MODE_GAME_SELECT;
-					fadeout = true;
-				}
-			}
-
-			switch (whatToChange_cursorPosition) {
-				case 0:
-				default:
-					cursorX = 80;
-					cursorY = 104;
-					break;
-				case 1:
-					cursorX = 148;
-					cursorY = 104;
-					break;
-				case 2:
-					cursorX = 212;
-					cursorY = 104;
-					break;
-			}
 		} else if (screenmode == SCREEN_MODE_CHANGE_CHARACTER) {
-			extern void changeCharacter(void);
-			changeCharacter();
+			extern void changeCharacterGraphics(void);
+			changeCharacterGraphics();
 		} else if (screenmode == SCREEN_MODE_CHANGE_MUSIC) {
-			extern void changeMusic(void);
-			changeMusic();
+			extern void changeMusicGraphics(void);
+			changeMusicGraphics();
 		} else if (screenmode == SCREEN_MODE_CHANGE_EMBLEM) {
-			extern void changeEmblem(void);
-			changeEmblem();
+			extern void changeEmblemGraphics(void);
+			changeEmblemGraphics();
+		}
+		// Scroll background
+		bg_xPos += 0.3;
+		if(bg_xPos >= 72) bg_xPos = 0.0f;
+		bg_yPos -= 0.3;
+		if(bg_yPos <= -136) bg_yPos = 0.0f;
+
+		if (hDown) {
+			createThread((ThreadFunc)controlThread);
 		}
 
 		if ((hDown & KEY_UP)
@@ -534,11 +557,6 @@ int main()
 				cursorAlpha = 0;
 			}
 		}
-
-		bg_xPos += 0.3;
-		if(bg_xPos >= 72) bg_xPos = 0.0f;
-		bg_yPos -= 0.3;
-		if(bg_yPos <= -136) bg_yPos = 0.0f;
 
 		if (fadein) {
 			fadealpha -= 6;
@@ -568,6 +586,8 @@ int main()
 	if (dspfirmfound) {
 		ndspExit();
 	}
+
+	//destroyThreads();
 
 	Gui::exit();
 

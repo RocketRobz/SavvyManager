@@ -61,6 +61,8 @@ extern void drawCursor(void);
 
 extern u32 hDown;
 
+static bool displayNothing = false;
+
 static int cursorPosition = 0;
 static int emblemChangeMenu_cursorPosition = 0;
 static int importEmblemList_cursorPosition = 0;
@@ -221,7 +223,7 @@ static void drawMsg(void) {
 	Draw_Text(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
 }
 
-void changeEmblem(void) {
+void changeEmblemGraphics(void) {
 	if (subScreenMode == 2) {
 		if (importPage == 1) {
 			totalEmblems = numberOfExportedEmblems-1;
@@ -285,6 +287,7 @@ void changeEmblem(void) {
 		Draw_Text(8, 8, 0.50, BLACK, "<");
 		Draw_Text(304, 8, 0.50, BLACK, ">");
 
+	  if (!displayNothing) {
 		int i2 = 48;
 		for (int i = import_emblemShownFirst; i < import_emblemShownFirst+3; i++) {
 			if (importPage == 1) {
@@ -300,6 +303,7 @@ void changeEmblem(void) {
 			}
 			i2 += 48;
 		}
+	  }
 	} else if (subScreenMode == 1) {
 		if (highlightedGame == 2) {
 			sprintf(emblemText, "Emblem");
@@ -348,7 +352,9 @@ void changeEmblem(void) {
 
 	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 	Draw_EndFrame();
+}
 
+void changeEmblem(void) {
 	if (!fadein && !fadeout) {
 		if (showMessage) {
 			if (hDown & KEY_A) {
@@ -508,7 +514,10 @@ void changeEmblem(void) {
 				} else {
 					sndSelect();
 					subScreenMode = 2;
+					displayNothing = true;
+					gspWaitForVBlank();
 					getExportedEmblemContents();
+					displayNothing = false;
 				}
 			}
 			if (hDown & KEY_B) {
