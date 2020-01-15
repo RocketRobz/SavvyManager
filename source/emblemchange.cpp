@@ -403,7 +403,7 @@ void changeEmblem(void) {
 				if (importPage == 1 && totalEmblems > 0) {
 					switch (highlightedGame) {
 						case 3:
-							sprintf(embFilePath, "sdmc:/3ds/SavvyManager/emblems/%s", getExportedEmblemName(importEmblemList_cursorPosition));
+							sprintf(embFilePath, "sdmc:/3ds/SavvyManager/emblems/%s.emb", getExportedEmblemName(importEmblemList_cursorPosition));
 							if (access(embFilePath, F_OK) == 0) {
 								sndSelect();
 								readSS4EmblemFile(cursorPosition, embFilePath);
@@ -412,7 +412,7 @@ void changeEmblem(void) {
 							}
 							break;
 						case 2:
-							sprintf(embFilePath, "sdmc:/3ds/SavvyManager/emblems/%s", getExportedEmblemName(importEmblemList_cursorPosition));
+							sprintf(embFilePath, "sdmc:/3ds/SavvyManager/emblems/%s.emb", getExportedEmblemName(importEmblemList_cursorPosition));
 							if (access(embFilePath, F_OK) == 0) {
 								sndSelect();
 								readSS3EmblemFile(embFilePath);

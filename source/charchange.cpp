@@ -297,7 +297,7 @@ void changeCharacterGraphics(void) {
 		if (previewCharacterFound) {
 			Gui::showCharSprite(zoomIn, charFadeAlpha);
 		} else {
-			Draw_Text(112, 104, 0.65, WHITE, "Preview not found.");
+			Draw_Text(112, 104, 0.65, WHITE, (import_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
 		}
 		charFadeAlpha += 20;
 		if (charFadeAlpha > 255) charFadeAlpha = 255;
@@ -617,7 +617,7 @@ void changeCharacter(void) {
 					bool exportFound = false;
 					switch (highlightedGame) {
 						case 3:
-							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS4/characters/%s", getExportedCharacterName(importCharacterList_cursorPosition));
+							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS4/characters/%s.chr", getExportedCharacterName(importCharacterList_cursorPosition));
 							if (access(chrFilePath, F_OK) == 0) {
 								sndSelect();
 								readSS4CharacterFile(characterList_cursorPosition, chrFilePath);
@@ -626,7 +626,7 @@ void changeCharacter(void) {
 							}
 							break;
 						case 2:
-							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS3/characters/%s", getExportedCharacterName(importCharacterList_cursorPosition));
+							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS3/characters/%s.chr", getExportedCharacterName(importCharacterList_cursorPosition));
 							if (access(chrFilePath, F_OK) == 0) {
 								sndSelect();
 								readSS3CharacterFile(characterList_cursorPosition, chrFilePath);
@@ -635,7 +635,7 @@ void changeCharacter(void) {
 							}
 							break;
 						case 1:
-							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS2/characters/%s", getExportedCharacterName(importCharacterList_cursorPosition));
+							sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS2/characters/%s.chr", getExportedCharacterName(importCharacterList_cursorPosition));
 							if (access(chrFilePath, F_OK) == 0) {
 								sndSelect();
 								readSS2CharacterFile(chrFilePath);

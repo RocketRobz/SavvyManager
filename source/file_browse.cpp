@@ -95,6 +95,14 @@ void getDirectoryContents (vector<DirEntry>& dirContents, const vector<string> e
 			dirEntry.isDirectory = (st.st_mode & S_IFDIR) ? true : false;
 
 			if (dirEntry.name.compare(".") != 0 && ((dirEntry.isDirectory && showDir) || nameEndsWith(dirEntry.name, extensionList))) {
+				if (!dirEntry.isDirectory) {
+					for (int i = dirEntry.name.size(); i > 0; i--) {
+						if (dirEntry.name[i] == '.') {
+							dirEntry.name[i] = '\0';	// Hide file extension from display
+							break;
+						}
+					}
+				}
 				dirContents.push_back (dirEntry);
 			}
 
@@ -134,13 +142,13 @@ void getExportedCharacterContents (void) {
 
 		switch (highlightedGame) {
 			case 3:
-				sprintf(chrPath, "sdmc:/3ds/SavvyManager/SS4/characters/%s", entry->name.c_str());
+				sprintf(chrPath, "sdmc:/3ds/SavvyManager/SS4/characters/%s.chr", entry->name.c_str());
 				break;
 			case 2:
-				sprintf(chrPath, "sdmc:/3ds/SavvyManager/SS3/characters/%s", entry->name.c_str());
+				sprintf(chrPath, "sdmc:/3ds/SavvyManager/SS3/characters/%s.chr", entry->name.c_str());
 				break;
 			case 1:
-				sprintf(chrPath, "sdmc:/3ds/SavvyManager/SS2/characters/%s", entry->name.c_str());
+				sprintf(chrPath, "sdmc:/3ds/SavvyManager/SS2/characters/%s.chr", entry->name.c_str());
 				break;
 		}
 
