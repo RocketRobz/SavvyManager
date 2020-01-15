@@ -52,7 +52,7 @@ Result Gui::init(void) {
 	bottom = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
 	sizeBuf = C2D_TextBufNew(4096);
 	sprites    = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
-	bgSprite   = C2D_SpriteSheetLoad("romfs:/gfx/bg_blue.t3x");
+	bgSprite   = C2D_SpriteSheetLoad("romfs:/gfx/bgNight_loversBell.t3x");
 	systemFont = C2D_FontLoadSystem(CFG_REGION_USA);
 	return 0;
 }
