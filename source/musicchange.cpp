@@ -68,17 +68,17 @@ static bool showMessage = false;
 static int messageNo = 0;
 
 static void drawMsg(void) {
-	Gui::spriteScale(sprites_msg_idx, 0, 8, 2, 1);
-	Gui::spriteScale(sprites_msg_idx, 160, 8, -2, 1);
+	Gui::sprite(sprites_msg_idx, 0, 8, 2, 1);
+	Gui::sprite(sprites_msg_idx, 160, 8, -2, 1);
 	Gui::sprite(sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 1) {
-		Draw_Text(32, 94, 0.60, BLACK, "Failed to apply music pack.");
+		Gui::DrawString(32, 94, 0.60, BLACK, "Failed to apply music pack.");
 	} else {
-		Draw_Text(32, 94, 0.60, BLACK, "Successfully applied music pack.");
+		Gui::DrawString(32, 94, 0.60, BLACK, "Successfully applied music pack.");
 	}
 	Gui::sprite(sprites_button_msg_shadow_idx, 114, 197);
 	Gui::sprite(sprites_button_msg_idx, 115, 188);
-	Draw_Text(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
+	Gui::DrawString(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
 }
 
 void changeMusicGraphics(void) {
@@ -91,22 +91,22 @@ void changeMusicGraphics(void) {
 	C2D_TargetClear(top, TRANSPARENT);
 	C2D_TargetClear(bottom, TRANSPARENT);
 	Gui::clearTextBufs();
-	set_screen(top);
+	Gui::setDraw(top);
 
-	Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
+	Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
 	for(int w = 0; w < 7; w++) {
 		for(int h = 0; h < 3; h++) {
 			Gui::sprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
 		}
 	}
 
-	Draw_Text(8, 206, 0.50, BLACK, "Current music pack:");
-	Draw_Text(8, 220, 0.50, BLACK, (currentMusicPack=="" ? "Original" : currentMusicPack.c_str()));
+	Gui::DrawString(8, 206, 0.50, BLACK, "Current music pack:");
+	Gui::DrawString(8, 220, 0.50, BLACK, (currentMusicPack=="" ? "Original" : currentMusicPack.c_str()));
 
-	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
-	set_screen(bottom);
-	Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
+	Gui::setDraw(bottom);
+	Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
 	for(int w = 0; w < 7; w++) {
 		for(int h = 0; h < 3; h++) {
 			Gui::sprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
@@ -116,7 +116,7 @@ void changeMusicGraphics(void) {
 	cursorX = 248;
 	cursorY = 64+(48*cursorPositionOnScreen);
 
-	Draw_Text(8, 8, 0.50, BLACK, "Select the music pack you want to use.");
+	Gui::DrawString(8, 8, 0.50, BLACK, "Select the music pack you want to use.");
 
 	int i2 = 48;
 	for (int i = musicPackShownFirst; i < musicPackShownFirst+3; i++) {
@@ -124,9 +124,9 @@ void changeMusicGraphics(void) {
 	
 		Gui::sprite(sprites_item_button_idx, 16, i2-20);
 		if (i == 0) {
-			Draw_Text(32, i2, 0.65, BLACK, "Original/Revert");
+			Gui::DrawString(32, i2, 0.65, BLACK, "Original/Revert");
 		} else {
-			Draw_Text(32, i2, 0.65, BLACK, getMusicPackName(i-1));
+			Gui::DrawString(32, i2, 0.65, BLACK, getMusicPackName(i-1));
 		}
 		i2 += 48;
 	}
@@ -142,8 +142,8 @@ void changeMusicGraphics(void) {
 		drawMsg();
 	}
 
-	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-	Draw_EndFrame();
+	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+	C3D_FrameEnd(0);
 }
 
 void changeMusic(void) {

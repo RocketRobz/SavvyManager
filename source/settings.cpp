@@ -8,15 +8,15 @@
 std::string currentMusicPack = "";
 
 void loadSettings(void) {
-    CIniFile settingsini(settingsIni);
+	CIniFile settingsini(settingsIni);
 
 	currentMusicPack = settingsini.GetString("SS2", "CURRENT_MUSIC_PACK", currentMusicPack);
 }
 
 void saveSettings(void) {
-    CIniFile settingsini(settingsIni);
+	CIniFile settingsini(settingsIni);
 
 	settingsini.SetString("SS2", "CURRENT_MUSIC_PACK", currentMusicPack);
 
-    settingsini.SaveIniFile(settingsIni);
+	settingsini.SaveIniFile(settingsIni);
 }

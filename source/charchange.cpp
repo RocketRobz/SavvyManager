@@ -166,47 +166,47 @@ static int messageNo = 0;
 static char chararacterImported[48];
 
 static void drawMsg(void) {
-	Gui::spriteScale(sprites_msg_idx, 0, 8, 2, 1);
-	Gui::spriteScale(sprites_msg_idx, 160, 8, -2, 1);
+	Gui::sprite(sprites_msg_idx, 0, 8, 2, 1);
+	Gui::sprite(sprites_msg_idx, 160, 8, -2, 1);
 	Gui::sprite(messageNo==4 ? sprites_icon_question_idx : sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 5) {
-		Draw_Text(32, 68, 0.60, BLACK, "Everyone is now in Fashion Forward!");
-		Draw_Text(32, 88, 0.60, BLACK, "(Except for customers and reps.)");
-		Draw_Text(32, 114, 0.60, BLACK, "Invite them over for photo shoots,");
-		Draw_Text(32, 134, 0.60, BLACK, "as well as AR photo shoots!");
+		Gui::DrawString(32, 68, 0.60, BLACK, "Everyone is now in Fashion Forward!");
+		Gui::DrawString(32, 88, 0.60, BLACK, "(Except for customers and reps.)");
+		Gui::DrawString(32, 114, 0.60, BLACK, "Invite them over for photo shoots,");
+		Gui::DrawString(32, 134, 0.60, BLACK, "as well as AR photo shoots!");
 	} else if (messageNo == 4) {
-		Draw_Text(32, 58, 0.60, BLACK, "Characters from the 1st, 2nd, and");
-		Draw_Text(32, 78, 0.60, BLACK, "4th games, will be added to the 3rd.");
-		Draw_Text(32, 104, 0.60, BLACK, "Characters part of downloaded");
-		Draw_Text(32, 124, 0.60, BLACK, "Caprice Chalet rooms will be");
-		Draw_Text(32, 144, 0.60, BLACK, "overwritten. Is this OK?");
+		Gui::DrawString(32, 58, 0.60, BLACK, "Characters from the 1st, 2nd, and");
+		Gui::DrawString(32, 78, 0.60, BLACK, "4th games, will be added to the 3rd.");
+		Gui::DrawString(32, 104, 0.60, BLACK, "Characters part of downloaded");
+		Gui::DrawString(32, 124, 0.60, BLACK, "Caprice Chalet rooms will be");
+		Gui::DrawString(32, 144, 0.60, BLACK, "overwritten. Is this OK?");
 	} else if (messageNo == 3) {
-		Draw_Text(32, 94, 0.60, BLACK, "Failed to import character.");
+		Gui::DrawString(32, 94, 0.60, BLACK, "Failed to import character.");
 	} else if (messageNo == 2) {
-		Draw_Text(32, 58, 0.60, BLACK, "Character exported successfully.");
-		Draw_Text(32, 94, 0.60, BLACK, "You can go to \"Import Characters\"");
-		Draw_Text(32, 114, 0.60, BLACK, "and restore the exported character");
-		Draw_Text(32, 134, 0.60, BLACK, "at any time.");
+		Gui::DrawString(32, 58, 0.60, BLACK, "Character exported successfully.");
+		Gui::DrawString(32, 94, 0.60, BLACK, "You can go to \"Import Characters\"");
+		Gui::DrawString(32, 114, 0.60, BLACK, "and restore the exported character");
+		Gui::DrawString(32, 134, 0.60, BLACK, "at any time.");
 	} else if (messageNo == 1) {
-		Draw_Text(32, 58, 0.60, BLACK, chararacterImported);
-		Draw_Text(32, 94, 0.60, BLACK, "Please restore \"SavvyManager\"");
-		Draw_Text(32, 114, 0.60, BLACK, "data for your game in Checkpoint,");
-		Draw_Text(32, 134, 0.60, BLACK, "for the change to take effect.");
+		Gui::DrawString(32, 58, 0.60, BLACK, chararacterImported);
+		Gui::DrawString(32, 94, 0.60, BLACK, "Please restore \"SavvyManager\"");
+		Gui::DrawString(32, 114, 0.60, BLACK, "data for your game in Checkpoint,");
+		Gui::DrawString(32, 134, 0.60, BLACK, "for the change to take effect.");
 	} else {
-		Draw_Text(32, 84, 0.60, BLACK, "This feature is not available yet.");
-		//Draw_Text(32, 104, 0.60, BLACK, "yet.");
+		Gui::DrawString(32, 84, 0.60, BLACK, "This feature is not available yet.");
+		//Gui::DrawString(32, 104, 0.60, BLACK, "yet.");
 	}
 	if (messageNo == 4) {
 		Gui::sprite(sprites_button_msg_shadow_idx, 52, 197);
 		Gui::sprite(sprites_button_msg_idx, 53, 188);
 		Gui::sprite(sprites_button_msg_shadow_idx, 176, 197);
 		Gui::sprite(sprites_button_msg_idx, 177, 188);
-		Draw_Text(72, 196, 0.70, MSG_BUTTONTEXT, " No");
-		Draw_Text(196, 196, 0.70, MSG_BUTTONTEXT, " Yes");
+		Gui::DrawString(72, 196, 0.70, MSG_BUTTONTEXT, " No");
+		Gui::DrawString(196, 196, 0.70, MSG_BUTTONTEXT, " Yes");
 	} else {
 		Gui::sprite(sprites_button_msg_shadow_idx, 114, 197);
 		Gui::sprite(sprites_button_msg_idx, 115, 188);
-		Draw_Text(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
+		Gui::DrawString(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
 	}
 }
 
@@ -290,14 +290,14 @@ void changeCharacterGraphics(void) {
 	C2D_TargetClear(top, TRANSPARENT);
 	C2D_TargetClear(bottom, TRANSPARENT);
 	Gui::clearTextBufs();
-	set_screen(top);
+	Gui::setDraw(top);
 
 	Gui::showBgSprite(zoomIn);
 	if (previewCharacter) {
 		if (previewCharacterFound) {
 			Gui::showCharSprite(zoomIn, charFadeAlpha);
 		} else {
-			Draw_Text(112, 104, 0.65, WHITE, (import_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
+			Gui::DrawString(112, 104, 0.65, WHITE, (import_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
 		}
 		charFadeAlpha += 20;
 		if (charFadeAlpha > 255) charFadeAlpha = 255;
@@ -306,17 +306,17 @@ void changeCharacterGraphics(void) {
 	}
 
 	if (showMessage && messageNo == 4) {
-		Draw_Text(8, 210, 0.50, WHITE, removeBags ? " Keep bags" : " Remove bags");
+		Gui::DrawString(8, 210, 0.50, WHITE, removeBags ? " Keep bags" : " Remove bags");
 		// Selected season
-		Draw_Text(156, 208, 0.65, WHITE, "L");
-		Draw_Text(172, 210, 0.50, WHITE, seasonName());
-		Draw_Text(232, 208, 0.65, WHITE, "R");
+		Gui::DrawString(156, 208, 0.65, WHITE, "L");
+		Gui::DrawString(172, 210, 0.50, WHITE, seasonName());
+		Gui::DrawString(232, 208, 0.65, WHITE, "R");
 	}
 
-	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
-	set_screen(bottom);
-	Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
+	Gui::setDraw(bottom);
+	Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
 	for(int w = 0; w < 7; w++) {
 		for(int h = 0; h < 3; h++) {
 			Gui::sprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
@@ -330,29 +330,29 @@ void changeCharacterGraphics(void) {
 		// Game name
 		switch (import_highlightedGame) {
 			case 4:
-				Draw_Text(32, 8, 0.50, BLACK, "Your character files");
+				Gui::DrawString(32, 8, 0.50, BLACK, "Your character files");
 				break;
 			case 3:
-				Draw_Text(32, 8, 0.50, BLACK, "Style Savvy: Styling Star");
+				Gui::DrawString(32, 8, 0.50, BLACK, "Style Savvy: Styling Star");
 				break;
 			case 2:
-				Draw_Text(32, 8, 0.50, BLACK, "Style Savvy: Fashion Forward");
+				Gui::DrawString(32, 8, 0.50, BLACK, "Style Savvy: Fashion Forward");
 				break;
 			case 1:
-				Draw_Text(32, 8, 0.50, BLACK, "Style Savvy: Trendsetters");
+				Gui::DrawString(32, 8, 0.50, BLACK, "Style Savvy: Trendsetters");
 				break;
 			case 0:
-				Draw_Text(32, 8, 0.50, BLACK, "Style Savvy");
+				Gui::DrawString(32, 8, 0.50, BLACK, "Style Savvy");
 				break;
 		}
-		Draw_Text(8, 8, 0.50, BLACK, "<");
-		Draw_Text(304, 8, 0.50, BLACK, ">");
+		Gui::DrawString(8, 8, 0.50, BLACK, "<");
+		Gui::DrawString(304, 8, 0.50, BLACK, ">");
 
 		if (import_highlightedGame != 4) {
 			// Selected season
-			Draw_Text(116, 208, 0.65, BLACK, "L");
-			Draw_Text(132, 210, 0.50, BLACK, seasonName());
-			Draw_Text(192, 208, 0.65, BLACK, "R");
+			Gui::DrawString(116, 208, 0.65, BLACK, "L");
+			Gui::DrawString(132, 210, 0.50, BLACK, seasonName());
+			Gui::DrawString(192, 208, 0.65, BLACK, "R");
 		}
 
 	  if (!displayNothing) {
@@ -362,23 +362,23 @@ void changeCharacterGraphics(void) {
 				if (i >= numberOfExportedCharacters) break;
 				Gui::sprite(sprites_item_button_idx, 16, i2-20);
 				Gui::sprite((getExportedCharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Draw_Text(64, i2, 0.65, BLACK, getExportedCharacterName(i));
+				Gui::DrawString(64, i2, 0.65, BLACK, getExportedCharacterName(i));
 			} else if (import_highlightedGame == 3) {
 				Gui::sprite(sprites_item_button_idx, 16, i2-20);
 				Gui::sprite((import_ss4CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Draw_Text(64, i2, 0.65, BLACK, import_ss4CharacterNames[i]);
+				Gui::DrawString(64, i2, 0.65, BLACK, import_ss4CharacterNames[i]);
 			} else if (import_highlightedGame == 2) {
 				Gui::sprite(sprites_item_button_idx, 16, i2-20);
 				Gui::sprite((import_ss3CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Draw_Text(64, i2, 0.65, BLACK, import_ss3CharacterNames[i]);
+				Gui::DrawString(64, i2, 0.65, BLACK, import_ss3CharacterNames[i]);
 			} else if (import_highlightedGame == 1) {
 				Gui::sprite(sprites_item_button_idx, 16, i2-20);
 				Gui::sprite((import_ss2CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Draw_Text(64, i2, 0.65, BLACK, import_ss2CharacterNames[i]);
+				Gui::DrawString(64, i2, 0.65, BLACK, import_ss2CharacterNames[i]);
 			} else if (import_highlightedGame == 0) {
 				Gui::sprite(sprites_item_button_idx, 16, i2-20);
 				Gui::sprite((import_ss1CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Draw_Text(64, i2, 0.65, BLACK, import_ss1CharacterNames[i]);
+				Gui::DrawString(64, i2, 0.65, BLACK, import_ss1CharacterNames[i]);
 			}
 			i2 += 48;
 		}
@@ -386,34 +386,34 @@ void changeCharacterGraphics(void) {
 	} else if (subScreenMode == 1) {
 		cursorY = 64+(48*characterChangeMenu_cursorPositionOnScreen);
 
-		Draw_Text(8, 8, 0.50, BLACK, characterName(true));
+		Gui::DrawString(8, 8, 0.50, BLACK, characterName(true));
 
 		int i2 = 0;
 		if (characterChangeMenu_optionShownFirst == 0) {
 			i2 += 48;
 			Gui::sprite(sprites_item_button_idx, 16, i2-20);
-			Draw_Text(32, i2, 0.65, BLACK, "Change attributes");
+			Gui::DrawString(32, i2, 0.65, BLACK, "Change attributes");
 		}
 		if (highlightedGame == 3) {
 			i2 += 48;
 			Gui::sprite(sprites_item_button_idx, 16, i2-20);
-			Draw_Text(32, i2, 0.65, BLACK, "Change bow placement");
+			Gui::DrawString(32, i2, 0.65, BLACK, "Change bow placement");
 		}
 		i2 += 48;
 		Gui::sprite(sprites_item_button_idx, 16, i2-20);
-		Draw_Text(32, i2, 0.65, BLACK, "Import character");
+		Gui::DrawString(32, i2, 0.65, BLACK, "Import character");
 		if (highlightedGame < 3 || characterChangeMenu_optionShownFirst == 1) {
 			i2 += 48;
 			Gui::sprite(sprites_item_button_idx, 16, i2-20);
-			Draw_Text(32, i2, 0.65, BLACK, "Export character");
+			Gui::DrawString(32, i2, 0.65, BLACK, "Export character");
 		}
 	} else {
 		cursorY = 64+(48*characterList_cursorPositionOnScreen);
 
-		Draw_Text(8, 8, 0.50, BLACK, "Select the character you want to change.");
+		Gui::DrawString(8, 8, 0.50, BLACK, "Select the character you want to change.");
 
 		if (highlightedGame == 2) {
-			Draw_Text(116, 210, 0.50, BLACK, "START: Expand contacts");
+			Gui::DrawString(116, 210, 0.50, BLACK, "START: Expand contacts");
 		}
 
 	  if (!displayNothing) {
@@ -423,22 +423,22 @@ void changeCharacterGraphics(void) {
 			if (highlightedGame == 3) {
 				if (i==0) {
 					Gui::sprite((getSS4CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-					Draw_Text(64, i2, 0.65, BLACK, ss4PlayerName);
+					Gui::DrawString(64, i2, 0.65, BLACK, ss4PlayerName);
 				} else {
 					Gui::sprite((getSS4CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-					Draw_Text(64, i2, 0.65, BLACK, ss4CharacterNames[i]);
+					Gui::DrawString(64, i2, 0.65, BLACK, ss4CharacterNames[i]);
 				}
 			} else if (highlightedGame == 2) {
 				if (i==0) {
 					Gui::sprite((getSS3CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-					Draw_Text(64, i2, 0.65, BLACK, ss3PlayerName);
+					Gui::DrawString(64, i2, 0.65, BLACK, ss3PlayerName);
 				} else {
 					Gui::sprite((getSS3CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-					Draw_Text(64, i2, 0.65, BLACK, ss3CharacterNames[i]);
+					Gui::DrawString(64, i2, 0.65, BLACK, ss3CharacterNames[i]);
 				}
 			} else if (highlightedGame == 1) {
 				Gui::sprite((getSS2CharacterGender() ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Draw_Text(64, i2, 0.65, BLACK, ss2PlayerName);
+				Gui::DrawString(64, i2, 0.65, BLACK, ss2PlayerName);
 				break;
 			}
 			i2 += 48;
@@ -457,8 +457,8 @@ void changeCharacterGraphics(void) {
 		drawMsg();
 	}
 
-	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-	Draw_EndFrame();
+	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+	C3D_FrameEnd(0);
 
 	if (hDown & KEY_CPAD_UP) {
 		zoomIn++;
