@@ -1,6 +1,6 @@
 /*
-*   This file is part of Universal-Manager
-*   Copyright (C) 2019 VoltZ, Epicpkmn11, Flame, RocketRobz, TotallyNotGuy
+*   This file is part of Universal-Updater
+*   Copyright (C) 2019-2020 DeadPhoenix8091, Epicpkmn11, Flame, RocketRobz, StackZ, TotallyNotGuy
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -27,23 +27,14 @@
 #ifndef GUI_HPP
 #define GUI_HPP
 
-#include <3ds.h>
-#include <citro2d.h>
-#include <citro3d.h>
-#include <random>
 #include <stack>
 #include <string.h>
-#include <unordered_map>
-#include <wchar.h>
 #include "common.hpp"
 
 // Spritesheets.
 #include "sprites.h"
 
 #include "colors.hpp"
-
-// emulated
-#define sprites_res_null_idx 500
 
 #define FONT_SIZE_18 0.72f
 #define FONT_SIZE_17 0.7f
@@ -54,30 +45,32 @@
 #define FONT_SIZE_9 0.37f
 
 namespace Gui {
+	// Init and Exit of the GUI. Also Character sprite loading.
 	Result init(void);
 	bool loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSeason);
 	void exit(void);
 
 	C3D_RenderTarget* target(gfxScreen_t t);
+	void setDraw(C3D_RenderTarget * screen);
 
+	// Clear Text Buffer.
 	void clearTextBufs(void);
-	
-	void sprite(int key, float x, float y);
-	void spriteScale(int key, float x, float y, float scaleX, float scaleY);
+
+	// Draw a Sprite from the sheet.
+	void sprite(int key, float x, float y, float ScaleX = 1, float ScaleY = 1);
 	void showBgSprite(int zoomIn);
 	void showCharSprite(int zoomIn, int fadeAlpha);
-
 	void Draw_ImageBlend(int key, float x, float y, u32 color);
-}
 
-	void set_screen(C3D_RenderTarget * screen);
+	// Text / String Functions.
+	void DrawStringCentered(float x, float y, float size, u32 color, std::string Text, int maxWidth = 0);
+	void DrawString(float x, float y, float size, u32 color, std::string Text, int maxWidth = 0);
+	void GetStringSize(float size, float *width, float *height, std::string Text);
+	float GetStringWidth(float size, std::string Text);
+	float GetStringHeight(float size, std::string Text);
 
-	void Draw_EndFrame(void);
-	void Draw_Text(float x, float y, float size, u32 color, const char *text);
-	void Draw_Textf(float x, float y, float size, u32 color, const char* text, ...);
-	void Draw_GetTextSize(float size, float *width, float *height, const char *text);
-	float Draw_GetTextWidth(float size, const char *text);
-	float Draw_GetTextHeight(float size, const char *text);
+	// Misc.
 	bool Draw_Rect(float x, float y, float w, float h, u32 color);
+}
 
 #endif

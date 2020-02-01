@@ -1,6 +1,6 @@
 /*
-*   This file is part of Universal-Manager
-*   Copyright (C) 2019 VoltZ, Epicpkmn11, Flame, RocketRobz, TotallyNotGuy
+*   This file is part of Universal-Updater
+*   Copyright (C) 2019-2020 DeadPhoenix8091, Epicpkmn11, Flame, RocketRobz, StackZ, TotallyNotGuy
 *
 *   This program is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -25,8 +25,7 @@
 */
 
 #include "gui.hpp"
-#include <assert.h>
-#include <stdarg.h>
+
 #include <unistd.h>
 
 
@@ -37,6 +36,7 @@ static C2D_SpriteSheet sprites;
 static C2D_SpriteSheet bgSprite;
 static C2D_SpriteSheet chracterSprite;
 static bool dochracterSpriteFree = false;
+bool currentScreen = false; // False -> Bottom, True -> Top.
 C2D_TextBuf sizeBuf;
 C2D_Font systemFont;
 
@@ -87,24 +87,15 @@ void Gui::exit(void) {
 	C3D_Fini();
 }
 
-void set_screen(C3D_RenderTarget * screen) {
+// Select, on which Screen should be drawn.
+void Gui::setDraw(C3D_RenderTarget * screen)
+{
 	C2D_SceneBegin(screen);
+	currentScreen = screen == top ? 1 : 0;
 }
 
-void Gui::sprite(int key, float x, float y) {
-	if (key == sprites_res_null_idx) {
-		return;
-	} else { // standard case
-		C2D_DrawImageAt(C2D_SpriteSheetGetImage(sprites, key), x, y, 0.5f);
-	}
-}
-
-void Gui::spriteScale(int key, float x, float y, float scaleX, float scaleY) {
-	if (key == sprites_res_null_idx) {
-		return;
-	} else { // standard case
-		C2D_DrawImageAt(C2D_SpriteSheetGetImage(sprites, key), x, y, 0.5f, NULL, scaleX, scaleY);
-	}
+void Gui::sprite(int key, float x, float y, float ScaleX, float ScaleY) {
+	C2D_DrawImageAt(C2D_SpriteSheetGetImage(sprites, key), x, y, 0.5f, NULL, ScaleX, ScaleY);
 }
 
 void Gui::showBgSprite(int zoomIn) {
@@ -133,45 +124,43 @@ void Gui::Draw_ImageBlend(int key, float x, float y, u32 color) {
 	C2D_DrawImageAt(C2D_SpriteSheetGetImage(sprites, key), x, y, 0.5f, &tint);
 }
 
-void Draw_EndFrame(void) {
-	C2D_TextBufClear(sizeBuf);
-	C3D_FrameEnd(0);
+void Gui::DrawStringCentered(float x, float y, float size, u32 color, std::string Text, int maxWidth) {
+	Gui::DrawString((currentScreen ? 200 : 160)+x-((maxWidth == 0 ? (int)Gui::GetStringWidth(size, Text) : std::min(maxWidth, (int)Gui::GetStringWidth(size, Text)))/2), y, size, color, Text, maxWidth);
 }
 
-void Draw_Text(float x, float y, float size, u32 color, const char *text) {
+// Draw String or Text.
+void Gui::DrawString(float x, float y, float size, u32 color, std::string Text, int maxWidth) {
 	C2D_Text c2d_text;
-	C2D_TextFontParse(&c2d_text, systemFont, sizeBuf, text);
+	C2D_TextParse(&c2d_text, sizeBuf, Text.c_str());
 	C2D_TextOptimize(&c2d_text);
-	C2D_DrawText(&c2d_text, C2D_WithColor, x, y, 0.5f, size, size, color);
+	if(maxWidth == 0) {
+		C2D_DrawText(&c2d_text, C2D_WithColor, x, y, 0.5f, size, size, color);
+	} else {
+		C2D_DrawText(&c2d_text, C2D_WithColor, x, y, 0.5f, std::min(size, size*(maxWidth/Gui::GetStringWidth(size, Text))), size, color);
+	}
 }
 
-void Draw_Textf(float x, float y, float size, u32 color, const char* text, ...) {
-	char buffer[256];
-	va_list args;
-	va_start(args, text);
-	vsnprintf(buffer, 256, text, args);
-	Draw_Text(x, y, size, color, buffer);
-	va_end(args);
-}
-
-void Draw_GetTextSize(float size, float *width, float *height, const char *text) {
-	C2D_Text c2d_text;
-	C2D_TextFontParse(&c2d_text, systemFont, sizeBuf, text);
-	C2D_TextGetDimensions(&c2d_text, size, size, width, height);
-}
-
-float Draw_GetTextWidth(float size, const char *text) {
+// Get String or Text Width.
+float Gui::GetStringWidth(float size, std::string Text) {
 	float width = 0;
-	Draw_GetTextSize(size, &width, NULL, text);
+	GetStringSize(size, &width, NULL, Text);
 	return width;
 }
 
-float Draw_GetTextHeight(float size, const char *text) {
+// Get String or Text Size.
+void Gui::GetStringSize(float size, float *width, float *height, std::string Text) {
+	C2D_Text c2d_text;
+	C2D_TextParse(&c2d_text, sizeBuf, Text.c_str());
+	C2D_TextGetDimensions(&c2d_text, size, size, width, height);
+}
+
+// Get String or Text Height.
+float Gui::GetStringHeight(float size, std::string Text) {
 	float height = 0;
-	Draw_GetTextSize(size, NULL, &height, text);
+	GetStringSize(size, NULL, &height, Text.c_str());
 	return height;
 }
 
-bool Draw_Rect(float x, float y, float w, float h, u32 color) {
+bool Gui::Draw_Rect(float x, float y, float w, float h, u32 color) {
 	return C2D_DrawRectSolid(x, y, 0.5f, w, h, color);
 }

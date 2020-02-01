@@ -201,28 +201,28 @@ static int messageNo = 0;
 static char emblemImported[48];
 
 static void drawMsg(void) {
-	Gui::spriteScale(sprites_msg_idx, 0, 8, 2, 1);
-	Gui::spriteScale(sprites_msg_idx, 160, 8, -2, 1);
+	Gui::sprite(sprites_msg_idx, 0, 8, 2, 1);
+	Gui::sprite(sprites_msg_idx, 160, 8, -2, 1);
 	Gui::sprite(sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 3) {
-		Draw_Text(32, 94, 0.60, BLACK, "Failed to import emblem.");
+		Gui::DrawString(32, 94, 0.60, BLACK, "Failed to import emblem.");
 	} else if (messageNo == 2) {
-		Draw_Text(32, 58, 0.60, BLACK, "Emblem exported successfully.");
-		Draw_Text(32, 94, 0.60, BLACK, "You can go to \"Import Emblems\"");
-		Draw_Text(32, 114, 0.60, BLACK, "and restore the exported emblem");
-		Draw_Text(32, 134, 0.60, BLACK, "at any time.");
+		Gui::DrawString(32, 58, 0.60, BLACK, "Emblem exported successfully.");
+		Gui::DrawString(32, 94, 0.60, BLACK, "You can go to \"Import Emblems\"");
+		Gui::DrawString(32, 114, 0.60, BLACK, "and restore the exported emblem");
+		Gui::DrawString(32, 134, 0.60, BLACK, "at any time.");
 	} else if (messageNo == 1) {
-		Draw_Text(32, 58, 0.60, BLACK, emblemImported);
-		Draw_Text(32, 94, 0.60, BLACK, "Please restore \"SavvyManager\"");
-		Draw_Text(32, 114, 0.60, BLACK, "data for your game in Checkpoint,");
-		Draw_Text(32, 134, 0.60, BLACK, "for the change to take effect.");
+		Gui::DrawString(32, 58, 0.60, BLACK, emblemImported);
+		Gui::DrawString(32, 94, 0.60, BLACK, "Please restore \"SavvyManager\"");
+		Gui::DrawString(32, 114, 0.60, BLACK, "data for your game in Checkpoint,");
+		Gui::DrawString(32, 134, 0.60, BLACK, "for the change to take effect.");
 	} else {
-		Draw_Text(32, 94, 0.60, BLACK, "This feature is not available yet.");
-		//Draw_Text(32, 104, 0.60, BLACK, "yet.");
+		Gui::DrawString(32, 94, 0.60, BLACK, "This feature is not available yet.");
+		//Gui::DrawString(32, 104, 0.60, BLACK, "yet.");
 	}
 	Gui::sprite(sprites_button_msg_shadow_idx, 114, 197);
 	Gui::sprite(sprites_button_msg_idx, 115, 188);
-	Draw_Text(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
+	Gui::DrawString(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
 }
 
 void changeEmblemGraphics(void) {
@@ -251,21 +251,21 @@ void changeEmblemGraphics(void) {
 	C2D_TargetClear(top, TRANSPARENT);
 	C2D_TargetClear(bottom, TRANSPARENT);
 	Gui::clearTextBufs();
-	set_screen(top);
+	Gui::setDraw(top);
 
-	Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
+	Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
 	for(int w = 0; w < 7; w++) {
 		for(int h = 0; h < 3; h++) {
 			Gui::sprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
 		}
 	}
-	Gui::spriteScale(sprites_emblem_back_idx, 100, 20, 2, 2);
+	Gui::sprite(sprites_emblem_back_idx, 100, 20, 2, 2);
 	//drawEmblem(136, 56, true);
 
-	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
-	set_screen(bottom);
-	Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
+	Gui::setDraw(bottom);
+	Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
 	for(int w = 0; w < 7; w++) {
 		for(int h = 0; h < 3; h++) {
 			Gui::sprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
@@ -280,14 +280,14 @@ void changeEmblemGraphics(void) {
 		// Game name
 		switch (importPage) {
 			case 1:
-				Draw_Text(32, 8, 0.50, BLACK, "Your emblem files");
+				Gui::DrawString(32, 8, 0.50, BLACK, "Your emblem files");
 				break;
 			case 0:
-				Draw_Text(32, 8, 0.50, BLACK, "Savvy Manager");
+				Gui::DrawString(32, 8, 0.50, BLACK, "Savvy Manager");
 				break;
 		}
-		Draw_Text(8, 8, 0.50, BLACK, "<");
-		Draw_Text(304, 8, 0.50, BLACK, ">");
+		Gui::DrawString(8, 8, 0.50, BLACK, "<");
+		Gui::DrawString(304, 8, 0.50, BLACK, ">");
 
 	  if (!displayNothing) {
 		int i2 = 48;
@@ -299,9 +299,9 @@ void changeEmblemGraphics(void) {
 			}
 			Gui::sprite(sprites_item_button_idx, 16, i2-20);
 			if (importPage == 1) {
-				Draw_Text(32, i2, 0.65, BLACK, getExportedEmblemName(i));
+				Gui::DrawString(32, i2, 0.65, BLACK, getExportedEmblemName(i));
 			} else {
-				Draw_Text(32, i2, 0.65, BLACK, import_emblemNames[i]);
+				Gui::DrawString(32, i2, 0.65, BLACK, import_emblemNames[i]);
 			}
 			i2 += 48;
 		}
@@ -315,18 +315,18 @@ void changeEmblemGraphics(void) {
 
 		cursorY = 64+(48*emblemChangeMenu_cursorPosition);
 
-		Draw_Text(8, 8, 0.50, BLACK, emblemText);
+		Gui::DrawString(8, 8, 0.50, BLACK, emblemText);
 
 		int i2 = 48;
 		Gui::sprite(sprites_item_button_idx, 16, i2-20);
-		Draw_Text(32, i2, 0.65, BLACK, "Import emblem");
+		Gui::DrawString(32, i2, 0.65, BLACK, "Import emblem");
 		i2 += 48;
 		Gui::sprite(sprites_item_button_idx, 16, i2-20);
-		Draw_Text(32, i2, 0.65, BLACK, "Export emblem");
+		Gui::DrawString(32, i2, 0.65, BLACK, "Export emblem");
 	} else {
 		cursorY = 64+(48*cursorPosition);
 
-		Draw_Text(8, 8, 0.50, BLACK, "Select the emblem to change.");
+		Gui::DrawString(8, 8, 0.50, BLACK, "Select the emblem to change.");
 
 		int i2 = 48;
 		for (int i = 0; i <= totalEmblems; i++) {
@@ -336,7 +336,7 @@ void changeEmblemGraphics(void) {
 			} else {
 				sprintf(emblemText, "Emblem %i", i+1);
 			}
-			Draw_Text(32, i2, 0.65, BLACK, emblemText);
+			Gui::DrawString(32, i2, 0.65, BLACK, emblemText);
 			i2 += 48;
 		}
 	}
@@ -352,8 +352,8 @@ void changeEmblemGraphics(void) {
 		drawMsg();
 	}
 
-	if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-	Draw_EndFrame();
+	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+	C3D_FrameEnd(0);
 }
 
 void changeEmblem(void) {

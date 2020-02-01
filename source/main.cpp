@@ -132,21 +132,21 @@ static bool showMessage = false;
 static int messageNo = 0;
 
 static void drawCannotEditMsg(void) {
-	Gui::spriteScale(sprites_msg_idx, 0, 8, 2, 1);
-	Gui::spriteScale(sprites_msg_idx, 160, 8, -2, 1);
+	Gui::sprite(sprites_msg_idx, 0, 8, 2, 1);
+	Gui::sprite(sprites_msg_idx, 160, 8, -2, 1);
 	Gui::sprite(sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 1) {
-		Draw_Text(32, 58, 0.60, BLACK, "Save data not found.");
-		Draw_Text(32, 90, 0.60, BLACK, highlightedGame==3 ? "Please back up the extra data using" : "Please back it up using");
-		Draw_Text(32, 110, 0.60, BLACK, "Checkpoint, and name the backup:");
-		Draw_Text(32, 134, 0.60, BLACK, "SavvyManager");
+		Gui::DrawString(32, 58, 0.60, BLACK, "Save data not found.");
+		Gui::DrawString(32, 90, 0.60, BLACK, highlightedGame==3 ? "Please back up the extra data using" : "Please back it up using");
+		Gui::DrawString(32, 110, 0.60, BLACK, "Checkpoint, and name the backup:");
+		Gui::DrawString(32, 134, 0.60, BLACK, "SavvyManager");
 	} else {
-		Draw_Text(32, 84, 0.60, BLACK, "Cannot edit Style Savvy's");
-		Draw_Text(32, 104, 0.60, BLACK, "save data yet.");
+		Gui::DrawString(32, 84, 0.60, BLACK, "Cannot edit Style Savvy's");
+		Gui::DrawString(32, 104, 0.60, BLACK, "save data yet.");
 	}
 	Gui::sprite(sprites_button_msg_shadow_idx, 114, 197);
 	Gui::sprite(sprites_button_msg_idx, 115, 188);
-	Draw_Text(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
+	Gui::DrawString(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
 }
 
 u32 hDown = 0;
@@ -341,9 +341,9 @@ int main()
 		dspfirmfound = true;
 	}else{
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-		set_screen(bottom);
-		Draw_Text(12, 16, 0.5f, WHITE, "Dumping DSP firm...");
-		Draw_EndFrame();
+		Gui::setDraw(bottom);
+		Gui::DrawString(12, 16, 0.5f, WHITE, "Dumping DSP firm...");
+		C3D_FrameEnd(0);
 		screenon();
 		dumpDsp();
 		if( access( "sdmc:/3ds/dspfirm.cdc", F_OK ) != -1 ) {
@@ -351,10 +351,11 @@ int main()
 			dspfirmfound = true;
 		} else {
 			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-			set_screen(bottom);
-			Draw_Text(12, 16, 0.5f, WHITE, "DSP firm dumping failed.\n"
+			C2D_TargetClear(bottom, TRANSPARENT); // clear Bottom Screen to avoid Text overdraw.
+			Gui::setDraw(bottom);
+			Gui::DrawString(12, 16, 0.5f, WHITE, "DSP firm dumping failed.\n"
 					"Running without sound.");
-			Draw_EndFrame();
+			C3D_FrameEnd(0);
 			for (int i = 0; i < 90; i++) {
 				gspWaitForVBlank();
 			}
@@ -401,21 +402,21 @@ int main()
 			C2D_TargetClear(top, TRANSPARENT);
 			C2D_TargetClear(bottom, TRANSPARENT);
 			Gui::clearTextBufs();
-			set_screen(top);
+			Gui::setDraw(top);
 
 			Gui::sprite(sprites_logo_rocketrobz_idx, 0, 0);
-			Draw_Text(8, 220, 0.50, BLACK, yeartext);
-			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+			Gui::DrawString(8, 220, 0.50, BLACK, yeartext);
+			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
-			set_screen(bottom);
-			Draw_Rect(0, 0, 320, 240, WHITE);
+			Gui::setDraw(bottom);
+			Gui::Draw_Rect(0, 0, 320, 240, WHITE);
 			/*text_width = 104;
-			Draw_Text(((320-text_width)/2), 100, 0.50, BLACK, yeartext);
+			Gui::DrawString(((320-text_width)/2), 100, 0.50, BLACK, yeartext);
 			text_width = 264;
-			Draw_Text(((320-text_width)/2), 116, 0.50, BLACK, yeartext2);*/
+			Gui::DrawString(((320-text_width)/2), 116, 0.50, BLACK, yeartext2);*/
 			Gui::sprite(sprites_logo_SSanniversary_idx, 32, 24);
-			if (fadealpha > 0) Draw_Rect(0, 0, 320, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-			Draw_EndFrame();
+			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+			C3D_FrameEnd(0);
 
 			screenDelay++;
 			if(screenDelay > 60*3){
@@ -427,7 +428,7 @@ int main()
 			C2D_TargetClear(top, TRANSPARENT);
 			C2D_TargetClear(bottom, TRANSPARENT);
 			Gui::clearTextBufs();
-			set_screen(top);
+			Gui::setDraw(top);
 
 			/*for(int w = 0; w < 7; w++) {
 				for(int h = 0; h < 3; h++) {
@@ -449,16 +450,16 @@ int main()
 					Gui::sprite(sprites_title4_screenshot_idx, 0, 0);
 					break;
 			}
-			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
-			set_screen(bottom);
-			Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
+			Gui::setDraw(bottom);
+			Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
 			for(int w = 0; w < 7; w++) {
 				for(int h = 0; h < 3; h++) {
 					Gui::sprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
 				}
 			}
-			Draw_Text(8, 8, 0.50, BLACK, "Select a game to manage it's save data.");
+			Gui::DrawString(8, 8, 0.50, BLACK, "Select a game to manage it's save data.");
 			switch(highlightedGame) {
 				case 0:
 				default:
@@ -474,14 +475,14 @@ int main()
 					Gui::sprite(sprites_title4_idx, 0, 56);
 					break;
 			}
-			Draw_Text(8, 112, 0.55, BLACK, "<");
-			Draw_Text(304, 112, 0.55, BLACK, ">");
-			Draw_Text(248, 220, 0.50, BLACK, verText);
+			Gui::DrawString(8, 112, 0.55, BLACK, "<");
+			Gui::DrawString(304, 112, 0.55, BLACK, ">");
+			Gui::DrawString(248, 220, 0.50, BLACK, verText);
 			if (showMessage) {
 				drawCannotEditMsg();
 			}
-			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-			Draw_EndFrame();
+			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+			C3D_FrameEnd(0);
 		} else if (screenmode == SCREEN_MODE_WHAT_TO_DO) {
 			if ((highlightedGame == 0)
 			|| (highlightedGame > 1 && whatToChange_cursorPosition == 1)
@@ -509,41 +510,41 @@ int main()
 			C2D_TargetClear(top, TRANSPARENT);
 			C2D_TargetClear(bottom, TRANSPARENT);
 			Gui::clearTextBufs();
-			set_screen(top);
+			Gui::setDraw(top);
 
-			Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
+			Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
 			for(int w = 0; w < 7; w++) {
 				for(int h = 0; h < 3; h++) {
 					Gui::sprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
 				}
 			}
-			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
-			set_screen(bottom);
-			Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
+			Gui::setDraw(bottom);
+			Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
 			for(int w = 0; w < 7; w++) {
 				for(int h = 0; h < 3; h++) {
 					Gui::sprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
 				}
 			}
-			Draw_Text(8, 8, 0.50, BLACK, "What do you want to change?");
+			Gui::DrawString(8, 8, 0.50, BLACK, "What do you want to change?");
 			int iconXpos = 64;
 			Gui::Draw_ImageBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
 			Gui::sprite(sprites_icon_profile_idx, iconXpos, 80);
-			Draw_Text(iconXpos-2, 140, 0.50, RED, "Characters");
+			Gui::DrawString(iconXpos-2, 140, 0.50, RED, "Characters");
 			iconXpos += 64;
 			if (highlightedGame == 1) {
 				// Show music pack option for Trendsetters
 				Gui::Draw_ImageBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
 				Gui::sprite(sprites_icon_music_idx, iconXpos, 80);
-				Draw_Text(iconXpos+14, 140, 0.50, RED, "Music");
+				Gui::DrawString(iconXpos+14, 140, 0.50, RED, "Music");
 			}
 			iconXpos += 64;
 			if (highlightedGame > 1) {
 				// Show emblem option for Fashion Forward and Styling Star
 				Gui::Draw_ImageBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
 				Gui::sprite(sprites_icon_emblem_idx, iconXpos, 80);
-				Draw_Text(iconXpos+8, 140, 0.50, RED, "Emblem");
+				Gui::DrawString(iconXpos+8, 140, 0.50, RED, "Emblem");
 			}
 			Gui::sprite(sprites_button_shadow_idx, 5, 199);
 			Gui::sprite(sprites_button_red_idx, 5, 195);
@@ -552,8 +553,8 @@ int main()
 			/*Gui::sprite(sprites_button_shadow_idx, 251, 199);
 			Gui::sprite(sprites_button_blue_idx, 251, 195);*/
 			drawCursor();
-			if (fadealpha > 0) Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-			Draw_EndFrame();
+			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+			C3D_FrameEnd(0);
 		} else if (screenmode == SCREEN_MODE_CHANGE_CHARACTER) {
 			extern void changeCharacterGraphics(void);
 			changeCharacterGraphics();
@@ -645,5 +646,5 @@ int main()
 	aptExit();
 	amExit();
 
-    return 0;
+	return 0;
 }
