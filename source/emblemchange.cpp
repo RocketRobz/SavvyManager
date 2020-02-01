@@ -205,20 +205,20 @@ static void drawMsg(void) {
 	Gui::sprite(sprites_msg_idx, 160, 8, -2, 1);
 	Gui::sprite(sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 3) {
-		Gui::DrawString(32, 94, 0.60, BLACK, "Failed to import emblem.");
+		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "Failed to import emblem.");
 	} else if (messageNo == 2) {
-		Gui::DrawString(32, 58, 0.60, BLACK, "Emblem exported successfully.");
-		Gui::DrawString(32, 94, 0.60, BLACK, "You can go to \"Import Emblems\"");
-		Gui::DrawString(32, 114, 0.60, BLACK, "and restore the exported emblem");
-		Gui::DrawString(32, 134, 0.60, BLACK, "at any time.");
+		Gui::DrawStringCentered(0, 58, 0.60, BLACK, "Emblem exported successfully.");
+		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "You can go to \"Import Emblems\"");
+		Gui::DrawStringCentered(0, 114, 0.60, BLACK, "and restore the exported emblem");
+		Gui::DrawStringCentered(0, 134, 0.60, BLACK, "at any time.");
 	} else if (messageNo == 1) {
-		Gui::DrawString(32, 58, 0.60, BLACK, emblemImported);
-		Gui::DrawString(32, 94, 0.60, BLACK, "Please restore \"SavvyManager\"");
-		Gui::DrawString(32, 114, 0.60, BLACK, "data for your game in Checkpoint,");
-		Gui::DrawString(32, 134, 0.60, BLACK, "for the change to take effect.");
+		Gui::DrawStringCentered(0, 58, 0.60, BLACK, emblemImported);
+		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "Please restore \"SavvyManager\"");
+		Gui::DrawStringCentered(0, 114, 0.60, BLACK, "data for your game in Checkpoint,");
+		Gui::DrawStringCentered(0, 134, 0.60, BLACK, "for the change to take effect.");
 	} else {
-		Gui::DrawString(32, 94, 0.60, BLACK, "This feature is not available yet.");
-		//Gui::DrawString(32, 104, 0.60, BLACK, "yet.");
+		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "This feature is not available yet.");
+		//Gui::DrawStringCentered(0, 104, 0.60, BLACK, "yet.");
 	}
 	Gui::sprite(sprites_button_msg_shadow_idx, 114, 197);
 	Gui::sprite(sprites_button_msg_idx, 115, 188);
@@ -280,10 +280,10 @@ void changeEmblemGraphics(void) {
 		// Game name
 		switch (importPage) {
 			case 1:
-				Gui::DrawString(32, 8, 0.50, BLACK, "Your emblem files");
+				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Your emblem files");
 				break;
 			case 0:
-				Gui::DrawString(32, 8, 0.50, BLACK, "Savvy Manager");
+				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Savvy Manager");
 				break;
 		}
 		Gui::DrawString(8, 8, 0.50, BLACK, "<");

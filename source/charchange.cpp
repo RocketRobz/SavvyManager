@@ -170,31 +170,31 @@ static void drawMsg(void) {
 	Gui::sprite(sprites_msg_idx, 160, 8, -2, 1);
 	Gui::sprite(messageNo==4 ? sprites_icon_question_idx : sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 5) {
-		Gui::DrawString(32, 68, 0.60, BLACK, "Everyone is now in Fashion Forward!");
-		Gui::DrawString(32, 88, 0.60, BLACK, "(Except for customers and reps.)");
-		Gui::DrawString(32, 114, 0.60, BLACK, "Invite them over for photo shoots,");
-		Gui::DrawString(32, 134, 0.60, BLACK, "as well as AR photo shoots!");
+		Gui::DrawStringCentered(0, 68, 0.60, BLACK, "Everyone is now in Fashion Forward!");
+		Gui::DrawStringCentered(0, 88, 0.60, BLACK, "(Except for customers and reps.)");
+		Gui::DrawStringCentered(0, 114, 0.60, BLACK, "Invite them over for photo shoots,");
+		Gui::DrawStringCentered(0, 134, 0.60, BLACK, "as well as AR photo shoots!");
 	} else if (messageNo == 4) {
-		Gui::DrawString(32, 58, 0.60, BLACK, "Characters from the 1st, 2nd, and");
-		Gui::DrawString(32, 78, 0.60, BLACK, "4th games, will be added to the 3rd.");
-		Gui::DrawString(32, 104, 0.60, BLACK, "Characters part of downloaded");
-		Gui::DrawString(32, 124, 0.60, BLACK, "Caprice Chalet rooms will be");
-		Gui::DrawString(32, 144, 0.60, BLACK, "overwritten. Is this OK?");
+		Gui::DrawStringCentered(0, 58, 0.60, BLACK, "Characters from the 1st, 2nd, and");
+		Gui::DrawStringCentered(0, 78, 0.60, BLACK, "4th games, will be added to the 3rd.");
+		Gui::DrawStringCentered(0, 104, 0.60, BLACK, "Characters part of downloaded");
+		Gui::DrawStringCentered(0, 124, 0.60, BLACK, "Caprice Chalet rooms will be");
+		Gui::DrawStringCentered(0, 144, 0.60, BLACK, "overwritten. Is this OK?");
 	} else if (messageNo == 3) {
-		Gui::DrawString(32, 94, 0.60, BLACK, "Failed to import character.");
+		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "Failed to import character.");
 	} else if (messageNo == 2) {
-		Gui::DrawString(32, 58, 0.60, BLACK, "Character exported successfully.");
-		Gui::DrawString(32, 94, 0.60, BLACK, "You can go to \"Import Characters\"");
-		Gui::DrawString(32, 114, 0.60, BLACK, "and restore the exported character");
-		Gui::DrawString(32, 134, 0.60, BLACK, "at any time.");
+		Gui::DrawStringCentered(0, 58, 0.60, BLACK, "Character exported successfully.");
+		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "You can go to \"Import Characters\"");
+		Gui::DrawStringCentered(0, 114, 0.60, BLACK, "and restore the exported character");
+		Gui::DrawStringCentered(0, 134, 0.60, BLACK, "at any time.");
 	} else if (messageNo == 1) {
-		Gui::DrawString(32, 58, 0.60, BLACK, chararacterImported);
-		Gui::DrawString(32, 94, 0.60, BLACK, "Please restore \"SavvyManager\"");
-		Gui::DrawString(32, 114, 0.60, BLACK, "data for your game in Checkpoint,");
-		Gui::DrawString(32, 134, 0.60, BLACK, "for the change to take effect.");
+		Gui::DrawStringCentered(0, 58, 0.60, BLACK, chararacterImported);
+		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "Please restore \"SavvyManager\"");
+		Gui::DrawStringCentered(0, 114, 0.60, BLACK, "data for your game in Checkpoint,");
+		Gui::DrawStringCentered(0, 134, 0.60, BLACK, "for the change to take effect.");
 	} else {
-		Gui::DrawString(32, 84, 0.60, BLACK, "This feature is not available yet.");
-		//Gui::DrawString(32, 104, 0.60, BLACK, "yet.");
+		Gui::DrawStringCentered(0, 84, 0.60, BLACK, "This feature is not available yet.");
+		//Gui::DrawStringCentered(0, 104, 0.60, BLACK, "yet.");
 	}
 	if (messageNo == 4) {
 		Gui::sprite(sprites_button_msg_shadow_idx, 52, 197);
@@ -297,7 +297,7 @@ void changeCharacterGraphics(void) {
 		if (previewCharacterFound) {
 			Gui::showCharSprite(zoomIn, charFadeAlpha);
 		} else {
-			Gui::DrawString(112, 104, 0.65, WHITE, (import_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
+			Gui::DrawStringCentered(0, 104, 0.65, WHITE, (import_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
 		}
 		charFadeAlpha += 20;
 		if (charFadeAlpha > 255) charFadeAlpha = 255;
@@ -308,8 +308,8 @@ void changeCharacterGraphics(void) {
 	if (showMessage && messageNo == 4) {
 		Gui::DrawString(8, 210, 0.50, WHITE, removeBags ? " Keep bags" : " Remove bags");
 		// Selected season
-		Gui::DrawString(156, 208, 0.65, WHITE, "L");
-		Gui::DrawString(172, 210, 0.50, WHITE, seasonName());
+		Gui::DrawString(160, 208, 0.65, WHITE, "L");
+		Gui::DrawStringCentered(0, 210, 0.50, WHITE, seasonName());
 		Gui::DrawString(232, 208, 0.65, WHITE, "R");
 	}
 
@@ -330,19 +330,19 @@ void changeCharacterGraphics(void) {
 		// Game name
 		switch (import_highlightedGame) {
 			case 4:
-				Gui::DrawString(32, 8, 0.50, BLACK, "Your character files");
+				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Your character files");
 				break;
 			case 3:
-				Gui::DrawString(32, 8, 0.50, BLACK, "Style Savvy: Styling Star");
+				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Style Savvy: Styling Star");
 				break;
 			case 2:
-				Gui::DrawString(32, 8, 0.50, BLACK, "Style Savvy: Fashion Forward");
+				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Style Savvy: Fashion Forward");
 				break;
 			case 1:
-				Gui::DrawString(32, 8, 0.50, BLACK, "Style Savvy: Trendsetters");
+				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Style Savvy: Trendsetters");
 				break;
 			case 0:
-				Gui::DrawString(32, 8, 0.50, BLACK, "Style Savvy");
+				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Style Savvy");
 				break;
 		}
 		Gui::DrawString(8, 8, 0.50, BLACK, "<");
@@ -350,8 +350,8 @@ void changeCharacterGraphics(void) {
 
 		if (import_highlightedGame != 4) {
 			// Selected season
-			Gui::DrawString(116, 208, 0.65, BLACK, "L");
-			Gui::DrawString(132, 210, 0.50, BLACK, seasonName());
+			Gui::DrawString(120, 208, 0.65, BLACK, "L");
+			Gui::DrawStringCentered(0, 210, 0.50, BLACK, seasonName());
 			Gui::DrawString(192, 208, 0.65, BLACK, "R");
 		}
 
