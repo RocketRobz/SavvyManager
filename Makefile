@@ -50,9 +50,10 @@ VERSION_MICRO := 0
 #---------------------------------------------------------------------------------
 TARGET		:=	SavvyManager
 BUILD		:=	build
-SOURCES		:=	source source/utils
+UNIVCORE	:=	Universal-Core
+SOURCES		:=	$(UNIVCORE) source source/utils
 DATA		:=	data
-INCLUDES	:=	include include/utils
+INCLUDES	:=	$(UNIVCORE) include include/utils
 GRAPHICS	:=	assets/gfx assets/gfx_chars assets/gfx_charprevbg
 ROMFS		:=	romfs
 GFXBUILD	:=	$(ROMFS)/gfx

@@ -1,0 +1,11 @@
+
+*.d
+*.o
+*.exe
+*.t3x
+*.3dsx
+*.cia
+*.elf
+*.smdh
+*.map
+*.lst
