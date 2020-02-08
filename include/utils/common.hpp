@@ -14,6 +14,10 @@ extern "C" {
 #ifdef __cplusplus
 }
 
+#include "gfx.hpp"
+#include "gui.hpp"
+#include "screenCommon.hpp"
+
 #include <cstdio>
 #include <iostream>
 #include <string>

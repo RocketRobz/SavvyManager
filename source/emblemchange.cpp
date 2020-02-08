@@ -6,14 +6,11 @@
 #include <unistd.h>		// access
 #include <sys/stat.h>
 
-#include "gui.hpp"
+#include "common.hpp"
 #include "savedata.h"
 #include "file_browse.h"
 
 #include "import_emblemnames.h"
-
-extern C3D_RenderTarget* top;
-extern C3D_RenderTarget* bottom;
 
 extern void sndSelect(void);
 extern void sndBack(void);
@@ -56,8 +53,6 @@ extern bool showCursor;
 extern int cursorX;
 extern int cursorY;
 extern int cursorAlpha;
-
-extern void drawCursor(void);
 
 extern u32 hDown;
 extern touchPosition touch;
@@ -201,9 +196,9 @@ static int messageNo = 0;
 static char emblemImported[48];
 
 static void drawMsg(void) {
-	Gui::sprite(sprites_msg_idx, 0, 8, 2, 1);
-	Gui::sprite(sprites_msg_idx, 160, 8, -2, 1);
-	Gui::sprite(sprites_icon_msg_idx, 132, -2);
+	GFX::DrawSprite(sprites_msg_idx, 0, 8, 2, 1);
+	GFX::DrawSprite(sprites_msg_idx, 160, 8, -2, 1);
+	GFX::DrawSprite(sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 3) {
 		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "Failed to import emblem.");
 	} else if (messageNo == 2) {
@@ -220,8 +215,8 @@ static void drawMsg(void) {
 		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "This feature is not available yet.");
 		//Gui::DrawStringCentered(0, 104, 0.60, BLACK, "yet.");
 	}
-	Gui::sprite(sprites_button_msg_shadow_idx, 114, 197);
-	Gui::sprite(sprites_button_msg_idx, 115, 188);
+	GFX::DrawSprite(sprites_button_msg_shadow_idx, 114, 197);
+	GFX::DrawSprite(sprites_button_msg_idx, 115, 188);
 	Gui::DrawString(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
 }
 
@@ -248,27 +243,27 @@ void changeEmblemGraphics(void) {
 	}
 
 	C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-	C2D_TargetClear(top, TRANSPARENT);
-	C2D_TargetClear(bottom, TRANSPARENT);
+	C2D_TargetClear(Top, TRANSPARENT);
+	C2D_TargetClear(Bottom, TRANSPARENT);
 	Gui::clearTextBufs();
-	Gui::setDraw(top);
+	Gui::ScreenDraw(Top);
 
 	Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
 	for(int w = 0; w < 7; w++) {
 		for(int h = 0; h < 3; h++) {
-			Gui::sprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
+			GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
 		}
 	}
-	Gui::sprite(sprites_emblem_back_idx, 100, 20, 2, 2);
+	GFX::DrawSprite(sprites_emblem_back_idx, 100, 20, 2, 2);
 	//drawEmblem(136, 56, true);
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
-	Gui::setDraw(bottom);
+	Gui::ScreenDraw(Bottom);
 	Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
 	for(int w = 0; w < 7; w++) {
 		for(int h = 0; h < 3; h++) {
-			Gui::sprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
+			GFX::DrawSprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
 		}
 	}
 
@@ -297,7 +292,7 @@ void changeEmblemGraphics(void) {
 			} else {
 				if (i > totalEmblems) break;
 			}
-			Gui::sprite(sprites_item_button_idx, 16, i2-20);
+			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 			if (importPage == 1) {
 				Gui::DrawString(32, i2, 0.65, BLACK, getExportedEmblemName(i));
 			} else {
@@ -318,10 +313,10 @@ void changeEmblemGraphics(void) {
 		Gui::DrawString(8, 8, 0.50, BLACK, emblemText);
 
 		int i2 = 48;
-		Gui::sprite(sprites_item_button_idx, 16, i2-20);
+		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 		Gui::DrawString(32, i2, 0.65, BLACK, "Import emblem");
 		i2 += 48;
-		Gui::sprite(sprites_item_button_idx, 16, i2-20);
+		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 		Gui::DrawString(32, i2, 0.65, BLACK, "Export emblem");
 	} else {
 		cursorY = 64+(48*cursorPosition);
@@ -330,7 +325,7 @@ void changeEmblemGraphics(void) {
 
 		int i2 = 48;
 		for (int i = 0; i <= totalEmblems; i++) {
-			Gui::sprite(sprites_item_button_idx, 16, i2-20);
+			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 			if (highlightedGame == 2) {
 				sprintf(emblemText, "Emblem");
 			} else {
@@ -341,12 +336,12 @@ void changeEmblemGraphics(void) {
 		}
 	}
 
-	Gui::sprite(sprites_button_shadow_idx, 5, 199);
-	Gui::sprite(sprites_button_red_idx, 5, 195);
-	Gui::sprite(sprites_arrow_back_idx, 19, 195);
-	Gui::sprite(sprites_button_b_idx, 44, 218);
+	GFX::DrawSprite(sprites_button_shadow_idx, 5, 199);
+	GFX::DrawSprite(sprites_button_red_idx, 5, 195);
+	GFX::DrawSprite(sprites_arrow_back_idx, 19, 195);
+	GFX::DrawSprite(sprites_button_b_idx, 44, 218);
 
-	drawCursor();
+	GFX::drawCursor();
 
 	if (showMessage) {
 		drawMsg();

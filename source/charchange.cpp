@@ -6,7 +6,7 @@
 #include <unistd.h>		// access
 #include <sys/stat.h>
 
-#include "gui.hpp"
+#include "common.hpp"
 #include "savedata.h"
 #include "file_browse.h"
 
@@ -17,9 +17,6 @@
 #include "import_ss3charnames.h"
 #include "import_ss4charnames.h"
 #include "import_everycharnames.h"
-
-extern C3D_RenderTarget* top;
-extern C3D_RenderTarget* bottom;
 
 extern void sndSelect(void);
 extern void sndBack(void);
@@ -83,8 +80,6 @@ extern bool showCursor;
 extern int cursorX;
 extern int cursorY;
 extern int cursorAlpha;
-
-extern void drawCursor(void);
 
 extern u32 hDown;
 extern touchPosition touch;
@@ -166,9 +161,9 @@ static int messageNo = 0;
 static char chararacterImported[48];
 
 static void drawMsg(void) {
-	Gui::sprite(sprites_msg_idx, 0, 8, 2, 1);
-	Gui::sprite(sprites_msg_idx, 160, 8, -2, 1);
-	Gui::sprite(messageNo==4 ? sprites_icon_question_idx : sprites_icon_msg_idx, 132, -2);
+	GFX::DrawSprite(sprites_msg_idx, 0, 8, 2, 1);
+	GFX::DrawSprite(sprites_msg_idx, 160, 8, -2, 1);
+	GFX::DrawSprite(messageNo==4 ? sprites_icon_question_idx : sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 5) {
 		Gui::DrawStringCentered(0, 68, 0.60, BLACK, "Everyone is now in Fashion Forward!");
 		Gui::DrawStringCentered(0, 88, 0.60, BLACK, "(Except for customers and reps.)");
@@ -197,15 +192,15 @@ static void drawMsg(void) {
 		//Gui::DrawStringCentered(0, 104, 0.60, BLACK, "yet.");
 	}
 	if (messageNo == 4) {
-		Gui::sprite(sprites_button_msg_shadow_idx, 52, 197);
-		Gui::sprite(sprites_button_msg_idx, 53, 188);
-		Gui::sprite(sprites_button_msg_shadow_idx, 176, 197);
-		Gui::sprite(sprites_button_msg_idx, 177, 188);
+		GFX::DrawSprite(sprites_button_msg_shadow_idx, 52, 197);
+		GFX::DrawSprite(sprites_button_msg_idx, 53, 188);
+		GFX::DrawSprite(sprites_button_msg_shadow_idx, 176, 197);
+		GFX::DrawSprite(sprites_button_msg_idx, 177, 188);
 		Gui::DrawString(72, 196, 0.70, MSG_BUTTONTEXT, " No");
 		Gui::DrawString(196, 196, 0.70, MSG_BUTTONTEXT, " Yes");
 	} else {
-		Gui::sprite(sprites_button_msg_shadow_idx, 114, 197);
-		Gui::sprite(sprites_button_msg_idx, 115, 188);
+		GFX::DrawSprite(sprites_button_msg_shadow_idx, 114, 197);
+		GFX::DrawSprite(sprites_button_msg_idx, 115, 188);
 		Gui::DrawString(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
 	}
 }
@@ -219,11 +214,11 @@ void loadChrImage(bool Robz) {
 		} else {
 			sprintf(chrFilePath, "romfs:/gfx/null.t3x");	// All Seasons
 		}
-		previewCharacterFound = Gui::loadCharSprite(chrFilePath, chrFilePath);
+		previewCharacterFound = GFX::loadCharSprite(chrFilePath, chrFilePath);
 	} else {
 		sprintf(chrFilePath, "romfs:/gfx/ss%i_%s.t3x", highlightedGame+1, (Robz ? "Robz" : import_characterName()));				// All Seasons
 		sprintf(chrFilePath2, "romfs:/gfx/ss%i_%s%i.t3x", highlightedGame+1, (Robz ? "Robz" : import_characterName()), seasonNo);	// One Season
-		previewCharacterFound = Gui::loadCharSprite(chrFilePath, chrFilePath2);
+		previewCharacterFound = GFX::loadCharSprite(chrFilePath, chrFilePath2);
 	}
 	previewCharacter = true;
 }
@@ -287,15 +282,15 @@ void changeCharacterGraphics(void) {
 	}
 
 	C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-	C2D_TargetClear(top, TRANSPARENT);
-	C2D_TargetClear(bottom, TRANSPARENT);
+	C2D_TargetClear(Top, TRANSPARENT);
+	C2D_TargetClear(Bottom, TRANSPARENT);
 	Gui::clearTextBufs();
-	Gui::setDraw(top);
+	Gui::ScreenDraw(Top);
 
-	Gui::showBgSprite(zoomIn);
+	GFX::showBgSprite(zoomIn);
 	if (previewCharacter) {
 		if (previewCharacterFound) {
-			Gui::showCharSprite(zoomIn, charFadeAlpha);
+			GFX::showCharSprite(zoomIn, charFadeAlpha);
 		} else {
 			Gui::DrawStringCentered(0, 104, 0.65, WHITE, (import_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
 		}
@@ -315,11 +310,11 @@ void changeCharacterGraphics(void) {
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
-	Gui::setDraw(bottom);
+	Gui::ScreenDraw(Bottom);
 	Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
 	for(int w = 0; w < 7; w++) {
 		for(int h = 0; h < 3; h++) {
-			Gui::sprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
+			GFX::DrawSprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
 		}
 	}
 
@@ -360,24 +355,24 @@ void changeCharacterGraphics(void) {
 		for (int i = import_characterShownFirst; i < import_characterShownFirst+3; i++) {
 			if (import_highlightedGame == 4) {
 				if (i >= numberOfExportedCharacters) break;
-				Gui::sprite(sprites_item_button_idx, 16, i2-20);
-				Gui::sprite((getExportedCharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+				GFX::DrawSprite((getExportedCharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, BLACK, getExportedCharacterName(i));
 			} else if (import_highlightedGame == 3) {
-				Gui::sprite(sprites_item_button_idx, 16, i2-20);
-				Gui::sprite((import_ss4CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+				GFX::DrawSprite((import_ss4CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, BLACK, import_ss4CharacterNames[i]);
 			} else if (import_highlightedGame == 2) {
-				Gui::sprite(sprites_item_button_idx, 16, i2-20);
-				Gui::sprite((import_ss3CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+				GFX::DrawSprite((import_ss3CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, BLACK, import_ss3CharacterNames[i]);
 			} else if (import_highlightedGame == 1) {
-				Gui::sprite(sprites_item_button_idx, 16, i2-20);
-				Gui::sprite((import_ss2CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+				GFX::DrawSprite((import_ss2CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, BLACK, import_ss2CharacterNames[i]);
 			} else if (import_highlightedGame == 0) {
-				Gui::sprite(sprites_item_button_idx, 16, i2-20);
-				Gui::sprite((import_ss1CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+				GFX::DrawSprite((import_ss1CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, BLACK, import_ss1CharacterNames[i]);
 			}
 			i2 += 48;
@@ -391,20 +386,20 @@ void changeCharacterGraphics(void) {
 		int i2 = 0;
 		if (characterChangeMenu_optionShownFirst == 0) {
 			i2 += 48;
-			Gui::sprite(sprites_item_button_idx, 16, i2-20);
+			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 			Gui::DrawString(32, i2, 0.65, BLACK, "Change attributes");
 		}
 		if (highlightedGame == 3) {
 			i2 += 48;
-			Gui::sprite(sprites_item_button_idx, 16, i2-20);
+			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 			Gui::DrawString(32, i2, 0.65, BLACK, "Change bow placement");
 		}
 		i2 += 48;
-		Gui::sprite(sprites_item_button_idx, 16, i2-20);
+		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 		Gui::DrawString(32, i2, 0.65, BLACK, "Import character");
 		if (highlightedGame < 3 || characterChangeMenu_optionShownFirst == 1) {
 			i2 += 48;
-			Gui::sprite(sprites_item_button_idx, 16, i2-20);
+			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 			Gui::DrawString(32, i2, 0.65, BLACK, "Export character");
 		}
 	} else {
@@ -419,25 +414,25 @@ void changeCharacterGraphics(void) {
 	  if (!displayNothing) {
 		int i2 = 48;
 		for (int i = characterShownFirst; i < characterShownFirst+3; i++) {
-			Gui::sprite(sprites_item_button_idx, 16, i2-20);
+			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 			if (highlightedGame == 3) {
 				if (i==0) {
-					Gui::sprite((getSS4CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+					GFX::DrawSprite((getSS4CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 					Gui::DrawString(64, i2, 0.65, BLACK, ss4PlayerName);
 				} else {
-					Gui::sprite((getSS4CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+					GFX::DrawSprite((getSS4CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 					Gui::DrawString(64, i2, 0.65, BLACK, ss4CharacterNames[i]);
 				}
 			} else if (highlightedGame == 2) {
 				if (i==0) {
-					Gui::sprite((getSS3CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+					GFX::DrawSprite((getSS3CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 					Gui::DrawString(64, i2, 0.65, BLACK, ss3PlayerName);
 				} else {
-					Gui::sprite((getSS3CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+					GFX::DrawSprite((getSS3CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 					Gui::DrawString(64, i2, 0.65, BLACK, ss3CharacterNames[i]);
 				}
 			} else if (highlightedGame == 1) {
-				Gui::sprite((getSS2CharacterGender() ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				GFX::DrawSprite((getSS2CharacterGender() ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, BLACK, ss2PlayerName);
 				break;
 			}
@@ -446,12 +441,12 @@ void changeCharacterGraphics(void) {
 	  }
 	}
 
-	Gui::sprite(sprites_button_shadow_idx, 5, 199);
-	Gui::sprite(sprites_button_red_idx, 5, 195);
-	Gui::sprite(sprites_arrow_back_idx, 19, 195);
-	Gui::sprite(sprites_button_b_idx, 44, 218);
+	GFX::DrawSprite(sprites_button_shadow_idx, 5, 199);
+	GFX::DrawSprite(sprites_button_red_idx, 5, 195);
+	GFX::DrawSprite(sprites_arrow_back_idx, 19, 195);
+	GFX::DrawSprite(sprites_button_b_idx, 44, 218);
 
-	drawCursor();
+	GFX::drawCursor();
 
 	if (showMessage) {
 		drawMsg();
