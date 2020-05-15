@@ -291,7 +291,6 @@ int main()
 
 	aptInit();
 	amInit();
-	sdmcInit();
 	romfsInit();
 	srvInit();
 	hidInit();
@@ -633,7 +632,6 @@ int main()
 	hidExit();
 	srvExit();
 	romfsExit();
-	sdmcExit();
 	aptExit();
 	amExit();
 
