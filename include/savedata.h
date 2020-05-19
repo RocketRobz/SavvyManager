@@ -118,6 +118,8 @@ extern char ss2PlayerName[10];
 extern char ss3PlayerName[10];
 extern char ss4PlayerName[10];
 
+extern void commitSaveData(void);
+
 extern void readSS2Save(void);
 extern void writeSS2Save(void);
 extern void readSS3Save(void);

@@ -26,6 +26,22 @@ static bool ss2SaveRead = false;
 static bool ss3SaveRead = false;
 static bool ss4SaveRead = false;
 
+static bool ss2SaveModified = false;
+static bool ss3SaveModified = false;
+static bool ss4SaveModified = false;
+
+void commitSaveData(void) {
+	if (ss2SaveModified) {
+		archiveCommitSaveData("ss2");
+	}
+	if (ss3SaveModified) {
+		archiveCommitSaveData("ss3");
+	}
+	if (ss4SaveModified) {
+		archiveCommitSaveData("ss4");
+	}
+}
+
 /*
 	Style Savvy
 */
@@ -76,10 +92,11 @@ void readSS2Save(void) {
 }
 
 void writeSS2Save(void) {
-	remove(ss2SavePath);
 	FILE* saveData = fopen(ss2SavePath, "wb");
 	fwrite(ss2Save, (int)sizeof(ss2Save), 1, saveData);
 	fclose(saveData);
+
+	ss2SaveModified = true;
 }
 
 void readSS2Character(void) {
@@ -161,10 +178,11 @@ void readSS3Save(void) {
 }
 
 void writeSS3Save(void) {
-	remove(ss3SavePath);
 	FILE* saveData = fopen(ss3SavePath, "wb");
 	fwrite(ss3Save, (int)sizeof(ss3Save), 1, saveData);
 	fclose(saveData);
+
+	ss3SaveModified = true;
 }
 
 void readSS3Character(u16 id) {
@@ -337,10 +355,11 @@ void readSS4Save(void) {
 }
 
 void writeSS4Save(void) {
-	remove(ss4SavePath);
 	FILE* saveData = fopen(ss4SavePath, "wb");
 	fwrite(ss4Save, (int)sizeof(ss4Save), 1, saveData);
 	fclose(saveData);
+
+	ss4SaveModified = true;
 }
 
 void readSS4Character(u16 id) {

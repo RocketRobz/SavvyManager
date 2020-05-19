@@ -621,6 +621,7 @@ int main()
 
 	runThreads = false;
 
+	commitSaveData();
 	archiveUnmountAll();
 
 	//delete music;
