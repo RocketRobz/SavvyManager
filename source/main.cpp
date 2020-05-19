@@ -371,11 +371,24 @@ int main()
 		sfx_highlight = new sound("romfs:/sounds/highlight.wav", 4, false);
 	}
 
+	Result res;
+
 	const u32 path2[3] = {MEDIATYPE_SD, 0x000A9100, 0x00040000};
+	const u32 path2card[3] = {MEDIATYPE_GAME_CARD, 0x000A9100, 0x00040000};
 	const u32 path3[3] = {MEDIATYPE_SD, 0x00196500, 0x00040000};
+	const u32 path3card[3] = {MEDIATYPE_GAME_CARD, 0x00196500, 0x00040000};
 	const u32 path4[3] = {MEDIATYPE_SD, 0x00001C25, 0};
-	archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2}, "ss2");
-	archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path3}, "ss3");
+
+	res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2}, "ss2");	// Read from digital version
+	if (R_FAILED(res)) {
+		res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2card}, "ss2");	// Read from game card
+	}
+
+	res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path3}, "ss3");	// Read from digital version
+	if (R_FAILED(res)) {
+		res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path3card}, "ss3");	// Read from game card
+	}
+
 	//archiveMount(ARCHIVE_EXTDATA, {PATH_BINARY, 12, path4}, "ss4");
 	FSUSER_OpenArchive(&archive4, ARCHIVE_EXTDATA, {PATH_BINARY, 12, path4});
 	//FSUSER_OpenDirectory(&handle4, archive4, fsMakePath(PATH_UTF16, "/"));
