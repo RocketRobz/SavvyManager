@@ -23,6 +23,7 @@ extern void loadSettings(void);
 
 // Current screen mode.
 enum ScreenMode {
+	SCREEN_MODE_EXIT = -1,				// Exit homebrew
 	SCREEN_MODE_ROCKETROBZ = 0,			// RocketRobz logo
 	SCREEN_MODE_GAME_SELECT = 1,		// Game select
 	SCREEN_MODE_WHAT_TO_DO = 2,			// What to do?
@@ -169,7 +170,7 @@ void controlThread(void) {
 					sndSelect();
 					showMessage = false;
 				}
-			} else if (!fadein) {
+			} else if (!fadein && !fadeout) {
 				if ((hDown & KEY_LEFT) || ((hDown & KEY_TOUCH) && touch.px >= 0 && touch.px < 32 && touch.py >= 104 && touch.py < 104+32)) {
 					sndHighlight();
 					highlightedGame--;
@@ -198,6 +199,13 @@ void controlThread(void) {
 					showMessage = true;
 				  }
 				}
+
+				if (hDown & KEY_START) {
+					sndBack();
+					screenmodebuffer = SCREEN_MODE_EXIT;
+					fadecolor = 0;
+					fadeout = true;
+				}
 			}
 		} else if (screenmode == SCREEN_MODE_WHAT_TO_DO) {
 			if (showMessage) {
@@ -205,7 +213,7 @@ void controlThread(void) {
 					sndSelect();
 					showMessage = false;
 				}
-			} else if (!fadein) {
+			} else if (!fadein && !fadeout) {
 				if (highlightedGame > 0 && showCursor) {
 					if (hDown & KEY_LEFT) {
 						sndHighlight();
@@ -397,7 +405,18 @@ int main()
 			screenDelay = 0;
 		}
 
-		if (screenmode == SCREEN_MODE_ROCKETROBZ) {
+		if (screenmode == SCREEN_MODE_EXIT) {
+			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
+			C2D_TargetClear(Top, TRANSPARENT);
+			C2D_TargetClear(Bottom, TRANSPARENT);
+			Gui::clearTextBufs();
+			Gui::ScreenDraw(Top);
+			Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, 255)); // Fade in/out effect
+			Gui::ScreenDraw(Bottom);
+			Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, 255)); // Fade in/out effect
+			C3D_FrameEnd(0);
+			break;
+		} else if (screenmode == SCREEN_MODE_ROCKETROBZ) {
 			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 			C2D_TargetClear(Top, TRANSPARENT);
 			C2D_TargetClear(Bottom, TRANSPARENT);
@@ -612,7 +631,9 @@ int main()
 			if (fadealpha > 255) {
 				fadealpha = 255;
 				screenmode = screenmodebuffer;
-				fadein = true;
+				if (screenmode != SCREEN_MODE_EXIT) {
+					fadein = true;
+				}
 				fadeout = false;
 			}
 		}
