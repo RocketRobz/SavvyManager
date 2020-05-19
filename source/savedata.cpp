@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <cstring>
 #include "savedata.h"
+#include "stringtool.h"
 #include "tonccpy.h"
 
 ss2character ss2CharacterData;
@@ -30,6 +31,9 @@ static bool ss2SaveModified = false;
 static bool ss3SaveModified = false;
 static bool ss4SaveModified = false;
 
+Handle handle4;
+FS_Archive archive4;
+
 void commitSaveData(void) {
 	if (ss2SaveModified) {
 		archiveCommitSaveData("ss2");
@@ -38,7 +42,10 @@ void commitSaveData(void) {
 		archiveCommitSaveData("ss3");
 	}
 	if (ss4SaveModified) {
-		archiveCommitSaveData("ss4");
+		u32 bytesWritten = 0;
+		FSUSER_OpenFile(&handle4, archive4, fsMakePath(PATH_UTF16, (const void*)UTF8toUTF16(ss4SavePath).data()), FS_OPEN_WRITE, FS_WRITE_FLUSH);
+		FSFILE_Write(handle4, &bytesWritten, 0, ss4Save, (u32)sizeof(ss4Save), 0);
+		FSFILE_Close(handle4);
 	}
 }
 
@@ -339,12 +346,28 @@ void writeSS3EmblemFile(const char* filename) {
 /*
 	Style Savvy: Styling Star
 */
+bool foundSS4Save(void) {
+	Result res = FSUSER_OpenFile(&handle4, archive4, fsMakePath(PATH_UTF16, (const void*)UTF8toUTF16(ss4SavePath).data()), FS_OPEN_READ, 0);
+	if (R_SUCCEEDED(res)) {
+		FSFILE_Close(handle4);
+		return true;
+	}
+
+	return false;
+}
+
 void readSS4Save(void) {
 	if (ss4SaveRead) return;
 
-	FILE* saveData = fopen(ss4SavePath, "rb");
+	std::u16string savePath = UTF8toUTF16(ss4SavePath);
+	u32 bytesRead = 0;
+
+	/*FILE* saveData = fopen(ss4SavePath, "rb");
 	fread(ss4Save, (int)sizeof(ss4Save), 1, saveData);
-	fclose(saveData);
+	fclose(saveData);*/
+	FSUSER_OpenFile(&handle4, archive4, fsMakePath(PATH_UTF16, (const void*)UTF8toUTF16(ss4SavePath).data()), FS_OPEN_READ, 0);
+	FSFILE_Read(handle4, &bytesRead, 0, ss4Save, (u32)sizeof(ss4Save));
+	FSFILE_Close(handle4);
 
 	// Get playable character's name
 	for (int i = 0; i < 9; i++) {
@@ -355,9 +378,9 @@ void readSS4Save(void) {
 }
 
 void writeSS4Save(void) {
-	FILE* saveData = fopen(ss4SavePath, "wb");
+	/*FILE* saveData = fopen(ss4SavePath, "wb");
 	fwrite(ss4Save, (int)sizeof(ss4Save), 1, saveData);
-	fclose(saveData);
+	fclose(saveData);*/
 
 	ss4SaveModified = true;
 }

@@ -10,7 +10,7 @@ extern "C" {
 
 #define ss2SavePath	"ss2:/record_card.bin"
 #define ss3SavePath	"ss3:/savedata.dat"
-#define ss4SavePath	"ss4:/savedata.dat"
+#define ss4SavePath	"/savedata.dat"
 
 typedef struct ss2character {
     u8 gender;				// Gender (01=Female, 02=Male)
@@ -118,12 +118,16 @@ extern char ss2PlayerName[10];
 extern char ss3PlayerName[10];
 extern char ss4PlayerName[10];
 
+extern Handle handle4;
+extern FS_Archive archive4;
+
 extern void commitSaveData(void);
 
 extern void readSS2Save(void);
 extern void writeSS2Save(void);
 extern void readSS3Save(void);
 extern void writeSS3Save(void);
+extern bool foundSS4Save(void);
 extern void readSS4Save(void);
 extern void writeSS4Save(void);
 

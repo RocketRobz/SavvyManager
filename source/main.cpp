@@ -370,17 +370,19 @@ int main()
 		sfx_back = new sound("romfs:/sounds/back.wav", 3, false);
 		sfx_highlight = new sound("romfs:/sounds/highlight.wav", 4, false);
 	}
-	
+
 	const u32 path2[3] = {MEDIATYPE_SD, 0x000A9100, 0x00040000};
 	const u32 path3[3] = {MEDIATYPE_SD, 0x00196500, 0x00040000};
 	const u32 path4[3] = {MEDIATYPE_SD, 0x00001C25, 0};
 	archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2}, "ss2");
 	archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path3}, "ss3");
-	archiveMount(ARCHIVE_EXTDATA, {PATH_BINARY, 12, path4}, "ss4");
+	//archiveMount(ARCHIVE_EXTDATA, {PATH_BINARY, 12, path4}, "ss4");
+	FSUSER_OpenArchive(&archive4, ARCHIVE_EXTDATA, {PATH_BINARY, 12, path4});
+	//FSUSER_OpenDirectory(&handle4, archive4, fsMakePath(PATH_UTF16, "/"));
 
 	ss2SaveFound = (access(ss2SavePath, F_OK) == 0);
 	ss3SaveFound = (access(ss3SavePath, F_OK) == 0);
-	ss4SaveFound = (access(ss4SavePath, F_OK) == 0);
+	ss4SaveFound = foundSS4Save();
 	
 	sprintf(verText, "Ver. %i.%i.%i", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
 

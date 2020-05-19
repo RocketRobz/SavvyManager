@@ -29,6 +29,8 @@ THE SOFTWARE.
 
 #include <string>
 
+std::u16string UTF8toUTF16(const char* src);
+
 std::string formatString(const char *fmt, ...);
 
 std::string replaceAll(std::string str, const std::string &from, const std::string &to);
