@@ -183,10 +183,7 @@ static void drawMsg(void) {
 		Gui::DrawStringCentered(0, 114, 0.60, BLACK, "and restore the exported character");
 		Gui::DrawStringCentered(0, 134, 0.60, BLACK, "at any time.");
 	} else if (messageNo == 1) {
-		Gui::DrawStringCentered(0, 58, 0.60, BLACK, chararacterImported);
-		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "Please restore \"SavvyManager\"");
-		Gui::DrawStringCentered(0, 114, 0.60, BLACK, "data for your game in Checkpoint,");
-		Gui::DrawStringCentered(0, 134, 0.60, BLACK, "for the change to take effect.");
+		Gui::DrawStringCentered(0, 94, 0.60, BLACK, chararacterImported);
 	} else {
 		Gui::DrawStringCentered(0, 84, 0.60, BLACK, "This feature is not available yet.");
 		//Gui::DrawStringCentered(0, 104, 0.60, BLACK, "yet.");

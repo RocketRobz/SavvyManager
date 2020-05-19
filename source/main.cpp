@@ -125,10 +125,14 @@ static void drawCannotEditMsg(void) {
 	GFX::DrawSprite(sprites_msg_idx, 160, 8, -2, 1);
 	GFX::DrawSprite(sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 1) {
-		Gui::DrawStringCentered(0, 58, 0.60, BLACK, "Save data not found.");
-		Gui::DrawStringCentered(0, 90, 0.60, BLACK, highlightedGame==3 ? "Please back up the extra data using" : "Please back it up using");
-		Gui::DrawStringCentered(0, 110, 0.60, BLACK, "Checkpoint, and name the backup:");
-		Gui::DrawStringCentered(0, 134, 0.60, BLACK, "SavvyManager");
+		if (highlightedGame == 0) {
+			Gui::DrawStringCentered(0, 58, 0.60, BLACK, "Save data not found.");
+			Gui::DrawStringCentered(0, 90, 0.60, BLACK, /*highlightedGame==3 ? "Please back up the extra data using" :*/ "Please back it up using");
+			Gui::DrawStringCentered(0, 110, 0.60, BLACK, "Checkpoint, and name the backup:");
+			Gui::DrawStringCentered(0, 134, 0.60, BLACK, "SavvyManager");
+		} else {
+			Gui::DrawStringCentered(0, 94, 0.60, BLACK, "Save data not found.");
+		}
 	} else {
 		Gui::DrawStringCentered(0, 92, 0.60, BLACK, "Cannot edit Style Savvy's");
 		Gui::DrawStringCentered(0, 112, 0.60, BLACK, "save data yet.");
@@ -181,7 +185,7 @@ void controlThread(void) {
 					sndBack();
 					messageNo = 0;
 					showMessage = true;
-				  } else if ((highlightedGame==1)
+				  } else if ((highlightedGame==1 && ss2SaveFound)
 				  || (highlightedGame==2 && ss3SaveFound)
 				  || (highlightedGame==3 && ss4SaveFound))
 				  {
@@ -359,6 +363,13 @@ int main()
 		sfx_highlight = new sound("romfs:/sounds/highlight.wav", 4, false);
 	}
 	
+	const u32 path2[3] = {MEDIATYPE_SD, 0x000A9100, 0x00040000};
+	const u32 path3[3] = {MEDIATYPE_SD, 0x00196500, 0x00040000};
+	const u32 path4[3] = {MEDIATYPE_SD, 0x00001C25, 0};
+	archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2}, "ss2");
+	archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path3}, "ss3");
+	archiveMount(ARCHIVE_EXTDATA, {PATH_BINARY, 12, path4}, "ss4");
+
 	ss2SaveFound = (access(ss2SavePath, F_OK) == 0);
 	ss3SaveFound = (access(ss3SavePath, F_OK) == 0);
 	ss4SaveFound = (access(ss4SavePath, F_OK) == 0);
@@ -609,6 +620,8 @@ int main()
 
 
 	runThreads = false;
+
+	archiveUnmountAll();
 
 	//delete music;
 	delete sfx_select;
