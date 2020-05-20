@@ -513,7 +513,8 @@ int main()
 			Gui::DrawString(((320-text_width)/2), 100, 0.50, BLACK, yeartext);
 			text_width = 264;
 			Gui::DrawString(((320-text_width)/2), 116, 0.50, BLACK, yeartext2);*/
-			GFX::DrawSprite(sprites_logo_SSanniversary_idx, 32, 24);
+			//GFX::DrawSprite(sprites_logo_SSanniversary_idx, 32, 24);
+			GFX::DrawSprite(sprites_logo_UniversalCore_idx, 0, 26);
 			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 			C3D_FrameEnd(0);
 
