@@ -33,6 +33,7 @@ extern int screenmodebuffer;
 /*
 */
 
+extern u8 sysRegion;
 extern int highlightedGame;
 
 extern int fadealpha;
@@ -191,8 +192,20 @@ void changeMusic(void) {
 			if (cursorPosition > 0) {
 				sprintf(musicPackPath, "sdmc:/3ds/SavvyManager/SS2/musicPacks/%s", getMusicPackName(cursorPosition-1));
 			}
-			rename("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound/stream", prevMusicPackPath);
-			if (cursorPosition==0 || rename(musicPackPath, "sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound/stream") == 0) {
+			const char* romfsStreamPath = "sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound/stream";
+			switch (sysRegion) {
+				case CFG_REGION_EUR:
+				case CFG_REGION_AUS:
+					romfsStreamPath = "sdmc:/luma/titles/00040000000A9000/romfs/Common/Sound/stream";
+					break;
+				case CFG_REGION_JPN:
+					romfsStreamPath = "sdmc:/luma/titles/000400000005D100/romfs/Common/Sound/stream";
+					break;
+				default:
+					break;
+			}
+			rename(romfsStreamPath, prevMusicPackPath);
+			if (cursorPosition==0 || rename(musicPackPath, romfsStreamPath) == 0) {
 				messageNo = 0;
 			} else {
 				messageNo = 1;

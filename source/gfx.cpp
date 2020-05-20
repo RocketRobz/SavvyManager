@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 static C2D_SpriteSheet sprites;
+static C2D_SpriteSheet gameSelSprites;
 static C2D_SpriteSheet bgSprite;
 static C2D_SpriteSheet chracterSprite;
 static bool dochracterSpriteFree = false;
@@ -14,13 +15,18 @@ extern int cursorAlpha;
 
 Result GFX::loadSheets() {
 	sprites    = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
+	gameSelSprites    = C2D_SpriteSheetLoad("romfs:/gfx/gameSelSprites.t3x");
 	bgSprite   = C2D_SpriteSheetLoad("romfs:/gfx/bgNight_loversBell.t3x");
 	return 0;
 }
 
 Result GFX::unloadSheets() {
 	C2D_SpriteSheetFree(sprites);
+	C2D_SpriteSheetFree(gameSelSprites);
 	C2D_SpriteSheetFree(bgSprite);
+	if (dochracterSpriteFree) {
+		C2D_SpriteSheetFree(chracterSprite);
+	}
 	return 0;
 }
 
@@ -60,6 +66,10 @@ void GFX::showCharSprite(int zoomIn, int fadeAlpha) {
 		C2D_SetImageTint(&tint, C2D_BotRight, C2D_Color32(255, 255, 255, fadeAlpha), 1);
 		C2D_DrawImageAt(C2D_SpriteSheetGetImage(chracterSprite, 0), 0, -(240*zoomIn), 0.5f, &tint);
 	}
+}
+
+void GFX::DrawGameSelSprite(int img, int x, int y, float ScaleX, float ScaleY) {
+	C2D_DrawImageAt(C2D_SpriteSheetGetImage(gameSelSprites, img), x, y, 0.5f, NULL, ScaleX, ScaleY);
 }
 
 void GFX::DrawSprite(int img, int x, int y, float ScaleX, float ScaleY) {

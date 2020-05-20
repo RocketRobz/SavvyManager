@@ -65,6 +65,7 @@ static const char* seasonName(void) {
 static char chrFilePath[256];
 static char chrFilePath2[256];
 
+extern u8 sysRegion;
 extern int highlightedGame;
 extern bool saveWritten;
 
@@ -153,6 +154,54 @@ static const char* import_characterName(void) {
 			return import_ss4CharacterNames[importCharacterList_cursorPosition];
 	}
 	return "null";
+}
+
+static const char* ss1Title(void) {
+	switch (sysRegion) {
+		default:
+			return "Style Savvy";
+		case CFG_REGION_EUR:
+		case CFG_REGION_AUS:
+			return "Style Boutique";
+		case CFG_REGION_JPN:
+			return "Wagamama Fashion: Girls Mode";
+	}
+}
+
+static const char* ss2Title(void) {
+	switch (sysRegion) {
+		default:
+			return "Style Savvy: Trendsetters";
+		case CFG_REGION_EUR:
+		case CFG_REGION_AUS:
+			return "New Style Boutique";
+		case CFG_REGION_JPN:
+			return "Girls Mode: Yokubari Sengen";
+	}
+}
+
+static const char* ss3Title(void) {
+	switch (sysRegion) {
+		default:
+			return "Style Savvy: Fashion Forward";
+		case CFG_REGION_EUR:
+		case CFG_REGION_AUS:
+			return "New Style Boutique 2: Fashion Forward";
+		case CFG_REGION_JPN:
+			return "Girls Mode 3: Kirakira * Code";
+	}
+}
+
+static const char* ss4Title(void) {
+	switch (sysRegion) {
+		default:
+			return "Style Savvy: Styling Star";
+		case CFG_REGION_EUR:
+		case CFG_REGION_AUS:
+			return "New Style Boutique 3: Styling Star";
+		case CFG_REGION_JPN:
+			return "Girls Mode 4: Star Stylist";
+	}
 }
 
 static bool showMessage = false;
@@ -325,16 +374,16 @@ void changeCharacterGraphics(void) {
 				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Your character files");
 				break;
 			case 3:
-				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Style Savvy: Styling Star");
+				Gui::DrawStringCentered(0, 8, 0.50, BLACK, ss4Title());
 				break;
 			case 2:
-				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Style Savvy: Fashion Forward");
+				Gui::DrawStringCentered(0, 8, 0.50, BLACK, ss3Title());
 				break;
 			case 1:
-				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Style Savvy: Trendsetters");
+				Gui::DrawStringCentered(0, 8, 0.50, BLACK, ss2Title());
 				break;
 			case 0:
-				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Style Savvy");
+				Gui::DrawStringCentered(0, 8, 0.50, BLACK, ss1Title());
 				break;
 		}
 		Gui::DrawString(8, 8, 0.50, BLACK, "<");

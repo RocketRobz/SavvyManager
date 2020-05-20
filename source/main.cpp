@@ -98,6 +98,7 @@ void screenon(void)
 	}
 }
 
+u8 sysRegion = CFG_REGION_USA;
 int highlightedGame = 1;
 
 int fadealpha = 255;
@@ -135,7 +136,18 @@ static void drawCannotEditMsg(void) {
 			Gui::DrawStringCentered(0, 94, 0.60, BLACK, "Save data not found.");
 		}
 	} else {
-		Gui::DrawStringCentered(0, 92, 0.60, BLACK, "Cannot edit Style Savvy's");
+		switch (sysRegion) {
+			default:
+				Gui::DrawStringCentered(0, 92, 0.60, BLACK, "Cannot edit Style Savvy's");
+				break;
+			case CFG_REGION_EUR:
+			case CFG_REGION_AUS:
+				Gui::DrawStringCentered(0, 92, 0.60, BLACK, "Cannot edit Style Boutique's");
+				break;
+			case CFG_REGION_JPN:
+				Gui::DrawStringCentered(0, 92, 0.60, BLACK, "Cannot edit Girls Mode's");
+				break;
+		}
 		Gui::DrawStringCentered(0, 112, 0.60, BLACK, "save data yet.");
 	}
 	GFX::DrawSprite(sprites_button_msg_shadow_idx, 114, 197);
@@ -306,6 +318,11 @@ int main()
 	romfsInit();
 	srvInit();
 	hidInit();
+	Result res = cfguInit();
+	if (R_SUCCEEDED(res)) {
+		CFGU_SecureInfoGetRegion(&sysRegion);
+		cfguExit();
+	}
 
 	gfxInitDefault();
 	
@@ -327,15 +344,34 @@ int main()
 	mkdir("sdmc:/luma", 0777);
 	mkdir("sdmc:/luma/titles", 0777);
 
-	// Style Savvy: Trendsetters folders
-	mkdir("sdmc:/luma/titles/00040000000A9100", 0777);
-	mkdir("sdmc:/luma/titles/00040000000A9100/romfs", 0777);
-	mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common", 0777);
-	mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound", 0777);
+	switch (sysRegion) {
+		default:
+			// Style Savvy: Trendsetters folders
+			mkdir("sdmc:/luma/titles/00040000000A9100", 0777);
+			mkdir("sdmc:/luma/titles/00040000000A9100/romfs", 0777);
+			mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common", 0777);
+			mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound", 0777);
+			break;
+		case CFG_REGION_EUR:
+		case CFG_REGION_AUS:
+			// New Style Boutique folders
+			mkdir("sdmc:/luma/titles/00040000000A9000", 0777);
+			mkdir("sdmc:/luma/titles/00040000000A9000/romfs", 0777);
+			mkdir("sdmc:/luma/titles/00040000000A9000/romfs/Common", 0777);
+			mkdir("sdmc:/luma/titles/00040000000A9000/romfs/Common/Sound", 0777);
+			break;
+		case CFG_REGION_JPN:
+			// Wagamama Fashion: Girls Mode - Yokubari Sengen folders
+			mkdir("sdmc:/luma/titles/000400000005D100", 0777);
+			mkdir("sdmc:/luma/titles/000400000005D100/romfs", 0777);
+			mkdir("sdmc:/luma/titles/000400000005D100/romfs/Common", 0777);
+			mkdir("sdmc:/luma/titles/000400000005D100/romfs/Common/Sound", 0777);
+			break;
+	}
 	//mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound/stream", 0777);
 
  	// Style Savvy: Fashion Forward folders
-	mkdir("sdmc:/luma/titles/0004000000196500", 0777);
+	//mkdir("sdmc:/luma/titles/0004000000196500", 0777);
 
 	if( access( "sdmc:/3ds/dspfirm.cdc", F_OK ) != -1 ) {
 		ndspInit();
@@ -371,12 +407,41 @@ int main()
 		sfx_highlight = new sound("romfs:/sounds/highlight.wav", 4, false);
 	}
 
-	Result res;
+	u32 ss2Id = 0x000A9100;
+	u32 ss3Id = 0x00196500;
 
-	const u32 path2[3] = {MEDIATYPE_SD, 0x000A9100, 0x00040000};
-	const u32 path2card[3] = {MEDIATYPE_GAME_CARD, 0x000A9100, 0x00040000};
-	const u32 path3[3] = {MEDIATYPE_SD, 0x00196500, 0x00040000};
-	const u32 path3card[3] = {MEDIATYPE_GAME_CARD, 0x00196500, 0x00040000};
+	int ss1Logo = gameSelSprites_title1_idx;
+	int ss2Screenshot = gameSelSprites_title2_screenshot_idx;
+	int ss2Logo = gameSelSprites_title2_idx;
+	int ssLogoXpos = 0;
+	int ss3Logo = gameSelSprites_title3_idx;
+	int ss4Logo = gameSelSprites_title4_idx;
+
+	switch (sysRegion) {
+		case CFG_REGION_EUR:
+		case CFG_REGION_AUS:
+			ss2Id = 0x000A9000;
+			ss3Id = 0x0016A100;
+			ss2Screenshot = gameSelSprites_title2_screenshotJ_idx;
+			ss1Logo = gameSelSprites_title1_E_idx;
+			ss2Logo = gameSelSprites_title2_E_idx;
+			ss3Logo = gameSelSprites_title3_E_idx;
+			ss4Logo = gameSelSprites_title4_E_idx;
+			ssLogoXpos = 32;
+			break;
+		case CFG_REGION_JPN:
+			ss2Id = 0x0005D100;
+			//ss3Id = 0x0016A100;
+			ss2Screenshot = gameSelSprites_title2_screenshotJ_idx;
+			break;
+		default:
+			break;
+	}
+
+	const u32 path2[3] = {MEDIATYPE_SD, ss2Id, 0x00040000};
+	const u32 path2card[3] = {MEDIATYPE_GAME_CARD, ss2Id, 0x00040000};
+	const u32 path3[3] = {MEDIATYPE_SD, ss3Id, 0x00040000};
+	const u32 path3card[3] = {MEDIATYPE_GAME_CARD, ss3Id, 0x00040000};
 	const u32 path4[3] = {MEDIATYPE_SD, 0x00001C25, 0};
 
 	res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2}, "ss2");	// Read from digital version
@@ -472,16 +537,16 @@ int main()
 			switch(highlightedGame) {
 				case 0:
 				default:
-					GFX::DrawSprite(sprites_title1_screenshot_idx, 0, 0);
+					GFX::DrawGameSelSprite(gameSelSprites_title1_screenshot_idx, 0, 0);
 					break;
 				case 1:
-					GFX::DrawSprite(sprites_title2_screenshot_idx, 0, 0);
+					GFX::DrawGameSelSprite(ss2Screenshot, 0, 0);
 					break;
 				case 2:
-					GFX::DrawSprite(sprites_title3_screenshot_idx, 0, 0);
+					GFX::DrawGameSelSprite(gameSelSprites_title3_screenshot_idx, 0, 0);
 					break;
 				case 3:
-					GFX::DrawSprite(sprites_title4_screenshot_idx, 0, 0);
+					GFX::DrawGameSelSprite(gameSelSprites_title4_screenshot_idx, 0, 0);
 					break;
 			}
 			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
@@ -497,16 +562,16 @@ int main()
 			switch(highlightedGame) {
 				case 0:
 				default:
-					GFX::DrawSprite(sprites_title1_idx, 0, 56);
+					GFX::DrawGameSelSprite(ss1Logo, ssLogoXpos, 56);
 					break;
 				case 1:
-					GFX::DrawSprite(sprites_title2_idx, 0, 56);
+					GFX::DrawGameSelSprite(ss2Logo, ssLogoXpos, 56);
 					break;
 				case 2:
-					GFX::DrawSprite(sprites_title3_idx, 0, 56);
+					GFX::DrawGameSelSprite(ss3Logo, 0, 56);
 					break;
 				case 3:
-					GFX::DrawSprite(sprites_title4_idx, 0, 56);
+					GFX::DrawGameSelSprite(ss4Logo, ssLogoXpos, 56);
 					break;
 			}
 			Gui::DrawString(8, 112, 0.55, BLACK, "<");
