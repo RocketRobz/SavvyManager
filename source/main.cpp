@@ -628,6 +628,21 @@ int main()
 					GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
 				}
 			}
+			switch(highlightedGame) {
+				case 0:
+				default:
+					GFX::DrawGameSelSprite(ss1Logo, 40+ssLogoXpos, 56);
+					break;
+				case 1:
+					GFX::DrawGameSelSprite(ss2Logo, 40+ssLogoXpos, 56);
+					break;
+				case 2:
+					GFX::DrawGameSelSprite(ss3Logo, 40, 56);
+					break;
+				case 3:
+					GFX::DrawGameSelSprite(ss4Logo, 40+ssLogoXpos, 56);
+					break;
+			}
 			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
 			Gui::ScreenDraw(Bottom);
