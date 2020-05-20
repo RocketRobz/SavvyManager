@@ -19,6 +19,7 @@ Handle threadRequest;
 
 static char verText[32];
 
+extern int iFps;
 extern void loadSettings(void);
 
 // Current screen mode.
@@ -409,6 +410,7 @@ int main()
 
 	u32 ss2Id = 0x000A9100;
 	u32 ss3Id = 0x00196500;
+	u32 ss4Id = 0x00001C25;
 
 	int ss1Logo = gameSelSprites_title1_idx;
 	int ss2Screenshot = gameSelSprites_title2_screenshot_idx;
@@ -431,8 +433,13 @@ int main()
 			break;
 		case CFG_REGION_JPN:
 			ss2Id = 0x0005D100;
-			//ss3Id = 0x0016A100;
+			ss3Id = 0x0012D800;
+			ss4Id = 0x000019F6;
 			ss2Screenshot = gameSelSprites_title2_screenshotJ_idx;
+			ss1Logo = gameSelSprites_title1_J_idx;
+			ss2Logo = gameSelSprites_title2_J_idx;
+			ss3Logo = gameSelSprites_title3_J_idx;
+			ss4Logo = gameSelSprites_title4_J_idx;
 			break;
 		default:
 			break;
@@ -442,7 +449,7 @@ int main()
 	const u32 path2card[3] = {MEDIATYPE_GAME_CARD, ss2Id, 0x00040000};
 	const u32 path3[3] = {MEDIATYPE_SD, ss3Id, 0x00040000};
 	const u32 path3card[3] = {MEDIATYPE_GAME_CARD, ss3Id, 0x00040000};
-	const u32 path4[3] = {MEDIATYPE_SD, 0x00001C25, 0};
+	const u32 path4[3] = {MEDIATYPE_SD, ss4Id, 0};
 
 	res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2}, "ss2");	// Read from digital version
 	if (R_FAILED(res)) {
@@ -465,6 +472,8 @@ int main()
 	sprintf(verText, "Ver. %i.%i.%i", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
 
 	loadSettings();
+
+	C3D_FrameRate(iFps);
 
 	screenon();
 
@@ -519,7 +528,7 @@ int main()
 			C3D_FrameEnd(0);
 
 			screenDelay++;
-			if(screenDelay > 60*3){
+			if(screenDelay > iFps*3){
 				screenmodebuffer = SCREEN_MODE_GAME_SELECT;
 				fadeout = true;
 			}
@@ -666,9 +675,21 @@ int main()
 			changeEmblemGraphics();
 		}
 		// Scroll background
-		bg_xPos += 0.3;
+		switch (iFps) {
+			default:
+				bg_xPos += 0.3;
+				bg_yPos -= 0.3;
+				break;
+			case 30:
+				bg_xPos += 0.6;
+				bg_yPos -= 0.6;
+				break;
+			case 24:
+				bg_xPos += 0.9;
+				bg_yPos -= 0.9;
+				break;
+		}
 		if(bg_xPos >= 72) bg_xPos = 0.0f;
-		bg_yPos -= 0.3;
 		if(bg_yPos <= -136) bg_yPos = 0.0f;
 
 		if (hDown) {
@@ -699,7 +720,17 @@ int main()
 		}
 
 		if (fadein) {
-			fadealpha -= 6;
+			switch (iFps) {
+				default:
+					fadealpha -= 6;
+					break;
+				case 30:
+					fadealpha -= 12;
+					break;
+				case 24:
+					fadealpha -= 14;
+					break;
+			}
 			if (fadealpha < 0) {
 				fadealpha = 0;
 				fadecolor = 255;
@@ -708,7 +739,17 @@ int main()
 		}
 
 		if (fadeout) {
-			fadealpha += 6;
+			switch (iFps) {
+				default:
+					fadealpha += 6;
+					break;
+				case 30:
+					fadealpha += 12;
+					break;
+				case 24:
+					fadealpha += 14;
+					break;
+			}
 			if (fadealpha > 255) {
 				fadealpha = 255;
 				screenmode = screenmodebuffer;

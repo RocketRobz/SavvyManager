@@ -5,6 +5,8 @@
 #include "stringtool.h"
 #include "tonccpy.h"
 
+extern u8 sysRegion;
+
 ss2character ss2CharacterData;
 ss3to4character ss4CharacterData;
 
@@ -172,76 +174,95 @@ bool getSS2CharacterGender(void) {
 void readSS3Save(void) {
 	if (ss3SaveRead) return;
 
+	u32 size = (sysRegion==CFG_REGION_JPN ? 0x120000 : 0x174000);
+
 	FILE* saveData = fopen(ss3SavePath, "rb");
-	fread(ss3Save, (int)sizeof(ss3Save), 1, saveData);
+	fread(ss3Save, size, 1, saveData);
 	fclose(saveData);
 
 	// Get playable character's name
+	u32 offset = (sysRegion==CFG_REGION_JPN ? 0x537DC : 0x54980);
 	for (int i = 0; i < 9; i++) {
-		ss3PlayerName[i] = ss3Save[0x54980+(i*2)];
+		ss3PlayerName[i] = ss3Save[offset+(i*2)];
 	}
 
 	ss3SaveRead = true;
 }
 
 void writeSS3Save(void) {
+	u32 size = (sysRegion==CFG_REGION_JPN ? 0x120000 : 0x174000);
+
 	FILE* saveData = fopen(ss3SavePath, "wb");
-	fwrite(ss3Save, (int)sizeof(ss3Save), 1, saveData);
+	fwrite(ss3Save, size, 1, saveData);
 	fclose(saveData);
 
 	ss3SaveModified = true;
 }
 
 void readSS3Character(u16 id) {
+	u32 playableCharOffset = (sysRegion==CFG_REGION_JPN ? 0x5387E : 0x54A22);
+	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x830D2 : 0x8427E);
+	u32 npCharOffset = (sysRegion==CFG_REGION_JPN ? 0x54D52 : 0x55EFE);
+
 	if (id == 0) {
 		// Playable character
-		tonccpy(&ss4CharacterData, (char*)ss3Save+(0x54A22), 0x36);
+		tonccpy(&ss4CharacterData, (char*)ss3Save+(playableCharOffset), 0x36);
 	} else if (id >= 0x0BB9) {
 		// Downloaded character
 		id -= 0x0BB9;
-		tonccpy(&ss4CharacterData, (char*)ss3Save+(0x8427E + (0x110*id)), 0x36);
+		tonccpy(&ss4CharacterData, (char*)ss3Save+(dlCharOffset + (0x110*id)), 0x36);
 	} else {
 		id--;
 		// Non-playable character
-		tonccpy(&ss4CharacterData, (char*)ss3Save+(0x55EFE + (0x110*id)), 0x36);
+		tonccpy(&ss4CharacterData, (char*)ss3Save+(npCharOffset + (0x110*id)), 0x36);
 	}
 }
 
 void writeSS3Character(u16 id) {
+	u32 playableCharOffset = (sysRegion==CFG_REGION_JPN ? 0x5387E : 0x54A22);
+	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x830D2 : 0x8427E);
+	u32 npCharOffset = (sysRegion==CFG_REGION_JPN ? 0x54D52 : 0x55EFE);
+
 	if (id == 0) {
 		// Playable character
-		tonccpy((char*)ss3Save+(0x54A22), &ss4CharacterData, 0x36);
+		tonccpy((char*)ss3Save+(playableCharOffset), &ss4CharacterData, 0x36);
 	} else if (id >= 0x0BB9) {
 		// Downloaded character
 		id -= 0x0BB9;
-		tonccpy((char*)ss3Save+(0x8427E + (0x110*id)), &ss4CharacterData, 0x36);
+		tonccpy((char*)ss3Save+(dlCharOffset + (0x110*id)), &ss4CharacterData, 0x36);
 	} else {
 		id--;
 		// Non-playable character
-		tonccpy((char*)ss3Save+(0x55EFE + (0x110*id)), &ss4CharacterData, 0x36);
+		tonccpy((char*)ss3Save+(npCharOffset + (0x110*id)), &ss4CharacterData, 0x36);
 	}
 }
 
 void toggleSS3Character(u16 id, bool enable) {
+	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x83182 : 0x8432E);
+
 	if (id >= 0x0BB9) {
 		// Downloaded character
 		id -= 0x0BB9;
-		*(u16*)(ss3Save+(0x8432E + (0x110*id))) = (enable ? 0x4013 : 0x0000);
+		*(u16*)(ss3Save+(dlCharOffset + (0x110*id))) = (enable ? 0x4013 : 0x0000);
 	}
 }
 
 void removeSS3CharacterBag(u16 id) {
+	u32 playableCharOffset = (sysRegion==CFG_REGION_JPN ? 0x538B2 : 0x54A56);
+	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x83106 : 0x842B2);
+	u32 npCharOffset = (sysRegion==CFG_REGION_JPN ? 0x54D86 : 0x55F32);
+
 	if (id == 0) {
 		// Playable character
-		*(u16*)(ss3Save+(0x54A56)) = 0;
+		*(u16*)(ss3Save+(playableCharOffset)) = 0;
 	} else if (id >= 0x0BB9) {
 		// Downloaded character
 		id -= 0x0BB9;
-		*(u16*)(ss3Save+(0x842B2 + (0x110*id))) = 0;
+		*(u16*)(ss3Save+(dlCharOffset + (0x110*id))) = 0;
 	} else {
 		id--;
 		// Non-playable character
-		*(u16*)(ss3Save+(0x55F32 + (0x110*id))) = 0;
+		*(u16*)(ss3Save+(npCharOffset + (0x110*id))) = 0;
 	}
 }
 
@@ -249,17 +270,21 @@ void readSS3CharacterFile(u16 id, const char* filename) {
 	FILE* characterData = fopen(filename, "rb");
 	if (!characterData) return;
 
+	u32 playableCharOffset = (sysRegion==CFG_REGION_JPN ? 0x5387E : 0x54A22);
+	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x830D2 : 0x8427E);
+	u32 npCharOffset = (sysRegion==CFG_REGION_JPN ? 0x54D52 : 0x55EFE);
+
 	if (id == 0) {
 		// Playable character
-		fread((char*)ss3Save+(0x54A22), 0x36, 1, characterData);
+		fread((char*)ss3Save+(playableCharOffset), 0x36, 1, characterData);
 	} else if (id >= 0x0BB9) {
 		// Downloaded character
 		id -= 0x0BB9;
-		fread((char*)ss3Save+(0x8427E + (0x110*id)), 0x36, 1, characterData);
+		fread((char*)ss3Save+(dlCharOffset + (0x110*id)), 0x36, 1, characterData);
 	} else {
 		id--;
 		// Non-playable character
-		fread((char*)ss3Save+(0x55EFE + (0x110*id)), 0x36, 1, characterData);
+		fread((char*)ss3Save+(npCharOffset + (0x110*id)), 0x36, 1, characterData);
 	}
 	fclose(characterData);
 }
@@ -268,17 +293,21 @@ void writeSS3CharacterFile(u16 id, const char* filename) {
 	FILE* characterData = fopen(filename, "wb");
 	if (!characterData) return;
 
+	u32 playableCharOffset = (sysRegion==CFG_REGION_JPN ? 0x5387E : 0x54A22);
+	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x830D2 : 0x8427E);
+	u32 npCharOffset = (sysRegion==CFG_REGION_JPN ? 0x54D52 : 0x55EFE);
+
 	if (id == 0) {
 		// Playable character
-		fwrite((char*)ss3Save+(0x54A22), 0x36, 1, characterData);
+		fwrite((char*)ss3Save+(playableCharOffset), 0x36, 1, characterData);
 	} else if (id >= 0x0BB9) {
 		// Downloaded character
 		id -= 0x0BB9;
-		fwrite((char*)ss3Save+(0x8427E + (0x110*id)), 0x36, 1, characterData);
+		fwrite((char*)ss3Save+(dlCharOffset + (0x110*id)), 0x36, 1, characterData);
 	} else  {
 		id--;
 		// Non-playable character
-		fwrite((char*)ss3Save+(0x55EFE + (0x110*id)), 0x36, 1, characterData);
+		fwrite((char*)ss3Save+(npCharOffset + (0x110*id)), 0x36, 1, characterData);
 	}
 	fclose(characterData);
 }
@@ -298,10 +327,12 @@ void readSS3ProfileFile(u16 id, const char* filename) {
 	FILE* profileData = fopen(filename, "rb");
 	if (!profileData) return;
 
+	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x86F80 : 0x88C5C);
+
 	if (id >= 0x0BB9) {
 		// Downloaded character
 		id -= 0x0BB9;
-		fread((char*)ss3Save+(0x88C5C + (0x2B4*id)), 0x224, 1, profileData);
+		fread((char*)ss3Save+(dlCharOffset + (0x2B4*id)), 0x224, 1, profileData);
 	}
 	fclose(profileData);
 }
@@ -310,27 +341,32 @@ void writeSS3ProfileFile(u16 id, const char* filename) {
 	FILE* profileData = fopen(filename, "wb");
 	if (!profileData) return;
 
+	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x86F80 : 0x88C5C);
+
 	if (id >= 0x0BB9) {
 		// Downloaded character
 		id -= 0x0BB9;
-		fwrite((char*)ss3Save+(0x88C5C + (0x2B4*id)), 0x224, 1, profileData);
+		fwrite((char*)ss3Save+(dlCharOffset + (0x2B4*id)), 0x224, 1, profileData);
 	}
 	fclose(profileData);
 }
 
 void readSS3Emblem(void) {
-	tonccpy(&emblemData, (char*)ss3Save+(0x2ABB8), 0x804);
+	u32 offset = (sysRegion==CFG_REGION_JPN ? 0x29A14 : 0x2ABB8);
+	tonccpy(&emblemData, (char*)ss3Save+(offset), 0x804);
 }
 
 void writeSS3Emblem(void) {
-	tonccpy((char*)ss3Save+(0x2ABB8), &emblemData, 0x804);
+	u32 offset = (sysRegion==CFG_REGION_JPN ? 0x29A14 : 0x2ABB8);
+	tonccpy((char*)ss3Save+(offset), &emblemData, 0x804);
 }
 
 void readSS3EmblemFile(const char* filename) {
 	FILE* emblemData = fopen(filename, "rb");
 	if (!emblemData) return;
 
-	fread((char*)ss3Save+(0x2ABB8), 0x804, 1, emblemData);
+	u32 offset = (sysRegion==CFG_REGION_JPN ? 0x29A14 : 0x2ABB8);
+	fread((char*)ss3Save+(offset), 0x804, 1, emblemData);
 	fclose(emblemData);
 }
 
@@ -338,7 +374,8 @@ void writeSS3EmblemFile(const char* filename) {
 	FILE* emblemData = fopen(filename, "wb");
 	if (!emblemData) return;
 
-	fwrite((char*)ss3Save+(0x2ABB8), 0x804, 1, emblemData);
+	u32 offset = (sysRegion==CFG_REGION_JPN ? 0x29A14 : 0x2ABB8);
+	fwrite((char*)ss3Save+(offset), 0x804, 1, emblemData);
 	fclose(emblemData);
 }
 

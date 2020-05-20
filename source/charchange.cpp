@@ -18,6 +18,8 @@
 #include "import_ss4charnames.h"
 #include "import_everycharnames.h"
 
+extern int iFps;
+
 extern void sndSelect(void);
 extern void sndBack(void);
 extern void sndHighlight(void);
@@ -340,7 +342,17 @@ void changeCharacterGraphics(void) {
 		} else {
 			Gui::DrawStringCentered(0, 104, 0.65, WHITE, (import_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
 		}
-		charFadeAlpha += 20;
+		switch (iFps) {
+			default:
+				charFadeAlpha += 20;
+				break;
+			case 30:
+				charFadeAlpha += 40;
+				break;
+			case 24:
+				charFadeAlpha += 55;
+				break;
+		}
 		if (charFadeAlpha > 255) charFadeAlpha = 255;
 	} else {
 		charFadeAlpha = 0;

@@ -7,6 +7,7 @@ extern "C" {
 
 #include <string>
 
+extern int iFps;
 extern std::string currentMusicPack;
 
 extern void loadSettings(void);
