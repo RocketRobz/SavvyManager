@@ -167,6 +167,8 @@ static const char* ss1Title(void) {
 			return "Style Boutique";
 		case CFG_REGION_JPN:
 			return "Wagamama Fashion: Girls Mode";
+		case CFG_REGION_KOR:
+			return "Namanui Collection: Girls Style";
 	}
 }
 
@@ -179,6 +181,8 @@ static const char* ss2Title(void) {
 			return "New Style Boutique";
 		case CFG_REGION_JPN:
 			return "Girls Mode: Yokubari Sengen";
+		case CFG_REGION_KOR:
+			return "Girls Style: Paesyeon Lideo Seon-eon!";
 	}
 }
 
@@ -191,6 +195,8 @@ static const char* ss3Title(void) {
 			return "New Style Boutique 2: Fashion Forward";
 		case CFG_REGION_JPN:
 			return "Girls Mode 3: Kirakira * Code";
+		case CFG_REGION_KOR:
+			return "Girls Style: Kirakira * Code";
 	}
 }
 
@@ -203,6 +209,8 @@ static const char* ss4Title(void) {
 			return "New Style Boutique 3: Styling Star";
 		case CFG_REGION_JPN:
 			return "Girls Mode 4: Star Stylist";
+		case CFG_REGION_KOR:
+			return "Girls Style: Star Stylist";
 	}
 }
 

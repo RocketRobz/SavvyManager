@@ -3,6 +3,7 @@
 
 #include "sprites.h"
 #include "gameSelSprites.h"
+#include "gameShotSprites.h"
 
 #include <3ds.h>
 #include <citro2d.h>
@@ -32,6 +33,7 @@ namespace GFX
 	void showBgSprite(int zoomIn);
 	void showCharSprite(int zoomIn, int fadeAlpha);
 	void DrawGameSelSprite(int img, int x, int y, float ScaleX = 1, float ScaleY = 1);
+	void DrawGameShotSprite(int img, int x, int y, float ScaleX = 1, float ScaleY = 1);
 	void DrawSprite(int img, int x, int y, float ScaleX = 1, float ScaleY = 1);
 	void DrawSpriteBlend(int key, float x, float y, u32 color, float ScaleX = 1, float ScaleY = 1);
 

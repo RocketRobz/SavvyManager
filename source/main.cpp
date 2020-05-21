@@ -127,7 +127,12 @@ static void drawCannotEditMsg(void) {
 	GFX::DrawSprite(sprites_msg_idx, 0, 8, 1, 1);
 	GFX::DrawSprite(sprites_msg_idx, 160, 8, -1, 1);
 	GFX::DrawSprite(sprites_icon_msg_idx, 132, -2);
-	if (messageNo == 1) {
+	if (messageNo == 2) {
+		Gui::DrawStringCentered(0, 58, 0.60, BLACK, "This game's title ID");
+		Gui::DrawStringCentered(0, 78, 0.60, BLACK, "is not known.");
+		Gui::DrawStringCentered(0, 112, 0.60, BLACK, "As a result, the save data");
+		Gui::DrawStringCentered(0, 132, 0.60, BLACK, "cannot be edited.");
+	} else if (messageNo == 1) {
 		if (highlightedGame == 0) {
 			Gui::DrawStringCentered(0, 58, 0.60, BLACK, "Save data not found.");
 			Gui::DrawStringCentered(0, 90, 0.60, BLACK, /*highlightedGame==3 ? "Please back up the extra data using" :*/ "Please back it up using");
@@ -147,6 +152,8 @@ static void drawCannotEditMsg(void) {
 				break;
 			case CFG_REGION_JPN:
 				Gui::DrawStringCentered(0, 92, 0.60, BLACK, "Cannot edit Girls Mode's");
+			case CFG_REGION_KOR:
+				Gui::DrawStringCentered(0, 92, 0.60, BLACK, "Cannot edit Girls Style's");
 				break;
 		}
 		Gui::DrawStringCentered(0, 112, 0.60, BLACK, "save data yet.");
@@ -187,17 +194,21 @@ void controlThread(void) {
 				if ((hDown & KEY_LEFT) || ((hDown & KEY_TOUCH) && touch.px >= 0 && touch.px < 32 && touch.py >= 104 && touch.py < 104+32)) {
 					sndHighlight();
 					highlightedGame--;
-					if (highlightedGame < 0) highlightedGame = 3;
+					if (highlightedGame < 0) highlightedGame = (sysRegion==CFG_REGION_KOR ? 1 : 3);
 				} else if ((hDown & KEY_RIGHT) || ((hDown & KEY_TOUCH) && touch.px >= 320-32 && touch.px < 320 && touch.py >= 104 && touch.py < 104+32)) {
 					sndHighlight();
 					highlightedGame++;
-					if (highlightedGame > 3) highlightedGame = 0;
+					if (highlightedGame > (sysRegion==CFG_REGION_KOR ? 1 : 3)) highlightedGame = 0;
 				}
 
 				if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 32 && touch.px < 320-32 && touch.py >= 56 && touch.py < 56+128)) {
 				  if (highlightedGame==0) {
 					sndBack();
 					messageNo = 0;
+					showMessage = true;
+				  } else if (highlightedGame==1 && sysRegion==CFG_REGION_KOR) {
+					sndBack();
+					messageNo = 2;
 					showMessage = true;
 				  } else if ((highlightedGame==1 && ss2SaveFound)
 				  || (highlightedGame==2 && ss3SaveFound)
@@ -413,8 +424,9 @@ int main()
 	u32 ss4Id = 0x00001C25;
 
 	int ss1Logo = gameSelSprites_title1_idx;
-	int ss2Screenshot = gameSelSprites_title2_screenshot_idx;
+	int ss2Screenshot = gameShotSprites_title2_screenshot_idx;
 	int ss2Logo = gameSelSprites_title2_idx;
+	int ss1LogoXpos = 0;
 	int ssLogoXpos = 0;
 	int ss3Logo = gameSelSprites_title3_idx;
 	int ss4Logo = gameSelSprites_title4_idx;
@@ -425,22 +437,30 @@ int main()
 			ss2Id = 0x000A9000;
 			ss3Id = 0x0016A100;
 			ss4Id = 0x00001C26;
-			ss2Screenshot = gameSelSprites_title2_screenshotJ_idx;
+			ss2Screenshot = gameShotSprites_title2_screenshotJ_idx;
 			ss1Logo = gameSelSprites_title1_E_idx;
 			ss2Logo = gameSelSprites_title2_E_idx;
 			ss3Logo = gameSelSprites_title3_E_idx;
 			ss4Logo = gameSelSprites_title4_E_idx;
+			ss1LogoXpos = 32;
 			ssLogoXpos = 32;
 			break;
 		case CFG_REGION_JPN:
 			ss2Id = 0x0005D100;
 			ss3Id = 0x0012D800;
 			ss4Id = 0x000019F6;
-			ss2Screenshot = gameSelSprites_title2_screenshotJ_idx;
+			ss2Screenshot = gameShotSprites_title2_screenshotJ_idx;
 			ss1Logo = gameSelSprites_title1_J_idx;
 			ss2Logo = gameSelSprites_title2_J_idx;
 			ss3Logo = gameSelSprites_title3_J_idx;
 			ss4Logo = gameSelSprites_title4_J_idx;
+			break;
+		case CFG_REGION_KOR:
+			ss2Id = 0x0005D100;
+			ss2Screenshot = gameShotSprites_title2_screenshotJ_idx;
+			ss1Logo = gameSelSprites_title1_K_idx;
+			ss2Logo = gameSelSprites_title2_K_idx;
+			ss1LogoXpos = 64;
 			break;
 		default:
 			break;
@@ -548,16 +568,16 @@ int main()
 			switch(highlightedGame) {
 				case 0:
 				default:
-					GFX::DrawGameSelSprite(gameSelSprites_title1_screenshot_idx, 0, 0);
+					GFX::DrawGameShotSprite(gameShotSprites_title1_screenshot_idx, 0, 0);
 					break;
 				case 1:
-					GFX::DrawGameSelSprite(ss2Screenshot, 0, 0);
+					GFX::DrawGameShotSprite(ss2Screenshot, 0, 0);
 					break;
 				case 2:
-					GFX::DrawGameSelSprite(gameSelSprites_title3_screenshot_idx, 0, 0);
+					GFX::DrawGameShotSprite(gameShotSprites_title3_screenshot_idx, 0, 0);
 					break;
 				case 3:
-					GFX::DrawGameSelSprite(gameSelSprites_title4_screenshot_idx, 0, 0);
+					GFX::DrawGameShotSprite(gameShotSprites_title4_screenshot_idx, 0, 0);
 					break;
 			}
 			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
@@ -573,7 +593,7 @@ int main()
 			switch(highlightedGame) {
 				case 0:
 				default:
-					GFX::DrawGameSelSprite(ss1Logo, ssLogoXpos, 56);
+					GFX::DrawGameSelSprite(ss1Logo, ss1LogoXpos, 56);
 					break;
 				case 1:
 					GFX::DrawGameSelSprite(ss2Logo, ssLogoXpos, 56);
@@ -631,7 +651,7 @@ int main()
 			switch(highlightedGame) {
 				case 0:
 				default:
-					GFX::DrawGameSelSprite(ss1Logo, 40+ssLogoXpos, 56);
+					GFX::DrawGameSelSprite(ss1Logo, 40+ss1LogoXpos, 56);
 					break;
 				case 1:
 					GFX::DrawGameSelSprite(ss2Logo, 40+ssLogoXpos, 56);
