@@ -4,7 +4,7 @@ const char* import_ss2CharacterNames[] {
 	"Emmylou",		// aka Harriet (EUR)
 	"Avery",		// (USA), aka Lola (EUR)
 	"Shoko",		// (JAP)
-	"India",		// aka India (EUR)
+	"India",		// aka Elena (EUR)
 	"Daphne",		// aka Shivani (EUR)
 	"Genevieve",	// aka Faye (EUR)
 	"Celeste",		// aka Clarissa (EUR)
