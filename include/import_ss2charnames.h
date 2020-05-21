@@ -9,6 +9,7 @@ const char* import_ss2CharacterNames[] {
 	"Genevieve",	// aka Faye (EUR)
 	"Celeste",		// aka Clarissa (EUR)
 	"Ingrid",		// aka Elsepth (EUR)
+	"Deborah",
 	"Daisy",		// aka Flora (EUR)
 	"Teagan",		// aka Tess (EUR)
 	"Nicky",
@@ -37,6 +38,7 @@ bool import_ss2CharacterGenders[] {
 	false,			// Female
 	false,			// Female
 	false,			// Female
+	false,			// Female
 };
 
 bool import_ss2CharacterTieColors[] {
@@ -45,6 +47,7 @@ bool import_ss2CharacterTieColors[] {
 	false,			// Pink
 	false,			// Pink
 	true,			// Light Green
+	false,			// Pink
 	false,			// Pink
 	false,			// Pink
 	false,			// Pink

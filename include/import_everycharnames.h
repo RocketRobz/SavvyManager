@@ -16,6 +16,7 @@ const char* import_everyCharacterNames[] {
 	"Genevieve",
 	"Celeste",
 	"Ingrid",
+	"Deborah",
 	"Daisy",
 	"Teagan",
 	"Nicky",
