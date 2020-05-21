@@ -1,8 +1,9 @@
 const char* import_ss2CharacterNames[] {
-	"Michaela",
-	"Evie",
+	"Michaela",		// (USA)
+	"Evie",			// (EUR/JAP)
 	"Emmylou",		// aka Harriet (EUR)
-	"Avery",		// aka Lola (EUR)
+	"Avery",		// (USA)
+	"Lola",			// (EUR/JAP)
 	"India",		// aka India (EUR)
 	"Daphne",		// aka Shivani (EUR)
 	"Genevieve",	// aka Faye (EUR)
@@ -41,7 +42,7 @@ bool import_ss2CharacterTieColors[] {
 	true,			// Light Green
 	false,			// Pink
 	false,			// Pink
-	false,			// Pink
+	true,			// Light Green
 	false,			// Pink
 	false,			// Pink
 	false,			// Pink
