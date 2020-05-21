@@ -212,8 +212,8 @@ static int messageNo = 0;
 static char chararacterImported[48];
 
 static void drawMsg(void) {
-	GFX::DrawSprite(sprites_msg_idx, 0, 8, 2, 1);
-	GFX::DrawSprite(sprites_msg_idx, 160, 8, -2, 1);
+	GFX::DrawSprite(sprites_msg_idx, 0, 8, 1, 1);
+	GFX::DrawSprite(sprites_msg_idx, 160, 8, -1, 1);
 	GFX::DrawSprite(messageNo==4 ? sprites_icon_question_idx : sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 5) {
 		Gui::DrawStringCentered(0, 68, 0.60, BLACK, "Everyone is now in Fashion Forward!");

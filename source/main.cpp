@@ -124,8 +124,8 @@ static bool showMessage = false;
 static int messageNo = 0;
 
 static void drawCannotEditMsg(void) {
-	GFX::DrawSprite(sprites_msg_idx, 0, 8, 2, 1);
-	GFX::DrawSprite(sprites_msg_idx, 160, 8, -2, 1);
+	GFX::DrawSprite(sprites_msg_idx, 0, 8, 1, 1);
+	GFX::DrawSprite(sprites_msg_idx, 160, 8, -1, 1);
 	GFX::DrawSprite(sprites_icon_msg_idx, 132, -2);
 	if (messageNo == 1) {
 		if (highlightedGame == 0) {
