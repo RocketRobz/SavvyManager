@@ -2,15 +2,15 @@ const char* import_ss2CharacterNames[] {
 	"Michaela",
 	"Evie",
 	"Emmylou",		// aka Harriet (EUR)
-	"Avery",
-	"India",
-	"Daphne",
-	"Genevieve",
-	"Celeste",
-	"Ingrid",
-	"Teagan",
+	"Avery",		// aka Lola (EUR)
+	"India",		// aka India (EUR)
+	"Daphne",		// aka Shivani (EUR)
+	"Genevieve",	// aka Faye (EUR)
+	"Celeste",		// aka Clarissa (EUR)
+	"Ingrid",		// aka Elsepth (EUR)
+	"Teagan",		// aka Tess (EUR)
 	"Nicky",
-	"Brienne",
+	"Brienne",		// aka Zahra (EUR)
 	"Clara",
 	"Yukiko",
 	"Dorothy",
@@ -34,4 +34,23 @@ bool import_ss2CharacterGenders[] {
 	false,			// Female
 	false,			// Female
 	false,			// Female
+};
+
+bool import_ss2CharacterTieColors[] {
+	false,			// Pink
+	true,			// Light Green
+	false,			// Pink
+	false,			// Pink
+	false,			// Pink
+	false,			// Pink
+	false,			// Pink
+	false,			// Pink
+	false,			// Pink
+	false,			// Pink
+	false,			// Pink
+	false,			// Pink
+	false,			// Pink
+	false,			// Pink
+	false,			// Pink
+	false,			// Pink
 };

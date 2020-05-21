@@ -434,7 +434,7 @@ void changeCharacterGraphics(void) {
 				Gui::DrawString(64, i2, 0.65, BLACK, import_ss3CharacterNames[i]);
 			} else if (import_highlightedGame == 1) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				GFX::DrawSprite((import_ss2CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				GFX::DrawSprite((import_ss2CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx)+import_ss2CharacterTieColors[i], 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, BLACK, import_ss2CharacterNames[i]);
 			} else if (import_highlightedGame == 0) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);

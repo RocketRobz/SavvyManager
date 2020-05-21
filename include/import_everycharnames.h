@@ -8,7 +8,7 @@ const char* import_everyCharacterNames[] {
 	"Didi",
 	"Olivia",
 	"Michaela",
-	"Emmylou",		// aka Harriet (EUR)
+	"Emmylou",
 	"Avery",
 	"India",
 	"Daphne",
