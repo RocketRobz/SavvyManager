@@ -51,6 +51,9 @@ void GFX::loadBgSprite(void) {
 		case 1:
 			bgPath = "romfs:/gfx/bgNight_loversBell.t3x";
 			break;
+		case 2:
+			bgPath = "romfs:/gfx/bgNight_bougainville.t3x";
+			break;
 	}
 	bgSprite   = C2D_SpriteSheetLoad(bgPath);
 	doBgSpriteFree = true;

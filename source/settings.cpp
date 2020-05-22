@@ -17,7 +17,9 @@ static const char* studioBgName(void) {
 		default:
 			return "Blue";
 		case 1:
-			return "Lovers Bell";
+			return "Lover's Bell";
+		case 2:
+			return "Bougainville";
 	}
 
 	return "null";
@@ -188,12 +190,31 @@ void settingsMenu(void) {
 				}
 			}
 		}
-		if ((hDown & KEY_A) && (cursorPosition <= numberOfSettings)) {
+		if ((hDown & KEY_LEFT) && (cursorPosition <= numberOfSettings)) {
+			sndSelect();
+			switch (cursorPosition) {
+				case 0:
+					studioBg--;
+					if (studioBg < 0) studioBg = 2;
+					displayStudioBg = false;
+					gspWaitForVBlank();
+					GFX::loadBgSprite();
+					displayStudioBg = true;
+					break;
+				case 1:
+					      if (iFps==30) iFps = 24;
+					else if (iFps==24) iFps = 60;
+					else if (iFps==60) iFps = 30;
+					C3D_FrameRate(iFps);
+					break;
+			}
+		}
+		if (((hDown & KEY_RIGHT) || (hDown & KEY_A)) && (cursorPosition <= numberOfSettings)) {
 			sndSelect();
 			switch (cursorPosition) {
 				case 0:
 					studioBg++;
-					if (studioBg > 1) studioBg = 0;
+					if (studioBg > 2) studioBg = 0;
 					displayStudioBg = false;
 					gspWaitForVBlank();
 					GFX::loadBgSprite();
