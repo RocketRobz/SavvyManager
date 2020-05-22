@@ -22,6 +22,7 @@ static char verText[32];
 
 extern int iFps;
 extern void loadSettings(void);
+extern void saveSettings(void);
 
 static int screenmode = 0;		// Current screen mode.
 int screenmodebuffer = 0;
@@ -221,7 +222,15 @@ void controlThread(void) {
 					fadecolor = 0;
 					fadeout = true;
 				}
+				if (hDown & KEY_SELECT) {
+					sndSelect();
+					screenmodebuffer = SCREEN_MODE_SETTINGS;
+					fadeout = true;
+				}
 			}
+		} else if (screenmode == SCREEN_MODE_SETTINGS) {
+			extern void settingsMenu(void);
+			settingsMenu();
 		} else if (screenmode == SCREEN_MODE_WHAT_TO_DO) {
 			if (showMessage) {
 				if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
@@ -329,6 +338,8 @@ int main()
 
 	gfxInitDefault();
 	
+	loadSettings();
+
 	Gui::init();
 	GFX::loadSheets();
 
@@ -483,8 +494,6 @@ int main()
 	
 	sprintf(verText, "Ver. %i.%i.%i", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
 
-	loadSettings();
-
 	C3D_FrameRate(iFps);
 
 	screenon();
@@ -525,7 +534,7 @@ int main()
 			Gui::ScreenDraw(Top);
 
 			GFX::DrawSprite(sprites_logo_rocketrobz_idx, 0, 0);
-			Gui::DrawString(8, 220, 0.50, BLACK, yeartext);
+			Gui::DrawString(8, 218, 0.50, BLACK, yeartext);
 			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
 			Gui::ScreenDraw(Bottom);
@@ -598,12 +607,17 @@ int main()
 			}
 			Gui::DrawString(8, 112, 0.55, BLACK, "<");
 			Gui::DrawString(304, 112, 0.55, BLACK, ">");
-			Gui::DrawString(248, 220, 0.50, BLACK, verText);
+			Gui::DrawString(8, 202, 0.50, BLACK, "START: Exit");
+			Gui::DrawString(8, 218, 0.50, BLACK, "SELECT: Settings");
+			Gui::DrawString(248, 218, 0.50, BLACK, verText);
 			if (showMessage) {
 				drawCannotEditMsg();
 			}
 			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 			C3D_FrameEnd(0);
+		} else if (screenmode == SCREEN_MODE_SETTINGS) {
+			extern void settingsMenuGraphics(void);
+			settingsMenuGraphics();
 		} else if (screenmode == SCREEN_MODE_WHAT_TO_DO) {
 			if ((highlightedGame == 0)
 			|| (highlightedGame > 1 && whatToChange_cursorPosition == 1)
@@ -790,6 +804,8 @@ int main()
 
 
 	runThreads = false;
+
+	saveSettings();
 
 	commitSaveData();
 	archiveUnmountAll();

@@ -7,7 +7,10 @@ static C2D_SpriteSheet gameSelSprites;
 static C2D_SpriteSheet gameShotSprites;
 static C2D_SpriteSheet bgSprite;
 static C2D_SpriteSheet chracterSprite;
-static bool dochracterSpriteFree = false;
+static bool doChracterSpriteFree = false;
+static bool doBgSpriteFree = false;
+
+extern int studioBg;
 
 extern bool showCursor;
 extern int cursorX;
@@ -18,7 +21,7 @@ Result GFX::loadSheets() {
 	sprites    = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
 	gameSelSprites  = C2D_SpriteSheetLoad("romfs:/gfx/gameSelSprites.t3x");
 	gameShotSprites = C2D_SpriteSheetLoad("romfs:/gfx/gameShotSprites.t3x");
-	bgSprite   = C2D_SpriteSheetLoad("romfs:/gfx/bgNight_loversBell.t3x");
+	GFX::loadBgSprite();
 	return 0;
 }
 
@@ -26,30 +29,50 @@ Result GFX::unloadSheets() {
 	C2D_SpriteSheetFree(sprites);
 	C2D_SpriteSheetFree(gameSelSprites);
 	C2D_SpriteSheetFree(gameShotSprites);
-	C2D_SpriteSheetFree(bgSprite);
-	if (dochracterSpriteFree) {
+	if (doBgSpriteFree) {
+		C2D_SpriteSheetFree(bgSprite);
+	}
+	if (doChracterSpriteFree) {
 		C2D_SpriteSheetFree(chracterSprite);
 	}
 	return 0;
 }
 
+void GFX::loadBgSprite(void) {
+	if (doBgSpriteFree) {
+		C2D_SpriteSheetFree(bgSprite);
+	}
+	const char* bgPath;
+	switch (studioBg) {
+		case 0:
+		default:
+			bgPath = "romfs:/gfx/bg_blue.t3x";
+			break;
+		case 1:
+			bgPath = "romfs:/gfx/bgNight_loversBell.t3x";
+			break;
+	}
+	bgSprite   = C2D_SpriteSheetLoad(bgPath);
+	doBgSpriteFree = true;
+}
+
 bool GFX::loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
-	if (dochracterSpriteFree) {
+	if (doChracterSpriteFree) {
 		C2D_SpriteSheetFree(chracterSprite);
 	}
 	if (access(t3xPathAllSeasons, F_OK) == 0) {
 		chracterSprite = C2D_SpriteSheetLoad(t3xPathAllSeasons);
-		dochracterSpriteFree = true;
+		doChracterSpriteFree = true;
 		return true;
 	} else {
-		dochracterSpriteFree = false;
+		doChracterSpriteFree = false;
 	}
 	if (access(t3xPathOneSeason, F_OK) == 0) {
 		chracterSprite = C2D_SpriteSheetLoad(t3xPathOneSeason);
-		dochracterSpriteFree = true;
+		doChracterSpriteFree = true;
 		return true;
 	} else {
-		dochracterSpriteFree = false;
+		doChracterSpriteFree = false;
 	}
 	return false;
 }

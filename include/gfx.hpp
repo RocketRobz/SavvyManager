@@ -30,6 +30,7 @@ namespace GFX
 
 	// Sprirte Functions.
 	bool loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSeason);
+	void loadBgSprite(void);
 	void showBgSprite(int zoomIn);
 	void showCharSprite(int zoomIn, int fadeAlpha);
 	void DrawGameSelSprite(int img, int x, int y, float ScaleX = 1, float ScaleY = 1);
