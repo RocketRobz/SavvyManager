@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 
 #include "common.hpp"
+#include "screenMode.h"
 #include "dumpdsp.h"
 #include "savedata.h"
 //#include "settings.h"
@@ -22,17 +23,7 @@ static char verText[32];
 extern int iFps;
 extern void loadSettings(void);
 
-// Current screen mode.
-enum ScreenMode {
-	SCREEN_MODE_EXIT = -1,				// Exit homebrew
-	SCREEN_MODE_ROCKETROBZ = 0,			// RocketRobz logo
-	SCREEN_MODE_GAME_SELECT = 1,		// Game select
-	SCREEN_MODE_WHAT_TO_DO = 2,			// What to do?
-	SCREEN_MODE_CHANGE_CHARACTER = 3,	// Change character
-	SCREEN_MODE_CHANGE_MUSIC = 4,		// Change music
-	SCREEN_MODE_CHANGE_EMBLEM = 5,		// Change emblem
-};
-static int screenmode = 0;
+static int screenmode = 0;		// Current screen mode.
 int screenmodebuffer = 0;
 
 static int screenDelay = 0;

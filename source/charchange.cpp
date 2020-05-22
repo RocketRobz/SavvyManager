@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 
 #include "common.hpp"
+#include "screenMode.h"
 #include "savedata.h"
 #include "file_browse.h"
 
@@ -24,15 +25,6 @@ extern void sndSelect(void);
 extern void sndBack(void);
 extern void sndHighlight(void);
 
-// Current screen mode.
-enum ScreenMode {
-	SCREEN_MODE_ROCKETROBZ = 0,			// RocketRobz logo
-	SCREEN_MODE_GAME_SELECT = 1,		// Game select
-	SCREEN_MODE_WHAT_TO_DO = 2,			// What to do?
-	SCREEN_MODE_CHANGE_CHARACTER = 3,	// Change character
-	SCREEN_MODE_CHANGE_MUSIC = 4,		// Change music
-	SCREEN_MODE_CHANGE_EMBLEM = 5,		// Change emblem
-};
 //static int screenmode = 0;
 extern int screenmodebuffer;
 
