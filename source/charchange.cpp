@@ -158,6 +158,30 @@ static const char* import_characterName(void) {
 	return "null";
 }
 
+static const char* import_SS2CharacterNames(int i) {
+	switch (sysRegion) {
+		default:
+			return import_ss2CharacterNames[i];
+		case CFG_REGION_EUR:
+		case CFG_REGION_AUS:
+			return import_nsbCharacterNames[i];
+	}
+}
+
+static const char* import_characterNameDisplay(void) {
+	switch (import_highlightedGame) {
+		case 0:
+			return import_ss1CharacterNames[importCharacterList_cursorPosition];
+		case 1:
+			return import_SS2CharacterNames(importCharacterList_cursorPosition);
+		case 2:
+			return import_ss3CharacterNames[importCharacterList_cursorPosition];
+		case 3:
+			return import_ss4CharacterNames[importCharacterList_cursorPosition];
+	}
+	return "null";
+}
+
 static const char* ss1Title(void) {
 	switch (sysRegion) {
 		default:
@@ -434,8 +458,8 @@ void changeCharacterGraphics(void) {
 				Gui::DrawString(64, i2, 0.65, BLACK, import_ss3CharacterNames[i]);
 			} else if (import_highlightedGame == 1) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				GFX::DrawSprite((import_ss2CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx)+import_ss2CharacterTieColors[i], 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, BLACK, import_ss2CharacterNames[i]);
+				GFX::DrawSprite((import_ss2CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx)/*+import_ss2CharacterTieColors[i]*/, 12, i2-8);
+				Gui::DrawString(64, i2, 0.65, BLACK, import_SS2CharacterNames(i));
 			} else if (import_highlightedGame == 0) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((import_ss1CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
@@ -742,7 +766,7 @@ void changeCharacter(void) {
 						writeSS2Save();
 						break;
 				}
-				sprintf(chararacterImported, "Imported %s successfully.", import_characterName());
+				sprintf(chararacterImported, "Imported %s successfully.", import_characterNameDisplay());
 				messageNo = 1;
 				subScreenMode = 1;
 				showMessage = true;

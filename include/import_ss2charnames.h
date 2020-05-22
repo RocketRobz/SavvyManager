@@ -1,19 +1,41 @@
 const char* import_ss2CharacterNames[] {
-	"Michaela",		// (USA)
+	"Michaela",
 	"Evie",			// (EUR/JAP)
-	"Emmylou",		// aka Harriet (EUR)
-	"Avery",		// (USA), aka Lola (EUR)
+	"Emmylou",
+	"Avery",		// aka Lola (EUR)
 	"Shoko",		// (JAP)
 	"India",		// aka Elena (EUR)
 	"Daphne",		// aka Shivani (EUR)
 	"Genevieve",	// aka Faye (EUR)
 	"Celeste",		// aka Clarissa (EUR)
-	"Ingrid",		// aka Elsepth (EUR)
-	"Deborah",
+	"Ingrid",
+	"Deborah",		// aka Elsepth (EUR)
 	"Daisy",		// aka Flora (EUR)
 	"Teagan",		// aka Tess (EUR)
 	"Nicky",
-	"Brienne",		// aka Zahra (EUR)
+	"Brienne",
+	"Clara",
+	"Yukiko",
+	"Dorothy",
+	"Dulcie",
+};
+
+const char* import_nsbCharacterNames[] {
+	"Michaela",		// (USA)
+	"Evie",
+	"Harriet",
+	"Avery",		// Lola (EUR)
+	"Shoko",		// (JAP)
+	"India",		// Elena (EUR)
+	"Daphne",		// Shivani (EUR)
+	"Genevieve",	// Faye (EUR)
+	"Celeste",		// Clarissa (EUR)
+	"Ingrid",
+	"Deborah",		// Elsepth (EUR)
+	"Daisy",		// Flora (EUR)
+	"Tess",
+	"Nicky",
+	"Zahra",
 	"Clara",
 	"Yukiko",
 	"Dorothy",
@@ -41,7 +63,7 @@ bool import_ss2CharacterGenders[] {
 	false,			// Female
 };
 
-bool import_ss2CharacterTieColors[] {
+/*bool import_ss2CharacterTieColors[] {
 	false,			// Pink
 	true,			// Light Green
 	false,			// Pink
@@ -60,4 +82,4 @@ bool import_ss2CharacterTieColors[] {
 	false,			// Pink
 	false,			// Pink
 	false,			// Pink
-};
+};*/
