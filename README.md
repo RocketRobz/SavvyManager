@@ -22,7 +22,7 @@ For Style Savvy's 10th Anniversary, a new save editor is here!
 * Coming soon: Change attributes of your character (such as gender, skin color, pose set, height, etc.).
 * Coming soon (SS4): Change bow placement on your character, if a bow is being worn.
 
-Before using Savvy Manager, it is recommended back up your Style Savvy game save(s) using Checkpoint, in case something goes wrong.
+Before using Savvy Manager, it is recommended to back up your Style Savvy game save(s) using Checkpoint, in case something goes wrong.
 
 **WARNING**     
 Star Stylist/Styling Star players, if you're playing as a male character, or as a female character with a unique eye shape (ex. Angélique), it is highly recommended you don't update your shop data at Shopdo.
