@@ -768,25 +768,13 @@ void changeCharacter(void) {
 				sndHighlight();
 				import_highlightedGame--;
 				if (import_highlightedGame < 0) import_highlightedGame = 4;
-				importCharacterList_cursorPosition = 0;
-				importCharacterList_cursorPositionOnScreen = 0;
-				import_characterShownFirst = 0;
-				if (import_highlightedGame == 4) {
-					previewCharacter = false;
-					if (!exportedCharListGotten[highlightedGame]) {
-						displayNothing = true;
-						gspWaitForVBlank();
-						getExportedCharacterContents();
-						exportedCharListGotten[highlightedGame] = true;
-						displayNothing = false;
-					}
-				}
-				loadChrImage(false);
 			}
 			if (hDown & KEY_DRIGHT) {
 				sndHighlight();
 				import_highlightedGame++;
 				if (import_highlightedGame > 4) import_highlightedGame = 0;
+			}
+			if ((hDown & KEY_DLEFT) || (hDown & KEY_DRIGHT)) {
 				importCharacterList_cursorPosition = 0;
 				importCharacterList_cursorPositionOnScreen = 0;
 				import_characterShownFirst = 0;
