@@ -8,21 +8,21 @@ For Style Savvy's 10th Anniversary, a save editor is here!
 
 # Features
 
-* Edit save data from all four Style Savvy games.
+* Edit save data from all four Girls Mode/Style Savvy/Style Boutique games.
 * As of currently, only games 2-4 are supported, and KOR region is not supported.
 * The GUI from Kirakira Code/Fashion Forward (third game).
 * Pre-rendered characters and backgrounds.
 * Sound effects from ChuChu Rocket.
-* Play as most characters from all Style Savvy games, in all (except first) Style Savvy games!     (Shop customers and brand reps not included.)
+* Play as most characters from all Girls Mode/Style Savvy/Style Boutique games, in all (except first) games!     (Shop customers and brand reps not included.)
 * When importing a character from those games, you can press L or R to select the seasonal outfit.     (Note that not all characters will have seasonal outfits.)
-* Add characters from the first game, Trendsetters, and Styling Star, as extra contacts in Fashion Forward!
+* Add characters from the first game, GM2/Trendsetters/NSB, and Star Stylist/Styling Star, as extra contacts in Kirakira Code/Fashion Forward!
 * You can also export your current character, in case if you want to restore/import it later.
-* (SS3/SS4) Import/Export brand emblems for custom designed outfits.
-* Apply music packs to Style Savvy: Trendsetters. (Requires game patching enabled in Luma.)
+* (3rd and 4th games) Import/Export brand emblems for custom designed outfits.
+* Apply music packs to Girls Mode 2/Style Savvy: Trendsetters/New Style Boutique. (Requires game patching enabled in Luma.)
 * Coming soon: Change attributes of your character (such as gender, skin color, pose set, height, etc.).
-* Coming soon (SS4): Change bow placement on your character, if a bow is being worn.
+* Coming soon (GM4/SS4/NSB3): Change bow placement on your character, if a bow is being worn.
 
-Before using Savvy Manager, it is recommended to back up your Style Savvy game save(s) using Checkpoint, in case something goes wrong.
+Before using Savvy Manager, it is recommended to back up your Girls Mode/Style Savvy/Style Boutique game save(s) using Checkpoint, in case something goes wrong.
 
 **WARNING**     
 Star Stylist/Styling Star players, if you're playing as a male character, or as a female character with a unique eye shape (ex. Angélique), it is highly recommended you don't update your shop data at Shopdo.
