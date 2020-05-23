@@ -31,7 +31,7 @@ static bool ss4SaveRead = false;
 
 static bool ss2SaveModified = false;
 static bool ss3SaveModified = false;
-static bool ss4SaveModified = false;
+//static bool ss4SaveModified = false;
 
 Handle handle4;
 FS_Archive archive4;
@@ -42,12 +42,6 @@ void commitSaveData(void) {
 	}
 	if (ss3SaveModified) {
 		archiveCommitSaveData("ss3");
-	}
-	if (ss4SaveModified) {
-		u32 bytesWritten = 0;
-		FSUSER_OpenFile(&handle4, archive4, fsMakePath(PATH_UTF16, (const void*)UTF8toUTF16(ss4SavePath).data()), FS_OPEN_WRITE, FS_WRITE_FLUSH);
-		FSFILE_Write(handle4, &bytesWritten, 0, ss4Save, (u32)sizeof(ss4Save), 0);
-		FSFILE_Close(handle4);
 	}
 }
 
@@ -396,12 +390,11 @@ bool foundSS4Save(void) {
 void readSS4Save(void) {
 	if (ss4SaveRead) return;
 
-	std::u16string savePath = UTF8toUTF16(ss4SavePath);
-	u32 bytesRead = 0;
-
 	/*FILE* saveData = fopen(ss4SavePath, "rb");
 	fread(ss4Save, (int)sizeof(ss4Save), 1, saveData);
 	fclose(saveData);*/
+
+	u32 bytesRead = 0;
 	FSUSER_OpenFile(&handle4, archive4, fsMakePath(PATH_UTF16, (const void*)UTF8toUTF16(ss4SavePath).data()), FS_OPEN_READ, 0);
 	FSFILE_Read(handle4, &bytesRead, 0, ss4Save, (u32)sizeof(ss4Save));
 	FSFILE_Close(handle4);
@@ -419,7 +412,12 @@ void writeSS4Save(void) {
 	fwrite(ss4Save, (int)sizeof(ss4Save), 1, saveData);
 	fclose(saveData);*/
 
-	ss4SaveModified = true;
+	u32 bytesWritten = 0;
+	FSUSER_OpenFile(&handle4, archive4, fsMakePath(PATH_UTF16, (const void*)UTF8toUTF16(ss4SavePath).data()), FS_OPEN_WRITE, FS_WRITE_FLUSH);
+	FSFILE_Write(handle4, &bytesWritten, 0, ss4Save, (u32)sizeof(ss4Save), 0);
+	FSFILE_Close(handle4);
+
+	//ss4SaveModified = true;
 }
 
 void readSS4Character(u16 id) {
