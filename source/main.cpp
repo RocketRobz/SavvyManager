@@ -439,7 +439,7 @@ int main()
 			ss2Id = 0x000A9000;
 			ss3Id = 0x0016A100;
 			ss4Id = 0x00001C26;
-			ss2Screenshot = gameShotSprites_title2_screenshotJ_idx;
+			ss2Screenshot = gameShotSprites_title2_screenshotE_idx;
 			ss1Logo = gameSelSprites_title1_E_idx;
 			ss2Logo = gameSelSprites_title2_E_idx;
 			ss3Logo = gameSelSprites_title3_E_idx;
