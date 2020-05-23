@@ -4,7 +4,7 @@
    <img src="https://img.shields.io/badge/GBATemp-Thread-blue.svg">
   </a>
 </p>
-For Style Savvy's 10th Anniversary, a new save editor is here!
+For Style Savvy's 10th Anniversary, a save editor is here!
 
 # Features
 
