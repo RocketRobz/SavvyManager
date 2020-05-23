@@ -300,7 +300,7 @@ static bool removeBags = false;
 void addEveryone(void) {
 //	if (highlightedGame != 2) return;
 	
-	for (int i = 0; i < 46; i++) {
+	for (int i = 0; i < 49; i++) {
 		sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", import_everyCharacterNames[i]);
 		if (access(chrFilePath, F_OK) != 0) {
 			sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), import_everyCharacterNames[i]);
@@ -309,7 +309,7 @@ void addEveryone(void) {
 		if (removeBags) {
 			removeSS3CharacterBag(0x0BB9+i);
 		}
-		sprintf(chrFilePath, "romfs:/character/Fashion Forward/Profiles/%s.cprf", import_everyCharacterNames[i]);
+		sprintf(chrFilePath, "romfs:/character/Fashion Forward/Profiles/%s.cprf", sysRegion==CFG_REGION_EUR||sysRegion==CFG_REGION_AUS ? import_everyCharacterProfileNamesEUR[i] : import_everyCharacterNames[i]);
 		readSS3ProfileFile(0x0BB9+i, chrFilePath);
 		toggleSS3Character(0x0BB9+i, true);
 	}
