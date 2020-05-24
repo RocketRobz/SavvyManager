@@ -589,7 +589,7 @@ int main()
 					GFX::DrawSprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
 				}
 			}
-			Gui::DrawString(8, 8, 0.50, BLACK, "Select a game to manage it's save data.");
+			Gui::DrawString(8, 8, 0.50, BLACK, "Select a game to manage its save data.");
 			switch(highlightedGame) {
 				case 0:
 				default:
