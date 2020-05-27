@@ -1,61 +1,18 @@
-﻿#include <stdio.h>
-#include <dirent.h>
-#include <string.h>
-#include <3ds.h>
-#include <malloc.h>
-#include <sys/stat.h>
-
-#include "common.hpp"
-#include "screenMode.h"
-#include "savedata.h"
-//#include "settings.h"
 #include "file_browse.h"
+#include "musicChange.hpp"
+#include "screenvars.h"
+#include "whatToDo.hpp"
 
-extern std::string currentMusicPack;
 extern void saveSettings(void);
 
-extern void sndSelect(void);
-extern void sndBack(void);
-extern void sndHighlight(void);
+MusicChange::MusicChange() {
+	if (!modeInited) {
+		getMusicPackContents();
+		modeInited = true;
+	}
+}
 
-//static int screenmode = 0;
-extern int screenmodebuffer;
-
-//static int subScreenMode = 0;
-/*
-*/
-
-extern u8 sysRegion;
-extern int highlightedGame;
-
-extern int fadealpha;
-extern int fadecolor;
-extern bool fadein;
-extern bool fadeout;
-
-extern float bg_xPos;
-extern float bg_yPos;
-
-extern bool showCursor;
-extern int cursorX;
-extern int cursorY;
-extern int cursorAlpha;
-
-extern u32 hDown;
-extern touchPosition touch;
-extern bool touchingBackButton(void);
-
-static int cursorPosition = 0;
-static int cursorPositionOnScreen = 0;
-
-static int musicPackShownFirst = 0;
-
-static bool modeInited = false;
-
-static bool showMessage = false;
-static int messageNo = 0;
-
-static void drawMsg(void) {
+void MusicChange::drawMsg(void) const {
 	GFX::DrawSprite(sprites_msg_idx, 0, 8, 1, 1);
 	GFX::DrawSprite(sprites_msg_idx, 160, 8, -1, 1);
 	GFX::DrawSprite(sprites_icon_msg_idx, 132, -2);
@@ -69,16 +26,7 @@ static void drawMsg(void) {
 	Gui::DrawString(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
 }
 
-void changeMusicGraphics(void) {
-	if (!modeInited) {
-		getMusicPackContents();
-		modeInited = true;
-	}
-
-	C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-	C2D_TargetClear(Top, TRANSPARENT);
-	C2D_TargetClear(Bottom, TRANSPARENT);
-	Gui::clearTextBufs();
+void MusicChange::Draw(void) const {
 	Gui::ScreenDraw(Top);
 
 	Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
@@ -101,8 +49,8 @@ void changeMusicGraphics(void) {
 		}
 	}
 
-	cursorX = 248;
-	cursorY = 64+(48*cursorPositionOnScreen);
+	this->cursorX = 248;
+	this->cursorY = 64+(48*cursorPositionOnScreen);
 
 	Gui::DrawString(8, 8, 0.50, BLACK, "Select the music pack you want to use.");
 
@@ -124,24 +72,23 @@ void changeMusicGraphics(void) {
 	GFX::DrawSprite(sprites_arrow_back_idx, 19, 195);
 	GFX::DrawSprite(sprites_button_b_idx, 44, 218);
 
-	GFX::drawCursor();
+	GFX::drawCursor(this->cursorX, this->cursorY);
 
 	if (showMessage) {
 		drawMsg();
 	}
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-	C3D_FrameEnd(0);
 }
 
-void changeMusic(void) {
-	if (!fadein && !fadeout) {
-		if (showMessage) {
-			if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
-				sndSelect();
-				showMessage = false;
-			}
-		} else {
+
+void MusicChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
+	if (showMessage) {
+		if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
+			sndSelect();
+			showMessage = false;
+		}
+	} else {
 		if (showCursor) {
 			if (hDown & KEY_UP) {
 				sndHighlight();
@@ -164,18 +111,18 @@ void changeMusic(void) {
 				if (cursorPosition > numberOfMusicPacks) {
 					cursorPosition = numberOfMusicPacks;
 					musicPackShownFirst = numberOfMusicPacks-2;
-					if (musicPackShownFirst < 0) musicPackShownFirst = 0;
-					if (cursorPositionOnScreen > numberOfMusicPacks) {
-						cursorPositionOnScreen = numberOfMusicPacks;
+						if (musicPackShownFirst < 0) musicPackShownFirst = 0;
+						if (cursorPositionOnScreen > numberOfMusicPacks) {
+							cursorPositionOnScreen = numberOfMusicPacks;
+						}
+					} else if (cursorPosition > musicPackShownFirst+2) {
+						musicPackShownFirst++;
 					}
-				} else if (cursorPosition > musicPackShownFirst+2) {
-					musicPackShownFirst++;
-				}
-				if (cursorPositionOnScreen > 2) {
-					cursorPositionOnScreen = 2;
+					if (cursorPositionOnScreen > 2) {
+						cursorPositionOnScreen = 2;
+					}
 				}
 			}
-		}
 		if ((hDown & KEY_A) && (cursorPosition <= numberOfMusicPacks)) {
 			sndSelect();
 			char prevMusicPackPath[256];
@@ -186,32 +133,31 @@ void changeMusic(void) {
 			}
 			const char* romfsStreamPath = "sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound/stream";
 			switch (sysRegion) {
-				case CFG_REGION_EUR:
-				case CFG_REGION_AUS:
-					romfsStreamPath = "sdmc:/luma/titles/00040000000A9000/romfs/Common/Sound/stream";
-					break;
-				case CFG_REGION_JPN:
-					romfsStreamPath = "sdmc:/luma/titles/000400000005D100/romfs/Common/Sound/stream";
-					break;
-				default:
-					break;
+					case CFG_REGION_EUR:
+					case CFG_REGION_AUS:
+						romfsStreamPath = "sdmc:/luma/titles/00040000000A9000/romfs/Common/Sound/stream";
+						break;
+					case CFG_REGION_JPN:
+						romfsStreamPath = "sdmc:/luma/titles/000400000005D100/romfs/Common/Sound/stream";
+						break;
+					default:
+						break;
+				}
+				rename(romfsStreamPath, prevMusicPackPath);
+				if (cursorPosition==0 || rename(musicPackPath, romfsStreamPath) == 0) {
+					messageNo = 0;
+				} else {
+					messageNo = 1;
+				}
+				showMessage = true;
+				currentMusicPack = (cursorPosition==0 ? "" : getMusicPackName(cursorPosition-1));
+				saveSettings();
+				modeInited = false;
 			}
-			rename(romfsStreamPath, prevMusicPackPath);
-			if (cursorPosition==0 || rename(musicPackPath, romfsStreamPath) == 0) {
-				messageNo = 0;
-			} else {
-				messageNo = 1;
-			}
-			showMessage = true;
-			currentMusicPack = (cursorPosition==0 ? "" : getMusicPackName(cursorPosition-1));
-			saveSettings();
-			modeInited = false;
-		}
+			
 		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 			sndBack();
-			screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
-			fadeout = true;
-		}
+			Gui::setScreen(std::make_unique<WhatToDo>(), true);
 		}
 	}
 }

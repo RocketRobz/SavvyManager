@@ -51,9 +51,9 @@ VERSION_MICRO := 0
 TARGET		:=	SavvyManager
 BUILD		:=	build
 UNIVCORE	:=	Universal-Core
-SOURCES		:=	$(UNIVCORE) source source/utils
+SOURCES		:=	$(UNIVCORE) source source/screens source/utils
 DATA		:=	data
-INCLUDES	:=	$(UNIVCORE) include include/utils
+INCLUDES	:=	$(UNIVCORE) include include/screens include/utils
 GRAPHICS	:=	assets/gfx assets/gfx_chars assets/gfx_charprevbg assets/gfx_gamesel assets/gfx_gameshots
 ROMFS		:=	romfs
 GFXBUILD	:=	$(ROMFS)/gfx
@@ -74,9 +74,9 @@ CFLAGS	:=	-g -Wall -O2 -mword-relocations \
 		$(ARCH)
 
 CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS -DVERSION_MAJOR=$(VERSION_MAJOR) \
-									-DVERSION_MINOR=$(VERSION_MINOR) -DVERSION_MICRO=$(VERSION_MICRO)
+			-DVERSION_MINOR=$(VERSION_MINOR) -DVERSION_MICRO=$(VERSION_MICRO)
 
-CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=c++11 -std=gnu++11
+CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++17
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
