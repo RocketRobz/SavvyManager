@@ -22,13 +22,12 @@
 
 typedef u32 Color;
 
-namespace GFX
-{
+namespace GFX {
 	// Load & Unload default sheets.
 	Result loadSheets();
 	Result unloadSheets();
 
-	// Sprirte Functions.
+	// Sprite Functions.
 	bool loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSeason);
 	void loadBgSprite(void);
 	void showBgSprite(int zoomIn);
@@ -39,7 +38,7 @@ namespace GFX
 	void DrawSpriteBlend(int key, float x, float y, u32 color, float ScaleX = 1, float ScaleY = 1);
 
 	// Draw Cursor.
-	void drawCursor(void);
+	void drawCursor(int cX, int cY);
 }
 
 #endif

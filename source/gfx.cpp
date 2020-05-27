@@ -18,9 +18,9 @@ extern int cursorY;
 extern int cursorAlpha;
 
 Result GFX::loadSheets() {
-	sprites    = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
-	gameSelSprites  = C2D_SpriteSheetLoad("romfs:/gfx/gameSelSprites.t3x");
-	gameShotSprites = C2D_SpriteSheetLoad("romfs:/gfx/gameShotSprites.t3x");
+	sprites			= C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
+	gameSelSprites	= C2D_SpriteSheetLoad("romfs:/gfx/gameSelSprites.t3x");
+	gameShotSprites	= C2D_SpriteSheetLoad("romfs:/gfx/gameShotSprites.t3x");
 	GFX::loadBgSprite();
 	return 0;
 }
@@ -55,8 +55,8 @@ void GFX::loadBgSprite(void) {
 			bgPath = "romfs:/gfx/bgNight_bougainville.t3x";
 			break;
 	}
-	bgSprite   = C2D_SpriteSheetLoad(bgPath);
-	doBgSpriteFree = true;
+	bgSprite		= C2D_SpriteSheetLoad(bgPath);
+	doBgSpriteFree	= true;
 }
 
 bool GFX::loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
@@ -118,10 +118,10 @@ void GFX::DrawSpriteBlend(int key, float x, float y, u32 color, float ScaleX, fl
 	C2D_DrawImageAt(C2D_SpriteSheetGetImage(sprites, key), x, y, 0.5f, &tint, ScaleX, ScaleY);
 }
 
-void GFX::drawCursor(void) {
+void GFX::drawCursor(int cX, int cY) {
 	if (cursorAlpha == 255) {
-		DrawSprite(sprites_cursor_idx, cursorX, cursorY);
+		DrawSprite(sprites_cursor_idx, cX, cY);
 	} else if (cursorAlpha > 0) {
-		DrawSpriteBlend(sprites_cursor_idx, cursorX, cursorY, C2D_Color32(255, 255, 255, cursorAlpha));
+		DrawSpriteBlend(sprites_cursor_idx, cX, cY, C2D_Color32(255, 255, 255, cursorAlpha));
 	}
 }

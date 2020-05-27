@@ -9,25 +9,25 @@
 #include "common.hpp"
 #include "screenMode.h"
 #include "dumpdsp.h"
+#include "gameSelect.hpp"
+#include "inifile.h"
+#include "rocketRobz.hpp"
 #include "savedata.h"
-//#include "settings.h"
+#include "screen.hpp"
 #include "sound.h"
 #include "thread.h"
 
+bool isInit = true;
+int delay = 0;
 Handle threadRequest;
 
+#define settingsIni "sdmc:/3ds/SavvyManager/settings.ini"
 #define CONFIG_3D_SLIDERSTATE (*(float *)0x1FF81080)
 
-static char verText[32];
-
-extern int iFps;
-extern void loadSettings(void);
-extern void saveSettings(void);
-
-static int screenmode = 0;		// Current screen mode.
-int screenmodebuffer = 0;
-
-static int screenDelay = 0;
+char verText[32];
+int studioBg = 0;
+int iFps = 60;
+std::string currentMusicPack = "";
 
 //sound *music = NULL;
 sound *sfx_select = NULL;
@@ -35,9 +35,30 @@ sound *sfx_back = NULL;
 sound *sfx_highlight = NULL;
 
 bool dspfirmfound = false;
+bool exiting = false;
 //static bool musicPlaying = false;
 static bool screenoff_ran = false;
 static bool screenon_ran = true;
+
+void loadSettings(void) {
+	CIniFile settingsini(settingsIni);
+
+	studioBg = settingsini.GetInt("SAVVY-MANAGER", "STUDIO_BG", studioBg);
+	iFps = settingsini.GetInt("SAVVY-MANAGER", "FRAME_RATE", iFps);
+
+	currentMusicPack = settingsini.GetString("SS2", "CURRENT_MUSIC_PACK", currentMusicPack);
+}
+
+void saveSettings(void) {
+	CIniFile settingsini(settingsIni);
+
+	settingsini.SetInt("SAVVY-MANAGER", "STUDIO_BG", studioBg);
+	settingsini.SetInt("SAVVY-MANAGER", "FRAME_RATE", iFps);
+
+	settingsini.SetString("SS2", "CURRENT_MUSIC_PACK", currentMusicPack);
+
+	settingsini.SaveIniFileModified(settingsIni);
+}
 
 /*static void Play_Music(void) {
 	if (!musicPlaying && dspfirmfound) {
@@ -81,7 +102,7 @@ void screenoff(void)
 
 void screenon(void)
 {
- 	screenoff_ran = false;
+	screenoff_ran = false;
 	if(!screenon_ran) {
 		if (R_SUCCEEDED(gspLcdInit())) {
 			GSPLCD_PowerOnBacklight(GSPLCD_SCREEN_BOTH);
@@ -94,229 +115,37 @@ void screenon(void)
 u8 sysRegion = CFG_REGION_USA;
 int highlightedGame = 1;
 
-int fadealpha = 255;
-int fadecolor = 0;
-bool fadein = true;
-bool fadeout = false;
-	
-int text_width = 0;
-const char* yeartext = "2019-2020 RocketRobz";
-//const char* yeartext2 = "Games 2008-2017 Nintendo & syn Sophia";
-	
 float bg_xPos = 0.0f;
 float bg_yPos = 0.0f;
-
 bool showCursor = false;
-int cursorX = 0;
-int cursorY = 0;
-static int whatToChange_cursorPosition = 0;
 int cursorAlpha = 0;
 
-static bool showMessage = false;
-static int messageNo = 0;
-
-static void drawCannotEditMsg(void) {
-	GFX::DrawSprite(sprites_msg_idx, 0, 8, 1, 1);
-	GFX::DrawSprite(sprites_msg_idx, 160, 8, -1, 1);
-	GFX::DrawSprite(sprites_icon_msg_idx, 132, -2);
-	if (messageNo == 2) {
-		Gui::DrawStringCentered(0, 58, 0.60, BLACK, "This game's title ID");
-		Gui::DrawStringCentered(0, 78, 0.60, BLACK, "is not known.");
-		Gui::DrawStringCentered(0, 112, 0.60, BLACK, "As a result, the save data");
-		Gui::DrawStringCentered(0, 132, 0.60, BLACK, "cannot be edited.");
-	} else if (messageNo == 1) {
-		if (highlightedGame == 0) {
-			Gui::DrawStringCentered(0, 58, 0.60, BLACK, "Save data not found.");
-			Gui::DrawStringCentered(0, 90, 0.60, BLACK, /*highlightedGame==3 ? "Please back up the extra data using" :*/ "Please back it up using");
-			Gui::DrawStringCentered(0, 110, 0.60, BLACK, "Checkpoint, and name the backup:");
-			Gui::DrawStringCentered(0, 134, 0.60, BLACK, "SavvyManager");
-		} else {
-			Gui::DrawStringCentered(0, 94, 0.60, BLACK, "Save data not found.");
-		}
-	} else {
-		switch (sysRegion) {
-			default:
-				Gui::DrawStringCentered(0, 92, 0.60, BLACK, "Cannot edit Style Savvy's");
-				break;
-			case CFG_REGION_EUR:
-			case CFG_REGION_AUS:
-				Gui::DrawStringCentered(0, 92, 0.60, BLACK, "Cannot edit Style Boutique's");
-				break;
-			case CFG_REGION_JPN:
-				Gui::DrawStringCentered(0, 92, 0.60, BLACK, "Cannot edit Girls Mode's");
-			case CFG_REGION_KOR:
-				Gui::DrawStringCentered(0, 92, 0.60, BLACK, "Cannot edit Girls Style's");
-				break;
-		}
-		Gui::DrawStringCentered(0, 112, 0.60, BLACK, "save data yet.");
-	}
-	GFX::DrawSprite(sprites_button_msg_shadow_idx, 114, 197);
-	GFX::DrawSprite(sprites_button_msg_idx, 115, 188);
-	Gui::DrawString(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
-}
+int ss1Logo = gameSelSprites_title1_idx;
+int ss2Screenshot = gameShotSprites_title2_screenshot_idx;
+int ss2Logo = gameSelSprites_title2_idx;
+int ss1LogoXpos = 0;
+int ssLogoXpos = 0;
+int ss3Logo = gameSelSprites_title3_idx;
+int ss4Logo = gameSelSprites_title4_idx;
 
 u32 hDown = 0;
+u32 hHeld = 0;
 touchPosition touch;
 
 bool touchingBackButton(void) {
 	return (touch.px >= 7 && touch.px < 7+40 && touch.py >= 197 && touch.py < 197+44);
 }
 
-static bool runSelection = false;
-
-static bool ss2SaveFound = false;
-static bool ss3SaveFound = false;
-static bool ss4SaveFound = false;
+bool ss2SaveFound = false;
+bool ss3SaveFound = false;
+bool ss4SaveFound = false;
 
 static bool runThreads = true;
 
 void controlThread(void) {
 	while (runThreads) {
 		svcWaitSynchronization(threadRequest, U64_MAX);
-
-		if (screenmode == SCREEN_MODE_GAME_SELECT) {
-			//Play_Music();
-
-			if (showMessage) {
-				if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
-					sndSelect();
-					showMessage = false;
-				}
-			} else if (!fadein && !fadeout) {
-				if ((hDown & KEY_LEFT) || ((hDown & KEY_TOUCH) && touch.px >= 0 && touch.px < 32 && touch.py >= 104 && touch.py < 104+32)) {
-					sndHighlight();
-					highlightedGame--;
-					if (highlightedGame < 0) highlightedGame = (sysRegion==CFG_REGION_KOR ? 1 : 3);
-				} else if ((hDown & KEY_RIGHT) || ((hDown & KEY_TOUCH) && touch.px >= 320-32 && touch.px < 320 && touch.py >= 104 && touch.py < 104+32)) {
-					sndHighlight();
-					highlightedGame++;
-					if (highlightedGame > (sysRegion==CFG_REGION_KOR ? 1 : 3)) highlightedGame = 0;
-				}
-
-				if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 32 && touch.px < 320-32 && touch.py >= 56 && touch.py < 56+128)) {
-				  if (highlightedGame==0) {
-					sndBack();
-					messageNo = 0;
-					showMessage = true;
-				  } else if (highlightedGame==1 && sysRegion==CFG_REGION_KOR) {
-					sndBack();
-					messageNo = 2;
-					showMessage = true;
-				  } else if ((highlightedGame==1 && ss2SaveFound)
-				  || (highlightedGame==2 && ss3SaveFound)
-				  || (highlightedGame==3 && ss4SaveFound))
-				  {
-					sndSelect();
-					screenmodebuffer = SCREEN_MODE_WHAT_TO_DO;
-					fadeout = true;
-				  } else {
-					sndBack();
-					messageNo = 1;
-					showMessage = true;
-				  }
-				}
-
-				if (hDown & KEY_START) {
-					sndBack();
-					screenmodebuffer = SCREEN_MODE_EXIT;
-					fadecolor = 0;
-					fadeout = true;
-				}
-				if (hDown & KEY_SELECT) {
-					sndSelect();
-					screenmodebuffer = SCREEN_MODE_SETTINGS;
-					fadeout = true;
-				}
-			}
-		} else if (screenmode == SCREEN_MODE_SETTINGS) {
-			extern void settingsMenu(void);
-			settingsMenu();
-		} else if (screenmode == SCREEN_MODE_WHAT_TO_DO) {
-			if (showMessage) {
-				if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
-					sndSelect();
-					showMessage = false;
-				}
-			} else if (!fadein && !fadeout) {
-				if (highlightedGame > 0 && showCursor) {
-					if (hDown & KEY_LEFT) {
-						sndHighlight();
-						if (highlightedGame > 1) {
-							if (whatToChange_cursorPosition == 2) whatToChange_cursorPosition = 0;
-							else if (whatToChange_cursorPosition == 0) whatToChange_cursorPosition = 2;
-						} else {
-							whatToChange_cursorPosition--;
-							if (whatToChange_cursorPosition < 0) whatToChange_cursorPosition = 1;
-						}
-					} else if (hDown & KEY_RIGHT) {
-						sndHighlight();
-						if (highlightedGame > 1) {
-							if (whatToChange_cursorPosition == 0) whatToChange_cursorPosition = 2;
-							else if (whatToChange_cursorPosition == 2) whatToChange_cursorPosition = 0;
-						} else {
-							whatToChange_cursorPosition++;
-							if (whatToChange_cursorPosition > 1) whatToChange_cursorPosition = 0;
-						}
-					}
-				}
-				if (hDown & KEY_A) {
-					runSelection = true;
-				}
-				if ((hDown & KEY_TOUCH) && touch.px >= 71 && touch.px <= 248 && touch.py >= 91 && touch.py <= 136) {
-					if (touch.px < 120) {
-						whatToChange_cursorPosition = 0;
-						runSelection = true;
-					}
-					if ((touch.px > 134) && (touch.px < 185) && highlightedGame==1) {
-						whatToChange_cursorPosition = 1;
-						runSelection = true;
-					}
-					if ((touch.px > 198) && highlightedGame > 1) {
-						whatToChange_cursorPosition = 2;
-						runSelection = true;
-					}
-				}
-				if (runSelection) {
-					sndSelect();
-					switch (whatToChange_cursorPosition) {
-						case 0:
-							if ((highlightedGame==1 && ss2SaveFound)
-							  || (highlightedGame==2 && ss3SaveFound)
-							  || (highlightedGame==3 && ss4SaveFound))
-							  {
-								screenmodebuffer = SCREEN_MODE_CHANGE_CHARACTER;
-							  } else {
-							  	sndBack();
-								messageNo = 1;
-								showMessage = true;
-							  }
-							break;
-						case 1:
-							screenmodebuffer = SCREEN_MODE_CHANGE_MUSIC;
-							break;
-						case 2:
-							screenmodebuffer = SCREEN_MODE_CHANGE_EMBLEM;
-							break;
-					}
-					fadeout = true;
-					runSelection = false;
-				}
-				if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
-					sndBack();
-					screenmodebuffer = SCREEN_MODE_GAME_SELECT;
-					fadeout = true;
-				}
-			}
-		} else if (screenmode == SCREEN_MODE_CHANGE_CHARACTER) {
-			extern void changeCharacter(void);
-			changeCharacter();
-		} else if (screenmode == SCREEN_MODE_CHANGE_MUSIC) {
-			extern void changeMusic(void);
-			changeMusic();
-		} else if (screenmode == SCREEN_MODE_CHANGE_EMBLEM) {
-			extern void changeEmblem(void);
-			changeEmblem();
-		}
+		Gui::ScreenLogic(hDown, hHeld, touch, true); // Call the logic of the current screen here.
 		svcClearEvent(threadRequest);
 	}
 }
@@ -324,12 +153,8 @@ void controlThread(void) {
 int main()
 {
 	screenoff();
-
-	aptInit();
 	amInit();
 	romfsInit();
-	srvInit();
-	hidInit();
 	Result res = cfguInit();
 	if (R_SUCCEEDED(res)) {
 		CFGU_SecureInfoGetRegion(&sysRegion);
@@ -337,11 +162,12 @@ int main()
 	}
 
 	gfxInitDefault();
-	
 	loadSettings();
 
 	Gui::init();
 	GFX::loadSheets();
+	fadein = true;
+	fadealpha = 255;
 
 	// make folders if they don't exist
 	mkdir("sdmc:/3ds", 0777);
@@ -387,17 +213,17 @@ int main()
  	// Style Savvy: Fashion Forward folders
 	//mkdir("sdmc:/luma/titles/0004000000196500", 0777);
 
-	if( access( "sdmc:/3ds/dspfirm.cdc", F_OK ) != -1 ) {
+	if ( access( "sdmc:/3ds/dspfirm.cdc", F_OK ) != -1 ) {
 		ndspInit();
 		dspfirmfound = true;
-	}else{
+	} else {
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 		Gui::ScreenDraw(Bottom);
 		Gui::DrawString(12, 16, 0.5f, WHITE, "Dumping DSP firm...");
 		C3D_FrameEnd(0);
 		screenon();
 		dumpDsp();
-		if( access( "sdmc:/3ds/dspfirm.cdc", F_OK ) != -1 ) {
+		if ( access( "sdmc:/3ds/dspfirm.cdc", F_OK ) != -1 ) {
 			ndspInit();
 			dspfirmfound = true;
 		} else {
@@ -424,14 +250,6 @@ int main()
 	u32 ss2Id = 0x000A9100;
 	u32 ss3Id = 0x00196500;
 	u32 ss4Id = 0x00001C25;
-
-	int ss1Logo = gameSelSprites_title1_idx;
-	int ss2Screenshot = gameShotSprites_title2_screenshot_idx;
-	int ss2Logo = gameSelSprites_title2_idx;
-	int ss1LogoXpos = 0;
-	int ssLogoXpos = 0;
-	int ss3Logo = gameSelSprites_title3_idx;
-	int ss4Logo = gameSelSprites_title4_idx;
 
 	switch (sysRegion) {
 		case CFG_REGION_EUR:
@@ -498,8 +316,10 @@ int main()
 
 	screenon();
 
+	Gui::setScreen(std::make_unique<RocketRobz>(), false); // Set screen to RocketRobz's screen.
 	svcCreateEvent(&threadRequest,(ResetType)0);
 	createThread((ThreadFunc)controlThread);
+	//Play_Music();
 
 	// Loop as long as the status is not exit
 	while(aptMainLoop()) {
@@ -507,214 +327,29 @@ int main()
 		hidScanInput();
 
 		hDown = hidKeysDown();
-		//const u32 hHeld = hidKeysHeld();
+		hHeld = hidKeysHeld();
 
 		hidTouchRead(&touch);
 
-		if (screenmode != SCREEN_MODE_ROCKETROBZ) {
-			screenDelay = 0;
+		// Here we draw the actual screen.
+		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
+		C2D_TargetClear(Top, TRANSPARENT);
+		C2D_TargetClear(Bottom, TRANSPARENT);
+		Gui::clearTextBufs();
+		Gui::DrawScreen();
+		C3D_FrameEnd(0);
+		if (exiting) {
+			if (!fadeout)	break;
 		}
 
-		if (screenmode == SCREEN_MODE_EXIT) {
-			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-			C2D_TargetClear(Top, TRANSPARENT);
-			C2D_TargetClear(Bottom, TRANSPARENT);
-			Gui::clearTextBufs();
-			Gui::ScreenDraw(Top);
-			Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, 255)); // Fade in/out effect
-			Gui::ScreenDraw(Bottom);
-			Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, 255)); // Fade in/out effect
-			C3D_FrameEnd(0);
-			break;
-		} else if (screenmode == SCREEN_MODE_ROCKETROBZ) {
-			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-			C2D_TargetClear(Top, TRANSPARENT);
-			C2D_TargetClear(Bottom, TRANSPARENT);
-			Gui::clearTextBufs();
-			Gui::ScreenDraw(Top);
-
-			GFX::DrawSprite(sprites_logo_rocketrobz_idx, 0, 0);
-			Gui::DrawString(8, 218, 0.50, BLACK, yeartext);
-			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-
-			Gui::ScreenDraw(Bottom);
-			Gui::Draw_Rect(0, 0, 320, 240, WHITE);
-			/*text_width = 104;
-			Gui::DrawString(((320-text_width)/2), 100, 0.50, BLACK, yeartext);
-			text_width = 264;
-			Gui::DrawString(((320-text_width)/2), 116, 0.50, BLACK, yeartext2);*/
-			//GFX::DrawSprite(sprites_logo_SSanniversary_idx, 32, 24);
-			GFX::DrawSprite(sprites_logo_UniversalCore_idx, 0, 26);
-			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-			C3D_FrameEnd(0);
-
-			screenDelay++;
-			if(screenDelay > iFps*3){
-				screenmodebuffer = SCREEN_MODE_GAME_SELECT;
-				fadeout = true;
+		if (isInit) {
+			delay++;
+			if (delay > iFps*3) {
+				Gui::setScreen(std::make_unique<GameSelect>(), true); // Set after delay to the GameSelect screen.
+				isInit = false;
 			}
-		} else if (screenmode == SCREEN_MODE_GAME_SELECT) {
-			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-			C2D_TargetClear(Top, TRANSPARENT);
-			C2D_TargetClear(Bottom, TRANSPARENT);
-			Gui::clearTextBufs();
-			Gui::ScreenDraw(Top);
-
-			/*for(int w = 0; w < 7; w++) {
-				for(int h = 0; h < 3; h++) {
-					Gui::sprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
-				}
-			}*/
-			switch(highlightedGame) {
-				case 0:
-				default:
-					GFX::DrawGameShotSprite(gameShotSprites_title1_screenshot_idx, 0, 0);
-					break;
-				case 1:
-					GFX::DrawGameShotSprite(ss2Screenshot, 0, 0);
-					break;
-				case 2:
-					GFX::DrawGameShotSprite(gameShotSprites_title3_screenshot_idx, 0, 0);
-					break;
-				case 3:
-					GFX::DrawGameShotSprite(gameShotSprites_title4_screenshot_idx, 0, 0);
-					break;
-			}
-			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-
-			Gui::ScreenDraw(Bottom);
-			Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
-			for(int w = 0; w < 7; w++) {
-				for(int h = 0; h < 3; h++) {
-					GFX::DrawSprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
-				}
-			}
-			Gui::DrawString(8, 8, 0.50, BLACK, "Select a game to manage its save data.");
-			switch(highlightedGame) {
-				case 0:
-				default:
-					GFX::DrawGameSelSprite(ss1Logo, ss1LogoXpos, 56);
-					break;
-				case 1:
-					GFX::DrawGameSelSprite(ss2Logo, ssLogoXpos, 56);
-					break;
-				case 2:
-					GFX::DrawGameSelSprite(ss3Logo, 0, 56);
-					break;
-				case 3:
-					GFX::DrawGameSelSprite(ss4Logo, ssLogoXpos, 56);
-					break;
-			}
-			Gui::DrawString(8, 112, 0.55, BLACK, "<");
-			Gui::DrawString(304, 112, 0.55, BLACK, ">");
-			Gui::DrawString(8, 202, 0.50, BLACK, "START: Exit");
-			Gui::DrawString(8, 218, 0.50, BLACK, "SELECT: Settings");
-			Gui::DrawString(248, 218, 0.50, BLACK, verText);
-			if (showMessage) {
-				drawCannotEditMsg();
-			}
-			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-			C3D_FrameEnd(0);
-		} else if (screenmode == SCREEN_MODE_SETTINGS) {
-			extern void settingsMenuGraphics(void);
-			settingsMenuGraphics();
-		} else if (screenmode == SCREEN_MODE_WHAT_TO_DO) {
-			if ((highlightedGame == 0)
-			|| (highlightedGame > 1 && whatToChange_cursorPosition == 1)
-			|| (highlightedGame < 2 && whatToChange_cursorPosition == 2)) {
-				whatToChange_cursorPosition = 0;
-			}
-
-			switch (whatToChange_cursorPosition) {
-				case 0:
-				default:
-					cursorX = 80;
-					cursorY = 104;
-					break;
-				case 1:
-					cursorX = 148;
-					cursorY = 104;
-					break;
-				case 2:
-					cursorX = 212;
-					cursorY = 104;
-					break;
-			}
-
-			C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-			C2D_TargetClear(Top, TRANSPARENT);
-			C2D_TargetClear(Bottom, TRANSPARENT);
-			Gui::clearTextBufs();
-			Gui::ScreenDraw(Top);
-
-			Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
-			for(int w = 0; w < 7; w++) {
-				for(int h = 0; h < 3; h++) {
-					GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
-				}
-			}
-			switch(highlightedGame) {
-				case 0:
-				default:
-					GFX::DrawGameSelSprite(ss1Logo, 40+ss1LogoXpos, 56);
-					break;
-				case 1:
-					GFX::DrawGameSelSprite(ss2Logo, 40+ssLogoXpos, 56);
-					break;
-				case 2:
-					GFX::DrawGameSelSprite(ss3Logo, 40, 56);
-					break;
-				case 3:
-					GFX::DrawGameSelSprite(ss4Logo, 40+ssLogoXpos, 56);
-					break;
-			}
-			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-
-			Gui::ScreenDraw(Bottom);
-			Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
-			for(int w = 0; w < 7; w++) {
-				for(int h = 0; h < 3; h++) {
-					GFX::DrawSprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
-				}
-			}
-			Gui::DrawString(8, 8, 0.50, BLACK, "What do you want to change?");
-			int iconXpos = 64;
-			GFX::DrawSpriteBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
-			GFX::DrawSprite(sprites_icon_profile_idx, iconXpos, 80);
-			Gui::DrawString(iconXpos-2, 140, 0.50, RED, "Characters");
-			iconXpos += 64;
-			if (highlightedGame == 1) {
-				// Show music pack option for Trendsetters
-				GFX::DrawSpriteBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
-				GFX::DrawSprite(sprites_icon_music_idx, iconXpos, 80);
-				Gui::DrawString(iconXpos+14, 140, 0.50, RED, "Music");
-			}
-			iconXpos += 64;
-			if (highlightedGame > 1) {
-				// Show emblem option for Fashion Forward and Styling Star
-				GFX::DrawSpriteBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
-				GFX::DrawSprite(sprites_icon_emblem_idx, iconXpos, 80);
-				Gui::DrawString(iconXpos+8, 140, 0.50, RED, "Emblem");
-			}
-			GFX::DrawSprite(sprites_button_shadow_idx, 5, 199);
-			GFX::DrawSprite(sprites_button_red_idx, 5, 195);
-			GFX::DrawSprite(sprites_arrow_back_idx, 19, 195);
-			GFX::DrawSprite(sprites_button_b_idx, 44, 218);
-			/*GFX::DrawSprite(sprites_button_shadow_idx, 251, 199);
-			GFX::DrawSprite(sprites_button_blue_idx, 251, 195);*/
-			GFX::drawCursor();
-			if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-			C3D_FrameEnd(0);
-		} else if (screenmode == SCREEN_MODE_CHANGE_CHARACTER) {
-			extern void changeCharacterGraphics(void);
-			changeCharacterGraphics();
-		} else if (screenmode == SCREEN_MODE_CHANGE_MUSIC) {
-			extern void changeMusicGraphics(void);
-			changeMusicGraphics();
-		} else if (screenmode == SCREEN_MODE_CHANGE_EMBLEM) {
-			extern void changeEmblemGraphics(void);
-			changeEmblemGraphics();
 		}
+
 		// Scroll background
 		switch (iFps) {
 			default:
@@ -730,8 +365,9 @@ int main()
 				bg_yPos -= 0.9;
 				break;
 		}
-		if(bg_xPos >= 72) bg_xPos = 0.0f;
-		if(bg_yPos <= -136) bg_yPos = 0.0f;
+
+		if (bg_xPos >= 72) bg_xPos = 0.0f;
+		if (bg_yPos <= -136) bg_yPos = 0.0f;
 
 		if (hDown) {
 			svcSignalEvent(threadRequest);
@@ -760,46 +396,20 @@ int main()
 			}
 		}
 
-		if (fadein) {
-			switch (iFps) {
-				default:
-					fadealpha -= 6;
-					break;
-				case 30:
-					fadealpha -= 12;
-					break;
-				case 24:
-					fadealpha -= 14;
-					break;
-			}
-			if (fadealpha < 0) {
-				fadealpha = 0;
-				fadecolor = 255;
-				fadein = false;
-			}
+		int fadeFPS;
+		switch (iFps) {
+			default:
+				fadeFPS = 6;
+				break;
+			case 30:
+				fadeFPS = 12;
+				break;
+			case 24:
+				fadeFPS = 14;
+				break;
 		}
 
-		if (fadeout) {
-			switch (iFps) {
-				default:
-					fadealpha += 6;
-					break;
-				case 30:
-					fadealpha += 12;
-					break;
-				case 24:
-					fadealpha += 14;
-					break;
-			}
-			if (fadealpha > 255) {
-				fadealpha = 255;
-				screenmode = screenmodebuffer;
-				if (screenmode != SCREEN_MODE_EXIT) {
-					fadein = true;
-				}
-				fadeout = false;
-			}
-		}
+		Gui::fadeEffects(fadeFPS, fadeFPS);
 	}
 
 
@@ -829,10 +439,7 @@ int main()
 	GFX::unloadSheets();
 
 	gfxExit();
-	hidExit();
-	srvExit();
 	romfsExit();
-	aptExit();
 	amExit();
 
 	return 0;
