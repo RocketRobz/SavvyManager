@@ -702,12 +702,14 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			sndHighlight();
 			this->import_highlightedGame--;
 			if (this->import_highlightedGame < 0) this->import_highlightedGame = 4;
+			this->getMaxChars();
 		}
 
 		if (hDown & KEY_DRIGHT) {
 			sndHighlight();
 			this->import_highlightedGame++;
 			if (this->import_highlightedGame > 4) this->import_highlightedGame = 0;
+			this->getMaxChars();
 		}
 
 		if ((hDown & KEY_DLEFT) || (hDown & KEY_DRIGHT)) {
