@@ -55,7 +55,7 @@ void CharacterChange::getMaxChars() {
 	} else if (import_highlightedGame == 2) {
 		import_totalCharacters = 0x10;
 	} else if (import_highlightedGame == 1) {
-		import_totalCharacters = 0xF;
+		import_totalCharacters = 0x12;
 	} else if (import_highlightedGame == 0) {
 		import_totalCharacters = 0x7;
 	}
