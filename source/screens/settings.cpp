@@ -59,7 +59,7 @@ void Settings::Draw(void) const {
 				Gui::DrawString(32, i2, 0.65, BLACK, txt_studioBG);
 				break;
 			case 1:
-				sprintf(txt_frameRate, "Frame Rate: %i", iFps);
+				sprintf(txt_frameRate, "Frame Rate: %iFPS", iFps);
 				Gui::DrawString(32, i2, 0.65, BLACK, txt_frameRate);
 				break;
 			default:
