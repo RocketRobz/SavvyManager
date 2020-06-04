@@ -6,7 +6,7 @@ void RocketRobz::Draw(void) const {
 	Gui::ScreenDraw(Top);
 
 	GFX::DrawSprite(sprites_logo_rocketrobz_idx, 0, 0);
-	Gui::DrawString(8, 218, 0.50, BLACK, this->yeartext);
+	Gui::DrawString(8, 218, 0.50, WHITE, this->yeartext);
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
 	Gui::ScreenDraw(Bottom);
