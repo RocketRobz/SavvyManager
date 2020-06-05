@@ -3,6 +3,7 @@
 #include "screenvars.h"
 
 char txt_studioBG[32];
+char txt_cinemaWide[24];
 char txt_frameRate[24];
 
 const char* Settings::studioBgName(void) const {
@@ -35,6 +36,11 @@ void Settings::Draw(void) const {
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
+	if (cinemaWide) {
+		Gui::Draw_Rect(0, 0, 400, 36, C2D_Color32(0, 0, 0, 255));
+		Gui::Draw_Rect(0, 204, 400, 36, C2D_Color32(0, 0, 0, 255));
+	}
+
 	Gui::ScreenDraw(Bottom);
 	Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
 	for(int w = 0; w < 7; w++) {
@@ -59,6 +65,10 @@ void Settings::Draw(void) const {
 				Gui::DrawString(32, i2, 0.65, BLACK, txt_studioBG);
 				break;
 			case 1:
+				sprintf(txt_cinemaWide, "Aspect Ratio: %s", cinemaWide ? "Cinema" : "Wide");
+				Gui::DrawString(32, i2, 0.65, BLACK, txt_cinemaWide);
+				break;
+			case 2:
 				sprintf(txt_frameRate, "Frame Rate: %iFPS", iFps);
 				Gui::DrawString(32, i2, 0.65, BLACK, txt_frameRate);
 				break;
@@ -127,6 +137,9 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				displayStudioBg = true;
 				break;
 			case 1:
+				cinemaWide = !cinemaWide;
+				break;
+			case 2:
 					 if (iFps==30) iFps = 24;
 				else if (iFps==24) iFps = 60;
 				else if (iFps==60) iFps = 30;
@@ -147,6 +160,9 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				displayStudioBg = true;
 				break;
 			case 1:
+				cinemaWide = !cinemaWide;
+				break;
+			case 2:
 					 if (iFps==60) iFps = 24;
 				else if (iFps==24) iFps = 30;
 				else if (iFps==30) iFps = 60;

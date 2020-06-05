@@ -14,7 +14,7 @@ private:
 	const char* studioBgName(void) const;
 	bool displayStudioBg = true;
 	mutable int cursorX, cursorY;
-	int numberOfSettings = 1;
+	int numberOfSettings = 2;
 	int cursorPosition = 0;
 	int cursorPositionOnScreen = 0;
 	int settingShownFirst = 0;

@@ -8,6 +8,7 @@ extern float bg_xPos;
 extern float bg_yPos;
 extern int cursorAlpha;
 extern int studioBg;
+extern bool cinemaWide;
 extern int iFps;
 extern std::string currentMusicPack;
 extern int highlightedGame;

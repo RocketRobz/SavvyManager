@@ -11,6 +11,7 @@ static bool doChracterSpriteFree = false;
 static bool doBgSpriteFree = false;
 
 extern int studioBg;
+extern int cinemaWide;
 
 extern bool showCursor;
 extern int cursorX;
@@ -81,19 +82,28 @@ bool GFX::loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSe
 }
 
 void GFX::showBgSprite(int zoomIn) {
-	Gui::DrawSprite(bgSprite, 0, 0, -(240*zoomIn));
+	int yPos = -(240*zoomIn);
+	if (cinemaWide) yPos -= 16;
+
+	Gui::DrawSprite(bgSprite, 0, 0, yPos);
 }
 
 void GFX::showCharSprite(int zoomIn, int fadeAlpha) {
+	int yPos = -((cinemaWide ? 168 : 240)*zoomIn);
+	if (cinemaWide) yPos += 36;
+
+	C2D_Image image = C2D_SpriteSheetGetImage(chracterSprite, 0);
+	C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
+
 	if (fadeAlpha == 255) {
-		C2D_DrawImageAt(C2D_SpriteSheetGetImage(chracterSprite, 0), 0, -(240*zoomIn), 0.5f);
+		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos, 0.5f, NULL, (cinemaWide ? 0.7f : 1), (cinemaWide ? 0.7f : 1));
 	} else {
 		C2D_ImageTint tint;
 		C2D_SetImageTint(&tint, C2D_TopLeft, C2D_Color32(255, 255, 255, fadeAlpha), 1);
 		C2D_SetImageTint(&tint, C2D_TopRight, C2D_Color32(255, 255, 255, fadeAlpha), 1);
 		C2D_SetImageTint(&tint, C2D_BotLeft, C2D_Color32(255, 255, 255, fadeAlpha), 1);
 		C2D_SetImageTint(&tint, C2D_BotRight, C2D_Color32(255, 255, 255, fadeAlpha), 1);
-		C2D_DrawImageAt(C2D_SpriteSheetGetImage(chracterSprite, 0), 0, -(240*zoomIn), 0.5f, &tint);
+		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos, 0.5f, &tint, (cinemaWide ? 0.7f : 1), (cinemaWide ? 0.7f : 1));
 	}
 }
 
