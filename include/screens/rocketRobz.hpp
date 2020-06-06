@@ -14,6 +14,7 @@ private:
 	const char* gamesByText = "Original games by";
 	const char* gameYearText = "2008-2017";
 	const char* gameYearText2 = "2009-2017";
+	const char* gameYearTextKOR = "2009-2013";
 };
 
 #endif

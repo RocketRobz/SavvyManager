@@ -39,7 +39,11 @@ void RocketRobz::Draw(void) const {
 		Gui::Draw_Rect(0, 0, 320, 240, WHITE);
 		GFX::DrawSprite(sprites_logo_nintendoSynSophia_idx, 0, 0);
 		Gui::DrawStringCentered(0, 8, 0.50, WHITE, this->gamesByText);
-		Gui::DrawStringCentered(0, 218, 0.50, BLACK, sysRegion==CFG_REGION_JPN ? this->gameYearText : this->gameYearText2);
+		if (sysRegion == CFG_REGION_KOR) {
+			Gui::DrawStringCentered(0, 218, 0.50, BLACK, this->gameYearTextKOR);
+		} else {
+			Gui::DrawStringCentered(0, 218, 0.50, BLACK, sysRegion==CFG_REGION_JPN ? this->gameYearText : this->gameYearText2);
+		}
 	} else {
 		Gui::DrawStringCentered(0, 48, 0.50, WHITE, this->presentedText);
 		Gui::DrawStringCentered(0, 72, 0.60, WHITE, "Cinema");
