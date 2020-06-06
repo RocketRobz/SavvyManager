@@ -65,7 +65,7 @@ void Settings::Draw(void) const {
 				Gui::DrawString(32, i2, 0.65, BLACK, txt_studioBG);
 				break;
 			case 1:
-				sprintf(txt_cinemaWide, "Aspect Ratio: %s", cinemaWide ? "Cinema" : "Wide");
+				sprintf(txt_cinemaWide, "Aspect Ratio: %s", cinemaWide ? "Cinema" : "Normal");
 				Gui::DrawString(32, i2, 0.65, BLACK, txt_cinemaWide);
 				break;
 			case 2:
