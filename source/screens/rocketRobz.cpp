@@ -46,8 +46,8 @@ void RocketRobz::Draw(void) const {
 		}
 	} else {
 		Gui::DrawStringCentered(0, 48, 0.50, WHITE, this->presentedText);
-		Gui::DrawStringCentered(0, 72, 0.60, WHITE, "Cinema");
-		GFX::DrawSprite(sprites_logo_widescreen_idx, 66, 91);
+		Gui::DrawStringCentered(0, 88, 0.60, WHITE, "Cinema");
+		GFX::DrawSprite(sprites_logo_widescreen_idx, 66, 107);
 	}
 	if (rr_fadeAlpha > 0) Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(0, 0, 0, rr_fadeAlpha)); // Fade in/out effect
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
@@ -87,7 +87,7 @@ void RocketRobz::Draw(void) const {
 			rr_fadeType = true;
 			prevSubMode++;
 		}
-	} else if (delay > iFps*3) {
+	} else if (delay > iFps*4) {
 		if (prevSubMode != 0) {
 			rr_fadeType = false;
 		}
