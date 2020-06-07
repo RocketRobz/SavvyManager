@@ -76,9 +76,9 @@ void RocketRobz::Draw(void) const {
 		if (rr_fadeAlpha > 255) rr_fadeAlpha = 255;
 	}
 
-	if (delay > iFps*13) {
+	/*if (delay > iFps*13) {
 		rr_fadeType = false;
-	} else if (delay > iFps*8) {
+	} else*/ if (delay > iFps*6) {
 		if (prevSubMode != 1) {
 			rr_fadeType = false;
 		}
@@ -87,7 +87,7 @@ void RocketRobz::Draw(void) const {
 			rr_fadeType = true;
 			prevSubMode++;
 		}
-	} else if (delay > iFps*4) {
+	} else if (delay > iFps*3) {
 		if (prevSubMode != 0) {
 			rr_fadeType = false;
 		}

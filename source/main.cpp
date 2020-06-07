@@ -31,7 +31,7 @@ int iFps = 60;
 std::string currentMusicPack = "";
 
 //sound *music = NULL;
-sound *mus_logos = NULL;
+//sound *mus_logos = NULL;
 sound *sfx_select = NULL;
 sound *sfx_back = NULL;
 sound *sfx_highlight = NULL;
@@ -71,11 +71,11 @@ void saveSettings(void) {
 	}
 }*/
 
-void musLogos(void) {
+/*void musLogos(void) {
 	if (!dspfirmfound) return;
 	mus_logos->stop();
 	mus_logos->play();
-}
+}*/
 
 void sndSelect(void) {
 	if (!dspfirmfound) return;
@@ -248,7 +248,7 @@ int main()
 
 	// Load the sound effects if DSP is available.
 	if (dspfirmfound) {
-		mus_logos = new sound("romfs:/sounds/logos.wav", 0, false);
+		//mus_logos = new sound("romfs:/sounds/logos.wav", 0, false);
 		//music = new sound("romfs:/sounds/music.wav", 1, true);
 		sfx_select = new sound("romfs:/sounds/select.wav", 2, false);
 		sfx_back = new sound("romfs:/sounds/back.wav", 3, false);
@@ -328,7 +328,7 @@ int main()
 	svcCreateEvent(&threadRequest,(ResetType)0);
 	createThread((ThreadFunc)controlThread);
 	//Play_Music();
-	musLogos();
+	//musLogos();
 
 	// Loop as long as the status is not exit
 	while(aptMainLoop()) {
@@ -353,7 +353,7 @@ int main()
 
 		if (isInit) {
 			delay++;
-			if (delay > iFps*15) {
+			if (delay > iFps*10) {
 				Gui::setScreen(std::make_unique<GameSelect>(), true); // Set after delay to the GameSelect screen.
 				isInit = false;
 			}
@@ -430,7 +430,7 @@ int main()
 	archiveUnmountAll();
 
 	//delete music;
-	delete mus_logos;
+	//delete mus_logos;
 	delete sfx_select;
 	delete sfx_back;
 	delete sfx_highlight;
