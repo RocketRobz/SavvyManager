@@ -5,6 +5,7 @@
 static C2D_SpriteSheet sprites;
 static C2D_SpriteSheet gameSelSprites;
 static C2D_SpriteSheet gameShotSprites;
+static C2D_SpriteSheet gameBgSprites;
 static C2D_SpriteSheet bgSprite;
 static C2D_SpriteSheet chracterSprite;
 static bool doChracterSpriteFree = false;
@@ -22,6 +23,7 @@ Result GFX::loadSheets() {
 	sprites			= C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
 	gameSelSprites	= C2D_SpriteSheetLoad("romfs:/gfx/gameSelSprites.t3x");
 	gameShotSprites	= C2D_SpriteSheetLoad("romfs:/gfx/gameShotSprites.t3x");
+	gameBgSprites	= C2D_SpriteSheetLoad("romfs:/gfx/gameBgSprites.t3x");
 	GFX::loadBgSprite();
 	return 0;
 }
@@ -30,6 +32,7 @@ Result GFX::unloadSheets() {
 	C2D_SpriteSheetFree(sprites);
 	C2D_SpriteSheetFree(gameSelSprites);
 	C2D_SpriteSheetFree(gameShotSprites);
+	C2D_SpriteSheetFree(gameBgSprites);
 	if (doBgSpriteFree) {
 		C2D_SpriteSheetFree(bgSprite);
 	}
@@ -113,6 +116,10 @@ void GFX::DrawGameSelSprite(int img, int x, int y, float ScaleX, float ScaleY) {
 
 void GFX::DrawGameShotSprite(int img, int x, int y, float ScaleX, float ScaleY) {
 	C2D_DrawImageAt(C2D_SpriteSheetGetImage(gameShotSprites, img), x, y, 0.5f, NULL, ScaleX, ScaleY);
+}
+
+void GFX::DrawGameBgSprite(int img, int x, int y, float ScaleX, float ScaleY) {
+	C2D_DrawImageAt(C2D_SpriteSheetGetImage(gameBgSprites, img), x, y, 0.5f, NULL, ScaleX, ScaleY);
 }
 
 void GFX::DrawSprite(int img, int x, int y, float ScaleX, float ScaleY, GPU_TEXTURE_FILTER_PARAM filter) {

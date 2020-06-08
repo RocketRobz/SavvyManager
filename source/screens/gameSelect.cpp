@@ -90,29 +90,33 @@ void GameSelect::Draw(void) const {
 	}
 
 	Gui::ScreenDraw(Bottom);
-	Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
-	for(int w = 0; w < 7; w++) {
-		for(int h = 0; h < 3; h++) {
-			GFX::DrawSprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
-		}
-	}
 
-	Gui::DrawString(8, 8, 0.50, BLACK, "Select a game to manage its save data.");
 	switch(highlightedGame) {
 		case 0:
 		default:
+			/*Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
+			for(int w = 0; w < 7; w++) {
+				for(int h = 0; h < 3; h++) {
+					GFX::DrawSprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
+				}
+			}*/
+			GFX::DrawGameBgSprite((sysRegion==CFG_REGION_EUR || sysRegion==CFG_REGION_AUS) ? gameBgSprites_title1_bgE_idx : gameBgSprites_title1_bg_idx, 0, 0, 2, 2);
 			GFX::DrawGameSelSprite(ss1Logo, ss1LogoXpos, 56);
 			break;
 		case 1:
+			GFX::DrawGameBgSprite(gameBgSprites_title2_bg_idx, 0, 0);
 			GFX::DrawGameSelSprite(ss2Logo, ssLogoXpos, 56);
 			break;
 		case 2:
+			GFX::DrawGameBgSprite(gameBgSprites_title3_bg_idx, 0, 0);
 			GFX::DrawGameSelSprite(ss3Logo, 0, 56);
 			break;
 		case 3:
+			GFX::DrawGameBgSprite((sysRegion==CFG_REGION_EUR || sysRegion==CFG_REGION_AUS) ? gameBgSprites_title4_bgE_idx : gameBgSprites_title4_bg_idx, 0, 0);
 			GFX::DrawGameSelSprite(ss4Logo, ssLogoXpos, 56);
 			break;
 	}
+	Gui::DrawString(8, 8, 0.50, BLACK, "Select a game to manage its save data.");
 	Gui::DrawString(8, 112, 0.55, BLACK, "<");
 	Gui::DrawString(304, 112, 0.55, BLACK, ">");
 	Gui::DrawString(8, 202, 0.50, BLACK, "START: Exit");
