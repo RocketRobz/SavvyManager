@@ -115,17 +115,23 @@ void GFX::DrawGameShotSprite(int img, int x, int y, float ScaleX, float ScaleY) 
 	C2D_DrawImageAt(C2D_SpriteSheetGetImage(gameShotSprites, img), x, y, 0.5f, NULL, ScaleX, ScaleY);
 }
 
-void GFX::DrawSprite(int img, int x, int y, float ScaleX, float ScaleY) {
-	C2D_DrawImageAt(C2D_SpriteSheetGetImage(sprites, img), x, y, 0.5f, NULL, ScaleX, ScaleY);
+void GFX::DrawSprite(int img, int x, int y, float ScaleX, float ScaleY, GPU_TEXTURE_FILTER_PARAM filter) {
+	C2D_Image image = C2D_SpriteSheetGetImage(sprites, img);
+	C3D_TexSetFilter(image.tex, filter, filter);
+
+	C2D_DrawImageAt(image, x, y, 0.5f, NULL, ScaleX, ScaleY);
 }
 
-void GFX::DrawSpriteBlend(int key, float x, float y, u32 color, float ScaleX, float ScaleY) {
+void GFX::DrawSpriteBlend(int img, float x, float y, u32 color, float ScaleX, float ScaleY, GPU_TEXTURE_FILTER_PARAM filter) {
+	C2D_Image image = C2D_SpriteSheetGetImage(sprites, img);
+	C3D_TexSetFilter(image.tex, filter, filter);
+
 	C2D_ImageTint tint;
 	C2D_SetImageTint(&tint, C2D_TopLeft, color, 1);
 	C2D_SetImageTint(&tint, C2D_TopRight, color, 1);
 	C2D_SetImageTint(&tint, C2D_BotLeft, color, 1);
 	C2D_SetImageTint(&tint, C2D_BotRight, color, 1);
-	C2D_DrawImageAt(C2D_SpriteSheetGetImage(sprites, key), x, y, 0.5f, &tint, ScaleX, ScaleY);
+	C2D_DrawImageAt(image, x, y, 0.5f, &tint, ScaleX, ScaleY);
 }
 
 void GFX::drawCursor(int cX, int cY) {

@@ -18,15 +18,19 @@ void RocketRobz::Draw(void) const {
 	Gui::ScreenDraw(Top);
 
 	if (subMode == 2) {
-		GFX::DrawSprite(sprites_logo_rocketrobz_idx, 0, 0);
-		Gui::DrawString(8, 218, 0.50, WHITE, this->yearText);
+		if (cinemaWide) {
+			GFX::DrawSprite(sprites_logo_rocketrobz_idx, 60, 36, 0.7f, 0.7f, GPU_LINEAR);
+		} else {
+			GFX::DrawSprite(sprites_logo_rocketrobz_idx, 0, 0);
+		}
+		Gui::DrawString(8, (cinemaWide ? 182 : 218), 0.50, WHITE, this->yearText);
 	} else {
 		GFX::DrawSprite(sprites_logo_savvymanager_idx, 56, 58);
 	}
 	if (delay > iFps*6 && rr_fadeAlpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(0, 0, 0, rr_fadeAlpha)); // Fade in/out effect
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
-	if (delay > iFps*14 && cinemaWide) {
+	if (cinemaWide) {
 		Gui::Draw_Rect(0, 0, 400, 36, C2D_Color32(0, 0, 0, 255));
 		Gui::Draw_Rect(0, 204, 400, 36, C2D_Color32(0, 0, 0, 255));
 	}
