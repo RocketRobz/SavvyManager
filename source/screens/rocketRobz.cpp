@@ -19,9 +19,9 @@ void RocketRobz::Draw(void) const {
 
 	if (subMode == 2) {
 		if (cinemaWide) {
-			GFX::DrawSprite(sprites_logo_rocketrobz_idx, 60, 36, 0.7f, 0.7f, GPU_LINEAR);
+			GFX::DrawSprite(sprites_logo_rocketrobz_idx, 60, 36, 0.35f, 0.7f, GPU_LINEAR);
 		} else {
-			GFX::DrawSprite(sprites_logo_rocketrobz_idx, 0, 0);
+			GFX::DrawSprite(sprites_logo_rocketrobz_idx, 0, 0, 0.5);
 		}
 		Gui::DrawString(8, (cinemaWide ? 182 : 218), 0.50, WHITE, this->yearText);
 	} else {
