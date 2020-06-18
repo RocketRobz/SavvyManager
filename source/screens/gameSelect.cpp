@@ -69,10 +69,10 @@ void GameSelect::Draw(void) const {
 	switch(highlightedGame) {
 		case 0:
 		default:
-			GFX::DrawGameShotSprite(gameShotSprites_title1_screenshot_idx, 0, (cinemaWide ? 8 : 0));
+			GFX::DrawGameShotSprite(gameShotSprites_title1_screenshot_idx, 0, (cinemaWide ? 8 : 0), 0.5, 1, GPU_LINEAR);
 			break;
 		case 1:
-			GFX::DrawGameShotSprite(ss2Screenshot, 0, (cinemaWide ? 24 : 0));
+			GFX::DrawGameShotSprite(ss2Screenshot, 0, (cinemaWide ? 24 : 0), 0.5, 1, GPU_LINEAR);
 			break;
 		case 2:
 			GFX::DrawGameShotSprite(gameShotSprites_title3_screenshot_idx, 0, (cinemaWide ? 24 : 0), 0.5, 1, GPU_LINEAR);
