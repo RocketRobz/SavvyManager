@@ -88,7 +88,7 @@ void GFX::showBgSprite(int zoomIn) {
 	int yPos = -(240*zoomIn);
 	if (cinemaWide) yPos -= 16;
 
-	Gui::DrawSprite(bgSprite, 0, 0, yPos);
+	Gui::DrawSprite(bgSprite, 0, 0, yPos, 0.5);
 }
 
 void GFX::showCharSprite(int zoomIn, int fadeAlpha) {
@@ -101,14 +101,14 @@ void GFX::showCharSprite(int zoomIn, int fadeAlpha) {
 	}
 
 	if (fadeAlpha == 255) {
-		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos, 0.5f, NULL, (cinemaWide ? 0.7f : 1), (cinemaWide ? 0.7f : 1));
+		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos, 0.5f, NULL, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
 	} else {
 		C2D_ImageTint tint;
 		C2D_SetImageTint(&tint, C2D_TopLeft, C2D_Color32(255, 255, 255, fadeAlpha), 1);
 		C2D_SetImageTint(&tint, C2D_TopRight, C2D_Color32(255, 255, 255, fadeAlpha), 1);
 		C2D_SetImageTint(&tint, C2D_BotLeft, C2D_Color32(255, 255, 255, fadeAlpha), 1);
 		C2D_SetImageTint(&tint, C2D_BotRight, C2D_Color32(255, 255, 255, fadeAlpha), 1);
-		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos, 0.5f, &tint, (cinemaWide ? 0.7f : 1), (cinemaWide ? 0.7f : 1));
+		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos, 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
 	}
 }
 
