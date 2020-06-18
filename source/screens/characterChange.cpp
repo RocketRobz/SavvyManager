@@ -290,11 +290,11 @@ void CharacterChange::Draw(void) const {
 	this->preview();
 
 	if (this->showMessage && this->messageNo == 4) {
-		Gui::DrawString(8, 210, 0.50, WHITE, this->removeBags ? " Keep bags" : " Remove bags");
+		Gui::DrawString(8, (cinemaWide ? 174 : 210), 0.50, WHITE, this->removeBags ? " Keep bags" : " Remove bags");
 		// Selected season
-		Gui::DrawString(160, 208, 0.65, WHITE, "L");
-		Gui::DrawStringCentered(0, 210, 0.50, WHITE, this->seasonName());
-		Gui::DrawString(232, 208, 0.65, WHITE, "R");
+		Gui::DrawString(160, (cinemaWide ? 174 : 210), 0.65, WHITE, "L");
+		Gui::DrawStringCentered(0, (cinemaWide ? 174 : 210), 0.50, WHITE, this->seasonName());
+		Gui::DrawString(232, (cinemaWide ? 174 : 210), 0.65, WHITE, "R");
 	}
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect

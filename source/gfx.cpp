@@ -96,7 +96,9 @@ void GFX::showCharSprite(int zoomIn, int fadeAlpha) {
 	if (cinemaWide) yPos += 36;
 
 	C2D_Image image = C2D_SpriteSheetGetImage(chracterSprite, 0);
-	C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
+	if (cinemaWide) {
+		C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
+	}
 
 	if (fadeAlpha == 255) {
 		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos, 0.5f, NULL, (cinemaWide ? 0.7f : 1), (cinemaWide ? 0.7f : 1));

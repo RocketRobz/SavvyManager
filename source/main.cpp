@@ -162,13 +162,18 @@ int main()
 	screenoff();
 	amInit();
 	romfsInit();
+
+	u8 consoleModel = 0;
+
 	Result res = cfguInit();
 	if (R_SUCCEEDED(res)) {
 		CFGU_SecureInfoGetRegion(&sysRegion);
+		CFGU_GetSystemModel(&consoleModel);
 		cfguExit();
 	}
 
 	gfxInitDefault();
+	gfxSetWide(consoleModel != 3);	// Enable 800x240 mode for non-O2DS consoles. Improves clarity in CinemaWide mode.
 	loadSettings();
 
 	Gui::init();
