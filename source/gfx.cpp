@@ -116,8 +116,11 @@ void GFX::DrawGameSelSprite(int img, int x, int y, float ScaleX, float ScaleY) {
 	C2D_DrawImageAt(C2D_SpriteSheetGetImage(gameSelSprites, img), x, y, 0.5f, NULL, ScaleX, ScaleY);
 }
 
-void GFX::DrawGameShotSprite(int img, int x, int y, float ScaleX, float ScaleY) {
-	C2D_DrawImageAt(C2D_SpriteSheetGetImage(gameShotSprites, img), x, y, 0.5f, NULL, ScaleX, ScaleY);
+void GFX::DrawGameShotSprite(int img, int x, int y, float ScaleX, float ScaleY, GPU_TEXTURE_FILTER_PARAM filter) {
+	C2D_Image image = C2D_SpriteSheetGetImage(gameShotSprites, img);
+	C3D_TexSetFilter(image.tex, filter, filter);
+
+	C2D_DrawImageAt(image, x, y, 0.5f, NULL, ScaleX, ScaleY);
 }
 
 void GFX::DrawGameBgSprite(int img, int x, int y, float ScaleX, float ScaleY) {
