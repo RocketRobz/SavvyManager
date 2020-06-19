@@ -8,6 +8,8 @@ extern int delay;
 static int rr_fadeAlpha = 0;
 static int rr_fadeType = true;
 
+extern u8 consoleModel;
+
 void RocketRobz::Draw(void) const {
 	/*if (!this->musicPlayed) {
 		extern void musLogos(void);
@@ -48,10 +50,14 @@ void RocketRobz::Draw(void) const {
 		} else {
 			Gui::DrawStringCentered(0, 218, 0.50, BLACK, sysRegion==CFG_REGION_JPN ? this->gameYearText : this->gameYearText2);
 		}
+	} else if (consoleModel == 3) {
+		if (delay < iFps*3) delay = iFps*3;
 	} else {
-		Gui::DrawStringCentered(0, 48, 0.50, WHITE, this->presentedText);
-		Gui::DrawStringCentered(0, 88, 0.60, WHITE, "Cinema");
-		GFX::DrawSprite(sprites_logo_widescreen_idx, 66, 107);
+		//Gui::DrawStringCentered(0, 48, 0.50, WHITE, this->presentedText);
+		//Gui::DrawStringCentered(0, 88, 0.60, WHITE, "Cinema");
+		//GFX::DrawSprite(sprites_logo_widescreen_idx, 66, 107);
+		Gui::DrawStringCentered(0, 48, 0.75, WHITE, this->presentedText);
+		GFX::DrawSprite(sprites_logo_horiHD_idx, 32, 85);
 	}
 	if (rr_fadeAlpha > 0) Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(0, 0, 0, rr_fadeAlpha)); // Fade in/out effect
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
