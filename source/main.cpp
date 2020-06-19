@@ -120,7 +120,6 @@ void screenon(void)
 }
 
 u8 sysRegion = CFG_REGION_USA;
-u8 consoleModel = 0;
 int highlightedGame = 1;
 
 float bg_xPos = 0.0f;
@@ -163,6 +162,8 @@ int main()
 	screenoff();
 	amInit();
 	romfsInit();
+
+	u8 consoleModel = 0;
 
 	Result res = cfguInit();
 	if (R_SUCCEEDED(res)) {
