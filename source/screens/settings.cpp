@@ -15,6 +15,8 @@ const char* Settings::studioBgName(void) const {
 			return "Lover's Bell";
 		case 2:
 			return "Bougainville";
+		case 3:
+			return "NIN10 Pro.";
 	}
 
 	return "null";
@@ -130,7 +132,7 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		switch (cursorPosition) {
 			case 0:
 				studioBg--;
-				if (studioBg < 0) studioBg = 2;
+				if (studioBg < 0) studioBg = 3;
 				displayStudioBg = false;
 				gspWaitForVBlank();
 				GFX::loadBgSprite();
@@ -153,7 +155,7 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		switch (cursorPosition) {
 			case 0:
 				studioBg++;
-				if (studioBg > 2) studioBg = 0;
+				if (studioBg > 3) studioBg = 0;
 				displayStudioBg = false;
 				gspWaitForVBlank();
 				GFX::loadBgSprite();
