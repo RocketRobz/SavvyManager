@@ -91,7 +91,12 @@ void GFX::showBgSprite(int zoomIn) {
 	int yPos = -(240*zoomIn);
 	if (cinemaWide) yPos -= 16;
 
-	Gui::DrawSprite(bgSprite, 0, 0, yPos, 0.5);
+	C2D_Image image = C2D_SpriteSheetGetImage(bgSprite, 0);
+	if (!gfxIsWide()) {
+		C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
+	}
+
+	C2D_DrawImageAt(image, 0, yPos, 0.5f, NULL, 0.5, 1);
 }
 
 void GFX::showCharSprite(int zoomIn, int fadeAlpha) {
@@ -99,7 +104,7 @@ void GFX::showCharSprite(int zoomIn, int fadeAlpha) {
 	if (cinemaWide) yPos += 36;
 
 	C2D_Image image = C2D_SpriteSheetGetImage(chracterSprite, 0);
-	if (cinemaWide) {
+	if (!gfxIsWide() || cinemaWide) {
 		C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
 	}
 
@@ -119,11 +124,13 @@ void GFX::DrawGameSelSprite(int img, int x, int y, float ScaleX, float ScaleY) {
 	C2D_DrawImageAt(C2D_SpriteSheetGetImage(gameSelSprites, img), x, y, 0.5f, NULL, ScaleX, ScaleY);
 }
 
-void GFX::DrawGameShotSprite(int img, int x, int y, float ScaleX, float ScaleY, GPU_TEXTURE_FILTER_PARAM filter) {
+void GFX::DrawGameShotSprite(int img, int x, int y) {
 	C2D_Image image = C2D_SpriteSheetGetImage(gameShotSprites, img);
-	C3D_TexSetFilter(image.tex, filter, filter);
+	if (!gfxIsWide()) {
+		C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
+	}
 
-	C2D_DrawImageAt(image, x, y, 0.5f, NULL, ScaleX, ScaleY);
+	C2D_DrawImageAt(image, x, y, 0.5f, NULL, 0.5, 1);
 }
 
 void GFX::DrawGameBgSprite(int img, int x, int y, float ScaleX, float ScaleY) {
