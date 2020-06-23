@@ -39,6 +39,7 @@ sound *sfx_highlight = NULL;
 
 bool dspfirmfound = false;
 bool exiting = false;
+bool musicPlayStarted = false;
 static bool musicPlaying = false;
 static bool musicLoopPlaying = false;
 static bool screenoff_ran = false;
@@ -350,6 +351,10 @@ int main()
 		hHeld = hidKeysHeld();
 
 		hidTouchRead(&touch);
+
+		if (musicPlayStarted) {
+			Play_Music();
+		}
 
 		// Here we draw the actual screen.
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);

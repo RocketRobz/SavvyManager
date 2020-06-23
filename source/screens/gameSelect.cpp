@@ -16,6 +16,7 @@ extern bool ss3SaveFound;
 extern bool ss4SaveFound;
 extern char verText[32];
 extern bool exiting;
+extern bool musicPlayStarted;
 
 void GameSelect::drawCannotEditMsg(void) const {
 	GFX::DrawSprite(sprites_msg_idx, 0, 8, 1, 1);
@@ -58,8 +59,11 @@ void GameSelect::drawCannotEditMsg(void) const {
 }
 
 void GameSelect::Draw(void) const {
-	extern void Play_Music();
-	Play_Music();
+	if (!musicPlayStarted) {
+		extern void Play_Music();
+		Play_Music();
+		musicPlayStarted = true;
+	}
 
 	Gui::ScreenDraw(Top);
 
