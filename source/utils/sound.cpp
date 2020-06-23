@@ -74,7 +74,6 @@ sound::sound(const string& path, int channel, bool toloop) {
 	fseek(fp, 44, SEEK_SET);
 	fread(data, 1, dataSize, fp);
 	fclose(fp);
-	dataSize /= 2;	// FIXME: 16-bit or stereo?
 
 	// Find the right format
 	u16 ndspFormat;
@@ -87,6 +86,8 @@ sound::sound(const string& path, int channel, bool toloop) {
 			NDSP_FORMAT_MONO_PCM16 :
 			NDSP_FORMAT_STEREO_PCM16;
 	}
+
+	dataSize /= (wavHeader.channels==1 ? 1 : 2);	// FIXME: 16-bit or stereo?
 
 	ndspChnReset(channel);
 	ndspChnSetInterp(channel, NDSP_INTERP_NONE);

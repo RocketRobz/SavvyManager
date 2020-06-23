@@ -58,6 +58,9 @@ void GameSelect::drawCannotEditMsg(void) const {
 }
 
 void GameSelect::Draw(void) const {
+	extern void Play_Music();
+	Play_Music();
+
 	Gui::ScreenDraw(Top);
 
 	/*for(int w = 0; w < 7; w++) {
