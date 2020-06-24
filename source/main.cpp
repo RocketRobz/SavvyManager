@@ -42,6 +42,7 @@ bool exiting = false;
 bool musicPlayStarted = false;
 static bool musicPlaying = false;
 static bool musicLoopPlaying = false;
+static int musicLoopDelay = 0;
 static bool screenoff_ran = false;
 static bool screenon_ran = true;
 
@@ -68,9 +69,12 @@ void saveSettings(void) {
 }
 
 void Play_Music(void) {
-	if (musicPlaying && !musicLoopPlaying && !ndspChnIsPlaying(0)) {
-		music_loop->play();
-		musicLoopPlaying = true;
+	if (musicPlaying && !musicLoopPlaying) {
+		musicLoopDelay++;
+		if (musicLoopDelay>60 && !ndspChnIsPlaying(0)) {
+			music_loop->play();
+			musicLoopPlaying = true;
+		}
 	}
 	if (!musicPlaying && dspfirmfound) {
 		music->play();
