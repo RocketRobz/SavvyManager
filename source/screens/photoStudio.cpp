@@ -254,10 +254,12 @@ void PhotoStudio::Draw(void) const {
 
 		if (char_highlightedGame != 4) {
 			// Selected season
-			Gui::DrawString(120, 208, 0.65, BLACK, "L");
-			Gui::DrawStringCentered(0, 210, 0.50, BLACK, this->seasonName());
-			Gui::DrawString(192, 208, 0.65, BLACK, "R");
+			Gui::DrawString(120-32, 208, 0.65, BLACK, "L");
+			Gui::DrawStringCentered(-32, 210, 0.50, BLACK, this->seasonName());
+			Gui::DrawString(192-32, 208, 0.65, BLACK, "R");
 		}
+
+		Gui::DrawString(192, 208, 0.65, BLUE, "SELECT: Robz");
 
 	  if (!displayNothing) {
 		int i2 = 48;
@@ -446,6 +448,10 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_A) {
 			sndSelect();
 			this->subScreenMode = 0;
+		} else if (hDown & KEY_SELECT) {
+			sndSelect();
+			this->subScreenMode = 0;
+			this->loadChrImage(true);	// Load Robz
 		}
 
 		if (hDown & KEY_DLEFT) {
