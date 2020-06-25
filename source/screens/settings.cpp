@@ -6,6 +6,19 @@ char txt_studioBG[32];
 char txt_cinemaWide[24];
 char txt_frameRate[24];
 
+int studioBgList[] = {
+	0,
+	1,
+	2,
+	3,
+	4,
+	5,
+	6,
+	7,
+	8,
+	9
+};
+
 const char* Settings::studioBgName(void) const {
 	switch (studioBg) {
 		case 0:
@@ -17,6 +30,18 @@ const char* Settings::studioBgName(void) const {
 			return "Bougainville";
 		case 3:
 			return "NIN10 Pro.";
+		case 4:
+			return "Celestial Hotel";
+		case 5:
+			return "Live Music Club 4";
+		case 6:
+			return "Menswear Shop";
+		case 7:
+			return "VIP Room";
+		case 8:
+			return "Restauraunt 4";
+		case 9:
+			return "Cinema";
 	}
 
 	return "null";
@@ -131,8 +156,9 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		sndSelect();
 		switch (cursorPosition) {
 			case 0:
-				studioBg--;
-				if (studioBg < 0) studioBg = 3;
+				studioBgInList--;
+				if (studioBgInList < 0) studioBgInList = 9;
+				studioBg = studioBgList[studioBgInList];
 				displayStudioBg = false;
 				gspWaitForVBlank();
 				GFX::loadBgSprite();
@@ -154,8 +180,9 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		sndSelect();
 		switch (cursorPosition) {
 			case 0:
-				studioBg++;
-				if (studioBg > 3) studioBg = 0;
+				studioBgInList++;
+				if (studioBgInList > 9) studioBgInList = 0;
+				studioBg = studioBgList[studioBgInList];
 				displayStudioBg = false;
 				gspWaitForVBlank();
 				GFX::loadBgSprite();
