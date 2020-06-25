@@ -43,7 +43,7 @@ void titleScreen::Draw(void) const {
 	GFX::DrawSprite(sprites_logo_savvymanager_idx, 56, 58);
 
 	Gui::DrawString(8, (cinemaWide ? 182 : 218), 0.50, BLACK, this->yearText);
-	Gui::DrawString(248, (cinemaWide ? 182 : 218), 0.50, BLACK, verText);
+	Gui::DrawString(328, (cinemaWide ? 182 : 218), 0.50, BLACK, verText);
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
 	if (cinemaWide) {
