@@ -10,7 +10,8 @@
 static Result Screenshot_GenerateScreenshot(const char *path) {
 	int x = 0, y = 0;
 	int width = gfxIsWide() ? 800 : 400;
-	int fileSize = gfxIsWide() ? 576000 : 288000;
+	int height = gfxIsWide() ? 480 : 240;
+	int fileSize = gfxIsWide() ? 576000*2 : 288000;
 	size_t size = 0x36;
 
 	// Get top/bottom framebuffers
@@ -27,7 +28,7 @@ static Result Screenshot_GenerateScreenshot(const char *path) {
 	*(u32*)&buf[0xA] = size;
 	*(u32*)&buf[0xE] = 0x28;
 	*(u32*)&buf[0x12] = width;
-	*(u32*)&buf[0x16] = 240;
+	*(u32*)&buf[0x16] = height;
 	*(u32*)&buf[0x1A] = 0x00180001;
 	*(u32*)&buf[0x22] = fileSize;
 
@@ -36,31 +37,39 @@ static Result Screenshot_GenerateScreenshot(const char *path) {
 
 	if (gfxIsWide()) {
 		// Left half
-		int i = 0;
+		int x2 = 0;
+		int y2 = 0;
+	  for (int i = 0; i <= 1; i++) {
+		x2 = 0;
+		y2 = i;
 		for (y = 0; y < 240; y++) {
 			for (x = 0; x < 400; x++) {
 				int si = ((239 - y) + (x * 240)) * 3;
-				int di = size + (i + ((239 - y) * 800)) * 3;
+				int di = size + (x2 + ((479 - y2) * 800)) * 3;
 				buf[di++] = framebuf[si++];
 				buf[di++] = framebuf[si++];
 				buf[di++] = framebuf[si++];
-				i++;
-				if (i == 400) i = 0;
+				x2++;
+				if (x2 == 400) x2 = 0;
 			}
+			y2 += 2;
 		}
 		// Right half
-		i = 400;
+		x2 = 400;
+		y2 = i;
 		for (y = 0; y < 240; y++) {
 			for (x = 400; x < 800; x++) {
 				int si = ((239 - y) + (x * 240)) * 3;
-				int di = size + (i + ((239 - y) * 800)) * 3;
+				int di = size + (x2 + ((479 - y2) * 800)) * 3;
 				buf[di++] = framebuf[si++];
 				buf[di++] = framebuf[si++];
 				buf[di++] = framebuf[si++];
-				i++;
-				if (i == 800) i = 400;
+				x2++;
+				if (x2 == 800) x2 = 400;
 			}
+			y2 += 2;
 		}
+	  }
 	} else {
 		for (y = 0; y < 240; y++) {
 			for (x = 0; x < 400; x++) {
