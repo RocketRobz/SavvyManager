@@ -1,7 +1,7 @@
 #include "exiting.hpp"
 #include "gameSelect.hpp"
 #include "screenvars.h"
-#include "settings.hpp"
+#include "titleScreen.hpp"
 #include "whatToDo.hpp"
 
 extern int ss1Logo;
@@ -14,8 +14,6 @@ extern int ss4Logo;
 extern bool ss2SaveFound;
 extern bool ss3SaveFound;
 extern bool ss4SaveFound;
-extern char verText[32];
-extern bool exiting;
 extern bool musicPlayStarted;
 
 void GameSelect::drawCannotEditMsg(void) const {
@@ -69,7 +67,7 @@ void GameSelect::Draw(void) const {
 
 	/*for(int w = 0; w < 7; w++) {
 		for(int h = 0; h < 3; h++) {
-			Gui::sprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
+			GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
 		}
 	}*/
 
@@ -126,9 +124,11 @@ void GameSelect::Draw(void) const {
 	Gui::DrawString(8, 8, 0.50, BLACK, "Select a game to manage its save data.");
 	Gui::DrawString(8, 112, 0.55, BLACK, "<");
 	Gui::DrawString(304, 112, 0.55, BLACK, ">");
-	Gui::DrawString(8, 202, 0.50, BLACK, "START: Exit");
-	Gui::DrawString(8, 218, 0.50, BLACK, "SELECT: Settings");
-	Gui::DrawString(248, 218, 0.50, BLACK, verText);
+
+	GFX::DrawSprite(sprites_button_shadow_idx, 5, 199);
+	GFX::DrawSprite(sprites_button_red_idx, 5, 195);
+	GFX::DrawSprite(sprites_arrow_back_idx, 19, 195);
+	GFX::DrawSprite(sprites_button_b_idx, 44, 218);
 
 	if (this->showMessage) {
 		this->drawCannotEditMsg();
@@ -178,15 +178,9 @@ void GameSelect::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		 }
 		}
 
-		if (hDown & KEY_START) {
+		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 			sndBack();
-			exiting = true;
-			fadecolor = 0;
-			Gui::setScreen(std::make_unique<Exiting>(), true);
-		}
-		if (hDown & KEY_SELECT) {
-			sndSelect();
-			Gui::setScreen(std::make_unique<Settings>(), true);
+			Gui::setScreen(std::make_unique<titleScreen>(), true);
 		}
 	}
 }

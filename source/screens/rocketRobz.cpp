@@ -23,7 +23,6 @@ void RocketRobz::Draw(void) const {
 		} else {
 			GFX::DrawSprite(sprites_logo_rocketrobz_idx, 0, 0, 0.5, 1, (gfxIsWide() ? GPU_LINEAR : GPU_NEAREST));
 		}
-		Gui::DrawString(8, (cinemaWide ? 182 : 218), 0.50, WHITE, this->yearText);
 	} else {
 		GFX::DrawSprite(sprites_logo_savvymanager_idx, 56, 58);
 	}

@@ -9,7 +9,7 @@
 #include "common.hpp"
 #include "screenMode.h"
 #include "dumpdsp.h"
-#include "gameSelect.hpp"
+#include "titleScreen.hpp"
 #include "inifile.h"
 #include "rocketRobz.hpp"
 #include "savedata.h"
@@ -30,6 +30,8 @@ int studioBgInList = 0;
 bool cinemaWide = false;
 int iFps = 60;
 std::string currentMusicPack = "";
+
+int titleSelection = 0;
 
 sound *music = NULL;
 sound *music_loop = NULL;
@@ -137,6 +139,7 @@ void screenon(void)
 }
 
 u8 sysRegion = CFG_REGION_USA;
+u64 appID = 0;
 int highlightedGame = 1;
 
 float bg_xPos = 0.0f;
@@ -188,6 +191,10 @@ int main()
 		CFGU_GetSystemModel(&consoleModel);
 		cfguExit();
 	}
+
+	aptInit();
+	APT_GetProgramID(&appID);
+	aptExit();
 
 	gfxInitDefault();
 	gfxSetWide(consoleModel != 3);	// Enable 800x240 mode for non-O2DS consoles. Improves clarity in graphics.
@@ -380,7 +387,7 @@ int main()
 		if (isInit) {
 			delay++;
 			if (delay > iFps*10) {
-				Gui::setScreen(std::make_unique<GameSelect>(), true); // Set after delay to the GameSelect screen.
+				Gui::setScreen(std::make_unique<titleScreen>(), true); // Set after delay to the title screen.
 				isInit = false;
 			}
 		}

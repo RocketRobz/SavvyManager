@@ -10,7 +10,6 @@ public:
 private:
 	//bool musicPlayed = false;
 	const char* presentedText = "Presented in";
-	const char* yearText = "2019-2020 RocketRobz";
 	const char* gamesByText = "Original games by";
 	const char* gameYearText = "2008-2017";
 	const char* gameYearText2 = "2009-2017";
