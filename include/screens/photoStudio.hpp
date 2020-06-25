@@ -68,8 +68,14 @@ private:
 	int importCharacterList_cursorPosition = 0;
 	int importCharacterList_cursorPositionOnScreen = 0;
 
+	int bgList_cursorPosition = 0;
+	int bgList_cursorPositionOnScreen = 0;
+
 	int characterShownFirst = 0;
 	int import_characterShownFirst = 0;
+
+	int bgShownFirst = 0;
+	int import_bgShownFirst = 0;
 
 	bool exportedCharListGotten[4] = {false};
 };

@@ -288,7 +288,7 @@ void PhotoStudio::Draw(void) const {
 		}
 	  }
 	} else if (this->subScreenMode == 1) {
-		this->cursorY = 64+(48*this->importCharacterList_cursorPositionOnScreen);
+		this->cursorY = 64+(48*this->bgList_cursorPositionOnScreen);
 
 		// Game name
 		switch (this->photo_highlightedGame) {
@@ -320,7 +320,7 @@ void PhotoStudio::Draw(void) const {
 
 	  if (!displayNothing) {
 		int i2 = 48;
-		for (int i = import_characterShownFirst; i < import_characterShownFirst+3; i++) {
+		for (int i = import_bgShownFirst; i < import_bgShownFirst+3; i++) {
 			if (photo_highlightedGame == 3) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				Gui::DrawString(32, i2, 0.65, BLACK, import_ss4BgNames[i]);
@@ -505,16 +505,16 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (showCursor) {
 			if (hDown & KEY_DUP) {
 				sndHighlight();
-				this->importCharacterList_cursorPosition--;
-				this->importCharacterList_cursorPositionOnScreen--;
-				if (this->importCharacterList_cursorPosition < 0) {
-					this->importCharacterList_cursorPosition = 0;
-					this->import_characterShownFirst = 0;
-				} else if (this->importCharacterList_cursorPosition < this->import_characterShownFirst) {
-					this->import_characterShownFirst--;
+				this->bgList_cursorPosition--;
+				this->bgList_cursorPositionOnScreen--;
+				if (this->bgList_cursorPosition < 0) {
+					this->bgList_cursorPosition = 0;
+					this->import_bgShownFirst = 0;
+				} else if (this->bgList_cursorPosition < this->import_bgShownFirst) {
+					this->import_bgShownFirst--;
 				}
-				if (this->importCharacterList_cursorPositionOnScreen < 0) {
-					this->importCharacterList_cursorPositionOnScreen = 0;
+				if (this->bgList_cursorPositionOnScreen < 0) {
+					this->bgList_cursorPositionOnScreen = 0;
 				}
 				switch (this->photo_highlightedGame) {
 					case 2:
@@ -532,20 +532,20 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 
 			if (hDown & KEY_DDOWN) {
 				sndHighlight();
-				this->importCharacterList_cursorPosition++;
-				this->importCharacterList_cursorPositionOnScreen++;
-				if (this->importCharacterList_cursorPosition > this->import_totalCharacters) {
-					this->importCharacterList_cursorPosition = this->import_totalCharacters;
-					this->import_characterShownFirst = this->import_totalCharacters-2;
-					if (this->import_characterShownFirst < 0) this->import_characterShownFirst = 0;
-					if (this->importCharacterList_cursorPositionOnScreen > this->import_totalCharacters) {
-						this->importCharacterList_cursorPositionOnScreen = this->import_totalCharacters;
+				this->bgList_cursorPosition++;
+				this->bgList_cursorPositionOnScreen++;
+				if (this->bgList_cursorPosition > this->import_totalCharacters) {
+					this->bgList_cursorPosition = this->import_totalCharacters;
+					this->import_bgShownFirst = this->import_totalCharacters-2;
+					if (this->import_bgShownFirst < 0) this->import_bgShownFirst = 0;
+					if (this->bgList_cursorPositionOnScreen > this->import_totalCharacters) {
+						this->bgList_cursorPositionOnScreen = this->import_totalCharacters;
 					}
-				} else if (this->importCharacterList_cursorPosition > this->import_characterShownFirst+2) {
-					this->import_characterShownFirst++;
+				} else if (this->bgList_cursorPosition > this->import_bgShownFirst+2) {
+					this->import_bgShownFirst++;
 				}
-				if (this->importCharacterList_cursorPositionOnScreen > 2) {
-					this->importCharacterList_cursorPositionOnScreen = 2;
+				if (this->bgList_cursorPositionOnScreen > 2) {
+					this->bgList_cursorPositionOnScreen = 2;
 				}
 				switch (this->photo_highlightedGame) {
 					case 2:
@@ -582,9 +582,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		}
 
 		if ((hDown & KEY_DLEFT) || (hDown & KEY_DRIGHT)) {
-			this->importCharacterList_cursorPosition = 0;
-			this->importCharacterList_cursorPositionOnScreen = 0;
-			this->import_characterShownFirst = 0;
+			this->bgList_cursorPosition = 0;
+			this->bgList_cursorPositionOnScreen = 0;
+			this->import_bgShownFirst = 0;
 			this->getMaxChars();
 			switch (this->photo_highlightedGame) {
 				case 2:
@@ -644,7 +644,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				sndSelect();
 				this->displayNothing = true;
 				this->subScreenMode = 2;
-				if ((this->subScreenMode == 4) && (this->photo_highlightedGame == 4) && !this->exportedCharListGotten[highlightedGame]) {
+				if ((this->subScreenMode == 2) && (this->photo_highlightedGame == 4) && !this->exportedCharListGotten[highlightedGame]) {
 					gspWaitForVBlank();
 					getExportedCharacterContents();
 					this->exportedCharListGotten[highlightedGame] = true;
