@@ -53,7 +53,7 @@ void loadSettings(void) {
 	CIniFile settingsini(settingsIni);
 
 	studioBg = settingsini.GetInt("SAVVY-MANAGER", "STUDIO_BG", studioBg);
-	for (studioBgInList = 0; studioBgInList <= 9; studioBgInList++) {
+	for (studioBgInList = 0; studioBgInList <= 11; studioBgInList++) {
 		if (studioBgList[studioBgInList] == studioBg) break;
 	}
 	cinemaWide = settingsini.GetInt("SAVVY-MANAGER", "CINEMA_WIDE", cinemaWide);

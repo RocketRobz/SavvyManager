@@ -16,7 +16,9 @@ int studioBgList[] = {
 	6,
 	7,
 	8,
-	9
+	9,
+	10,
+	11
 };
 
 const char* Settings::studioBgName(void) const {
@@ -31,16 +33,20 @@ const char* Settings::studioBgName(void) const {
 		case 3:
 			return "NIN10 Pro.";
 		case 4:
-			return "Celestial Hotel";
+			return "Beautician 4";
 		case 5:
-			return "Live Music Club 4";
+			return "Hair Salon 4";
 		case 6:
-			return "Menswear Shop";
+			return "Celestial Hotel";
 		case 7:
-			return "VIP Room";
+			return "Live Music Club 4";
 		case 8:
-			return "Restauraunt 4";
+			return "Menswear Shop";
 		case 9:
+			return "VIP Room";
+		case 10:
+			return "Restauraunt 4";
+		case 11:
 			return "Cinema";
 	}
 
@@ -157,7 +163,7 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		switch (cursorPosition) {
 			case 0:
 				studioBgInList--;
-				if (studioBgInList < 0) studioBgInList = 9;
+				if (studioBgInList < 0) studioBgInList = 11;
 				studioBg = studioBgList[studioBgInList];
 				displayStudioBg = false;
 				gspWaitForVBlank();
@@ -181,7 +187,7 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		switch (cursorPosition) {
 			case 0:
 				studioBgInList++;
-				if (studioBgInList > 9) studioBgInList = 0;
+				if (studioBgInList > 11) studioBgInList = 0;
 				studioBg = studioBgList[studioBgInList];
 				displayStudioBg = false;
 				gspWaitForVBlank();
