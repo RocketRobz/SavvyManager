@@ -74,7 +74,6 @@ private:
 	int characterShownFirst = 0;
 	int import_characterShownFirst = 0;
 
-	int bgShownFirst = 0;
 	int import_bgShownFirst = 0;
 
 	bool exportedCharListGotten[4] = {false};

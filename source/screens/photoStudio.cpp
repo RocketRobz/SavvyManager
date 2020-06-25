@@ -549,10 +549,10 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				switch (this->photo_highlightedGame) {
 					case 2:
-						studioBg = import_ss3BgNums[this->importCharacterList_cursorPosition];
+						studioBg = import_ss3BgNums[this->bgList_cursorPosition];
 						break;
 					case 3:
-						studioBg = import_ss4BgNums[this->importCharacterList_cursorPosition];
+						studioBg = import_ss4BgNums[this->bgList_cursorPosition];
 						break;
 				}
 				this->displayStudioBg = false;
@@ -588,10 +588,10 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			this->getMaxChars();
 			switch (this->photo_highlightedGame) {
 				case 2:
-					studioBg = import_ss3BgNums[this->importCharacterList_cursorPosition];
+					studioBg = import_ss3BgNums[this->bgList_cursorPosition];
 					break;
 				case 3:
-					studioBg = import_ss4BgNums[this->importCharacterList_cursorPosition];
+					studioBg = import_ss4BgNums[this->bgList_cursorPosition];
 					break;
 			}
 			this->displayStudioBg = false;
