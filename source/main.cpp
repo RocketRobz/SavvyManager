@@ -14,6 +14,7 @@
 #include "rocketRobz.hpp"
 #include "savedata.h"
 #include "screen.hpp"
+#include "screenshot.h"
 #include "sound.h"
 #include "thread.h"
 
@@ -410,6 +411,10 @@ int main()
 
 		if (bg_xPos >= 72) bg_xPos = 0.0f;
 		if (bg_yPos <= -136) bg_yPos = 0.0f;
+
+		if (hDown & KEY_Y) {
+			Screenshot_Capture();
+		}
 
 		if (hDown) {
 			svcSignalEvent(threadRequest);
