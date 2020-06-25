@@ -17,7 +17,7 @@ private:
 	int cursorAlpha = 0;
 	const char* yearText = "2019-2020 RocketRobz";
 	const char* manageSaveText = "Manage Save Data";
-	const char* photoStudioText = "Photo Studio (TBA)";
+	const char* photoStudioText = "Photo Studio";
 	const char* settingsText = "Settings";
 	const char* returnToHomeText = ": Return to HOME Menu";
 	const char* exitText = "X: Exit";

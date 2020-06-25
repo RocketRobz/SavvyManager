@@ -1,21 +1,8 @@
-const char* import_ss1CharacterNames[] {
-	"Grace",
-	"Renee",
-	"Dominic",
-	"Eunice",
-	"Felicity",
-	"Libby",
-	"Didi",
-	"Olivia",
-};
+#ifndef _SAVVY_MANAGER_IMPORT_SS1_CHAR_NAMES_HPP
+#define _SAVVY_MANAGER_IMPORT_SS1_CHAR_NAMES_HPP
 
-bool import_ss1CharacterGenders[] {
-	false,			// Female
-	false,			// Female
-	true,			// Male
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-};
+extern const char* import_ss1CharacterNames[8];
+
+extern bool import_ss1CharacterGenders[8];
+
+#endif

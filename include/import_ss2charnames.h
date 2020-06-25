@@ -1,85 +1,12 @@
-const char* import_ss2CharacterNames[] {
-	"Michaela",
-	"Evie",			// (EUR/JAP)
-	"Emmylou",
-	"Avery",		// aka Lola (EUR)
-	"Shoko",		// (JAP)
-	"India",		// aka Elena (EUR)
-	"Daphne",		// aka Shivani (EUR)
-	"Genevieve",	// aka Faye (EUR)
-	"Celeste",		// aka Clarissa (EUR)
-	"Ingrid",
-	"Deborah",		// aka Elsepth (EUR)
-	"Daisy",		// aka Flora (EUR)
-	"Teagan",		// aka Tess (EUR)
-	"Nicky",
-	"Brienne",
-	"Clara",
-	"Yukiko",
-	"Dorothy",
-	"Dulcie",
-};
+#ifndef _SAVVY_MANAGER_IMPORT_SS2_CHAR_NAMES_HPP
+#define _SAVVY_MANAGER_IMPORT_SS2_CHAR_NAMES_HPP
 
-const char* import_nsbCharacterNames[] {
-	"Michaela",		// (USA)
-	"Evie",
-	"Harriet",
-	"Avery",		// Lola (EUR)
-	"Shoko",		// (JAP)
-	"India",		// Elena (EUR)
-	"Daphne",		// Shivani (EUR)
-	"Genevieve",	// Faye (EUR)
-	"Celeste",		// Clarissa (EUR)
-	"Ingrid",
-	"Deborah",		// Elsepth (EUR)
-	"Daisy",		// Flora (EUR)
-	"Tess",
-	"Nicky",
-	"Zahra",
-	"Clara",
-	"Yukiko",
-	"Dorothy",
-	"Dulcie",
-};
+extern const char* import_ss2CharacterNames[19];
 
-bool import_ss2CharacterGenders[] {
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-	false,			// Female
-};
+extern const char* import_nsbCharacterNames[19];
 
-/*bool import_ss2CharacterTieColors[] {
-	false,			// Pink
-	true,			// Light Green
-	false,			// Pink
-	false,			// Pink
-	true,			// Light Green
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-};*/
+extern bool import_ss2CharacterGenders[19];
+
+/*extern bool import_ss2CharacterTieColors[19];*/
+
+#endif

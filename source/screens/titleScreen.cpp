@@ -3,6 +3,7 @@
 #include "screenvars.h"
 #include "settings.hpp"
 #include "gameSelect.hpp"
+#include "photoStudio.hpp"
 
 extern u64 appID;
 extern int titleSelection;
@@ -110,6 +111,9 @@ void titleScreen::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			switch (titleSelection) {
 				case 0:
 					Gui::setScreen(std::make_unique<GameSelect>(), true);
+					break;
+				case 1:
+					Gui::setScreen(std::make_unique<PhotoStudio>(), true);
 					break;
 				case 2:
 					Gui::setScreen(std::make_unique<Settings>(), true);
