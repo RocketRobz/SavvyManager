@@ -35,15 +35,15 @@ void PhotoStudio::getMaxChars() {
 			import_totalCharacters = 0;
 		}
 	} else {
-		if (photo_highlightedGame == 4) {
+		if (char_highlightedGame == 4) {
 			import_totalCharacters = numberOfExportedCharacters-1;
-		} else if (photo_highlightedGame == 3) {
+		} else if (char_highlightedGame == 3) {
 			import_totalCharacters = 0xD;
-		} else if (photo_highlightedGame == 2) {
+		} else if (char_highlightedGame == 2) {
 			import_totalCharacters = 0x10;
-		} else if (photo_highlightedGame == 1) {
+		} else if (char_highlightedGame == 1) {
 			import_totalCharacters = 0x12;
-		} else if (photo_highlightedGame == 0) {
+		} else if (char_highlightedGame == 0) {
 			import_totalCharacters = 0x7;
 		}
 	}
@@ -232,7 +232,7 @@ void PhotoStudio::Draw(void) const {
 		this->cursorY = 64+(48*this->importCharacterList_cursorPositionOnScreen);
 
 		// Game name
-		switch (this->photo_highlightedGame) {
+		switch (this->char_highlightedGame) {
 			case 4:
 				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Your character files");
 				break;
@@ -252,7 +252,7 @@ void PhotoStudio::Draw(void) const {
 		Gui::DrawString(8, 8, 0.50, BLACK, "<");
 		Gui::DrawString(304, 8, 0.50, BLACK, ">");
 
-		if (photo_highlightedGame != 4) {
+		if (char_highlightedGame != 4) {
 			// Selected season
 			Gui::DrawString(120, 208, 0.65, BLACK, "L");
 			Gui::DrawStringCentered(0, 210, 0.50, BLACK, this->seasonName());
@@ -262,24 +262,24 @@ void PhotoStudio::Draw(void) const {
 	  if (!displayNothing) {
 		int i2 = 48;
 		for (int i = import_characterShownFirst; i < import_characterShownFirst+3; i++) {
-			if (photo_highlightedGame == 4) {
+			if (char_highlightedGame == 4) {
 				if (i >= numberOfExportedCharacters) break;
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((getExportedCharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, BLACK, getExportedCharacterName(i));
-			} else if (photo_highlightedGame == 3) {
+			} else if (char_highlightedGame == 3) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((import_ss4CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, BLACK, import_ss4CharacterNames[i]);
-			} else if (photo_highlightedGame == 2) {
+			} else if (char_highlightedGame == 2) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((import_ss3CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, BLACK, import_ss3CharacterNames[i]);
-			} else if (photo_highlightedGame == 1) {
+			} else if (char_highlightedGame == 1) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((import_ss2CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx)/*+import_ss2CharacterTieColors[i]*/, 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, BLACK, import_SS2CharacterNames(i));
-			} else if (photo_highlightedGame == 0) {
+			} else if (char_highlightedGame == 0) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((import_ss1CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, BLACK, import_ss1CharacterNames[i]);
@@ -450,15 +450,15 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 
 		if (hDown & KEY_DLEFT) {
 			sndHighlight();
-			this->photo_highlightedGame--;
-			if (this->photo_highlightedGame < 0) this->photo_highlightedGame = 4;
+			this->char_highlightedGame--;
+			if (this->char_highlightedGame < 0) this->char_highlightedGame = 4;
 			this->getMaxChars();
 		}
 
 		if (hDown & KEY_DRIGHT) {
 			sndHighlight();
-			this->photo_highlightedGame++;
-			if (this->photo_highlightedGame > 4) this->photo_highlightedGame = 0;
+			this->char_highlightedGame++;
+			if (this->char_highlightedGame > 4) this->char_highlightedGame = 0;
 			this->getMaxChars();
 		}
 
@@ -466,7 +466,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			this->importCharacterList_cursorPosition = 0;
 			this->importCharacterList_cursorPositionOnScreen = 0;
 			this->import_characterShownFirst = 0;
-			if (this->photo_highlightedGame == 4) {
+			if (this->char_highlightedGame == 4) {
 				this->previewCharacter = false;
 				if (!this->exportedCharListGotten[highlightedGame]) {
 					this->displayNothing = true;
@@ -480,7 +480,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			this->loadChrImage(false);
 		}
 
-		if (this->photo_highlightedGame != 4) {
+		if (this->char_highlightedGame != 4) {
 			if ((hDown & KEY_L) || (hDown & KEY_ZL)) {
 				sndHighlight();
 				this->seasonNo--;
@@ -565,6 +565,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_A) {
 			sndSelect();
 			this->subScreenMode = 0;
+			this->previewCharacter = this->characterPicked;
 		}
 
 		if (hDown & KEY_DLEFT) {
@@ -644,7 +645,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				sndSelect();
 				this->displayNothing = true;
 				this->subScreenMode = 2;
-				if ((this->subScreenMode == 2) && (this->photo_highlightedGame == 4) && !this->exportedCharListGotten[highlightedGame]) {
+				if ((this->subScreenMode == 2) && (this->char_highlightedGame == 4) && !this->exportedCharListGotten[highlightedGame]) {
 					gspWaitForVBlank();
 					getExportedCharacterContents();
 					this->exportedCharListGotten[highlightedGame] = true;

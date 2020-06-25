@@ -36,6 +36,7 @@ private:
 
 	mutable int cursorX, cursorY;
 	int photo_highlightedGame = 0;
+	int char_highlightedGame = 0;
 	int seasonNo = 0;
 
 	char chrFilePath[256];
