@@ -8,8 +8,12 @@ char txt_frameRate[24];
 
 int studioBgList[] = {
 	0,
-	1,
+	12,
+	13,
+	14,
+	15,
 	2,
+	1,
 	3,
 	4,
 	5,
@@ -26,10 +30,18 @@ const char* Settings::studioBgName(void) const {
 		case 0:
 		default:
 			return "Blue";
-		case 1:
-			return "Lover's Bell";
+		case 12:
+			return "Tropica Beach";
+		case 13:
+			return "Primrose Park";
+		case 14:
+			return "Cafe 3";
+		case 15:
+			return "Maple Crescent";
 		case 2:
 			return "Bougainville";
+		case 1:
+			return "Lover's Bell";
 		case 3:
 			return "NIN10 Pro.";
 		case 4:
@@ -163,7 +175,7 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		switch (cursorPosition) {
 			case 0:
 				studioBgInList--;
-				if (studioBgInList < 0) studioBgInList = 11;
+				if (studioBgInList < 0) studioBgInList = studioBgAmount;
 				studioBg = studioBgList[studioBgInList];
 				displayStudioBg = false;
 				gspWaitForVBlank();
@@ -187,7 +199,7 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		switch (cursorPosition) {
 			case 0:
 				studioBgInList++;
-				if (studioBgInList > 11) studioBgInList = 0;
+				if (studioBgInList > studioBgAmount) studioBgInList = 0;
 				studioBg = studioBgList[studioBgInList];
 				displayStudioBg = false;
 				gspWaitForVBlank();

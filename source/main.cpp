@@ -26,6 +26,7 @@ Handle threadRequest;
 #define CONFIG_3D_SLIDERSTATE (*(float *)0x1FF81080)
 
 char verText[32];
+int studioBgAmount = 15;
 int studioBg = 0;
 int studioBgInList = 0;
 bool cinemaWide = false;
@@ -56,7 +57,7 @@ void loadSettings(void) {
 	CIniFile settingsini(settingsIni);
 
 	studioBg = settingsini.GetInt("SAVVY-MANAGER", "STUDIO_BG", studioBg);
-	for (studioBgInList = 0; studioBgInList <= 11; studioBgInList++) {
+	for (studioBgInList = 0; studioBgInList <= studioBgAmount; studioBgInList++) {
 		if (studioBgList[studioBgInList] == studioBg) break;
 	}
 	cinemaWide = settingsini.GetInt("SAVVY-MANAGER", "CINEMA_WIDE", cinemaWide);

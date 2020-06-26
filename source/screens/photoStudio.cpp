@@ -28,7 +28,7 @@ void PhotoStudio::getMaxChars() {
 		if (photo_highlightedGame == 3) {
 			import_totalCharacters = 9;
 		} else if (photo_highlightedGame == 2) {
-			import_totalCharacters = 2;
+			import_totalCharacters = 6;
 		} else if (photo_highlightedGame == 1) {
 			import_totalCharacters = 0;
 		} else if (photo_highlightedGame == 0) {
@@ -674,7 +674,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			this->characterChangeMenu_optionShownFirst = 0;
 
 			extern int studioBgList[];
-			for (studioBgInList = 0; studioBgInList <= 11; studioBgInList++) {
+			for (studioBgInList = 0; studioBgInList <= studioBgAmount; studioBgInList++) {
 				if (studioBgList[studioBgInList] == studioBg) break;
 			}
 

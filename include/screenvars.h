@@ -7,6 +7,7 @@ extern bool showCursor;
 extern float bg_xPos;
 extern float bg_yPos;
 extern int cursorAlpha;
+extern int studioBgAmount;
 extern int studioBg;
 extern int studioBgInList;
 extern bool cinemaWide;
