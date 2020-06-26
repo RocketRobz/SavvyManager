@@ -344,7 +344,7 @@ void PhotoStudio::Draw(void) const {
 
 		Gui::DrawString(8, 8, 0.50, BLACK, "What do you want to do?");
 
-		Gui::DrawString(184, 206, 0.65, BLACK, ": Take photo");
+		Gui::DrawString(192, 206, 0.65, BLACK, ": Take photo");
 
 		int i2 = 0;
 		i2 += 48;
