@@ -33,7 +33,7 @@ As such features are not normally available in-game, you may risk a possible ban
 # Credits
 * devkitPro: libctru, citro2d/3d, nds-hb-menu's file/folder browsing code
 * Universal Team: Universal Core
-* @joel16: Screenshot code from [3DShell](https://github.com/joel16/3DShell)
+* joel16: Screenshot code from [3DShell](https://github.com/joel16/3DShell)
 * Pixel Perfect: [Music icon](https://www.flaticon.com/free-icon/musical-note_727218)
 * Mike Dexter: Original MIDI sequence of the Sega CD Model 2 BIOS music
 * rog9001: His New Style Boutique 3 Save Editor tool has motivated me to work on this further.
