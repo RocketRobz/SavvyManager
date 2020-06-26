@@ -135,7 +135,7 @@ void GFX::showBgSprite(int zoomIn) {
 	C2D_DrawImageAt(image, 0, yPos, 0.5f, NULL, 0.5, 1);
 }
 
-void GFX::showCharSprite(int zoomIn, int fadeAlpha) {
+void GFX::showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects) {
 	int yPos = -((cinemaWide ? 168 : 240)*zoomIn);
 	if (cinemaWide) yPos += 36;
 
@@ -144,14 +144,27 @@ void GFX::showCharSprite(int zoomIn, int fadeAlpha) {
 		C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
 	}
 
+	C2D_ImageTint tint;
 	if (fadeAlpha == 255) {
-		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos, 0.5f, NULL, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
+		if (lightingEffects) {
+			switch (studioBg) {
+				default:
+					C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, 255), 0);
+					break;
+				case 1:
+				case 7:
+				case 12:
+				case 13:
+				case 14:
+					C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 95, 255), 0.1);	// Tint for Night time or dark areas
+					break;
+			}
+		} else {
+			C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, 255), 0);
+		}
+		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos, 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
 	} else {
-		C2D_ImageTint tint;
-		C2D_SetImageTint(&tint, C2D_TopLeft, C2D_Color32(255, 255, 255, fadeAlpha), 1);
-		C2D_SetImageTint(&tint, C2D_TopRight, C2D_Color32(255, 255, 255, fadeAlpha), 1);
-		C2D_SetImageTint(&tint, C2D_BotLeft, C2D_Color32(255, 255, 255, fadeAlpha), 1);
-		C2D_SetImageTint(&tint, C2D_BotRight, C2D_Color32(255, 255, 255, fadeAlpha), 1);
+		C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, fadeAlpha), 1);
 		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos, 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
 	}
 }

@@ -204,9 +204,9 @@ void PhotoStudio::Draw(void) const {
 	}
 	if (this->previewCharacter) {
 		if (this->previewCharacterFound) {
-			GFX::showCharSprite(this->zoomIn, this->charFadeAlpha);
+			GFX::showCharSprite(this->zoomIn, this->charFadeAlpha, true);
 		} else {
-			Gui::DrawStringCentered(0, 104, 0.65, WHITE, (this->photo_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
+			Gui::DrawStringCentered(0, 104, 0.65, WHITE, (this->char_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
 		}
 	}
 
