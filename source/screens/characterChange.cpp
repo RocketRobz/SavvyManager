@@ -278,23 +278,29 @@ void CharacterChange::addEveryone(void) {
 void CharacterChange::Draw(void) const {
 	Gui::ScreenDraw(Top);
 
-	GFX::showBgSprite(zoomIn);
+	//GFX::showBgSprite(zoomIn);
+	Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
+	for(int w = 0; w < 7; w++) {
+		for(int h = 0; h < 3; h++) {
+			GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
+		}
+	}
 	if (this->previewCharacter) {
 		if (this->previewCharacterFound) {
 			GFX::showCharSprite(this->zoomIn, this->charFadeAlpha);
 		} else {
-			Gui::DrawStringCentered(0, 104, 0.65, WHITE, (this->import_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
+			Gui::DrawStringCentered(0, 104, 0.65, BLACK, (this->import_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
 		}
 	}
 
 	this->preview();
 
 	if (this->showMessage && this->messageNo == 4) {
-		Gui::DrawString(8, (cinemaWide ? 174 : 210), 0.50, WHITE, this->removeBags ? " Keep bags" : " Remove bags");
+		Gui::DrawString(8, (cinemaWide ? 174 : 210), 0.50, BLACK, this->removeBags ? " Keep bags" : " Remove bags");
 		// Selected season
-		Gui::DrawString(160, (cinemaWide ? 174 : 210), 0.65, WHITE, "L");
-		Gui::DrawStringCentered(0, (cinemaWide ? 174 : 210), 0.50, WHITE, this->seasonName());
-		Gui::DrawString(232, (cinemaWide ? 174 : 210), 0.65, WHITE, "R");
+		Gui::DrawString(160, (cinemaWide ? 174 : 210), 0.65, BLACK, "L");
+		Gui::DrawStringCentered(0, (cinemaWide ? 174 : 210), 0.50, BLACK, this->seasonName());
+		Gui::DrawString(232, (cinemaWide ? 174 : 210), 0.65, BLACK, "R");
 	}
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect

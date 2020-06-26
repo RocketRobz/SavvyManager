@@ -7,75 +7,31 @@ char txt_cinemaWide[24];
 char txt_frameRate[24];
 
 int studioBgList[] = {
-	0,
-	12,
-	13,
-	14,
-	15,
-	2,
-	1,
-	3,
-	4,
-	5,
-	6,
-	7,
-	8,
-	9,
-	10,
-	11
+	0,	// Blue
+	12,	// Tropica Beach
+	13,	// Primrose Park
+	14,	// Cafe 3
+	15,	// Maple Crescent
+	2,	// Bougainville
+	1,	// Lover's Bell
+	3,	// Nin10 Pro
+	4,	// Beautician 4
+	5,	// Hair Salon 4
+	6,	// Celestial Hotel
+	7,	// Live Music Club 4
+	8,	// Menswear Shop
+	9,	// VIP Room
+	10,	// Restauraunt 4
+	11	// Cinema
 };
-
-const char* Settings::studioBgName(void) const {
-	switch (studioBg) {
-		case 0:
-		default:
-			return "Blue";
-		case 12:
-			return "Tropica Beach";
-		case 13:
-			return "Primrose Park";
-		case 14:
-			return "Cafe 3";
-		case 15:
-			return "Maple Crescent";
-		case 2:
-			return "Bougainville";
-		case 1:
-			return "Lover's Bell";
-		case 3:
-			return "NIN10 Pro.";
-		case 4:
-			return "Beautician 4";
-		case 5:
-			return "Hair Salon 4";
-		case 6:
-			return "Celestial Hotel";
-		case 7:
-			return "Live Music Club 4";
-		case 8:
-			return "Menswear Shop";
-		case 9:
-			return "VIP Room";
-		case 10:
-			return "Restauraunt 4";
-		case 11:
-			return "Cinema";
-	}
-
-	return "null";
-}
 
 void Settings::Draw(void) const {
 	Gui::ScreenDraw(Top);
 
-	if (this->displayStudioBg) {
-		GFX::showBgSprite(0);
-	} else {
-		Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
-		for(int w = 0; w < 7; w++) {
-			for(int h = 0; h < 3; h++) {
-				GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
-			}
+	Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
+	for(int w = 0; w < 7; w++) {
+		for(int h = 0; h < 3; h++) {
+			GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
 		}
 	}
 
@@ -106,14 +62,10 @@ void Settings::Draw(void) const {
 		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 		switch (i) {
 			case 0:
-				sprintf(txt_studioBG, "Studio BG: %s", studioBgName());
-				Gui::DrawString(32, i2, 0.65, BLACK, txt_studioBG);
-				break;
-			case 1:
 				sprintf(txt_cinemaWide, "Aspect Ratio: %s", cinemaWide ? "Cinema" : "Normal");
 				Gui::DrawString(32, i2, 0.65, BLACK, txt_cinemaWide);
 				break;
-			case 2:
+			case 1:
 				sprintf(txt_frameRate, "Frame Rate: %iFPS", iFps);
 				Gui::DrawString(32, i2, 0.65, BLACK, txt_frameRate);
 				break;
@@ -174,18 +126,9 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		sndSelect();
 		switch (cursorPosition) {
 			case 0:
-				studioBgInList--;
-				if (studioBgInList < 0) studioBgInList = studioBgAmount;
-				studioBg = studioBgList[studioBgInList];
-				displayStudioBg = false;
-				gspWaitForVBlank();
-				GFX::loadBgSprite();
-				displayStudioBg = true;
-				break;
-			case 1:
 				cinemaWide = !cinemaWide;
 				break;
-			case 2:
+			case 1:
 					 if (iFps==30) iFps = 24;
 				else if (iFps==24) iFps = 60;
 				else if (iFps==60) iFps = 30;
@@ -198,18 +141,9 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		sndSelect();
 		switch (cursorPosition) {
 			case 0:
-				studioBgInList++;
-				if (studioBgInList > studioBgAmount) studioBgInList = 0;
-				studioBg = studioBgList[studioBgInList];
-				displayStudioBg = false;
-				gspWaitForVBlank();
-				GFX::loadBgSprite();
-				displayStudioBg = true;
-				break;
-			case 1:
 				cinemaWide = !cinemaWide;
 				break;
-			case 2:
+			case 1:
 					 if (iFps==60) iFps = 24;
 				else if (iFps==24) iFps = 30;
 				else if (iFps==30) iFps = 60;

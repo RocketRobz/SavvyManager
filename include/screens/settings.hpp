@@ -12,9 +12,8 @@ public:
 	void Logic(u32 hDown, u32 hHeld, touchPosition touch) override;
 private:
 	const char* studioBgName(void) const;
-	bool displayStudioBg = true;
 	mutable int cursorX, cursorY;
-	int numberOfSettings = 2;
+	int numberOfSettings = 1;
 	int cursorPosition = 0;
 	int cursorPositionOnScreen = 0;
 	int settingShownFirst = 0;
