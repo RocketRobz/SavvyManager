@@ -2,28 +2,8 @@
 #include "settings.hpp"
 #include "screenvars.h"
 
-char txt_studioBG[32];
 char txt_cinemaWide[24];
 char txt_frameRate[24];
-
-int studioBgList[] = {
-	0,	// Blue
-	12,	// Tropica Beach
-	13,	// Primrose Park
-	14,	// Cafe 3
-	15,	// Maple Crescent
-	2,	// Bougainville
-	1,	// Lover's Bell
-	3,	// Nin10 Pro
-	4,	// Beautician 4
-	5,	// Hair Salon 4
-	6,	// Celestial Hotel
-	7,	// Live Music Club 4
-	8,	// Menswear Shop
-	9,	// VIP Room
-	10,	// Restauraunt 4
-	11	// Cinema
-};
 
 void Settings::Draw(void) const {
 	Gui::ScreenDraw(Top);

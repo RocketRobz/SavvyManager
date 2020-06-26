@@ -672,12 +672,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			this->characterChangeMenu_cursorPosition = 0;
 			this->characterChangeMenu_cursorPositionOnScreen = 0;
 			this->characterChangeMenu_optionShownFirst = 0;
-
-			extern int studioBgList[];
-			for (studioBgInList = 0; studioBgInList <= studioBgAmount; studioBgInList++) {
-				if (studioBgList[studioBgInList] == studioBg) break;
-			}
-
 			Gui::setScreen(std::make_unique<titleScreen>(), true);
 		}
 	
