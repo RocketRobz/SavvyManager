@@ -151,6 +151,9 @@ void GFX::showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects) {
 				default:
 					C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, 255), 0);
 					break;
+				case 11:
+					C2D_PlainImageTint(&tint, C2D_Color32(191, 63, 87, 255), 0.1);	// Tint for Cinema
+					break;
 				case 1:
 				case 7:
 				case 12:
