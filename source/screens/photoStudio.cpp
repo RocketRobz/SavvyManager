@@ -16,6 +16,8 @@
 
 #include <unistd.h>
 
+extern int orgHighlightedGame;
+
 PhotoStudio::PhotoStudio() {
 	this->getList();
 }
@@ -681,7 +683,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 
 		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 			sndBack();
-			highlightedGame = 1;
+			highlightedGame = orgHighlightedGame;
 			Gui::setScreen(std::make_unique<titleScreen>(), true);
 		}
 	

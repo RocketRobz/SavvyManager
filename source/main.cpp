@@ -135,6 +135,7 @@ void screenon(void)
 
 u8 sysRegion = CFG_REGION_USA;
 u64 appID = 0;
+int orgHighlightedGame = 1;
 int highlightedGame = 1;
 
 float bg_xPos = 0.0f;

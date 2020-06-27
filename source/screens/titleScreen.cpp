@@ -6,6 +6,7 @@
 #include "photoStudio.hpp"
 
 extern u64 appID;
+extern int orgHighlightedGame;
 extern int titleSelection;
 extern char verText[32];
 extern bool exiting;
@@ -114,6 +115,7 @@ void titleScreen::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					Gui::setScreen(std::make_unique<GameSelect>(), true);
 					break;
 				case 1:
+					orgHighlightedGame = highlightedGame;
 					Gui::setScreen(std::make_unique<PhotoStudio>(), true);
 					break;
 				case 2:
