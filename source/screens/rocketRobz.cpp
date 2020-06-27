@@ -34,6 +34,7 @@ void RocketRobz::Draw(void) const {
 		Gui::Draw_Rect(0, 204, 400, 36, C2D_Color32(0, 0, 0, 255));
 	}
 
+	if (shiftBySubPixel) return;
 	Gui::ScreenDraw(Bottom);
 	if (subMode == 2) {
 		//GFX::DrawSprite(sprites_logo_SSanniversary_idx, 32, 24);

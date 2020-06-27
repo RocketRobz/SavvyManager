@@ -94,6 +94,10 @@ void GameSelect::Draw(void) const {
 		Gui::Draw_Rect(0, 204, 400, 36, C2D_Color32(0, 0, 0, 255));
 	}
 
+	if (shiftBySubPixel) {
+		Gui::Draw_Rect(0, 239, 400, 1, C2D_Color32(0, 0, 0, 255));
+		return;
+	}
 	Gui::ScreenDraw(Bottom);
 
 	switch(highlightedGame) {

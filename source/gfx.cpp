@@ -19,6 +19,8 @@ extern int cursorX;
 extern int cursorY;
 extern int cursorAlpha;
 
+bool shiftBySubPixel = false;
+
 Result GFX::loadSheets() {
 	sprites			= C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
 	gameSelSprites	= C2D_SpriteSheetLoad("romfs:/gfx/gameSelSprites.t3x");
@@ -201,7 +203,7 @@ void GFX::showBgSprite(int zoomIn) {
 		C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
 	}
 
-	C2D_DrawImageAt(image, 0, yPos, 0.5f, NULL, 0.5, 1);
+	C2D_DrawImageAt(image, 0, yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, NULL, 0.5, 1);
 }
 
 void GFX::showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects) {
@@ -234,10 +236,10 @@ void GFX::showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects) {
 		} else {
 			C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, 255), 0);
 		}
-		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos, 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
+		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
 	} else {
 		C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, fadeAlpha), 1);
-		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos, 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
+		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
 	}
 }
 
@@ -251,7 +253,7 @@ void GFX::DrawGameShotSprite(int img, int x, int y) {
 		C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
 	}
 
-	C2D_DrawImageAt(image, x, y, 0.5f, NULL, 0.5, 1);
+	C2D_DrawImageAt(image, x, y-(shiftBySubPixel ? 0.5f : 0), 0.5f, NULL, 0.5, 1);
 }
 
 void GFX::DrawGameBgSprite(int img, int x, int y, float ScaleX, float ScaleY) {
@@ -259,10 +261,15 @@ void GFX::DrawGameBgSprite(int img, int x, int y, float ScaleX, float ScaleY) {
 }
 
 void GFX::DrawSprite(int img, int x, int y, float ScaleX, float ScaleY, GPU_TEXTURE_FILTER_PARAM filter) {
+	float yPos = y;
+	if (shiftBySubPixel && img != sprites_logo_savvymanager_idx) {
+		yPos -= 0.5f;
+	}
+
 	C2D_Image image = C2D_SpriteSheetGetImage(sprites, img);
 	C3D_TexSetFilter(image.tex, filter, filter);
 
-	C2D_DrawImageAt(image, x, y, 0.5f, NULL, ScaleX, ScaleY);
+	C2D_DrawImageAt(image, x, yPos, 0.5f, NULL, ScaleX, ScaleY);
 }
 
 void GFX::DrawSpriteBlend(int img, float x, float y, u32 color, float ScaleX, float ScaleY, GPU_TEXTURE_FILTER_PARAM filter) {
@@ -274,7 +281,7 @@ void GFX::DrawSpriteBlend(int img, float x, float y, u32 color, float ScaleX, fl
 	C2D_SetImageTint(&tint, C2D_TopRight, color, 1);
 	C2D_SetImageTint(&tint, C2D_BotLeft, color, 1);
 	C2D_SetImageTint(&tint, C2D_BotRight, color, 1);
-	C2D_DrawImageAt(image, x, y, 0.5f, &tint, ScaleX, ScaleY);
+	C2D_DrawImageAt(image, x, y-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, ScaleX, ScaleY);
 }
 
 void GFX::drawCursor(int cX, int cY) {

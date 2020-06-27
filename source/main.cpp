@@ -158,6 +158,16 @@ bool touchingBackButton(void) {
 	return (touch.px >= 7 && touch.px < 7+40 && touch.py >= 197 && touch.py < 197+44);
 }
 
+void renderTopScreenSubPixels(void) {
+	shiftBySubPixel = true;
+	C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
+	C2D_TargetClear(Top, TRANSPARENT);
+	Gui::clearTextBufs();
+	Gui::DrawScreen();
+	C3D_FrameEnd(0);
+	shiftBySubPixel = false;
+}
+
 bool ss2SaveFound = false;
 bool ss3SaveFound = false;
 bool ss4SaveFound = false;
@@ -387,6 +397,10 @@ int main()
 			}
 		}
 
+		if (hDown & KEY_Y) {
+			Screenshot_Capture();
+		}
+
 		// Scroll background
 		switch (iFps) {
 			default:
@@ -405,10 +419,6 @@ int main()
 
 		if (bg_xPos >= 72) bg_xPos = 0.0f;
 		if (bg_yPos <= -136) bg_yPos = 0.0f;
-
-		if (hDown & KEY_Y) {
-			Screenshot_Capture();
-		}
 
 		if (hDown) {
 			svcSignalEvent(threadRequest);

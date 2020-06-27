@@ -23,6 +23,8 @@
 
 typedef u32 Color;
 
+extern bool shiftBySubPixel;
+
 namespace GFX {
 	// Load & Unload default sheets.
 	Result loadSheets();

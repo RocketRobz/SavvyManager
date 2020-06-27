@@ -7,6 +7,8 @@
 
 #include "screenshot.h"
 
+extern void renderTopScreenSubPixels(void);
+
 static Result Screenshot_GenerateScreenshot(const char *path) {
 	int x = 0, y = 0;
 	int width = gfxIsWide() ? 800 : 400;
@@ -18,8 +20,7 @@ static Result Screenshot_GenerateScreenshot(const char *path) {
 	//u8 *top_framebuf = gfxGetFramebuffer(GFX_BOTTOM, GFX_BOTTOM, NULL, NULL);
 	u8 *bottom_framebuf = gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL);
 
-	u8 *buf = NULL;
-	buf = linearAlloc(size + fileSize);
+	u8 *buf = (u8*)linearAlloc(size + fileSize);
 	memset(buf, 0, size + fileSize);
 	buf[size + fileSize] = 0;
 
@@ -40,6 +41,7 @@ static Result Screenshot_GenerateScreenshot(const char *path) {
 		int x2 = 0;
 		int y2 = 0;
 	  for (int i = 0; i <= 1; i++) {
+		if (i==1) renderTopScreenSubPixels();
 		x2 = 0;
 		y2 = i;
 		for (y = 0; y < 240; y++) {
