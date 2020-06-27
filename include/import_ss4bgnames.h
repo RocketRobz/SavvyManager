@@ -1,4 +1,6 @@
 const char* import_ss4BgNames[] {
+	"White",
+	"Yellow",
 	"Blue",
 	"NIN10 Pro.",
 	"Beautician",
@@ -12,6 +14,8 @@ const char* import_ss4BgNames[] {
 };
 
 int import_ss4BgNums[] {
+	16,
+	17,
 	0,
 	3,
 	4,

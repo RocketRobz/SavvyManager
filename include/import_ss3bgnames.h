@@ -1,4 +1,6 @@
 const char* import_ss3BgNames[] {
+	"White",
+	"Yellow",
 	"Blue",
 	"Tropica Beach",
 	"Primrose Park",
@@ -9,6 +11,8 @@ const char* import_ss3BgNames[] {
 };
 
 int import_ss3BgNums[] {
+	16,
+	17,
 	0,
 	12,
 	13,

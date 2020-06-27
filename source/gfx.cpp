@@ -97,6 +97,75 @@ void GFX::loadBgSprite(void) {
 		case 15:
 			bgPath = "romfs:/gfx/bgNight_mapleCrescent.t3x";
 			break;
+		case 16:
+			bgPath = "romfs:/gfx/bg_white.t3x";
+			break;
+		case 17:
+			bgPath = "romfs:/gfx/bg_yellow.t3x";
+			break;
+		case 18:
+			bgPath = "romfs:/gfx/bg_snowflakes.t3x";
+			break;
+		case 19:
+			bgPath = "romfs:/gfx/bg_pinkShine.t3x";
+			break;
+		case 20:
+			bgPath = "romfs:/gfx/bg_beigeWithCircles.t3x";
+			break;
+		case 21:
+			bgPath = "romfs:/gfx/bg_gradientPurple.t3x";
+			break;
+		case 22:
+			bgPath = "romfs:/gfx/bg_greenBirds.t3x";
+			break;
+		case 23:
+			bgPath = "romfs:/gfx/bg_circlePattern.t3x";
+			break;
+		case 24:
+			bgPath = "romfs:/gfx/bg_circleWindows.t3x";
+			break;
+		case 25:
+			bgPath = "romfs:/gfx/bg_bigHearts.t3x";
+			break;
+		case 26:
+			bgPath = "romfs:/gfx/bg_smallHearts.t3x";
+			break;
+		case 27:
+			bgPath = "romfs:/gfx/bg_park2Spring.t3x";
+			break;
+		case 28:
+			bgPath = "romfs:/gfx/bg_park2Summer.t3x";
+			break;
+		case 29:
+			bgPath = "romfs:/gfx/bg_park2Fall.t3x";
+			break;
+		case 30:
+			bgPath = "romfs:/gfx/bg_park2Winter.t3x";
+			break;
+		case 31:
+			bgPath = "romfs:/gfx/bg_downtownSpring.t3x";
+			break;
+		case 32:
+			bgPath = "romfs:/gfx/bg_downtownSummer.t3x";
+			break;
+		case 33:
+			bgPath = "romfs:/gfx/bg_downtownFall.t3x";
+			break;
+		case 34:
+			bgPath = "romfs:/gfx/bg_downtownWinter.t3x";
+			break;
+		case 35:
+			bgPath = "romfs:/gfx/bg_cafe2Spring.t3x";
+			break;
+		case 36:
+			bgPath = "romfs:/gfx/bg_cafe2Summer.t3x";
+			break;
+		case 37:
+			bgPath = "romfs:/gfx/bg_cafe2Fall.t3x";
+			break;
+		case 38:
+			bgPath = "romfs:/gfx/bg_cafe2Winter.t3x";
+			break;
 	}
 	bgSprite		= C2D_SpriteSheetLoad(bgPath);
 	doBgSpriteFree	= true;
