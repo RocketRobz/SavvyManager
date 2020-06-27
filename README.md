@@ -21,6 +21,8 @@ For Style Savvy's 10th Anniversary, a save editor is here!
 * You can also export your current character, in case if you want to restore/import it later.
 * (3rd and 4th games) Import/Export brand emblems for custom designed outfits.
 * Apply music packs to Girls Mode 2/Style Savvy: Trendsetters/New Style Boutique. (Requires game patching enabled in Luma.)
+* With Photo Studio, you can take pictures of your favorite characters, and even Robz himself, in any location possible!     
+Works with no existing save data.
 * Coming soon: Change attributes of your character (such as gender, skin color, pose set, height, etc.).
 * Coming soon (GM4/SS4/NSB3): Change bow placement on your character, if a bow is being worn.
 
