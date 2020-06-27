@@ -354,7 +354,7 @@ void PhotoStudio::Draw(void) const {
 		int i2 = 0;
 		i2 += 48;
 		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-		Gui::DrawString(32, i2, 0.65, BLACK, "Change studio BG");
+		Gui::DrawString(32, i2, 0.65, BLACK, "Change location");
 		i2 += 48;
 		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 		Gui::DrawString(32, i2, 0.65, BLACK, "Change character");
@@ -396,14 +396,15 @@ void PhotoStudio::preview() const {
 
 
 void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
-	if (hDown & KEY_CPAD_UP) {
-		this->zoomIn++;
-		if (this->zoomIn > 2) this->zoomIn = 2;
-	}
-	
-	if (hDown & KEY_CPAD_DOWN) {
-		this->zoomIn--;
-		if (this->zoomIn < 0) this->zoomIn = 0;
+	if (this->subScreenMode==0 || this->subScreenMode==2) {
+		if (hDown & KEY_CPAD_UP) {
+			this->zoomIn++;
+			if (this->zoomIn > 2) this->zoomIn = 2;
+		}
+		if (hDown & KEY_CPAD_DOWN) {
+			this->zoomIn--;
+			if (this->zoomIn < 0) this->zoomIn = 0;
+		}
 	}
 
 	if (this->showMessage) {
@@ -661,6 +662,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				this->subScreenMode = 1;
 				this->getMaxChars();
 				this->previewCharacter = false;
+				this->zoomIn = 0;
 			} else if (this->characterChangeMenu_cursorPosition == 1) {
 				sndSelect();
 				this->displayNothing = true;
