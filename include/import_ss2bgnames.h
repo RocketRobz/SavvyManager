@@ -21,6 +21,7 @@ const char* import_ss2BgNames[] {
 	"Cafe (Summer)",
 	"Cafe (Fall)",
 	"Cafe (Winter)",
+	"Exhibition Hall",
 };
 
 int import_ss2BgNums[] {
@@ -46,4 +47,5 @@ int import_ss2BgNums[] {
 	36,
 	37,
 	38,
+	39,
 };

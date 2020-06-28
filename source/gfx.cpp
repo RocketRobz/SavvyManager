@@ -48,7 +48,11 @@ void GFX::loadBgSprite(void) {
 	if (doBgSpriteFree) {
 		C2D_SpriteSheetFree(bgSprite);
 	}
+
 	const char* bgPath;
+	time_t t = time(0);
+	int hour = localtime(&t)->tm_hour;
+
 	switch (studioBg) {
 		case 0:
 		default:
@@ -167,6 +171,13 @@ void GFX::loadBgSprite(void) {
 			break;
 		case 38:
 			bgPath = "romfs:/gfx/bg_cafe2Winter.t3x";
+			break;
+		case 39:
+			if (hour >= 7 && hour < 19) {
+				bgPath = "romfs:/gfx/bgDay_exhibitionHall2.t3x";
+			} else {
+				bgPath = "romfs:/gfx/bgNight_exhibitionHall2.t3x";
+			}
 			break;
 	}
 	bgSprite		= C2D_SpriteSheetLoad(bgPath);
