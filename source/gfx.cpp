@@ -185,6 +185,15 @@ void GFX::loadBgSprite(void) {
 		case 41:
 			bgPath = "romfs:/gfx/bg_afterParty.t3x";
 			break;
+		case 42:
+			bgPath = "romfs:/gfx/bg_graceShop.t3x";
+			break;
+		case 43:
+			bgPath = "romfs:/gfx/bg_hairSalon1.t3x";
+			break;
+		case 44:
+			bgPath = "romfs:/gfx/bg_beautician1.t3x";
+			break;
 	}
 	bgSprite		= C2D_SpriteSheetLoad(bgPath);
 	doBgSpriteFree	= true;

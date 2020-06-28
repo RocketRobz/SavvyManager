@@ -10,6 +10,7 @@
 #include "import_ss3charnames.h"
 #include "import_ss4charnames.h"
 
+#include "import_ss1bgnames.h"
 #include "import_ss2bgnames.h"
 #include "import_ss3bgnames.h"
 #include "import_ss4bgnames.h"
@@ -35,7 +36,7 @@ void PhotoStudio::getMaxChars() {
 		} else if (photo_highlightedGame == 1) {
 			import_totalCharacters = 24;
 		} else if (photo_highlightedGame == 0) {
-			import_totalCharacters = 0;
+			import_totalCharacters = 2;
 		}
 	} else {
 		if (char_highlightedGame == 4) {
@@ -341,7 +342,7 @@ void PhotoStudio::Draw(void) const {
 				Gui::DrawString(32, i2, 0.65, BLACK, import_ss2BgNames[i]);
 			} else if (photo_highlightedGame == 0) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				//Gui::DrawString(32, i2, 0.65, BLACK, import_ss1CharacterNames[i]);
+				Gui::DrawString(32, i2, 0.65, BLACK, import_ss1BgNames[i]);
 			}
 			i2 += 48;
 		}
@@ -531,6 +532,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					this->bgList_cursorPositionOnScreen = 0;
 				}
 				switch (this->photo_highlightedGame) {
+					case 0:
+						studioBg = import_ss1BgNums[this->bgList_cursorPosition];
+						break;
 					case 1:
 						studioBg = import_ss2BgNums[this->bgList_cursorPosition];
 						break;
@@ -565,6 +569,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					this->bgList_cursorPositionOnScreen = 2;
 				}
 				switch (this->photo_highlightedGame) {
+					case 0:
+						studioBg = import_ss1BgNums[this->bgList_cursorPosition];
+						break;
 					case 1:
 						studioBg = import_ss2BgNums[this->bgList_cursorPosition];
 						break;
@@ -608,6 +615,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			this->import_bgShownFirst = 0;
 			this->getMaxChars();
 			switch (this->photo_highlightedGame) {
+				case 0:
+					studioBg = import_ss1BgNums[this->bgList_cursorPosition];
+					break;
 				case 1:
 					studioBg = import_ss2BgNums[this->bgList_cursorPosition];
 					break;
@@ -664,6 +674,28 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				this->subScreenMode = 1;
 				this->getMaxChars();
 				this->previewCharacter = false;
+				int bgNum = 0;
+				switch (this->photo_highlightedGame) {
+					case 0:
+						bgNum = import_ss1BgNums[this->bgList_cursorPosition];
+						break;
+					case 1:
+						bgNum = import_ss2BgNums[this->bgList_cursorPosition];
+						break;
+					case 2:
+						bgNum = import_ss3BgNums[this->bgList_cursorPosition];
+						break;
+					case 3:
+						bgNum = import_ss4BgNums[this->bgList_cursorPosition];
+						break;
+				}
+				if (studioBg != bgNum) {
+					this->displayStudioBg = false;
+					gspWaitForVBlank();
+					studioBg = bgNum;
+					GFX::loadBgSprite();
+					this->displayStudioBg = true;
+				}
 				this->zoomIn = 0;
 			} else if (this->characterChangeMenu_cursorPosition == 1) {
 				sndSelect();
