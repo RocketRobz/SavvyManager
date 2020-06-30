@@ -31,6 +31,8 @@ void WhatToDo::initialize() {
 }
 
 void WhatToDo::Draw(void) const {
+	GFX::loadGameSelSheets();
+
 	Gui::ScreenDraw(Top);
 
 	Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
