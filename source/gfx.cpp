@@ -6,18 +6,28 @@ static C2D_SpriteSheet sprites;
 static C2D_SpriteSheet gameSelSprites;
 static C2D_SpriteSheet gameShotSprites;
 static C2D_SpriteSheet gameBgSprites;
-static C2D_SpriteSheet bgSprite;
+static C2D_SpriteSheet bgSprite[4];
 static C2D_SpriteSheet chracterSprite;
 static bool doChracterSpriteFree = false;
-static bool doBgSpriteFree = false;
+static bool doBgSpriteFree[4] = {false};
 
 extern int studioBg;
 extern int cinemaWide;
+extern int iFps;
 
 extern bool showCursor;
 extern int cursorX;
 extern int cursorY;
 extern int cursorAlpha;
+
+static bool animateBg = false;
+static int bgAnimationFrame = 0;
+static int bgAnimationCurrent = 0;
+static int bgAnimationTime = 0;
+//static int bgAnimationDelay = 0;
+static int bgAnimation[8] = {100};
+
+static int timeOutside = 0;	// 0 == Day, 1 == Sunset, 2 == Night
 
 bool shiftBySubPixel = false;
 
@@ -35,19 +45,22 @@ Result GFX::unloadSheets() {
 	C2D_SpriteSheetFree(gameSelSprites);
 	C2D_SpriteSheetFree(gameShotSprites);
 	C2D_SpriteSheetFree(gameBgSprites);
-	if (doBgSpriteFree) {
-		C2D_SpriteSheetFree(bgSprite);
-	}
-	if (doChracterSpriteFree) {
-		C2D_SpriteSheetFree(chracterSprite);
+	for (int i = 0; i < 4; i++) {
+		if (doBgSpriteFree[i]) {
+			C2D_SpriteSheetFree(bgSprite[i]);
+		}
 	}
 	return 0;
 }
 
 void GFX::loadBgSprite(void) {
-	if (doBgSpriteFree) {
-		C2D_SpriteSheetFree(bgSprite);
+	for (int i = 0; i < 4; i++) {
+		if (doBgSpriteFree[i]) {
+			C2D_SpriteSheetFree(bgSprite[i]);
+		}
 	}
+
+	timeOutside = 0;
 
 	const char* bgPath;
 	time_t t = time(0);
@@ -59,10 +72,20 @@ void GFX::loadBgSprite(void) {
 			bgPath = "romfs:/gfx/bg_blue.t3x";
 			break;
 		case 1:
-			bgPath = "romfs:/gfx/bgNight_loversBell.t3x";
+			if (hour >= 7 && hour < 19) {
+				bgPath = "romfs:/gfx/bgDay_loversBell.t3x";
+			} else {
+				bgPath = "romfs:/gfx/bgNight_loversBell.t3x";
+				timeOutside = 2;
+			}
 			break;
 		case 2:
-			bgPath = "romfs:/gfx/bgNight_bougainville.t3x";
+			if (hour >= 7 && hour < 19) {
+				bgPath = "romfs:/gfx/bgDay_bougainville.t3x";
+			} else {
+				bgPath = "romfs:/gfx/bgNight_bougainville.t3x";
+				timeOutside = 2;
+			}
 			break;
 		case 3:
 			bgPath = "romfs:/gfx/bg_nin10Pro.t3x";
@@ -92,16 +115,36 @@ void GFX::loadBgSprite(void) {
 			bgPath = "romfs:/gfx/bg_cinema.t3x";
 			break;
 		case 12:
-			bgPath = "romfs:/gfx/bgNight_tropicaBeach.t3x";
+			if (hour >= 7 && hour < 19) {
+				bgPath = "romfs:/gfx/bgDay_tropicaBeach_0.t3x";
+			} else {
+				bgPath = "romfs:/gfx/bgNight_tropicaBeach.t3x";
+				timeOutside = 2;
+			}
 			break;
 		case 13:
-			bgPath = "romfs:/gfx/bgNight_primrosePark.t3x";
+			if (hour >= 7 && hour < 19) {
+				bgPath = "romfs:/gfx/bgDay_primrosePark.t3x";
+			} else {
+				bgPath = "romfs:/gfx/bgNight_primrosePark.t3x";
+				timeOutside = 2;
+			}
 			break;
 		case 14:
-			bgPath = "romfs:/gfx/bgNight_cafe3.t3x";
+			if (hour >= 7 && hour < 19) {
+				bgPath = "romfs:/gfx/bgDay_cafe3.t3x";
+			} else {
+				bgPath = "romfs:/gfx/bgNight_cafe3.t3x";
+				timeOutside = 2;
+			}
 			break;
 		case 15:
-			bgPath = "romfs:/gfx/bgNight_mapleCrescent.t3x";
+			if (hour >= 7 && hour < 19) {
+				bgPath = "romfs:/gfx/bgDay_mapleCrescent.t3x";
+			} else {
+				bgPath = "romfs:/gfx/bgNight_mapleCrescent.t3x";
+				timeOutside = 2;
+			}
 			break;
 		case 16:
 			bgPath = "romfs:/gfx/bg_white.t3x";
@@ -177,6 +220,7 @@ void GFX::loadBgSprite(void) {
 				bgPath = "romfs:/gfx/bgDay_exhibitionHall2.t3x";
 			} else {
 				bgPath = "romfs:/gfx/bgNight_exhibitionHall2.t3x";
+				timeOutside = 2;
 			}
 			break;
 		case 40:
@@ -195,8 +239,30 @@ void GFX::loadBgSprite(void) {
 			bgPath = "romfs:/gfx/bg_beautician1.t3x";
 			break;
 	}
-	bgSprite		= C2D_SpriteSheetLoad(bgPath);
-	doBgSpriteFree	= true;
+	bgSprite[0]		= C2D_SpriteSheetLoad(bgPath);
+	doBgSpriteFree[0] = true;
+	doBgSpriteFree[1] = false;
+	doBgSpriteFree[2] = false;
+	doBgSpriteFree[3] = false;
+	bgAnimationFrame = 0;
+	bgAnimationCurrent = 0;
+	bgAnimationTime = 0;
+	animateBg = false;
+
+	// Load animated parts
+	if (studioBg == 12 && timeOutside == 0) {
+		bgSprite[1]	= C2D_SpriteSheetLoad("romfs:/gfx/bgDay_tropicaBeach_1.t3x");
+		bgSprite[2]	= C2D_SpriteSheetLoad("romfs:/gfx/bgDay_tropicaBeach_2.t3x");
+		doBgSpriteFree[1] = true;
+		doBgSpriteFree[2] = true;
+		//bgAnimationDelay = iFps;
+		bgAnimation[0] = 0;
+		bgAnimation[1] = 1;
+		bgAnimation[2] = 2;
+		bgAnimation[3] = 1;
+		bgAnimation[4] = 100;
+		animateBg = true;
+	}
 }
 
 bool GFX::loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
@@ -224,12 +290,26 @@ void GFX::showBgSprite(int zoomIn) {
 	int yPos = -(240*zoomIn);
 	if (cinemaWide) yPos -= 16;
 
-	C2D_Image image = C2D_SpriteSheetGetImage(bgSprite, 0);
+	C2D_Image image = C2D_SpriteSheetGetImage(bgSprite[bgAnimationFrame], 0);
 	if (!gfxIsWide()) {
 		C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
 	}
 
 	C2D_DrawImageAt(image, 0, yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, NULL, 0.5, 1);
+
+	if (animateBg) {
+		// Animate background
+		bgAnimationTime++;
+		if (bgAnimationTime >= iFps) {
+			bgAnimationCurrent++;
+			if (bgAnimation[bgAnimationCurrent] == 100) {
+				// Reset animation
+				bgAnimationCurrent = 0;
+			}
+			bgAnimationFrame = bgAnimation[bgAnimationCurrent];
+			bgAnimationTime = 0;
+		}
+	}
 }
 
 void GFX::showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects) {
@@ -243,24 +323,26 @@ void GFX::showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects) {
 
 	C2D_ImageTint tint;
 	if (fadeAlpha == 255) {
+		C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, 255), 0);
 		if (lightingEffects) {
 			switch (studioBg) {
 				default:
-					C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, 255), 0);
+					break;
+				case 7:
+					C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 95, 255), 0.1);	// Tint for Live Music Club
 					break;
 				case 11:
 					C2D_PlainImageTint(&tint, C2D_Color32(191, 63, 87, 255), 0.1);	// Tint for Cinema
 					break;
 				case 1:
-				case 7:
 				case 12:
 				case 13:
 				case 14:
-					C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 95, 255), 0.1);	// Tint for Night time or dark areas
+					if (timeOutside == 2) {
+						C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 95, 255), 0.1);	// Tint for Nighttime
+					}
 					break;
 			}
-		} else {
-			C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, 255), 0);
 		}
 		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
 	} else {
