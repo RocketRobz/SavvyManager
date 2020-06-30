@@ -43,7 +43,8 @@ private:
 	char chrFilePath2[256];
 
 	bool displayNothing = false;
-	bool displayStudioBg = true;
+	bool displayStudioBg = false;
+	bool showScrollingBg = true;
 	bool characterPicked = false;
 
 	mutable int charFadeAlpha = 0;

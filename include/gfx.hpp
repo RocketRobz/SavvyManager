@@ -38,6 +38,8 @@ namespace GFX {
 	// Sprite Functions.
 	bool loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSeason);
 	void loadBgSprite(void);
+	void unloadBgSprite(void);
+	void reloadBgSprite(void);
 	void showBgSprite(int zoomIn);
 	void animateBgSprite(void);
 	void showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects = false);

@@ -52,7 +52,7 @@ static bool screenon_ran = true;
 void loadSettings(void) {
 	CIniFile settingsini(settingsIni);
 
-	studioBg = settingsini.GetInt("SAVVY-MANAGER", "STUDIO_BG", studioBg);
+	//studioBg = settingsini.GetInt("SAVVY-MANAGER", "STUDIO_BG", studioBg);
 	cinemaWide = settingsini.GetInt("SAVVY-MANAGER", "CINEMA_WIDE", cinemaWide);
 	iFps = settingsini.GetInt("SAVVY-MANAGER", "FRAME_RATE", iFps);
 
@@ -62,7 +62,7 @@ void loadSettings(void) {
 void saveSettings(void) {
 	CIniFile settingsini(settingsIni);
 
-	settingsini.SetInt("SAVVY-MANAGER", "STUDIO_BG", studioBg);
+	//settingsini.SetInt("SAVVY-MANAGER", "STUDIO_BG", studioBg);
 	settingsini.SetInt("SAVVY-MANAGER", "CINEMA_WIDE", cinemaWide);
 	settingsini.SetInt("SAVVY-MANAGER", "FRAME_RATE", iFps);
 

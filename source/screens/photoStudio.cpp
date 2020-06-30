@@ -202,9 +202,11 @@ void PhotoStudio::Draw(void) const {
 		GFX::showBgSprite(zoomIn);
 	} else {
 		Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
-		for(int w = 0; w < 7; w++) {
-			for(int h = 0; h < 3; h++) {
-				GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
+		if (this->showScrollingBg) {
+			for(int w = 0; w < 7; w++) {
+				for(int h = 0; h < 3; h++) {
+					GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
+				}
 			}
 		}
 	}
@@ -544,7 +546,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				this->displayStudioBg = false;
 				gspWaitForVBlank();
-				GFX::loadBgSprite();
+				GFX::reloadBgSprite();
 				this->displayStudioBg = true;
 			}
 
@@ -581,7 +583,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				this->displayStudioBg = false;
 				gspWaitForVBlank();
-				GFX::loadBgSprite();
+				GFX::reloadBgSprite();
 				this->displayStudioBg = true;
 			}
 		}
@@ -627,7 +629,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			}
 			this->displayStudioBg = false;
 			gspWaitForVBlank();
-			GFX::loadBgSprite();
+			GFX::reloadBgSprite();
 			this->displayStudioBg = true;
 		}
 
@@ -686,13 +688,14 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 						bgNum = import_ss4BgNums[this->bgList_cursorPosition];
 						break;
 				}
-				if (studioBg != bgNum) {
+				//if (studioBg != bgNum) {
+					this->showScrollingBg = false;
 					this->displayStudioBg = false;
 					gspWaitForVBlank();
 					studioBg = bgNum;
-					GFX::loadBgSprite();
+					GFX::reloadBgSprite();
 					this->displayStudioBg = true;
-				}
+				//}
 				this->zoomIn = 0;
 			} else if (this->characterChangeMenu_cursorPosition == 1) {
 				sndSelect();

@@ -10,8 +10,8 @@ static C2D_SpriteSheet gameShotSprites;
 static C2D_SpriteSheet gameBgSprites;
 static C2D_SpriteSheet bgSprite;
 static C2D_SpriteSheet chracterSprite;
-static bool doChracterSpriteFree = false;
-static bool doBgSpriteFree = false;
+static bool chracterSpriteLoaded = false;
+static bool bgSpriteLoaded = false;
 
 extern int studioBg;
 extern int cinemaWide;
@@ -44,8 +44,16 @@ Result GFX::loadSheets() {
 
 Result GFX::unloadSheets() {
 	C2D_SpriteSheetFree(sprites);
-	if (doBgSpriteFree) {
+	if (gameSelGraphicsLoaded) {
+		C2D_SpriteSheetFree(gameSelSprites);
+		C2D_SpriteSheetFree(gameShotSprites);
+		C2D_SpriteSheetFree(gameBgSprites);
+	}
+	if (bgSpriteLoaded) {
 		C2D_SpriteSheetFree(bgSprite);
+	}
+	if (chracterSpriteLoaded) {
+		C2D_SpriteSheetFree(chracterSprite);
 	}
 	return 0;
 }
@@ -85,9 +93,7 @@ static inline bool isEvening(int hour, int minutes) {
 }
 
 void GFX::loadBgSprite(void) {
-	if (doBgSpriteFree) {
-		C2D_SpriteSheetFree(bgSprite);
-	}
+	if (bgSpriteLoaded) return;
 
 	timeOutside = 2;	// Default is Nighttime
 
@@ -279,7 +285,7 @@ void GFX::loadBgSprite(void) {
 	fclose(bgFile);
 
 	bgSprite		= C2D_SpriteSheetLoadFromMem(bgSpriteMem[0], 0x200000);
-	doBgSpriteFree = true;
+	bgSpriteLoaded = true;
 	bgAnimationFrame = 0;
 	bgAnimationCurrent = 0;
 	bgAnimationTime = 0;
@@ -311,25 +317,38 @@ void GFX::loadBgSprite(void) {
 		bgAnimation[4] = 100;
 		bgCanAnimate = true;
 	}
+
+	bgSpriteLoaded = true;
+}
+
+void GFX::unloadBgSprite() {
+	if (!bgSpriteLoaded) return;
+	C2D_SpriteSheetFree(bgSprite);
+	bgSpriteLoaded = false;
+}
+
+void GFX::reloadBgSprite() {
+	unloadBgSprite();
+	loadBgSprite();
 }
 
 bool GFX::loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
-	if (doChracterSpriteFree) {
+	if (chracterSpriteLoaded) {
 		C2D_SpriteSheetFree(chracterSprite);
 	}
 	if (access(t3xPathAllSeasons, F_OK) == 0) {
 		chracterSprite = C2D_SpriteSheetLoad(t3xPathAllSeasons);
-		doChracterSpriteFree = true;
+		chracterSpriteLoaded = true;
 		return true;
 	} else {
-		doChracterSpriteFree = false;
+		chracterSpriteLoaded = false;
 	}
 	if (access(t3xPathOneSeason, F_OK) == 0) {
 		chracterSprite = C2D_SpriteSheetLoad(t3xPathOneSeason);
-		doChracterSpriteFree = true;
+		chracterSpriteLoaded = true;
 		return true;
 	} else {
-		doChracterSpriteFree = false;
+		chracterSpriteLoaded = false;
 	}
 	return false;
 }
