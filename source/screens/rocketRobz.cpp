@@ -23,6 +23,7 @@ void RocketRobz::Draw(void) const {
 		} else {
 			GFX::DrawSprite(sprites_logo_rocketrobz_idx, 0, 0, 0.5, 1, (gfxIsWide() ? GPU_LINEAR : GPU_NEAREST));
 		}
+		Gui::Draw_Rect(0, 398, 400, 2, C2D_Color32(0, 0, 0, 255));	// Hide line from other texture(s)
 	} else {
 		GFX::DrawSprite(sprites_logo_savvymanager_idx, 56, 58);
 	}
