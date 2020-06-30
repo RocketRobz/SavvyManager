@@ -26,6 +26,7 @@ void titleScreen::drawCannotEditMsg(void) const {
 }
 
 void titleScreen::Draw(void) const {
+	GFX::unloadGameSelSheets();
 	animateBg = false;
 
 	if (!musicPlayStarted) {

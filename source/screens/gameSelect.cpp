@@ -57,6 +57,8 @@ void GameSelect::drawCannotEditMsg(void) const {
 }
 
 void GameSelect::Draw(void) const {
+	GFX::loadGameSelSheets();
+
 	if (!musicPlayStarted) {
 		extern void Play_Music();
 		Play_Music();

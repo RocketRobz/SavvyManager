@@ -32,6 +32,8 @@ namespace GFX {
 	// Load & Unload default sheets.
 	Result loadSheets();
 	Result unloadSheets();
+	void loadGameSelSheets();
+	void unloadGameSelSheets();
 
 	// Sprite Functions.
 	bool loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSeason);

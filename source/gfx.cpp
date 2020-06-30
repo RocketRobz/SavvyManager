@@ -34,24 +34,38 @@ static int timeOutside = 0;	// 0 == Day, 1 == Sunset, 2 == Night
 
 bool shiftBySubPixel = false;
 
+bool gameSelGraphicsLoaded = false;
+
 Result GFX::loadSheets() {
 	sprites			= C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
-	gameSelSprites	= C2D_SpriteSheetLoad("romfs:/gfx/gameSelSprites.t3x");
-	gameShotSprites	= C2D_SpriteSheetLoad("romfs:/gfx/gameShotSprites.t3x");
-	gameBgSprites	= C2D_SpriteSheetLoad("romfs:/gfx/gameBgSprites.t3x");
 	GFX::loadBgSprite();
 	return 0;
 }
 
 Result GFX::unloadSheets() {
 	C2D_SpriteSheetFree(sprites);
-	C2D_SpriteSheetFree(gameSelSprites);
-	C2D_SpriteSheetFree(gameShotSprites);
-	C2D_SpriteSheetFree(gameBgSprites);
 	if (doBgSpriteFree) {
 		C2D_SpriteSheetFree(bgSprite);
 	}
 	return 0;
+}
+
+void GFX::loadGameSelSheets() {
+	if (gameSelGraphicsLoaded) return;
+
+	gameSelSprites	= C2D_SpriteSheetLoad("romfs:/gfx/gameSelSprites.t3x");
+	gameShotSprites	= C2D_SpriteSheetLoad("romfs:/gfx/gameShotSprites.t3x");
+	gameBgSprites	= C2D_SpriteSheetLoad("romfs:/gfx/gameBgSprites.t3x");
+	gameSelGraphicsLoaded = true;
+}
+
+void GFX::unloadGameSelSheets() {
+	if (!gameSelGraphicsLoaded) return;
+
+	C2D_SpriteSheetFree(gameSelSprites);
+	C2D_SpriteSheetFree(gameShotSprites);
+	C2D_SpriteSheetFree(gameBgSprites);
+	gameSelGraphicsLoaded = false;
 }
 
 static inline bool isDaytime(int hour, int minutes) {
