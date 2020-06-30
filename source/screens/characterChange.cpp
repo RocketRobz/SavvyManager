@@ -276,6 +276,8 @@ void CharacterChange::addEveryone(void) {
 
 
 void CharacterChange::Draw(void) const {
+	GFX::unloadGameSelSheets();
+
 	Gui::ScreenDraw(Top);
 
 	//GFX::showBgSprite(zoomIn);
