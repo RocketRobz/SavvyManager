@@ -54,16 +54,33 @@ Result GFX::unloadSheets() {
 	return 0;
 }
 
+static inline bool isDaytime(int hour, int minutes) {
+	if ((hour >= 7 && hour < 20) || (hour == 20 && minutes >= 0 && minutes < 45)) {
+		timeOutside = 0;
+		return true;
+	}
+	return false;
+}
+
+static inline bool isEvening(int hour, int minutes) {
+	if ((hour == 20 && minutes >= 45 && minutes < 60) || (hour == 21 && minutes >= 0 && minutes < 45)) {
+		timeOutside = 1;
+		return true;
+	}
+	return false;
+}
+
 void GFX::loadBgSprite(void) {
 	if (doBgSpriteFree) {
 		C2D_SpriteSheetFree(bgSprite);
 	}
 
-	timeOutside = 0;
+	timeOutside = 2;	// Default is Nighttime
 
 	const char* bgPath;
 	time_t t = time(0);
 	int hour = localtime(&t)->tm_hour;
+	int minutes = localtime(&t)->tm_min;
 
 	switch (studioBg) {
 		case 0:
@@ -71,19 +88,21 @@ void GFX::loadBgSprite(void) {
 			bgPath = "romfs:/gfx/bg_blue.t3x";
 			break;
 		case 1:
-			if (hour >= 7 && hour < 19) {
+			if (isDaytime(hour, minutes)) {
 				bgPath = "romfs:/gfx/bgDay_loversBell.t3x";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgSunset_loversBell.t3x";
 			} else {
 				bgPath = "romfs:/gfx/bgNight_loversBell.t3x";
-				timeOutside = 2;
 			}
 			break;
 		case 2:
-			if (hour >= 7 && hour < 19) {
+			if (isDaytime(hour, minutes)) {
 				bgPath = "romfs:/gfx/bgDay_bougainville.t3x";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgSunset_bougainville.t3x";
 			} else {
 				bgPath = "romfs:/gfx/bgNight_bougainville.t3x";
-				timeOutside = 2;
 			}
 			break;
 		case 3:
@@ -114,35 +133,39 @@ void GFX::loadBgSprite(void) {
 			bgPath = "romfs:/gfx/bg_cinema.t3x";
 			break;
 		case 12:
-			if (hour >= 7 && hour < 19) {
+			if (isDaytime(hour, minutes)) {
 				bgPath = "romfs:/gfx/bgDay_tropicaBeach_0.t3x";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgSunset_tropicaBeach_0.t3x";
 			} else {
 				bgPath = "romfs:/gfx/bgNight_tropicaBeach.t3x";
-				timeOutside = 2;
 			}
 			break;
 		case 13:
-			if (hour >= 7 && hour < 19) {
+			if (isDaytime(hour, minutes)) {
 				bgPath = "romfs:/gfx/bgDay_primrosePark.t3x";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgSunset_primrosePark.t3x";
 			} else {
 				bgPath = "romfs:/gfx/bgNight_primrosePark.t3x";
-				timeOutside = 2;
 			}
 			break;
 		case 14:
-			if (hour >= 7 && hour < 19) {
+			if (isDaytime(hour, minutes)) {
 				bgPath = "romfs:/gfx/bgDay_cafe3.t3x";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgSunset_cafe3.t3x";
 			} else {
 				bgPath = "romfs:/gfx/bgNight_cafe3.t3x";
-				timeOutside = 2;
 			}
 			break;
 		case 15:
-			if (hour >= 7 && hour < 19) {
+			if (isDaytime(hour, minutes)) {
 				bgPath = "romfs:/gfx/bgDay_mapleCrescent.t3x";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgSunset_mapleCrescent.t3x";
 			} else {
 				bgPath = "romfs:/gfx/bgNight_mapleCrescent.t3x";
-				timeOutside = 2;
 			}
 			break;
 		case 16:
@@ -215,11 +238,10 @@ void GFX::loadBgSprite(void) {
 			bgPath = "romfs:/gfx/bg_cafe2Winter.t3x";
 			break;
 		case 39:
-			if (hour >= 7 && hour < 19) {
+			if (isDaytime(hour, minutes)) {
 				bgPath = "romfs:/gfx/bgDay_exhibitionHall2.t3x";
 			} else {
 				bgPath = "romfs:/gfx/bgNight_exhibitionHall2.t3x";
-				timeOutside = 2;
 			}
 			break;
 		case 40:
@@ -250,11 +272,21 @@ void GFX::loadBgSprite(void) {
 	bgCanAnimate = false;
 
 	// Load animated parts
-	if (studioBg == 12 && timeOutside == 0) {
-		bgFile = fopen("romfs:/gfx/bgDay_tropicaBeach_1.t3x", "rb");
+	if (studioBg == 12 && (timeOutside == 0 || timeOutside == 1)) {
+		if (timeOutside == 0) {
+			bgPath = "romfs:/gfx/bgDay_tropicaBeach_1.t3x";
+		} else {
+			bgPath = "romfs:/gfx/bgSunset_tropicaBeach_1.t3x";
+		}
+		bgFile = fopen(bgPath, "rb");
 		fread((void*)bgSpriteMem[1], 1, 0x200000, bgFile);
 		fclose(bgFile);
-		bgFile = fopen("romfs:/gfx/bgDay_tropicaBeach_2.t3x", "rb");
+		if (timeOutside == 0) {
+			bgPath = "romfs:/gfx/bgDay_tropicaBeach_2.t3x";
+		} else {
+			bgPath = "romfs:/gfx/bgSunset_tropicaBeach_2.t3x";
+		}
+		bgFile = fopen(bgPath, "rb");
 		fread((void*)bgSpriteMem[2], 1, 0x200000, bgFile);
 		fclose(bgFile);
 		//bgAnimationDelay = iFps;
@@ -344,7 +376,10 @@ void GFX::showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects) {
 				case 12:
 				case 13:
 				case 14:
-					if (timeOutside == 2) {
+				case 15:
+					if (timeOutside == 1) {
+						C2D_PlainImageTint(&tint, C2D_Color32(95, 47, 0, 255), 0.1);	// Tint for Sunset
+					} else if (timeOutside == 2) {
 						C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 95, 255), 0.1);	// Tint for Nighttime
 					}
 					break;

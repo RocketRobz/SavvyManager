@@ -34,6 +34,13 @@ void titleScreen::Draw(void) const {
 		musicPlayStarted = true;
 	}
 
+	// Debug the time
+	/*time_t t = time(0);
+	int hour = localtime(&t)->tm_hour;
+	int minutes = localtime(&t)->tm_min;
+	char timeText[16];
+	sprintf(timeText, "%i:%i", hour, minutes);*/
+
 	Gui::ScreenDraw(Top);
 
 	Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
@@ -46,6 +53,7 @@ void titleScreen::Draw(void) const {
 	GFX::DrawSprite(sprites_logo_savvymanager_idx, 56, 58);
 
 	Gui::DrawString(8, (cinemaWide ? 182 : 218)-(shiftBySubPixel ? 0.5f : 0), 0.50, BLACK, this->yearText);
+	//Gui::DrawString(328, (cinemaWide ? 40 : 4)-(shiftBySubPixel ? 0.5f : 0), 0.50, BLACK, timeText);
 	Gui::DrawString(328, (cinemaWide ? 182 : 218)-(shiftBySubPixel ? 0.5f : 0), 0.50, BLACK, verText);
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
