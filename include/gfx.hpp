@@ -23,6 +23,9 @@
 
 typedef u32 Color;
 
+extern bool animateBg;
+extern bool bgCanAnimate;
+
 extern bool shiftBySubPixel;
 
 namespace GFX {
@@ -34,6 +37,7 @@ namespace GFX {
 	bool loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSeason);
 	void loadBgSprite(void);
 	void showBgSprite(int zoomIn);
+	void animateBgSprite(void);
 	void showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects = false);
 	void DrawGameSelSprite(int img, int x, int y, float ScaleX = 1, float ScaleY = 1);
 	void DrawGameShotSprite(int img, int x, int y);

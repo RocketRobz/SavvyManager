@@ -2,14 +2,16 @@
 
 #include <unistd.h>
 
+static char bgSpriteMem[4][0x200000];
+
 static C2D_SpriteSheet sprites;
 static C2D_SpriteSheet gameSelSprites;
 static C2D_SpriteSheet gameShotSprites;
 static C2D_SpriteSheet gameBgSprites;
-static C2D_SpriteSheet bgSprite[4];
+static C2D_SpriteSheet bgSprite;
 static C2D_SpriteSheet chracterSprite;
 static bool doChracterSpriteFree = false;
-static bool doBgSpriteFree[4] = {false};
+static bool doBgSpriteFree = false;
 
 extern int studioBg;
 extern int cinemaWide;
@@ -20,7 +22,8 @@ extern int cursorX;
 extern int cursorY;
 extern int cursorAlpha;
 
-static bool animateBg = false;
+bool animateBg = false;
+bool bgCanAnimate = false;
 static int bgAnimationFrame = 0;
 static int bgAnimationCurrent = 0;
 static int bgAnimationTime = 0;
@@ -45,19 +48,15 @@ Result GFX::unloadSheets() {
 	C2D_SpriteSheetFree(gameSelSprites);
 	C2D_SpriteSheetFree(gameShotSprites);
 	C2D_SpriteSheetFree(gameBgSprites);
-	for (int i = 0; i < 4; i++) {
-		if (doBgSpriteFree[i]) {
-			C2D_SpriteSheetFree(bgSprite[i]);
-		}
+	if (doBgSpriteFree) {
+		C2D_SpriteSheetFree(bgSprite);
 	}
 	return 0;
 }
 
 void GFX::loadBgSprite(void) {
-	for (int i = 0; i < 4; i++) {
-		if (doBgSpriteFree[i]) {
-			C2D_SpriteSheetFree(bgSprite[i]);
-		}
+	if (doBgSpriteFree) {
+		C2D_SpriteSheetFree(bgSprite);
 	}
 
 	timeOutside = 0;
@@ -239,29 +238,32 @@ void GFX::loadBgSprite(void) {
 			bgPath = "romfs:/gfx/bg_beautician1.t3x";
 			break;
 	}
-	bgSprite[0]		= C2D_SpriteSheetLoad(bgPath);
-	doBgSpriteFree[0] = true;
-	doBgSpriteFree[1] = false;
-	doBgSpriteFree[2] = false;
-	doBgSpriteFree[3] = false;
+	FILE* bgFile = fopen(bgPath, "rb");
+	fread((void*)bgSpriteMem[0], 1, 0x200000, bgFile);
+	fclose(bgFile);
+
+	bgSprite		= C2D_SpriteSheetLoadFromMem(bgSpriteMem[0], 0x200000);
+	doBgSpriteFree = true;
 	bgAnimationFrame = 0;
 	bgAnimationCurrent = 0;
 	bgAnimationTime = 0;
-	animateBg = false;
+	bgCanAnimate = false;
 
 	// Load animated parts
 	if (studioBg == 12 && timeOutside == 0) {
-		bgSprite[1]	= C2D_SpriteSheetLoad("romfs:/gfx/bgDay_tropicaBeach_1.t3x");
-		bgSprite[2]	= C2D_SpriteSheetLoad("romfs:/gfx/bgDay_tropicaBeach_2.t3x");
-		doBgSpriteFree[1] = true;
-		doBgSpriteFree[2] = true;
+		bgFile = fopen("romfs:/gfx/bgDay_tropicaBeach_1.t3x", "rb");
+		fread((void*)bgSpriteMem[1], 1, 0x200000, bgFile);
+		fclose(bgFile);
+		bgFile = fopen("romfs:/gfx/bgDay_tropicaBeach_2.t3x", "rb");
+		fread((void*)bgSpriteMem[2], 1, 0x200000, bgFile);
+		fclose(bgFile);
 		//bgAnimationDelay = iFps;
 		bgAnimation[0] = 0;
 		bgAnimation[1] = 1;
 		bgAnimation[2] = 2;
 		bgAnimation[3] = 1;
 		bgAnimation[4] = 100;
-		animateBg = true;
+		bgCanAnimate = true;
 	}
 }
 
@@ -290,25 +292,29 @@ void GFX::showBgSprite(int zoomIn) {
 	int yPos = -(240*zoomIn);
 	if (cinemaWide) yPos -= 16;
 
-	C2D_Image image = C2D_SpriteSheetGetImage(bgSprite[bgAnimationFrame], 0);
+	C2D_Image image = C2D_SpriteSheetGetImage(bgSprite, 0);
 	if (!gfxIsWide()) {
 		C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
 	}
 
 	C2D_DrawImageAt(image, 0, yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, NULL, 0.5, 1);
+}
 
-	if (animateBg) {
-		// Animate background
-		bgAnimationTime++;
-		if (bgAnimationTime >= iFps) {
-			bgAnimationCurrent++;
-			if (bgAnimation[bgAnimationCurrent] == 100) {
-				// Reset animation
-				bgAnimationCurrent = 0;
-			}
-			bgAnimationFrame = bgAnimation[bgAnimationCurrent];
-			bgAnimationTime = 0;
+void GFX::animateBgSprite(void) {
+	if (!animateBg) return;
+
+	// Animate background
+	bgAnimationTime++;
+	if (bgAnimationTime >= iFps) {
+		bgAnimationCurrent++;
+		if (bgAnimation[bgAnimationCurrent] == 100) {
+			// Reset animation
+			bgAnimationCurrent = 0;
 		}
+		bgAnimationFrame = bgAnimation[bgAnimationCurrent];
+		C2D_SpriteSheetFree(bgSprite);
+		bgSprite = C2D_SpriteSheetLoadFromMem(bgSpriteMem[bgAnimationFrame], 0x200000);
+		bgAnimationTime = 0;
 	}
 }
 

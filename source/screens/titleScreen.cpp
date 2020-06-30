@@ -26,6 +26,8 @@ void titleScreen::drawCannotEditMsg(void) const {
 }
 
 void titleScreen::Draw(void) const {
+	animateBg = false;
+
 	if (!musicPlayStarted) {
 		extern void Play_Music();
 		Play_Music();

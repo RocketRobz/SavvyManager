@@ -194,6 +194,8 @@ void PhotoStudio::loadChrImage(bool Robz) {
 
 
 void PhotoStudio::Draw(void) const {
+	animateBg = bgCanAnimate;
+
 	Gui::ScreenDraw(Top);
 
 	if (this->displayStudioBg) {

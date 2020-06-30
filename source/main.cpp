@@ -386,6 +386,7 @@ int main()
 		Gui::clearTextBufs();
 		Gui::DrawScreen();
 		C3D_FrameEnd(0);
+		GFX::animateBgSprite();
 		if (exiting) {
 			if (!fadeout)	break;
 		}
