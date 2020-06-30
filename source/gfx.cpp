@@ -326,8 +326,6 @@ void GFX::unloadBgSprite() {
 
 	animateBg = false;
 	bgCanAnimate = false;
-	studioBg = 0;
-	timeOutside = 0;
 
 	C2D_SpriteSheetFree(bgSprite);
 	bgSpriteLoaded = false;
