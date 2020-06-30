@@ -323,6 +323,12 @@ void GFX::loadBgSprite(void) {
 
 void GFX::unloadBgSprite() {
 	if (!bgSpriteLoaded) return;
+
+	animateBg = false;
+	bgCanAnimate = false;
+	studioBg = 0;
+	timeOutside = 0;
+
 	C2D_SpriteSheetFree(bgSprite);
 	bgSpriteLoaded = false;
 }
