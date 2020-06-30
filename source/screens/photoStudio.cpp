@@ -230,12 +230,7 @@ void PhotoStudio::Draw(void) const {
 		return;
 	}
 	Gui::ScreenDraw(Bottom);
-	Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
-	for(int w = 0; w < 7; w++) {
-		for(int h = 0; h < 3; h++) {
-			GFX::DrawSprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
-		}
-	}
+	GFX::DrawSprite(sprites_photo_bg_idx, 0, 0);
 
 	this->cursorX = 248;
 	if (this->subScreenMode == 2) {
