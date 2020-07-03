@@ -279,6 +279,15 @@ void GFX::loadBgSprite(void) {
 		case 44:
 			bgPath = "romfs:/gfx/bg_beautician1.t3x";
 			break;
+		case 45:
+			bgPath = "romfs:/gfx/bg_lifestyleShop2.t3x";
+			break;
+		case 46:
+			bgPath = "romfs:/gfx/bg_liveMusicClub2.t3x";
+			break;
+		case 47:
+			bgPath = "romfs:/gfx/bg_roseGarden2.t3x";
+			break;
 	}
 	FILE* bgFile = fopen(bgPath, "rb");
 	fread((void*)bgSpriteMem[0], 1, 0x200000, bgFile);
@@ -404,7 +413,10 @@ void GFX::showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects) {
 				default:
 					break;
 				case 7:
-					C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 95, 255), 0.1);	// Tint for Live Music Club
+					C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 95, 255), 0.1);	// Tint for Live Music Club 4
+					break;
+				case 46:
+					C2D_PlainImageTint(&tint, C2D_Color32(31, 31, 95, 255), 0.1);	// Tint for Live Music Club 2
 					break;
 				case 11:
 					C2D_PlainImageTint(&tint, C2D_Color32(191, 63, 87, 255), 0.1);	// Tint for Cinema

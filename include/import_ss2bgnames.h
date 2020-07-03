@@ -24,6 +24,9 @@ const char* import_ss2BgNames[] {
 	"Exhibition Hall",
 	"Beautician",
 	"After Party",
+	"Lifestyle Shop",
+	"Live Music Club",
+	"Rose Garden",
 };
 
 int import_ss2BgNums[] {
@@ -52,4 +55,7 @@ int import_ss2BgNums[] {
 	39,
 	40,
 	41,
+	45,
+	46,
+	47,
 };
