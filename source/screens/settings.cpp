@@ -1,4 +1,4 @@
-#include "titleScreen.hpp"
+#include "gameSelect.hpp"
 #include "settings.hpp"
 #include "screenvars.h"
 
@@ -135,6 +135,6 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 
 	if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 		sndBack();
-		Gui::setScreen(std::make_unique<titleScreen>(), true);
+		Gui::setScreen(std::make_unique<GameSelect>(), true);
 	}
 }

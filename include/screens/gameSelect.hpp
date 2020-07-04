@@ -15,6 +15,9 @@ private:
 	int messageNo = 0;
 	bool showMessage = false;
 	int cursorAlpha = 0;
+	const char* settingsText = "SELECT: Settings";
+	const char* returnToHomeText = ": Return to HOME Menu";
+	const char* exitText = "START: Exit";
 };
 
 #endif

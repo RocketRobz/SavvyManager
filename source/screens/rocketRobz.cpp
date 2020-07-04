@@ -2,6 +2,8 @@
 #include "rocketRobz.hpp"
 #include "screenvars.h"
 
+extern char verText[32];
+
 static int subMode = 0;
 static int prevSubMode = -1;
 extern int delay;
@@ -24,8 +26,10 @@ void RocketRobz::Draw(void) const {
 			GFX::DrawSprite(sprites_logo_rocketrobz_idx, 0, 0, 0.5, 1, (gfxIsWide() ? GPU_LINEAR : GPU_NEAREST));
 		}
 		Gui::Draw_Rect(0, 238, 400, 2, C2D_Color32(0, 0, 0, 255));	// Hide line from other texture(s)
+		Gui::DrawString(8, (cinemaWide ? 182 : 218)-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, this->yearText);
 	} else {
 		GFX::DrawSprite(sprites_logo_savvymanager_idx, 56, 58);
+		Gui::DrawString(328, (cinemaWide ? 182 : 218)-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, verText);
 	}
 	if (delay > iFps*6 && rr_fadeAlpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(0, 0, 0, rr_fadeAlpha)); // Fade in/out effect
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect

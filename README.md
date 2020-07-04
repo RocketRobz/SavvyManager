@@ -21,8 +21,6 @@ For Style Savvy's 10th Anniversary, a save editor is here!
 * You can also export your current character, in case if you want to restore/import it later.
 * (3rd and 4th games) Import/Export brand emblems for custom designed outfits.
 * Apply music packs to Girls Mode 2/Style Savvy: Trendsetters/New Style Boutique. (Requires game patching enabled in Luma.)
-* With Photo Studio, you can take pictures of your favorite characters, and even Robz himself, in any location possible!     
-Works with no existing save data.
 * Coming soon: Change attributes of your character (such as gender, skin color, pose set, height, etc.).
 * Coming soon (GM4/SS4/NSB3): Change bow placement on your character, if a bow is being worn.
 
@@ -35,7 +33,6 @@ As such features are not normally available in-game, you may risk a possible ban
 # Credits
 * devkitPro: libctru, citro2d/3d, nds-hb-menu's file/folder browsing code
 * Universal Team: Universal Core
-* joel16: Screenshot code from [3DShell](https://github.com/joel16/3DShell)
 * Pixel Perfect: [Music icon](https://www.flaticon.com/free-icon/musical-note_727218)
 * Mike Dexter: Original MIDI sequence of the Sega CD Model 2 BIOS music
 * rog9001: His New Style Boutique 3 Save Editor tool has motivated me to work on this further.

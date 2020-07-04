@@ -1,8 +1,11 @@
 #include "exiting.hpp"
 #include "gameSelect.hpp"
 #include "screenvars.h"
-#include "titleScreen.hpp"
+#include "settings.hpp"
 #include "whatToDo.hpp"
+
+extern u64 appID;
+extern bool exiting;
 
 extern int ss1Logo;
 extern int ss2Screenshot;
@@ -130,11 +133,15 @@ void GameSelect::Draw(void) const {
 	Gui::DrawString(8, 8, 0.50, BLACK, "Select a game to manage its save data.");
 	Gui::DrawString(8, 112, 0.55, BLACK, "<");
 	Gui::DrawString(304, 112, 0.55, BLACK, ">");
-
-	GFX::DrawSprite(sprites_button_shadow_idx, 5, 199);
-	GFX::DrawSprite(sprites_button_red_idx, 5, 195);
-	GFX::DrawSprite(sprites_arrow_back_idx, 19, 195);
-	GFX::DrawSprite(sprites_button_b_idx, 44, 218);
+	Gui::DrawStringCentered(0, 202, 0.50, BLACK, this->settingsText);
+	if ((u32)appID == 0x3697300) {
+		const int home_width = 144+16;
+		const int home_x = (320-home_width)/2;
+		GFX::DrawSprite(sprites_homeicon_idx, home_x, 218);
+		Gui::DrawString(home_x+16, 218, 0.50, BLACK, this->returnToHomeText); // Draw HOME icon
+	} else {
+		Gui::DrawStringCentered(0, 218, 0.50, BLACK, this->exitText);
+	}
 
 	if (this->showMessage) {
 		this->drawCannotEditMsg();
@@ -184,9 +191,15 @@ void GameSelect::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		 }
 		}
 
-		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
+		if (hDown & KEY_START) {
 			sndBack();
-			Gui::setScreen(std::make_unique<titleScreen>(), true);
+			exiting = true;
+			fadecolor = 0;
+			Gui::setScreen(std::make_unique<Exiting>(), true);
+		}
+		if (hDown & KEY_SELECT) {
+			sndSelect();
+			Gui::setScreen(std::make_unique<Settings>(), true);
 		}
 	}
 }

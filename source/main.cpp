@@ -9,12 +9,11 @@
 #include "common.hpp"
 #include "screenMode.h"
 #include "dumpdsp.h"
-#include "titleScreen.hpp"
+#include "gameSelect.hpp"
 #include "inifile.h"
 #include "rocketRobz.hpp"
 #include "savedata.h"
 #include "screen.hpp"
-#include "screenshot.h"
 #include "sound.h"
 #include "thread.h"
 
@@ -386,7 +385,6 @@ int main()
 		Gui::clearTextBufs();
 		Gui::DrawScreen();
 		C3D_FrameEnd(0);
-		GFX::animateBgSprite();
 		if (exiting) {
 			if (!fadeout)	break;
 		}
@@ -394,13 +392,9 @@ int main()
 		if (isInit) {
 			delay++;
 			if (delay > iFps*10) {
-				Gui::setScreen(std::make_unique<titleScreen>(), true); // Set after delay to the title screen.
+				Gui::setScreen(std::make_unique<GameSelect>(), true); // Set after delay to the game select screen.
 				isInit = false;
 			}
-		}
-
-		if (hDown & KEY_Y) {
-			Screenshot_Capture();
 		}
 
 		// Scroll background
