@@ -114,14 +114,23 @@ void GFX::DrawGameBgSprite(int img, int x, int y, float ScaleX, float ScaleY) {
 	C2D_DrawImageAt(C2D_SpriteSheetGetImage(gameBgSprites, img), x, y, 0.5f, NULL, ScaleX, ScaleY);
 }
 
-void GFX::DrawSprite(int img, int x, int y, float ScaleX, float ScaleY, GPU_TEXTURE_FILTER_PARAM filter) {
+void GFX::DrawSprite(int img, int x, int y, float ScaleX, float ScaleY) {
+	float yPos = y;
+	if (shiftBySubPixel && img != sprites_logo_savvymanager_idx) {
+		yPos -= 0.5f;
+	}
+
+	C2D_DrawImageAt(C2D_SpriteSheetGetImage(sprites, img), x, yPos, 0.5f, NULL, ScaleX, ScaleY);
+}
+
+void GFX::DrawSpriteLinear(int img, int x, int y, float ScaleX, float ScaleY) {
 	float yPos = y;
 	if (shiftBySubPixel && img != sprites_logo_savvymanager_idx) {
 		yPos -= 0.5f;
 	}
 
 	C2D_Image image = C2D_SpriteSheetGetImage(sprites, img);
-	C3D_TexSetFilter(image.tex, filter, filter);
+	C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
 
 	C2D_DrawImageAt(image, x, yPos, 0.5f, NULL, ScaleX, ScaleY);
 }
