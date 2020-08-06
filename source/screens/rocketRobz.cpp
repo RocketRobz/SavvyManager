@@ -29,6 +29,12 @@ void RocketRobz::Draw(void) const {
 		Gui::DrawString(8, (cinemaWide ? 182 : 218)-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, this->yearText);
 	} else {
 		GFX::DrawSprite(sprites_logo_savvymanager_idx, 56, 58);
+		if (gfxIsWide()) {
+			// Replicate dot by dot image
+			for (int i = 32; i < 400-32; i++) {
+				Gui::Draw_Rect(i, 0, 0.5, 240, C2D_Color32(0, 0, 0, 127));
+			}
+		}
 		Gui::DrawString(328, (cinemaWide ? 182 : 218)-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, verText);
 	}
 	if (delay > iFps*6 && rr_fadeAlpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(0, 0, 0, rr_fadeAlpha)); // Fade in/out effect
