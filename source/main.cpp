@@ -45,8 +45,6 @@ bool musicPlayStarted = false;
 static bool musicPlaying = false;
 static bool musicLoopPlaying = false;
 static int musicLoopDelay = 0;
-static bool screenoff_ran = false;
-static bool screenon_ran = true;
 
 void loadSettings(void) {
 	CIniFile settingsini(settingsIni);
@@ -108,30 +106,6 @@ void sndHighlight(void) {
 	sfx_highlight->play();
 }
 
-void screenoff(void)
-{
-	screenon_ran = false;
-	if(!screenoff_ran) {
-		if (R_SUCCEEDED(gspLcdInit())) {
-			GSPLCD_PowerOffBacklight(GSPLCD_SCREEN_BOTH);
-			gspLcdExit();
-		}
-		screenoff_ran = true;
-	}
-}
-
-void screenon(void)
-{
-	screenoff_ran = false;
-	if(!screenon_ran) {
-		if (R_SUCCEEDED(gspLcdInit())) {
-			GSPLCD_PowerOnBacklight(GSPLCD_SCREEN_BOTH);
-			gspLcdExit();
-		}
-		screenon_ran = true;
-	}
-}
-
 u8 sysRegion = CFG_REGION_USA;
 u64 appID = 0;
 int orgHighlightedGame = 1;
@@ -184,7 +158,6 @@ void controlThread(void) {
 
 int main()
 {
-	screenoff();
 	amInit();
 	romfsInit();
 
@@ -262,7 +235,6 @@ int main()
 		Gui::ScreenDraw(Bottom);
 		Gui::DrawString(12, 16, 0.5f, WHITE, "Dumping DSP firm...");
 		C3D_FrameEnd(0);
-		screenon();
 		dumpDsp();
 		if ( access( "sdmc:/3ds/dspfirm.cdc", F_OK ) != -1 ) {
 			ndspInit();
@@ -356,8 +328,6 @@ int main()
 	sprintf(verText, "Ver. %i.%i.%i", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
 
 	C3D_FrameRate(iFps);
-
-	screenon();
 
 	Gui::setScreen(std::make_unique<RocketRobz>(), false); // Set screen to RocketRobz's screen.
 	svcCreateEvent(&threadRequest,(ResetType)0);
