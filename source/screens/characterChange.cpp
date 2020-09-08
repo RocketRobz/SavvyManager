@@ -16,7 +16,7 @@
 #include <unistd.h>
 
 CharacterChange::CharacterChange() {
-	this->getList();
+	getList();
 }
 
 void CharacterChange::getList() {
@@ -44,7 +44,7 @@ void CharacterChange::getList() {
 		readSS2Save();
 	}
 
-	this->getMaxChars();
+	getMaxChars();
 }
 
 void CharacterChange::getMaxChars() {
@@ -111,6 +111,34 @@ const char* CharacterChange::import_characterName(void) const {
 			return import_ss3CharacterNames[importCharacterList_cursorPosition];
 		case 3:
 			return import_ss4CharacterNames[importCharacterList_cursorPosition];
+	}
+	return "null";
+}
+
+const char* CharacterChange::import_characterPreviewFileName(void) const {
+	switch (import_highlightedGame) {
+		case 2:
+		switch (seasonNo) {
+			case 0:
+				return ss3CharacterPreviewFileNamesSpring[importCharacterList_cursorPosition];
+			case 1:
+				return ss3CharacterPreviewFileNamesSummer[importCharacterList_cursorPosition];
+			case 2:
+				return ss3CharacterPreviewFileNamesFall[importCharacterList_cursorPosition];
+			case 3:
+				return ss3CharacterPreviewFileNamesWinter[importCharacterList_cursorPosition];
+		}
+		case 3:
+		switch (seasonNo) {
+			case 0:
+				return ss4CharacterPreviewFileNamesSpring[importCharacterList_cursorPosition];
+			case 1:
+				return ss4CharacterPreviewFileNamesSummer[importCharacterList_cursorPosition];
+			case 2:
+				return ss4CharacterPreviewFileNamesFall[importCharacterList_cursorPosition];
+			case 3:
+				return ss4CharacterPreviewFileNamesWinter[importCharacterList_cursorPosition];
+		}
 	}
 	return "null";
 }
@@ -238,37 +266,40 @@ void CharacterChange::drawMsg(void) const {
 }
 
 void CharacterChange::loadChrImage(bool Robz) {
-	this->previewCharacter = false;
+	previewCharacter = false;
 	gspWaitForVBlank();
 	if (import_highlightedGame == 4) {
 		if (numberOfExportedCharacters > 0) {
-			sprintf(this->chrFilePath, "sdmc:/3ds/SavvyManager/SS%i/characters/previews/%s.t3x", highlightedGame+1, getExportedCharacterName(this->importCharacterList_cursorPosition));	// All Seasons
+			sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS%i/characters/previews/%s.t3x", highlightedGame+1, getExportedCharacterName(importCharacterList_cursorPosition));	// All Seasons
 		} else {
-			sprintf(this->chrFilePath, "romfs:/gfx/null.t3x");	// All Seasons
+			sprintf(chrFilePath, "romfs:/gfx/null.t3x");	// All Seasons
 		}
-		this->previewCharacterFound = GFX::loadCharSprite(this->chrFilePath, this->chrFilePath);
+		previewCharacterFound = GFX::loadCharSprite(chrFilePath, chrFilePath);
+	} else if (import_highlightedGame >= 2) {
+		sprintf(chrFilePath, "romfs:/gfx/ss%i_%s.t3x", highlightedGame+1, import_characterPreviewFileName());
+		previewCharacterFound = GFX::loadCharSprite(chrFilePath, chrFilePath);
 	} else {
-		sprintf(this->chrFilePath, "romfs:/gfx/ss%i_%s.t3x", highlightedGame+1, (Robz ? "Robz" : import_characterName()));				// All Seasons
-		sprintf(this->chrFilePath2, "romfs:/gfx/ss%i_%s%i.t3x", highlightedGame+1, (Robz ? "Robz" : import_characterName()), this->seasonNo);	// One Season
-		this->previewCharacterFound = GFX::loadCharSprite(this->chrFilePath, this->chrFilePath2);
+		sprintf(chrFilePath, "romfs:/gfx/ss%i_%s.t3x", highlightedGame+1, (Robz ? "Robz" : import_characterName()));				// All Seasons
+		sprintf(chrFilePath2, "romfs:/gfx/ss%i_%s%i.t3x", highlightedGame+1, (Robz ? "Robz" : import_characterName()), seasonNo);	// One Season
+		previewCharacterFound = GFX::loadCharSprite(chrFilePath, chrFilePath2);
 	}
-	this->previewCharacter = true;
+	previewCharacter = true;
 }
 
 void CharacterChange::addEveryone(void) {
 //	if (highlightedGame != 2) return;
 	
 	for (int i = 0; i < 49; i++) {
-		sprintf(this->chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", import_everyCharacterNames[i]);
-		if (access(this->chrFilePath, F_OK) != 0) {
-			sprintf(this->chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", this->seasonName(), import_everyCharacterNames[i]);
+		sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", import_everyCharacterNames[i]);
+		if (access(chrFilePath, F_OK) != 0) {
+			sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), import_everyCharacterNames[i]);
 		}
 		readSS3CharacterFile(0x0BB9+i, chrFilePath);
-		if (this->removeBags) {
+		if (removeBags) {
 			removeSS3CharacterBag(0x0BB9+i);
 		}
-		sprintf(this->chrFilePath, "romfs:/character/Fashion Forward/Profiles/%s.cprf", sysRegion==CFG_REGION_EUR||sysRegion==CFG_REGION_AUS ? import_everyCharacterProfileNamesEUR[i] : import_everyCharacterNames[i]);
-		readSS3ProfileFile(0x0BB9+i, this->chrFilePath);
+		sprintf(chrFilePath, "romfs:/character/Fashion Forward/Profiles/%s.cprf", sysRegion==CFG_REGION_EUR||sysRegion==CFG_REGION_AUS ? import_everyCharacterProfileNamesEUR[i] : import_everyCharacterNames[i]);
+		readSS3ProfileFile(0x0BB9+i, chrFilePath);
 		toggleSS3Character(0x0BB9+i, true);
 	}
 	writeSS3Save();
@@ -287,21 +318,21 @@ void CharacterChange::Draw(void) const {
 			GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
 		}
 	}
-	if (this->previewCharacter) {
-		if (this->previewCharacterFound) {
-			GFX::showCharSprite(this->zoomIn, this->charFadeAlpha);
+	if (previewCharacter) {
+		if (previewCharacterFound) {
+			GFX::showCharSprite(zoomIn, charFadeAlpha);
 		} else {
-			Gui::DrawStringCentered(0, 104, 0.65, BLACK, (this->import_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
+			Gui::DrawStringCentered(0, 104, 0.65, BLACK, (import_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
 		}
 	}
 
-	this->preview();
+	preview();
 
-	if (this->showMessage && this->messageNo == 4) {
-		Gui::DrawString(8, (cinemaWide ? 174 : 210), 0.50, BLACK, this->removeBags ? " Keep bags" : " Remove bags");
+	if (showMessage && messageNo == 4) {
+		Gui::DrawString(8, (cinemaWide ? 174 : 210), 0.50, BLACK, removeBags ? " Keep bags" : " Remove bags");
 		// Selected season
 		Gui::DrawString(160, (cinemaWide ? 174 : 210), 0.65, BLACK, "L");
-		Gui::DrawStringCentered(0, (cinemaWide ? 174 : 210), 0.50, BLACK, this->seasonName());
+		Gui::DrawStringCentered(0, (cinemaWide ? 174 : 210), 0.50, BLACK, seasonName());
 		Gui::DrawString(232, (cinemaWide ? 174 : 210), 0.65, BLACK, "R");
 	}
 
@@ -324,12 +355,12 @@ void CharacterChange::Draw(void) const {
 		}
 	}
 
-	this->cursorX = 248;
-	if (this->subScreenMode == 4) {
-		this->cursorY = 64+(48*this->importCharacterList_cursorPositionOnScreen);
+	cursorX = 248;
+	if (subScreenMode == 4) {
+		cursorY = 64+(48*importCharacterList_cursorPositionOnScreen);
 
 		// Game name
-		switch (this->import_highlightedGame) {
+		switch (import_highlightedGame) {
 			case 4:
 				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Your character files");
 				break;
@@ -352,7 +383,7 @@ void CharacterChange::Draw(void) const {
 		if (import_highlightedGame != 4) {
 			// Selected season
 			Gui::DrawString(120, 208, 0.65, BLACK, "L");
-			Gui::DrawStringCentered(0, 210, 0.50, BLACK, this->seasonName());
+			Gui::DrawStringCentered(0, 210, 0.50, BLACK, seasonName());
 			Gui::DrawString(192, 208, 0.65, BLACK, "R");
 		}
 
@@ -385,7 +416,7 @@ void CharacterChange::Draw(void) const {
 		}
 	  }
 	} else if (subScreenMode == 1) {
-		this->cursorY = 64+(48*characterChangeMenu_cursorPositionOnScreen);
+		cursorY = 64+(48*characterChangeMenu_cursorPositionOnScreen);
 
 		Gui::DrawString(8, 8, 0.50, BLACK, characterName(true));
 
@@ -409,7 +440,7 @@ void CharacterChange::Draw(void) const {
 			Gui::DrawString(32, i2, 0.65, BLACK, "Export character");
 		}
 	} else {
-		this->cursorY = 64+(48*characterList_cursorPositionOnScreen);
+		cursorY = 64+(48*characterList_cursorPositionOnScreen);
 
 		Gui::DrawString(8, 8, 0.50, BLACK, "Select the character you want to change.");
 
@@ -452,7 +483,7 @@ void CharacterChange::Draw(void) const {
 	GFX::DrawSprite(sprites_arrow_back_idx, 19, 195);
 	GFX::DrawSprite(sprites_button_b_idx, 44, 218);
 
-	GFX::drawCursor(this->cursorX, this->cursorY);
+	GFX::drawCursor(cursorX, cursorY);
 
 	if (showMessage) {
 		drawMsg();
@@ -462,21 +493,21 @@ void CharacterChange::Draw(void) const {
 }
 
 void CharacterChange::preview() const {
-	if (this->previewCharacter) {
+	if (previewCharacter) {
 		switch (iFps) {
 			default:
-				this->charFadeAlpha += 20;
+				charFadeAlpha += 20;
 				break;
 			case 30:
-				this->charFadeAlpha += 40;
+				charFadeAlpha += 40;
 				break;
 			case 24:
-				this->charFadeAlpha += 55;
+				charFadeAlpha += 55;
 				break;
 		}
-		if (this->charFadeAlpha > 255) this->charFadeAlpha = 255;
+		if (charFadeAlpha > 255) charFadeAlpha = 255;
 	} else {
-		this->charFadeAlpha = 0;
+		charFadeAlpha = 0;
 	}
 }
 
@@ -484,125 +515,125 @@ void CharacterChange::preview() const {
 
 void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 	if (hDown & KEY_CPAD_UP) {
-		this->zoomIn++;
-		if (this->zoomIn > 2) this->zoomIn = 2;
+		zoomIn++;
+		if (zoomIn > 2) zoomIn = 2;
 	}
 	
 	if (hDown & KEY_CPAD_DOWN) {
-		this->zoomIn--;
-		if (this->zoomIn < 0) this->zoomIn = 0;
+		zoomIn--;
+		if (zoomIn < 0) zoomIn = 0;
 	}
 
-	if (this->showMessage) {
-		if (this->messageNo == 4) {
+	if (showMessage) {
+		if (messageNo == 4) {
 			if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 176 && touch.px < 176+90 && touch.py >= 188 && touch.py < 188+47)) {
 				sndSelect();
-				this->addEveryone();
-				this->messageNo = 5;
+				addEveryone();
+				messageNo = 5;
 			}
 
 			if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touch.px >= 52 && touch.px < 52+90 && touch.py >= 188 && touch.py < 188+47)) {
 				sndBack();
-				this->showMessage = false;
+				showMessage = false;
 			}
 
 			if (hDown & KEY_Y) {
 				sndHighlight();
-				this->removeBags = !this->removeBags;
+				removeBags = !removeBags;
 			}
 
 			if ((hDown & KEY_L) || (hDown & KEY_ZL)) {
 				sndHighlight();
-				this->seasonNo--;
-				if (this->seasonNo < 0) this->seasonNo = 3;
+				seasonNo--;
+				if (seasonNo < 0) seasonNo = 3;
 			}
 
 			if ((hDown & KEY_R) || (hDown & KEY_ZR)) {
 				sndHighlight();
-				this->seasonNo++;
-				if (this->seasonNo > 3) this->seasonNo = 0;
+				seasonNo++;
+				if (seasonNo > 3) seasonNo = 0;
 			}
 		} else {
 			if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
 				sndSelect();
-				if (this->messageNo == 5) {
-					this->messageNo = 1;
-					sprintf(this->chararacterImported, "Characters imported successfully.");
+				if (messageNo == 5) {
+					messageNo = 1;
+					sprintf(chararacterImported, "Characters imported successfully.");
 				} else {
-					if (this->subScreenMode == 1) {
-						this->previewCharacter = false;
+					if (subScreenMode == 1) {
+						previewCharacter = false;
 					}
-					this->showMessage = false;
+					showMessage = false;
 				}
 			}
 		}
-	} else if (this->subScreenMode == 4) {
+	} else if (subScreenMode == 4) {
 		bool robzAction = false;
 		if (hDown) {
-			this->cheatKeys[cheatKeyPosition] = hDown;
-			this->cheatKeyPosition++;
+			cheatKeys[cheatKeyPosition] = hDown;
+			cheatKeyPosition++;
 		}
-		robzAction =  ((this->cheatKeys[0] & KEY_DUP)
-					&& (this->cheatKeys[1] & KEY_DUP)
-					&& (this->cheatKeys[2] & KEY_DDOWN)
-					&& (this->cheatKeys[3] & KEY_DDOWN)
-					&& (this->cheatKeys[4] & KEY_DLEFT)
-					&& (this->cheatKeys[5] & KEY_DRIGHT)
-					&& (this->cheatKeys[6] & KEY_DLEFT)
-					&& (this->cheatKeys[7] & KEY_DRIGHT)
-					&& (this->cheatKeys[8] & KEY_B)
-					&& (this->cheatKeys[9] & KEY_A));
-		if (this->cheatKeyPosition==10
-		|| ((this->cheatKeys[0] != 0) && !(this->cheatKeys[0] & KEY_DUP))
-		|| ((this->cheatKeys[1] != 0) && !(this->cheatKeys[1] & KEY_DUP))
-		|| ((this->cheatKeys[2] != 0) && !(this->cheatKeys[2] & KEY_DDOWN))
-		|| ((this->cheatKeys[3] != 0) && !(this->cheatKeys[3] & KEY_DDOWN))
-		|| ((this->cheatKeys[4] != 0) && !(this->cheatKeys[4] & KEY_DLEFT))
-		|| ((this->cheatKeys[5] != 0) && !(this->cheatKeys[5] & KEY_DRIGHT))
-		|| ((this->cheatKeys[6] != 0) && !(this->cheatKeys[6] & KEY_DLEFT))
-		|| ((this->cheatKeys[7] != 0) && !(this->cheatKeys[7] & KEY_DRIGHT))
-		|| ((this->cheatKeys[8] != 0) && !(this->cheatKeys[8] & KEY_B))
-		|| ((this->cheatKeys[9] != 0) && !(this->cheatKeys[9] & KEY_A))) {
+		robzAction =  ((cheatKeys[0] & KEY_DUP)
+					&& (cheatKeys[1] & KEY_DUP)
+					&& (cheatKeys[2] & KEY_DDOWN)
+					&& (cheatKeys[3] & KEY_DDOWN)
+					&& (cheatKeys[4] & KEY_DLEFT)
+					&& (cheatKeys[5] & KEY_DRIGHT)
+					&& (cheatKeys[6] & KEY_DLEFT)
+					&& (cheatKeys[7] & KEY_DRIGHT)
+					&& (cheatKeys[8] & KEY_B)
+					&& (cheatKeys[9] & KEY_A));
+		if (cheatKeyPosition==10
+		|| ((cheatKeys[0] != 0) && !(cheatKeys[0] & KEY_DUP))
+		|| ((cheatKeys[1] != 0) && !(cheatKeys[1] & KEY_DUP))
+		|| ((cheatKeys[2] != 0) && !(cheatKeys[2] & KEY_DDOWN))
+		|| ((cheatKeys[3] != 0) && !(cheatKeys[3] & KEY_DDOWN))
+		|| ((cheatKeys[4] != 0) && !(cheatKeys[4] & KEY_DLEFT))
+		|| ((cheatKeys[5] != 0) && !(cheatKeys[5] & KEY_DRIGHT))
+		|| ((cheatKeys[6] != 0) && !(cheatKeys[6] & KEY_DLEFT))
+		|| ((cheatKeys[7] != 0) && !(cheatKeys[7] & KEY_DRIGHT))
+		|| ((cheatKeys[8] != 0) && !(cheatKeys[8] & KEY_B))
+		|| ((cheatKeys[9] != 0) && !(cheatKeys[9] & KEY_A))) {
 			for (int i= 0; i < 10; i++) {
-				this->cheatKeys[i] = 0;
+				cheatKeys[i] = 0;
 			}
-			this->cheatKeyPosition = 0;
+			cheatKeyPosition = 0;
 		}
 		if (showCursor) {
 			if (hDown & KEY_DUP) {
 				sndHighlight();
-				this->importCharacterList_cursorPosition--;
-				this->importCharacterList_cursorPositionOnScreen--;
-				if (this->importCharacterList_cursorPosition < 0) {
-					this->importCharacterList_cursorPosition = 0;
-					this->import_characterShownFirst = 0;
-				} else if (this->importCharacterList_cursorPosition < this->import_characterShownFirst) {
-					this->import_characterShownFirst--;
+				importCharacterList_cursorPosition--;
+				importCharacterList_cursorPositionOnScreen--;
+				if (importCharacterList_cursorPosition < 0) {
+					importCharacterList_cursorPosition = 0;
+					import_characterShownFirst = 0;
+				} else if (importCharacterList_cursorPosition < import_characterShownFirst) {
+					import_characterShownFirst--;
 				}
-				if (this->importCharacterList_cursorPositionOnScreen < 0) {
-					this->importCharacterList_cursorPositionOnScreen = 0;
+				if (importCharacterList_cursorPositionOnScreen < 0) {
+					importCharacterList_cursorPositionOnScreen = 0;
 				}
-				this->loadChrImage(false);
+				loadChrImage(false);
 			}
 
 			if (hDown & KEY_DDOWN) {
 				sndHighlight();
-				this->importCharacterList_cursorPosition++;
-				this->importCharacterList_cursorPositionOnScreen++;
-				if (this->importCharacterList_cursorPosition > this->import_totalCharacters) {
-					this->importCharacterList_cursorPosition = this->import_totalCharacters;
-					this->import_characterShownFirst = this->import_totalCharacters-2;
-					if (this->import_characterShownFirst < 0) this->import_characterShownFirst = 0;
-					if (this->importCharacterList_cursorPositionOnScreen > this->import_totalCharacters) {
-						this->importCharacterList_cursorPositionOnScreen = this->import_totalCharacters;
+				importCharacterList_cursorPosition++;
+				importCharacterList_cursorPositionOnScreen++;
+				if (importCharacterList_cursorPosition > import_totalCharacters) {
+					importCharacterList_cursorPosition = import_totalCharacters;
+					import_characterShownFirst = import_totalCharacters-2;
+					if (import_characterShownFirst < 0) import_characterShownFirst = 0;
+					if (importCharacterList_cursorPositionOnScreen > import_totalCharacters) {
+						importCharacterList_cursorPositionOnScreen = import_totalCharacters;
 					}
-				} else if (this->importCharacterList_cursorPosition > this->import_characterShownFirst+2) {
-					this->import_characterShownFirst++;
+				} else if (importCharacterList_cursorPosition > import_characterShownFirst+2) {
+					import_characterShownFirst++;
 				}
-				if (this->importCharacterList_cursorPositionOnScreen > 2) {
-					this->importCharacterList_cursorPositionOnScreen = 2;
+				if (importCharacterList_cursorPositionOnScreen > 2) {
+					importCharacterList_cursorPositionOnScreen = 2;
 				}
-				this->loadChrImage(false);
+				loadChrImage(false);
 			}
 		}
 
@@ -611,296 +642,296 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				sndSelect();
 				switch (highlightedGame) {
 					case 3:
-						sprintf(this->chrFilePath, "romfs:/character/Styling Star/All Seasons/%s.chr", "Robz");
-						if (access(this->chrFilePath, F_OK) != 0) {
-							sprintf(this->chrFilePath, "romfs:/character/Styling Star/%s/%s.chr", this->seasonName(), "Robz");
+						sprintf(chrFilePath, "romfs:/character/Styling Star/All Seasons/%s.chr", "Robz");
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Styling Star/%s/%s.chr", seasonName(), "Robz");
 						}
-						readSS4CharacterFile(this->characterList_cursorPosition, this->chrFilePath);
+						readSS4CharacterFile(characterList_cursorPosition, chrFilePath);
 						writeSS4Save();
 						break;
 					case 2:
-						sprintf(this->chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", "Robz");
-						if (access(this->chrFilePath, F_OK) != 0) {
-							sprintf(this->chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", this->seasonName(), "Robz");
+						sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", "Robz");
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), "Robz");
 						}
-						readSS3CharacterFile(this->characterList_cursorPosition, this->chrFilePath);
+						readSS3CharacterFile(characterList_cursorPosition, chrFilePath);
 						writeSS3Save();
 						break;
 					case 1:
-						sprintf(this->chrFilePath, "romfs:/character/Trendsetters/All Seasons/%s.chr", "Robz");
-						if (access(this->chrFilePath, F_OK) != 0) {
-						sprintf(this->chrFilePath, "romfs:/character/Trendsetters/%s/%s.chr", this->seasonName(), "Robz");
+						sprintf(chrFilePath, "romfs:/character/Trendsetters/All Seasons/%s.chr", "Robz");
+						if (access(chrFilePath, F_OK) != 0) {
+						sprintf(chrFilePath, "romfs:/character/Trendsetters/%s/%s.chr", seasonName(), "Robz");
 						}
-						readSS2CharacterFile(this->chrFilePath);
+						readSS2CharacterFile(chrFilePath);
 						writeSS2Save();
 						break;
 				}
-				this->loadChrImage(true);
-				sprintf(this->chararacterImported, "Imported %s successfully.", "Robz");
-				this->messageNo = 1;
-				this->subScreenMode = 1;
-				this->showMessage = true;
-			} else if (this->import_highlightedGame == 4 && numberOfExportedCharacters > 0) {
+				loadChrImage(true);
+				sprintf(chararacterImported, "Imported %s successfully.", "Robz");
+				messageNo = 1;
+				subScreenMode = 1;
+				showMessage = true;
+			} else if (import_highlightedGame == 4 && numberOfExportedCharacters > 0) {
 				bool exportFound = false;
 				switch (highlightedGame) {
 					case 3:
-						sprintf(this->chrFilePath, "sdmc:/3ds/SavvyManager/SS4/characters/%s.chr", getExportedCharacterName(importCharacterList_cursorPosition));
+						sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS4/characters/%s.chr", getExportedCharacterName(importCharacterList_cursorPosition));
 						if (access(chrFilePath, F_OK) == 0) {
 							sndSelect();
-							readSS4CharacterFile(this->characterList_cursorPosition, this->chrFilePath);
+							readSS4CharacterFile(characterList_cursorPosition, chrFilePath);
 							writeSS4Save();
 							exportFound = true;
 						}
 						break;
 					case 2:
-						sprintf(this->chrFilePath, "sdmc:/3ds/SavvyManager/SS3/characters/%s.chr", getExportedCharacterName(importCharacterList_cursorPosition));
-						if (access(this->chrFilePath, F_OK) == 0) {
+						sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS3/characters/%s.chr", getExportedCharacterName(importCharacterList_cursorPosition));
+						if (access(chrFilePath, F_OK) == 0) {
 							sndSelect();
-							readSS3CharacterFile(this->characterList_cursorPosition, this->chrFilePath);
+							readSS3CharacterFile(characterList_cursorPosition, chrFilePath);
 							writeSS3Save();
 							exportFound = true;
 						}
 						break;
 					case 1:
-						sprintf(this->chrFilePath, "sdmc:/3ds/SavvyManager/SS2/characters/%s.chr", getExportedCharacterName(importCharacterList_cursorPosition));
-						if (access(this->chrFilePath, F_OK) == 0) {
+						sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS2/characters/%s.chr", getExportedCharacterName(importCharacterList_cursorPosition));
+						if (access(chrFilePath, F_OK) == 0) {
 							sndSelect();
-							readSS2CharacterFile(this->chrFilePath);
+							readSS2CharacterFile(chrFilePath);
 							writeSS2Save();
 							exportFound = true;
 						}
 						break;
 				}
 				if (exportFound) {
-					sprintf(this->chararacterImported, "Imported %s successfully.", getExportedCharacterName(importCharacterList_cursorPosition));
-					this->messageNo = 1;
-					this->subScreenMode = 1;
+					sprintf(chararacterImported, "Imported %s successfully.", getExportedCharacterName(importCharacterList_cursorPosition));
+					messageNo = 1;
+					subScreenMode = 1;
 				} else {
 					sndBack();
-					this->messageNo = 3;
+					messageNo = 3;
 				}
-				this->showMessage = true;
-			} else if (this->import_highlightedGame != 4) {
+				showMessage = true;
+			} else if (import_highlightedGame != 4) {
 				sndSelect();
 				switch (highlightedGame) {
 					case 3:
-						sprintf(this->chrFilePath, "romfs:/character/Styling Star/All Seasons/%s.chr", import_characterName());
-						if (access(this->chrFilePath, F_OK) != 0) {
-							sprintf(this->chrFilePath, "romfs:/character/Styling Star/%s/%s.chr", this->seasonName(), import_characterName());
+						sprintf(chrFilePath, "romfs:/character/Styling Star/All Seasons/%s.chr", import_characterName());
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Styling Star/%s/%s.chr", seasonName(), import_characterName());
 						}
-						readSS4CharacterFile(this->characterList_cursorPosition, this->chrFilePath);
+						readSS4CharacterFile(characterList_cursorPosition, chrFilePath);
 						writeSS4Save();
 						break;
 					case 2:
-						sprintf(this->chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", import_characterName());
-						if (access(this->chrFilePath, F_OK) != 0) {
-							sprintf(this->chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", this->seasonName(), import_characterName());
+						sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", import_characterName());
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), import_characterName());
 						}
-						readSS3CharacterFile(this->characterList_cursorPosition, this->chrFilePath);
+						readSS3CharacterFile(characterList_cursorPosition, chrFilePath);
 						writeSS3Save();
 						break;
 					case 1:
-						sprintf(this->chrFilePath, "romfs:/character/Trendsetters/All Seasons/%s.chr", import_characterName());
-						if (access(this->chrFilePath, F_OK) != 0) {
-							sprintf(this->chrFilePath, "romfs:/character/Trendsetters/%s/%s.chr", this->seasonName(), import_characterName());
+						sprintf(chrFilePath, "romfs:/character/Trendsetters/All Seasons/%s.chr", import_characterName());
+						if (access(chrFilePath, F_OK) != 0) {
+							sprintf(chrFilePath, "romfs:/character/Trendsetters/%s/%s.chr", seasonName(), import_characterName());
 						}
-						readSS2CharacterFile(this->chrFilePath);
+						readSS2CharacterFile(chrFilePath);
 						writeSS2Save();
 						break;
 				}
-				sprintf(this->chararacterImported, "Imported %s successfully.", import_characterNameDisplay());
-				this->messageNo = 1;
-				this->subScreenMode = 1;
-				this->showMessage = true;
+				sprintf(chararacterImported, "Imported %s successfully.", import_characterNameDisplay());
+				messageNo = 1;
+				subScreenMode = 1;
+				showMessage = true;
 				}
 			}
 
 		if (hDown & KEY_DLEFT) {
 			sndHighlight();
-			this->import_highlightedGame--;
-			if (this->import_highlightedGame < 0) this->import_highlightedGame = 4;
-			this->getMaxChars();
+			import_highlightedGame--;
+			if (import_highlightedGame < 0) import_highlightedGame = 4;
+			getMaxChars();
 		}
 
 		if (hDown & KEY_DRIGHT) {
 			sndHighlight();
-			this->import_highlightedGame++;
-			if (this->import_highlightedGame > 4) this->import_highlightedGame = 0;
-			this->getMaxChars();
+			import_highlightedGame++;
+			if (import_highlightedGame > 4) import_highlightedGame = 0;
+			getMaxChars();
 		}
 
 		if ((hDown & KEY_DLEFT) || (hDown & KEY_DRIGHT)) {
-			this->importCharacterList_cursorPosition = 0;
-			this->importCharacterList_cursorPositionOnScreen = 0;
-			this->import_characterShownFirst = 0;
-			if (this->import_highlightedGame == 4) {
-				this->previewCharacter = false;
-				if (!this->exportedCharListGotten[highlightedGame]) {
-					this->displayNothing = true;
+			importCharacterList_cursorPosition = 0;
+			importCharacterList_cursorPositionOnScreen = 0;
+			import_characterShownFirst = 0;
+			if (import_highlightedGame == 4) {
+				previewCharacter = false;
+				if (!exportedCharListGotten[highlightedGame]) {
+					displayNothing = true;
 					gspWaitForVBlank();
 					getExportedCharacterContents();
-					this->exportedCharListGotten[highlightedGame] = true;
-					this->displayNothing = false;
+					exportedCharListGotten[highlightedGame] = true;
+					displayNothing = false;
 				}
 			}
-			this->getMaxChars();
-			this->loadChrImage(false);
+			getMaxChars();
+			loadChrImage(false);
 		}
 
-		if (this->import_highlightedGame != 4) {
+		if (import_highlightedGame != 4) {
 			if ((hDown & KEY_L) || (hDown & KEY_ZL)) {
 				sndHighlight();
-				this->seasonNo--;
-				if (this->seasonNo < 0) this->seasonNo = 3;
-				this->loadChrImage(false);
+				seasonNo--;
+				if (seasonNo < 0) seasonNo = 3;
+				loadChrImage(false);
 			}
 
 			if ((hDown & KEY_R) || (hDown & KEY_ZR)) {
 				sndHighlight();
-				this->seasonNo++;
-				if (this->seasonNo > 3) this->seasonNo = 0;
-				this->loadChrImage(false);
+				seasonNo++;
+				if (seasonNo > 3) seasonNo = 0;
+				loadChrImage(false);
 			}
 		}
 
-		if (((hDown & KEY_B) && !(this->cheatKeys[8] & KEY_B))
+		if (((hDown & KEY_B) && !(cheatKeys[8] & KEY_B))
 		|| ((hDown & KEY_TOUCH) && touchingBackButton())) {
 			sndBack();
-			this->subScreenMode = 1;
-			this->previewCharacter = false;
+			subScreenMode = 1;
+			previewCharacter = false;
 		}
 
-	} else if (this->subScreenMode == 1) {
+	} else if (subScreenMode == 1) {
 		if (showCursor) {
 			if (hDown & KEY_DUP) {
 				sndHighlight();
-				this->characterChangeMenu_cursorPosition--;
-				this->characterChangeMenu_cursorPositionOnScreen--;
-				if (this->characterChangeMenu_cursorPosition < 0) {
-					this->characterChangeMenu_cursorPosition = 0;
-					this->characterChangeMenu_optionShownFirst = 0;
-				} else if (this->characterChangeMenu_cursorPosition < this->characterChangeMenu_optionShownFirst) {
-					this->characterChangeMenu_optionShownFirst--;
+				characterChangeMenu_cursorPosition--;
+				characterChangeMenu_cursorPositionOnScreen--;
+				if (characterChangeMenu_cursorPosition < 0) {
+					characterChangeMenu_cursorPosition = 0;
+					characterChangeMenu_optionShownFirst = 0;
+				} else if (characterChangeMenu_cursorPosition < characterChangeMenu_optionShownFirst) {
+					characterChangeMenu_optionShownFirst--;
 				}
-				if (this->characterChangeMenu_cursorPositionOnScreen < 0) {
-					this->characterChangeMenu_cursorPositionOnScreen = 0;
+				if (characterChangeMenu_cursorPositionOnScreen < 0) {
+					characterChangeMenu_cursorPositionOnScreen = 0;
 				}
 			}
 
 			if (hDown & KEY_DDOWN) {
 				sndHighlight();
-				this->characterChangeMenu_cursorPosition++;
-				this->characterChangeMenu_cursorPositionOnScreen++;
-				if (this->characterChangeMenu_cursorPosition > this->characterChangeMenuOptions) {
-					this->characterChangeMenu_cursorPosition = this->characterChangeMenuOptions;
-					this->characterChangeMenu_optionShownFirst = this->characterChangeMenuOptions-2;
-				} else if (this->characterChangeMenu_cursorPosition > this->characterChangeMenu_optionShownFirst+2) {
-					this->characterChangeMenu_optionShownFirst++;
+				characterChangeMenu_cursorPosition++;
+				characterChangeMenu_cursorPositionOnScreen++;
+				if (characterChangeMenu_cursorPosition > characterChangeMenuOptions) {
+					characterChangeMenu_cursorPosition = characterChangeMenuOptions;
+					characterChangeMenu_optionShownFirst = characterChangeMenuOptions-2;
+				} else if (characterChangeMenu_cursorPosition > characterChangeMenu_optionShownFirst+2) {
+					characterChangeMenu_optionShownFirst++;
 				}
 
-				if (this->characterChangeMenu_cursorPositionOnScreen > 2) {
-					this->characterChangeMenu_cursorPositionOnScreen = 2;
+				if (characterChangeMenu_cursorPositionOnScreen > 2) {
+					characterChangeMenu_cursorPositionOnScreen = 2;
 				}
 			}
 		}
 
 		if (hDown & KEY_A) {
-			if (this->characterChangeMenuOps[characterChangeMenu_cursorPosition] == 0) {
+			if (characterChangeMenuOps[characterChangeMenu_cursorPosition] == 0) {
 				sndBack();
-				this->messageNo = 0;
-				this->showMessage = true;
-			} else if (this->characterChangeMenuOps[characterChangeMenu_cursorPosition] == 10) {
+				messageNo = 0;
+				showMessage = true;
+			} else if (characterChangeMenuOps[characterChangeMenu_cursorPosition] == 10) {
 				// Export character
 				sndSelect();
 				switch (highlightedGame) {
 					case 3:
-						sprintf(this->chrFilePath, "sdmc:/3ds/SavvyManager/SS4/characters/%s.chr", this->characterName(false));
-						writeSS4CharacterFile(this->characterList_cursorPosition, this->chrFilePath);
+						sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS4/characters/%s.chr", characterName(false));
+						writeSS4CharacterFile(characterList_cursorPosition, chrFilePath);
 						break;
 					case 2:
-						sprintf(this->chrFilePath, "sdmc:/3ds/SavvyManager/SS3/characters/%s.chr", characterName(false));
-						writeSS3CharacterFile(this->characterList_cursorPosition, this->chrFilePath);
+						sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS3/characters/%s.chr", characterName(false));
+						writeSS3CharacterFile(characterList_cursorPosition, chrFilePath);
 						break;
 					case 1:
-						sprintf(this->chrFilePath, "sdmc:/3ds/SavvyManager/SS2/characters/%s.chr", characterName(false));
-						writeSS2CharacterFile(this->chrFilePath);
+						sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS2/characters/%s.chr", characterName(false));
+						writeSS2CharacterFile(chrFilePath);
 						break;
 				}
-				this->exportedCharListGotten[highlightedGame] = false;
-				this->messageNo = 2;
-				this->showMessage = true;
+				exportedCharListGotten[highlightedGame] = false;
+				messageNo = 2;
+				showMessage = true;
 			} else {
 				sndSelect();
-				this->displayNothing = true;
-				this->subScreenMode = this->characterChangeMenuOps[characterChangeMenu_cursorPosition];
-				if ((this->subScreenMode == 4) && (this->import_highlightedGame == 4) && !this->exportedCharListGotten[highlightedGame]) {
+				displayNothing = true;
+				subScreenMode = characterChangeMenuOps[characterChangeMenu_cursorPosition];
+				if ((subScreenMode == 4) && (import_highlightedGame == 4) && !exportedCharListGotten[highlightedGame]) {
 					gspWaitForVBlank();
 					getExportedCharacterContents();
-					this->exportedCharListGotten[highlightedGame] = true;
+					exportedCharListGotten[highlightedGame] = true;
 				}
-				this->displayNothing = false;
-				this->loadChrImage(false);
+				displayNothing = false;
+				loadChrImage(false);
 			}
 		}
 
 		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 			sndBack();
-			this->subScreenMode = 0;
+			subScreenMode = 0;
 		}
 	
 	} else {
 		if (showCursor) {
 			if ((hDown & KEY_DUP) && (highlightedGame > 1)) {
 				sndHighlight();
-				this->characterList_cursorPosition--;
-				this->characterList_cursorPositionOnScreen--;
-				if (this->characterList_cursorPosition < 0) {
-					this->characterList_cursorPosition = 0;
-					this->characterShownFirst = 0;
-				} else if (this->characterList_cursorPosition < this->characterShownFirst) {
-					this->characterShownFirst--;
+				characterList_cursorPosition--;
+				characterList_cursorPositionOnScreen--;
+				if (characterList_cursorPosition < 0) {
+					characterList_cursorPosition = 0;
+					characterShownFirst = 0;
+				} else if (characterList_cursorPosition < characterShownFirst) {
+					characterShownFirst--;
 				}
-				if (this->characterList_cursorPositionOnScreen < 0) {
-					this->characterList_cursorPositionOnScreen = 0;
+				if (characterList_cursorPositionOnScreen < 0) {
+					characterList_cursorPositionOnScreen = 0;
 				}
 			}
 
 			if ((hDown & KEY_DDOWN) && (highlightedGame > 1)) {
 				sndHighlight();
-				this->characterList_cursorPosition++;
-				this->characterList_cursorPositionOnScreen++;
-				if (this->characterList_cursorPosition > this->totalCharacters) {
-					this->characterList_cursorPosition = this->totalCharacters;
-					this->characterShownFirst = this->totalCharacters-2;
-				} else if (this->characterList_cursorPosition > this->characterShownFirst+2) {
-					this->characterShownFirst++;
+				characterList_cursorPosition++;
+				characterList_cursorPositionOnScreen++;
+				if (characterList_cursorPosition > totalCharacters) {
+					characterList_cursorPosition = totalCharacters;
+					characterShownFirst = totalCharacters-2;
+				} else if (characterList_cursorPosition > characterShownFirst+2) {
+					characterShownFirst++;
 				}
-				if (this->characterList_cursorPositionOnScreen > 2) {
-					this->characterList_cursorPositionOnScreen = 2;
+				if (characterList_cursorPositionOnScreen > 2) {
+					characterList_cursorPositionOnScreen = 2;
 				}
 			}
 		}
 
 		if (hDown & KEY_A) {
 			sndSelect();
-			this->subScreenMode = 1;
+			subScreenMode = 1;
 		}
 
 		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 			sndBack();
-			this->characterList_cursorPosition = 0;
-			this->characterList_cursorPositionOnScreen = 0;
-			this->characterShownFirst = 0;
-			this->characterChangeMenu_cursorPosition = 0;
-			this->characterChangeMenu_cursorPositionOnScreen = 0;
-			this->characterChangeMenu_optionShownFirst = 0;
+			characterList_cursorPosition = 0;
+			characterList_cursorPositionOnScreen = 0;
+			characterShownFirst = 0;
+			characterChangeMenu_cursorPosition = 0;
+			characterChangeMenu_cursorPositionOnScreen = 0;
+			characterChangeMenu_optionShownFirst = 0;
 			Gui::setScreen(std::make_unique<WhatToDo>(), true);
 		}
 
 		if ((hDown & KEY_START) && (highlightedGame == 2)) {
 			sndSelect();
-			this->messageNo = 4;
-			this->showMessage = true;
+			messageNo = 4;
+			showMessage = true;
 		}
 	}
 }
