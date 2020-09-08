@@ -55,8 +55,8 @@ void MusicChange::Draw(void) const {
 		}
 	}
 
-	this->cursorX = 248;
-	this->cursorY = 64+(48*cursorPositionOnScreen);
+	cursorX = 248;
+	cursorY = 64+(48*cursorPositionOnScreen);
 
 	Gui::DrawString(8, 8, 0.50, BLACK, "Select the music pack you want to use.");
 
@@ -78,7 +78,7 @@ void MusicChange::Draw(void) const {
 	GFX::DrawSprite(sprites_arrow_back_idx, 19, 195);
 	GFX::DrawSprite(sprites_button_b_idx, 44, 218);
 
-	GFX::drawCursor(this->cursorX, this->cursorY);
+	GFX::drawCursor(cursorX, cursorY);
 
 	if (showMessage) {
 		drawMsg();
@@ -145,6 +145,9 @@ void MusicChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 						break;
 					case CFG_REGION_JPN:
 						romfsStreamPath = "sdmc:/luma/titles/000400000005D100/romfs/Common/Sound/stream";
+						break;
+					case CFG_REGION_KOR:
+						romfsStreamPath = "sdmc:/luma/titles/00040000000C4F00/romfs/Common/Sound/stream";
 						break;
 					default:
 						break;

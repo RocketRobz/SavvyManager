@@ -23,12 +23,12 @@ void GameSelect::drawCannotEditMsg(void) const {
 	GFX::DrawSprite(sprites_msg_idx, 0, 8, 1, 1);
 	GFX::DrawSprite(sprites_msg_idx, 160, 8, -1, 1);
 	GFX::DrawSprite(sprites_icon_msg_idx, 132, -2);
-	if (this->messageNo == 2) {
+	if (messageNo == 2) {
 		Gui::DrawStringCentered(0, 58, 0.60, BLACK, "This game's title ID");
 		Gui::DrawStringCentered(0, 78, 0.60, BLACK, "is not known.");
 		Gui::DrawStringCentered(0, 112, 0.60, BLACK, "As a result, the save data");
 		Gui::DrawStringCentered(0, 132, 0.60, BLACK, "cannot be edited.");
-	} else if (this->messageNo == 1) {
+	} else if (messageNo == 1) {
 		if (highlightedGame == 0) {
 			Gui::DrawStringCentered(0, 58, 0.60, BLACK, "Save data not found.");
 			Gui::DrawStringCentered(0, 90, 0.60, BLACK, /*highlightedGame==3 ? "Please back up the extra data using" :*/ "Please back it up using");
@@ -133,18 +133,18 @@ void GameSelect::Draw(void) const {
 	Gui::DrawString(8, 8, 0.50, BLACK, "Select a game to manage its save data.");
 	Gui::DrawString(8, 112, 0.55, BLACK, "<");
 	Gui::DrawString(304, 112, 0.55, BLACK, ">");
-	Gui::DrawStringCentered(0, 202, 0.50, BLACK, this->settingsText);
+	Gui::DrawStringCentered(0, 202, 0.50, BLACK, settingsText);
 	if ((u32)appID == 0x3697300) {
 		const int home_width = 144+16;
 		const int home_x = (320-home_width)/2;
 		GFX::DrawSprite(sprites_homeicon_idx, home_x, 218);
-		Gui::DrawString(home_x+16, 218, 0.50, BLACK, this->returnToHomeText); // Draw HOME icon
+		Gui::DrawString(home_x+16, 218, 0.50, BLACK, returnToHomeText); // Draw HOME icon
 	} else {
-		Gui::DrawStringCentered(0, 218, 0.50, BLACK, this->exitText);
+		Gui::DrawStringCentered(0, 218, 0.50, BLACK, exitText);
 	}
 
-	if (this->showMessage) {
-		this->drawCannotEditMsg();
+	if (showMessage) {
+		drawCannotEditMsg();
 	}
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
@@ -152,10 +152,10 @@ void GameSelect::Draw(void) const {
 
 
 void GameSelect::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
-	if (this->showMessage) {
+	if (showMessage) {
 		if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
 			sndSelect();
-			this->showMessage = false;
+			showMessage = false;
 		}
 
 	} else {
@@ -172,12 +172,8 @@ void GameSelect::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 32 && touch.px < 320-32 && touch.py >= 56 && touch.py < 56+128)) {
 		  if (highlightedGame == 0) {
 			sndBack();
-			this->messageNo = 0;
-			this->showMessage = true;
-		  } else if (highlightedGame == 1 && sysRegion == CFG_REGION_KOR) {
-			sndBack();
-			this->messageNo = 2;
-			this->showMessage = true;
+			messageNo = 0;
+			showMessage = true;
 		  } else if ((highlightedGame == 1 && ss2SaveFound)
 		  || (highlightedGame == 2 && ss3SaveFound)
 		  || (highlightedGame == 3 && ss4SaveFound))
@@ -186,8 +182,8 @@ void GameSelect::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			Gui::setScreen(std::make_unique<WhatToDo>(), true);
 		 } else {
 			sndBack();
-			this->messageNo = 1;
-			this->showMessage = true;
+			messageNo = 1;
+			showMessage = true;
 		 }
 		}
 

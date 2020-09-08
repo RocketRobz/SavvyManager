@@ -221,8 +221,14 @@ int main()
 			mkdir("sdmc:/luma/titles/000400000005D100/romfs/Common", 0777);
 			mkdir("sdmc:/luma/titles/000400000005D100/romfs/Common/Sound", 0777);
 			break;
+		case CFG_REGION_KOR:
+			// Girls Style: Paesyeon Lideo Seon-eon! folders
+			mkdir("sdmc:/luma/titles/00040000000C4F00", 0777);
+			mkdir("sdmc:/luma/titles/00040000000C4F00/romfs", 0777);
+			mkdir("sdmc:/luma/titles/00040000000C4F00/romfs/Common", 0777);
+			mkdir("sdmc:/luma/titles/00040000000C4F00/romfs/Common/Sound", 0777);
+			break;
 	}
-	//mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound/stream", 0777);
 
  	// Style Savvy: Fashion Forward folders
 	//mkdir("sdmc:/luma/titles/0004000000196500", 0777);
@@ -291,7 +297,7 @@ int main()
 			ss4Logo = gameSelSprites_title4_J_idx;
 			break;
 		case CFG_REGION_KOR:
-			ss2Id = 0x0005D100;
+			ss2Id = 0x000C4F00;
 			//ss2Screenshot = gameShotSprites_title2_screenshotJ_idx;
 			ss1Logo = gameSelSprites_title1_K_idx;
 			ss2Logo = gameSelSprites_title2_K_idx;
