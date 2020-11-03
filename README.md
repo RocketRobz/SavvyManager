@@ -9,7 +9,8 @@ For Style Savvy's 10th Anniversary, a save editor is here!
 # Features
 
 * Edit save data from all four Girls Mode/Style Savvy/Style Boutique games.
-* As of currently, only games 2-4 are supported, and KOR region is not supported.
+* As of currently, only games 2-4 are supported.
+   * Only the 2nd game is supported for KOR regions.
 * High-resolution Hori-HD (800px wide mode), exclusive to 3DS, New 3DS, and New 2DS consoles!
 * The GUI from Kirakira Code/Fashion Forward (third game).
 * Pre-rendered characters and backgrounds.
