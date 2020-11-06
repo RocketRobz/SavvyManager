@@ -321,6 +321,7 @@ void CharacterChange::removeEveryone(void) {
 
 	restoreSS3DLCharacters("sdmc:/3ds/SavvyManager/SS3/dlCharacters.bak");
 	writeSS3Save();
+	remove("sdmc:/3ds/SavvyManager/SS3/dlCharacters.bak");
 	ss3DLCharactersBackedUp = false;
 
 	sprintf(chararacterImported, "Characters removed successfully.");
