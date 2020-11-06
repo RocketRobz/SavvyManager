@@ -330,7 +330,7 @@ void backupSS3DLCharacters(const char* filename) {
 }
 
 void restoreSS3DLCharacters(const char* filename) {
-	FILE* characterData = fopen(filename, "wb");
+	FILE* characterData = fopen(filename, "rb");
 	if (!characterData) return;
 
 	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x830D0 : 0x8427C);
