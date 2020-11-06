@@ -241,6 +241,18 @@ void toggleSS3Character(u16 id, bool enable) {
 	}
 }
 
+bool existsSS3Character(u16 id) {
+	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x83182 : 0x8432E);
+
+	if (id >= 0x0BB9) {
+		// Downloaded character
+		id -= 0x0BB9;
+		return *(u16*)(ss3Save+(dlCharOffset + (0x110*id))) == 0x4013;
+	}
+
+	return true;
+}
+
 void removeSS3CharacterBag(u16 id) {
 	u32 playableCharOffset = (sysRegion==CFG_REGION_JPN ? 0x538B2 : 0x54A56);
 	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x83106 : 0x842B2);
@@ -298,11 +310,33 @@ void writeSS3CharacterFile(u16 id, const char* filename) {
 		// Downloaded character
 		id -= 0x0BB9;
 		fwrite((char*)ss3Save+(dlCharOffset + (0x110*id)), 0x36, 1, characterData);
-	} else  {
+	} else {
 		id--;
 		// Non-playable character
 		fwrite((char*)ss3Save+(npCharOffset + (0x110*id)), 0x36, 1, characterData);
 	}
+	fclose(characterData);
+}
+
+void backupSS3DLCharacters(const char* filename) {
+	FILE* characterData = fopen(filename, "wb");
+	if (!characterData) return;
+
+	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x830D0 : 0x8427C);
+
+	// Backup downloaded characters
+	fwrite((char*)ss3Save+(dlCharOffset), 0x103D4, 1, characterData);
+	fclose(characterData);
+}
+
+void restoreSS3DLCharacters(const char* filename) {
+	FILE* characterData = fopen(filename, "wb");
+	if (!characterData) return;
+
+	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x830D0 : 0x8427C);
+
+	// Restore downloaded characters
+	fread((char*)ss3Save+(dlCharOffset), 0x103D4, 1, characterData);
 	fclose(characterData);
 }
 

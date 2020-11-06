@@ -15,6 +15,8 @@
 
 #include <unistd.h>
 
+extern bool ss3DLCharactersBackedUp;
+
 CharacterChange::CharacterChange() {
 	getList();
 }
@@ -227,7 +229,13 @@ void CharacterChange::drawMsg(void) const {
 	GFX::DrawSprite(sprites_msg_idx, 0, 8, 1, 1);
 	GFX::DrawSprite(sprites_msg_idx, 160, 8, -1, 1);
 	GFX::DrawSprite(messageNo == 4 ? sprites_icon_question_idx : sprites_icon_msg_idx, 132, -2);
-	if (messageNo == 5) {
+	if (messageNo == 6) {
+		Gui::DrawStringCentered(0, 58, 0.60, BLACK, "Characters from the 1st, 2nd, and");
+		Gui::DrawStringCentered(0, 78, 0.60, BLACK, "4th games, will leave from the 3rd.");
+		Gui::DrawStringCentered(0, 104, 0.60, BLACK, "Characters part of downloaded");
+		Gui::DrawStringCentered(0, 124, 0.60, BLACK, "Caprice Chalet rooms (if exists)");
+		Gui::DrawStringCentered(0, 144, 0.60, BLACK, "will be restored. Is this OK?");
+	} else if (messageNo == 5) {
 		Gui::DrawStringCentered(0, 68, 0.60, BLACK, "Everyone is now in Fashion Forward!");
 		Gui::DrawStringCentered(0, 88, 0.60, BLACK, "(Except for customers and reps.)");
 		Gui::DrawStringCentered(0, 114, 0.60, BLACK, "Invite them over for photo shoots,");
@@ -237,7 +245,7 @@ void CharacterChange::drawMsg(void) const {
 		Gui::DrawStringCentered(0, 78, 0.60, BLACK, "4th games, will be added to the 3rd.");
 		Gui::DrawStringCentered(0, 104, 0.60, BLACK, "Characters part of downloaded");
 		Gui::DrawStringCentered(0, 124, 0.60, BLACK, "Caprice Chalet rooms will be");
-		Gui::DrawStringCentered(0, 144, 0.60, BLACK, "overwritten. Is this OK?");
+		Gui::DrawStringCentered(0, 144, 0.60, BLACK, "backed-up. Is this OK?");
 	} else if (messageNo == 3) {
 		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "Failed to import character.");
 	} else if (messageNo == 2) {
@@ -251,7 +259,7 @@ void CharacterChange::drawMsg(void) const {
 		Gui::DrawStringCentered(0, 84, 0.60, BLACK, "This feature is not available yet.");
 		//Gui::DrawStringCentered(0, 104, 0.60, BLACK, "yet.");
 	}
-	if (messageNo == 4) {
+	if (messageNo == 4 || messageNo == 6) {
 		GFX::DrawSprite(sprites_button_msg_shadow_idx, 52, 197);
 		GFX::DrawSprite(sprites_button_msg_idx, 53, 188);
 		GFX::DrawSprite(sprites_button_msg_shadow_idx, 176, 197);
@@ -288,7 +296,9 @@ void CharacterChange::loadChrImage(bool Robz) {
 
 void CharacterChange::addEveryone(void) {
 //	if (highlightedGame != 2) return;
-	
+
+	backupSS3DLCharacters("sdmc:/3ds/SavvyManager/SS3/dlCharacters.bak");
+
 	for (int i = 0; i < 49; i++) {
 		sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", import_everyCharacterNames[i]);
 		if (access(chrFilePath, F_OK) != 0) {
@@ -303,6 +313,23 @@ void CharacterChange::addEveryone(void) {
 		toggleSS3Character(0x0BB9+i, true);
 	}
 	writeSS3Save();
+	ss3DLCharactersBackedUp = true;
+}
+
+void CharacterChange::removeEveryone(void) {
+//	if (highlightedGame != 2) return;
+
+	restoreSS3DLCharacters("sdmc:/3ds/SavvyManager/SS3/dlCharacters.bak");
+	writeSS3Save();
+	ss3DLCharactersBackedUp = false;
+
+	sprintf(chararacterImported, "Characters removed successfully.");
+	for (u16 id = 0x0BB9; id <= 0x0BFD; id++) {
+		if (existsSS3Character(id)) {
+			sprintf(chararacterImported, "Character(s) restored successfully.");
+			break;
+		}
+	}
 }
 
 
@@ -445,7 +472,7 @@ void CharacterChange::Draw(void) const {
 		Gui::DrawString(8, 8, 0.50, BLACK, "Select the character you want to change.");
 
 		if (highlightedGame == 2) {
-			Gui::DrawString(116, 210, 0.50, BLACK, "START: Expand contacts");
+			Gui::DrawString(116, 210, 0.50, BLACK, ss3DLCharactersBackedUp ? "START: Remove contacts" : "START: Expand contacts");
 		}
 
 	  if (!displayNothing) {
@@ -525,7 +552,18 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 	}
 
 	if (showMessage) {
-		if (messageNo == 4) {
+		if (messageNo == 6) {
+			if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 176 && touch.px < 176+90 && touch.py >= 188 && touch.py < 188+47)) {
+				sndSelect();
+				removeEveryone();
+				messageNo = 1;
+			}
+
+			if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touch.px >= 52 && touch.px < 52+90 && touch.py >= 188 && touch.py < 188+47)) {
+				sndBack();
+				showMessage = false;
+			}
+		} else if (messageNo == 4) {
 			if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 176 && touch.px < 176+90 && touch.py >= 188 && touch.py < 188+47)) {
 				sndSelect();
 				addEveryone();
@@ -930,7 +968,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 
 		if ((hDown & KEY_START) && (highlightedGame == 2)) {
 			sndSelect();
-			messageNo = 4;
+			messageNo = ss3DLCharactersBackedUp ? 6 : 4;
 			showMessage = true;
 		}
 	}

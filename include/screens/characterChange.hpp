@@ -28,6 +28,7 @@ private:
 	void drawMsg(void) const;
 	void loadChrImage(bool Robz);
 	void addEveryone(void);
+	void removeEveryone(void);
 
 	int subScreenMode = 0;
 	/*

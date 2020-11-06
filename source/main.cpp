@@ -29,6 +29,7 @@ int studioBg = 0;
 bool cinemaWide = false;
 int iFps = 60;
 std::string currentMusicPack = "";
+bool ss3DLCharactersBackedUp = false;
 
 int titleSelection = 0;
 
@@ -331,6 +332,8 @@ int main()
 	ss3SaveFound = (access(ss3SavePath, F_OK) == 0);
 	ss4SaveFound = foundSS4Save();
 	
+	ss3DLCharactersBackedUp = (access("sdmc:/3ds/SavvyManager/SS3/dlCharacters.bak", F_OK) == 0);
+
 	sprintf(verText, "Ver. %i.%i.%i", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
 
 	C3D_FrameRate(iFps);
