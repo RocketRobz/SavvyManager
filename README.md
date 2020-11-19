@@ -14,7 +14,7 @@ For Style Savvy's 10th Anniversary, a save editor is here!
 * High-resolution Hori-HD (800px wide mode), exclusive to 3DS, New 3DS, and New 2DS consoles!
 * The GUI from Kirakira Code/Fashion Forward (third game).
 * Pre-rendered characters and backgrounds.
-* A Girls Mode/Style Savvy/Style Boutique soundfont cover of the Sega CD (Model 2) BIOS music!
+* Originally composed menu music!
 * Sound effects from ChuChu Rocket.
 * Play as most characters from all Girls Mode/Style Savvy/Style Boutique games, in all (except first) games!     (Shop customers and brand reps not included.)
 * When importing a character from those games, you can press L or R to select the seasonal outfit.     (Note that not all characters will have seasonal outfits.)
@@ -35,5 +35,4 @@ As such features are not normally available in-game, you may risk a possible ban
 * devkitPro: libctru, citro2d/3d, nds-hb-menu's file/folder browsing code
 * Universal Team: Universal Core
 * Pixel Perfect: [Music icon](https://www.flaticon.com/free-icon/musical-note_727218)
-* Mike Dexter: Original MIDI sequence of the Sega CD Model 2 BIOS music
 * rog9001: His New Style Boutique 3 Save Editor tool has motivated me to work on this further.
