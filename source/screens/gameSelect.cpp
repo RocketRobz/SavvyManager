@@ -56,7 +56,7 @@ void GameSelect::drawCannotEditMsg(void) const {
 	}
 	GFX::DrawSprite(sprites_button_msg_shadow_idx, 114, 197);
 	GFX::DrawSprite(sprites_button_msg_idx, 115, 188);
-	Gui::DrawString(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
+	Gui::DrawString((sysRegion==CFG_REGION_KOR ? 128 : 134), 196, 0.70, MSG_BUTTONTEXT, " OK!");
 }
 
 void GameSelect::Draw(void) const {
@@ -130,7 +130,7 @@ void GameSelect::Draw(void) const {
 	Gui::DrawString(304, 112, 0.55, BLACK, ">");
 	Gui::DrawStringCentered(0, 202, 0.50, BLACK, settingsText);
 	if ((u32)appID == 0x3697300) {
-		const int home_width = 144+16;
+		const int home_width = (sysRegion==CFG_REGION_KOR ? 176 : 144)+16;
 		const int home_x = (320-home_width)/2;
 		GFX::DrawSprite(sprites_homeicon_idx, home_x, 218);
 		Gui::DrawString(home_x+16, 218, 0.50, BLACK, returnToHomeText); // Draw HOME icon

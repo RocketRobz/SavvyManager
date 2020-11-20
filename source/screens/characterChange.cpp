@@ -269,7 +269,7 @@ void CharacterChange::drawMsg(void) const {
 	} else {
 		GFX::DrawSprite(sprites_button_msg_shadow_idx, 114, 197);
 		GFX::DrawSprite(sprites_button_msg_idx, 115, 188);
-		Gui::DrawString(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
+		Gui::DrawString((sysRegion==CFG_REGION_KOR ? 128 : 134), 196, 0.70, MSG_BUTTONTEXT, " OK!");
 	}
 }
 
