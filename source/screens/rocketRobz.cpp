@@ -37,6 +37,7 @@ void RocketRobz::Draw(void) const {
 
 		GFX::DrawSpriteLinearBlend(sprites_rr_robz_idx, robzXpos-7, robzYpos, C2D_Color32(255, 0, 0, 127), 0.5, 1);
 		GFX::DrawSpriteLinearBlend(sprites_rr_robz_idx, robzXpos+7, robzYpos, C2D_Color32(0, 0, 255, 127), 0.5, 1);
+		Gui::Draw_Rect(400-50, 0, 50, 240, C2D_Color32(0, 0, 0, 255));
 		GFX::DrawSpriteLinear(sprites_rr_shapeBG_idx, 50, 0, 0.5, 1);
 		Gui::Draw_Rect(0, 238, 400, 2, C2D_Color32(0, 0, 0, 255));	// Hide line from other texture(s)
 		GFX::DrawSpriteLinear(sprites_rr_robz_idx, robzXpos, robzYpos, 0.5, 1);
