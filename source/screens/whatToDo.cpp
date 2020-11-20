@@ -17,17 +17,17 @@ extern bool ss3SaveFound;
 extern bool ss4SaveFound;
 
 WhatToDo::WhatToDo() {
-	this->initialize();
+	initialize();
 }
 
 void WhatToDo::initialize() {
 	if ((highlightedGame == 0)
-	|| (highlightedGame > 1 && this->whatToChange_cursorPosition == 1)
-	|| (highlightedGame < 2 && this->whatToChange_cursorPosition == 2)) {
-		this->whatToChange_cursorPosition = 0;
+	|| (highlightedGame > 1 && whatToChange_cursorPosition == 1)
+	|| (highlightedGame < 2 && whatToChange_cursorPosition == 2)) {
+		whatToChange_cursorPosition = 0;
 	}
 
-	this->cursorChange();
+	cursorChange();
 }
 
 void WhatToDo::Draw(void) const {
@@ -59,11 +59,6 @@ void WhatToDo::Draw(void) const {
 	}
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-
-	if (cinemaWide) {
-		Gui::Draw_Rect(0, 0, 400, 36, C2D_Color32(0, 0, 0, 255));
-		Gui::Draw_Rect(0, 204, 400, 36, C2D_Color32(0, 0, 0, 255));
-	}
 
 	if (shiftBySubPixel) return;
 	Gui::ScreenDraw(Bottom);
@@ -99,87 +94,87 @@ void WhatToDo::Draw(void) const {
 	GFX::DrawSprite(sprites_button_b_idx, 44, 218);
 	/*GFX::DrawSprite(sprites_button_shadow_idx, 251, 199);
 	GFX::DrawSprite(sprites_button_blue_idx, 251, 195);*/
-	GFX::drawCursor(this->cursorX, this->cursorY);
+	GFX::drawCursor(cursorX, cursorY);
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 }
 
 void WhatToDo::cursorChange() {
-	switch (this->whatToChange_cursorPosition) {
+	switch (whatToChange_cursorPosition) {
 		case 0:
 		default:
-			this->cursorX = 80;
-			this->cursorY = 104;
+			cursorX = 80;
+			cursorY = 104;
 			break;
 		case 1:
-			this->cursorX = 148;
-			this->cursorY = 104;
+			cursorX = 148;
+			cursorY = 104;
 			break;
 		case 2:
-			this->cursorX = 212;
-			this->cursorY = 104;
+			cursorX = 212;
+			cursorY = 104;
 			break;
 	}
 }
 
 void WhatToDo::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
-	if (this->showMessage) {
+	if (showMessage) {
 		if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
 			sndSelect();
-			this->showMessage = false;
+			showMessage = false;
 		}
 	} else {
 		if (highlightedGame > 0 && showCursor) {
 			if (hDown & KEY_LEFT) {
 				sndHighlight();
 				if (highlightedGame > 1) {
-					if (this->whatToChange_cursorPosition == 2)	this->whatToChange_cursorPosition = 0;
-					else if (this->whatToChange_cursorPosition == 0)	this->whatToChange_cursorPosition = 2;
-					this->cursorChange();
+					if (whatToChange_cursorPosition == 2)	whatToChange_cursorPosition = 0;
+					else if (whatToChange_cursorPosition == 0)	whatToChange_cursorPosition = 2;
+					cursorChange();
 				} else {
-					this->whatToChange_cursorPosition--;
-					if (this->whatToChange_cursorPosition < 0)	this->whatToChange_cursorPosition = 1;
-					this->cursorChange();
+					whatToChange_cursorPosition--;
+					if (whatToChange_cursorPosition < 0)	whatToChange_cursorPosition = 1;
+					cursorChange();
 				}
 			} else if (hDown & KEY_RIGHT) {
 				sndHighlight();
 				if (highlightedGame > 1) {
-					if (this->whatToChange_cursorPosition == 0) this->whatToChange_cursorPosition = 2;
-					else if (this->whatToChange_cursorPosition == 2) this->whatToChange_cursorPosition = 0;
-					this->cursorChange();
+					if (whatToChange_cursorPosition == 0) whatToChange_cursorPosition = 2;
+					else if (whatToChange_cursorPosition == 2) whatToChange_cursorPosition = 0;
+					cursorChange();
 				} else {
 					whatToChange_cursorPosition++;
-					if (this->whatToChange_cursorPosition > 1) this->whatToChange_cursorPosition = 0;
-					this->cursorChange();
+					if (whatToChange_cursorPosition > 1) whatToChange_cursorPosition = 0;
+					cursorChange();
 				}
 			}
 		}
 
 		if (hDown & KEY_A) {
-			this->runSelection = true;
+			runSelection = true;
 		}
 
 		if ((hDown & KEY_TOUCH) && touch.px >= 71 && touch.px <= 248 && touch.py >= 91 && touch.py <= 136) {
 			if (touch.px < 120) {
-				this->whatToChange_cursorPosition = 0;
-				this->cursorChange();
-				this->runSelection = true;
+				whatToChange_cursorPosition = 0;
+				cursorChange();
+				runSelection = true;
 			}
 			if ((touch.px > 134) && (touch.px < 185) && highlightedGame==1) {
-				this->whatToChange_cursorPosition = 1;
-				this->cursorChange();
-				this->runSelection = true;
+				whatToChange_cursorPosition = 1;
+				cursorChange();
+				runSelection = true;
 			}
 			if ((touch.px > 198) && highlightedGame > 1) {
-				this->whatToChange_cursorPosition = 2;
-				this->cursorChange();
-				this->runSelection = true;
+				whatToChange_cursorPosition = 2;
+				cursorChange();
+				runSelection = true;
 			}
 		}
 		
-		if (this->runSelection) {
+		if (runSelection) {
 			sndSelect();
-			switch (this->whatToChange_cursorPosition) {
+			switch (whatToChange_cursorPosition) {
 				case 0:
 					if ((highlightedGame==1 && ss2SaveFound)
 					|| (highlightedGame==2 && ss3SaveFound)
@@ -188,8 +183,8 @@ void WhatToDo::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 						Gui::setScreen(std::make_unique<CharacterChange>(), true);
 					} else {
 						sndBack();
-						this->messageNo = 1;
-						this->showMessage = true;
+						messageNo = 1;
+						showMessage = true;
 					}
 					break;
 				case 1:
