@@ -185,11 +185,6 @@ void EmblemChange::Draw(void) const {
 	//drawEmblem(136, 56, true);
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
-	if (cinemaWide) {
-		Gui::Draw_Rect(0, 0, 400, 36, C2D_Color32(0, 0, 0, 255));
-		Gui::Draw_Rect(0, 204, 400, 36, C2D_Color32(0, 0, 0, 255));
-	}
-
 	if (shiftBySubPixel) return;
 	Gui::ScreenDraw(Bottom);
 	Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG

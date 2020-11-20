@@ -8,7 +8,6 @@ extern u64 appID;
 extern bool exiting;
 
 extern int ss1Logo;
-extern int ss2Screenshot;
 extern int ss2Logo;
 extern int ss1LogoXpos;
 extern int ssLogoXpos;
@@ -79,25 +78,20 @@ void GameSelect::Draw(void) const {
 	switch(highlightedGame) {
 		case 0:
 		default:
-			GFX::DrawGameShotSprite(gameShotSprites_title1_screenshot_idx, 0, (cinemaWide ? 8 : 0));
+			GFX::DrawGameShotSprite(gameShotSprites_title1_screenshot_idx, 0, 0);
 			break;
 		case 1:
-			GFX::DrawGameShotSprite(ss2Screenshot, 0, (cinemaWide ? 24 : 0));
+			GFX::DrawGameShotSprite(gameShotSprites_title2_screenshot_idx, 0, 0);
 			break;
 		case 2:
-			GFX::DrawGameShotSprite(gameShotSprites_title3_screenshot_idx, 0, (cinemaWide ? 24 : 0));
+			GFX::DrawGameShotSprite(gameShotSprites_title3_screenshot_idx, 0, 0);
 			break;
 		case 3:
-			GFX::DrawGameShotSprite(gameShotSprites_title4_screenshot_idx, 0, (cinemaWide ? 32 : 0));
+			GFX::DrawGameShotSprite(gameShotSprites_title4_screenshot_idx, 0, 0);
 			break;
 	}
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-
-	if (cinemaWide) {
-		Gui::Draw_Rect(0, 0, 400, 36, C2D_Color32(0, 0, 0, 255));
-		Gui::Draw_Rect(0, 204, 400, 36, C2D_Color32(0, 0, 0, 255));
-	}
 
 	if (shiftBySubPixel) {
 		Gui::Draw_Rect(0, 239, 400, 1, C2D_Color32(0, 0, 0, 255));

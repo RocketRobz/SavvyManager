@@ -26,7 +26,6 @@ Handle threadRequest;
 
 char verText[32];
 int studioBg = 0;
-bool cinemaWide = false;
 int iFps = 60;
 std::string currentMusicPack = "";
 bool ss3DLCharactersBackedUp = false;
@@ -51,7 +50,6 @@ void loadSettings(void) {
 	CIniFile settingsini(settingsIni);
 
 	//studioBg = settingsini.GetInt("SAVVY-MANAGER", "STUDIO_BG", studioBg);
-	cinemaWide = settingsini.GetInt("SAVVY-MANAGER", "CINEMA_WIDE", cinemaWide);
 	iFps = settingsini.GetInt("SAVVY-MANAGER", "FRAME_RATE", iFps);
 
 	currentMusicPack = settingsini.GetString("SS2", "CURRENT_MUSIC_PACK", currentMusicPack);
@@ -61,7 +59,6 @@ void saveSettings(void) {
 	CIniFile settingsini(settingsIni);
 
 	//settingsini.SetInt("SAVVY-MANAGER", "STUDIO_BG", studioBg);
-	settingsini.SetInt("SAVVY-MANAGER", "CINEMA_WIDE", cinemaWide);
 	settingsini.SetInt("SAVVY-MANAGER", "FRAME_RATE", iFps);
 
 	settingsini.SetString("SS2", "CURRENT_MUSIC_PACK", currentMusicPack);
@@ -118,7 +115,6 @@ bool showCursor = false;
 int cursorAlpha = 0;
 
 int ss1Logo = gameSelSprites_title1_idx;
-int ss2Screenshot = gameShotSprites_title2_screenshot_idx;
 int ss2Logo = gameSelSprites_title2_idx;
 int ss1LogoXpos = 0;
 int ssLogoXpos = 0;
@@ -279,7 +275,6 @@ int main()
 			ss2Id = 0x000A9000;
 			ss3Id = 0x0016A100;
 			ss4Id = 0x00001C26;
-			//ss2Screenshot = gameShotSprites_title2_screenshotE_idx;
 			ss1Logo = gameSelSprites_title1_E_idx;
 			ss2Logo = gameSelSprites_title2_E_idx;
 			ss3Logo = gameSelSprites_title3_E_idx;
@@ -291,7 +286,6 @@ int main()
 			ss2Id = 0x0005D100;
 			ss3Id = 0x0012D800;
 			ss4Id = 0x000019F6;
-			//ss2Screenshot = gameShotSprites_title2_screenshotJ_idx;
 			ss1Logo = gameSelSprites_title1_J_idx;
 			ss2Logo = gameSelSprites_title2_J_idx;
 			ss3Logo = gameSelSprites_title3_J_idx;
@@ -299,7 +293,6 @@ int main()
 			break;
 		case CFG_REGION_KOR:
 			ss2Id = 0x000C4F00;
-			//ss2Screenshot = gameShotSprites_title2_screenshotJ_idx;
 			ss1Logo = gameSelSprites_title1_K_idx;
 			ss2Logo = gameSelSprites_title2_K_idx;
 			ss1LogoXpos = 64;

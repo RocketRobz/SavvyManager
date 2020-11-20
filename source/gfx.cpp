@@ -10,7 +10,6 @@ static C2D_SpriteSheet chracterSprite;
 static bool chracterSpriteLoaded = false;
 
 extern int studioBg;
-extern int cinemaWide;
 extern int iFps;
 
 extern bool showCursor;
@@ -80,11 +79,10 @@ bool GFX::loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSe
 }
 
 void GFX::showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects) {
-	int yPos = -((cinemaWide ? 168 : 240)*zoomIn);
-	if (cinemaWide) yPos += 36;
+	int yPos = -(240*zoomIn);
 
 	C2D_Image image = C2D_SpriteSheetGetImage(chracterSprite, 0);
-	if (!gfxIsWide() || cinemaWide) {
+	if (!gfxIsWide()) {
 		C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
 	}
 
@@ -94,7 +92,7 @@ void GFX::showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects) {
 	} else {
 		C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, fadeAlpha), 1);
 	}
-	C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
+	C2D_DrawImageAt(image, 0, yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, 0.5, 1);
 }
 
 void GFX::DrawGameSelSprite(int img, int x, int y, float ScaleX, float ScaleY) {

@@ -2,7 +2,6 @@
 #include "settings.hpp"
 #include "screenvars.h"
 
-char txt_cinemaWide[24];
 char txt_frameRate[24];
 
 void Settings::Draw(void) const {
@@ -16,11 +15,6 @@ void Settings::Draw(void) const {
 	}
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-
-	if (cinemaWide) {
-		Gui::Draw_Rect(0, 0, 400, 36, C2D_Color32(0, 0, 0, 255));
-		Gui::Draw_Rect(0, 204, 400, 36, C2D_Color32(0, 0, 0, 255));
-	}
 
 	if (shiftBySubPixel) return;
 	Gui::ScreenDraw(Bottom);
@@ -43,10 +37,6 @@ void Settings::Draw(void) const {
 		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 		switch (i) {
 			case 0:
-				sprintf(txt_cinemaWide, "Aspect Ratio: %s", cinemaWide ? "Cinema" : "Normal");
-				Gui::DrawString(32, i2, 0.65, BLACK, txt_cinemaWide);
-				break;
-			case 1:
 				sprintf(txt_frameRate, "Frame Rate: %iFPS", iFps);
 				Gui::DrawString(32, i2, 0.65, BLACK, txt_frameRate);
 				break;
@@ -61,13 +51,13 @@ void Settings::Draw(void) const {
 	GFX::DrawSprite(sprites_arrow_back_idx, 19, 195);
 	GFX::DrawSprite(sprites_button_b_idx, 44, 218);
 
-	GFX::drawCursor(this->cursorX, this->cursorY);
+	GFX::drawCursor(cursorX, cursorY);
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 }
 
 void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
-	if (showCursor) {
+	/*if (showCursor) {
 		if (hDown & KEY_UP) {
 			sndHighlight();
 			cursorPosition--;
@@ -101,15 +91,12 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				cursorPositionOnScreen = 2;
 			}
 		}
-	}
+	}*/
 
 	if ((hDown & KEY_LEFT) && (cursorPosition <= numberOfSettings)) {
 		sndSelect();
 		switch (cursorPosition) {
 			case 0:
-				cinemaWide = !cinemaWide;
-				break;
-			case 1:
 					 if (iFps==30) iFps = 24;
 				else if (iFps==24) iFps = 60;
 				else if (iFps==60) iFps = 30;
@@ -122,9 +109,6 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		sndSelect();
 		switch (cursorPosition) {
 			case 0:
-				cinemaWide = !cinemaWide;
-				break;
-			case 1:
 					 if (iFps==60) iFps = 24;
 				else if (iFps==24) iFps = 30;
 				else if (iFps==30) iFps = 60;
