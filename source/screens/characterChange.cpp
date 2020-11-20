@@ -359,9 +359,9 @@ void CharacterChange::Draw(void) const {
 	if (showMessage && messageNo == 4) {
 		Gui::DrawString(8, 210, 0.50, BLACK, removeBags ? " Keep bags" : " Remove bags");
 		// Selected season
-		Gui::DrawString(160, 210, 0.65, BLACK, "L");
+		Gui::DrawString(160, 208, 0.65, BLACK, "L");
 		Gui::DrawStringCentered(0, 210, 0.50, BLACK, seasonName());
-		Gui::DrawString(232, 210, 0.65, BLACK, "R");
+		Gui::DrawString(232, 208, 0.65, BLACK, "R");
 	}
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
