@@ -207,7 +207,7 @@ const char* CharacterChange::ss3Title(void) const {
 		case CFG_REGION_JPN:
 			return "Girls Mode 3: Kirakira * Code";
 		case CFG_REGION_KOR:
-			return "Girls Style: Kirakira * Code";
+			return "Girls Style: Glitter * Code";
 	}
 }
 
