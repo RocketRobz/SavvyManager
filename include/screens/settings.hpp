@@ -13,7 +13,7 @@ public:
 private:
 	const char* studioBgName(void) const;
 	mutable int cursorX, cursorY;
-	int numberOfSettings = 1;
+	int numberOfSettings = 0;
 	int cursorPosition = 0;
 	int cursorPositionOnScreen = 0;
 	int settingShownFirst = 0;
