@@ -71,22 +71,23 @@ void WhatToDo::Draw(void) const {
 
 	Gui::DrawString(8, 8, 0.50, BLACK, "What do you want to change?");
 	int iconXpos = 64;
+	const float textSize = (sysRegion==CFG_REGION_KOR ? 0.45 : 0.50);
 	GFX::DrawSpriteBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
 	GFX::DrawSprite(sprites_icon_profile_idx, iconXpos, 80);
-	Gui::DrawString(iconXpos-2, 140, 0.50, RED, "Characters");
+	Gui::DrawStringCentered(-64, 140, textSize, RED, "Characters");
 	iconXpos += 64;
 	if (highlightedGame == 1) {
 		// Show music pack option for Trendsetters
 		GFX::DrawSpriteBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
 		GFX::DrawSprite(sprites_icon_music_idx, iconXpos, 80);
-		Gui::DrawString(iconXpos+14, 140, 0.50, RED, "Music");
+		Gui::DrawStringCentered(0, 140, textSize, RED, "Music");
 	}
 	iconXpos += 64;
 	if (highlightedGame > 1) {
 		// Show emblem option for Fashion Forward and Styling Star
 		GFX::DrawSpriteBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
 		GFX::DrawSprite(sprites_icon_emblem_idx, iconXpos, 80);
-		Gui::DrawString(iconXpos+8, 140, 0.50, RED, "Emblem");
+		Gui::DrawStringCentered(64, 140, textSize, RED, "Emblem");
 	}
 	GFX::DrawSprite(sprites_button_shadow_idx, 5, 199);
 	GFX::DrawSprite(sprites_button_red_idx, 5, 195);
