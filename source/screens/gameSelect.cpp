@@ -47,6 +47,7 @@ void GameSelect::drawCannotEditMsg(void) const {
 				break;
 			case CFG_REGION_JPN:
 				Gui::DrawStringCentered(0, 92, 0.60, BLACK, "Cannot edit Girls Mode's");
+				break;
 			case CFG_REGION_KOR:
 				Gui::DrawStringCentered(0, 92, 0.60, BLACK, "Cannot edit Girls Style's");
 				break;
