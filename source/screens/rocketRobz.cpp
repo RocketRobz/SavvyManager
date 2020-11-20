@@ -3,6 +3,7 @@
 #include "screenvars.h"
 
 extern char verText[32];
+extern u8 sysRegion;
 
 static int subMode = 0;
 static int prevSubMode = -1;
@@ -48,7 +49,7 @@ void RocketRobz::Draw(void) const {
 			if (rrTextFade < 0) rrTextFade = 0;
 
 			Gui::DrawString(8, 218-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, yearText);
-			GFX::DrawSpriteLinear(sprites_text_rocketrobz_idx, 87, 220-(shiftBySubPixel ? 0.5f : 0), 0.5, 1);
+			GFX::DrawSpriteLinear(sprites_text_rocketrobz_idx, (sysRegion==CFG_REGION_KOR ? 96 : 87), 220-(shiftBySubPixel ? 0.5f : 0), 0.5, 1);
 		} else {
 			robzXpos -= 4;
 			robzYpos -= 4;
