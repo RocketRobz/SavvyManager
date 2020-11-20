@@ -10,6 +10,10 @@ extern int delay;
 static int rr_fadeAlpha = 0;
 static int rr_fadeType = true;
 
+static int robzXpos = 135+220;
+static int robzYpos = 19+220;
+static int rrTextFade = 255;
+
 void RocketRobz::Draw(void) const {
 	/*if (!this->musicPlayed) {
 		extern void musLogos(void);
@@ -20,14 +24,36 @@ void RocketRobz::Draw(void) const {
 	Gui::ScreenDraw(Top);
 
 	if (subMode == 2) {
-		if (cinemaWide) {
-			GFX::DrawSpriteLinear(sprites_logo_rocketrobz_idx, 60, 36, 0.35f, 0.7f);
-		} else {
-			GFX::DrawSpriteLinear(sprites_logo_rocketrobz_idx, 0, 0, 0.5, 1);
-		}
+		// Top half gradient
+		C2D_DrawRectangle(
+	64, 42, 0, 280, 76,
+	C2D_Color32(82, 0, 121, 255), C2D_Color32(82, 0, 121, 255),
+	C2D_Color32(169, 0, 254, 255), C2D_Color32(169, 0, 254, 255));
+		// Bottom half gradient
+		C2D_DrawRectangle(
+	64, 118, 0, 280, 86,
+	C2D_Color32(169, 0, 254, 255), C2D_Color32(169, 0, 254, 255),
+	C2D_Color32(71, 0, 104, 255), C2D_Color32(71, 0, 104, 255));
+
+		GFX::DrawSpriteLinearBlend(sprites_rr_robz_idx, robzXpos-7, robzYpos, C2D_Color32(255, 0, 0, 127), 0.5, 1);
+		GFX::DrawSpriteLinearBlend(sprites_rr_robz_idx, robzXpos+7, robzYpos, C2D_Color32(0, 0, 255, 127), 0.5, 1);
+		GFX::DrawSpriteLinear(sprites_rr_shapeBG_idx, 50, 0, 0.5, 1);
 		Gui::Draw_Rect(0, 238, 400, 2, C2D_Color32(0, 0, 0, 255));	// Hide line from other texture(s)
-		Gui::DrawString(8, (cinemaWide ? 182 : 218)-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, yearText);
-		GFX::DrawSpriteLinear(sprites_text_rocketrobz_idx, 86, (cinemaWide ? 184 : 220)-(shiftBySubPixel ? 0.5f : 0), 0.5, 1);
+		GFX::DrawSpriteLinear(sprites_rr_robz_idx, robzXpos, robzYpos, 0.5, 1);
+		if (robzXpos == 135 && robzYpos == 19) {
+			GFX::DrawSpriteLinear(sprites_logo_rocketrobz_idx, 54, 74, 0.5, 1);
+			if (rrTextFade > 0) GFX::DrawSpriteLinearBlend(sprites_logo_rocketrobz_idx, 54, 74, C2D_Color32(255, 255, 255, rrTextFade), 0.5, 1);
+			rrTextFade -= 16;
+			if (rrTextFade < 0) rrTextFade = 0;
+
+			Gui::DrawString(8, 218-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, yearText);
+			GFX::DrawSpriteLinear(sprites_text_rocketrobz_idx, 87, 220-(shiftBySubPixel ? 0.5f : 0), 0.5, 1);
+		} else {
+			robzXpos -= 4;
+			robzYpos -= 4;
+			if (robzXpos < 135) robzXpos = 135;
+			if (robzYpos < 19) robzYpos = 19;
+		}
 	} else {
 		GFX::DrawSprite(sprites_logo_savvymanager_idx, 56, 58);
 		if (gfxIsWide()) {
@@ -36,15 +62,10 @@ void RocketRobz::Draw(void) const {
 				Gui::Draw_Rect(i, 0, 0.5, 240, C2D_Color32(0, 0, 0, 127));
 			}
 		}
-		Gui::DrawString(328, (cinemaWide ? 182 : 218)-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, verText);
+		Gui::DrawString(328, 218-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, verText);
 	}
 	if (delay > iFps*6 && rr_fadeAlpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(0, 0, 0, rr_fadeAlpha)); // Fade in/out effect
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-
-	if (cinemaWide) {
-		Gui::Draw_Rect(0, 0, 400, 36, C2D_Color32(0, 0, 0, 255));
-		Gui::Draw_Rect(0, 204, 400, 36, C2D_Color32(0, 0, 0, 255));
-	}
 
 	if (shiftBySubPixel) return;
 	Gui::ScreenDraw(Bottom);
@@ -120,4 +141,8 @@ void RocketRobz::Draw(void) const {
 }
 
 
-void RocketRobz::Logic(u32 hDown, u32 hHeld, touchPosition touch) { }
+void RocketRobz::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
+	if ((hDown & KEY_START || hDown & KEY_TOUCH) && subMode == 2) {
+		delay = iFps*10;
+	}
+}

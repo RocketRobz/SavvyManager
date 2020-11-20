@@ -370,7 +370,7 @@ int main()
 
 		if (isInit) {
 			delay++;
-			if (delay > iFps*10) {
+			if (delay > iFps*11) {
 				Gui::setScreen(std::make_unique<GameSelect>(), true); // Set after delay to the game select screen.
 				isInit = false;
 			}

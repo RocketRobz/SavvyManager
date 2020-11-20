@@ -48,7 +48,8 @@ namespace GFX {
 	void DrawGameBgSprite(int img, int x, int y, float ScaleX = 1, float ScaleY = 1);
 	void DrawSprite(int img, int x, int y, float ScaleX = 1, float ScaleY = 1);
 	void DrawSpriteLinear(int img, int x, int y, float ScaleX = 1, float ScaleY = 1);
-	void DrawSpriteBlend(int img, float x, float y, u32 color, float ScaleX = 1, float ScaleY = 1, GPU_TEXTURE_FILTER_PARAM filter = GPU_NEAREST);
+	void DrawSpriteBlend(int img, float x, float y, u32 color, float ScaleX = 1, float ScaleY = 1);
+	void DrawSpriteLinearBlend(int img, float x, float y, u32 color, float ScaleX = 1, float ScaleY = 1);
 
 	// Draw Cursor.
 	void drawCursor(int cX, int cY);
