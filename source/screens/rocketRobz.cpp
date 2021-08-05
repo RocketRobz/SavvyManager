@@ -25,6 +25,17 @@ void RocketRobz::Draw(void) const {
 	Gui::ScreenDraw(Top);
 
 	if (subMode == 2) {
+		GFX::DrawSprite(sprites_logo_savvymanager_idx, 56, 58);
+		if (gfxIsWide()) {
+			// Replicate dot by dot image
+			for (int i = 32; i < 400-32; i++) {
+				Gui::Draw_Rect(i, 0, 0.5, 240, C2D_Color32(0, 0, 0, 127));
+			}
+		}
+		Gui::DrawString(120, 218-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, yearText);
+		GFX::DrawSpriteLinear(sprites_text_rocketrobz_idx, 120+(sysRegion==CFG_REGION_KOR ? 88 : 79), 220-(shiftBySubPixel ? 0.5f : 0), 0.5, 1);
+		Gui::DrawString(8, 8-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, verText);
+	} else {
 		// Top half gradient
 		C2D_DrawRectangle(
 	64, 42, 0, 280, 76,
@@ -47,50 +58,37 @@ void RocketRobz::Draw(void) const {
 			if (rrTextFade > 0) GFX::DrawSpriteLinearBlend(sprites_logo_rocketrobz_idx, 54, 74, C2D_Color32(255, 255, 255, rrTextFade), 0.5, 1);
 			rrTextFade -= 16;
 			if (rrTextFade < 0) rrTextFade = 0;
-
-			Gui::DrawString(8, 218-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, yearText);
-			GFX::DrawSpriteLinear(sprites_text_rocketrobz_idx, (sysRegion==CFG_REGION_KOR ? 96 : 87), 220-(shiftBySubPixel ? 0.5f : 0), 0.5, 1);
 		} else {
 			robzXpos -= 4;
 			robzYpos -= 4;
 			if (robzXpos < 135) robzXpos = 135;
 			if (robzYpos < 19) robzYpos = 19;
 		}
-	} else {
-		GFX::DrawSprite(sprites_logo_savvymanager_idx, 56, 58);
-		if (gfxIsWide()) {
-			// Replicate dot by dot image
-			for (int i = 32; i < 400-32; i++) {
-				Gui::Draw_Rect(i, 0, 0.5, 240, C2D_Color32(0, 0, 0, 127));
-			}
-		}
-		Gui::DrawString(328, 218-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, verText);
 	}
 	if (delay > iFps*6 && rr_fadeAlpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(0, 0, 0, rr_fadeAlpha)); // Fade in/out effect
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
 	if (shiftBySubPixel) return;
 	Gui::ScreenDraw(Bottom);
-	if (subMode == 2) {
+	if (subMode == 2 && gfxIsWide()) {
 		//GFX::DrawSprite(sprites_logo_SSanniversary_idx, 32, 24);
-		GFX::DrawSprite(sprites_logo_UniversalCore_idx, 0, 26);
+		//Gui::DrawStringCentered(0, 48, 0.50, WHITE, this->presentedText);
+		//Gui::DrawStringCentered(0, 88, 0.60, WHITE, "Cinema");
+		//GFX::DrawSprite(sprites_logo_widescreen_idx, 66, 107);
+		Gui::DrawStringCentered(0, 48, 0.75, WHITE, this->presentedText);
+		GFX::DrawSprite(sprites_logo_horiHD_idx, 32, 85);
 	} else if (subMode == 1) {
-		Gui::Draw_Rect(0, 0, 320, 240, WHITE);
-		GFX::DrawSprite(sprites_logo_nintendoSynSophia_idx, 0, 0);
+		Gui::Draw_Rect(0, 0, 320, 120, C2D_Color32(230, 0, 18, 255));
+		Gui::Draw_Rect(0, 120, 320, 120, WHITE);
+		GFX::DrawSprite(sprites_logo_nintendoSynSophia_idx, 0, 48);
 		Gui::DrawStringCentered(0, 8, 0.50, WHITE, this->gamesByText);
 		if (sysRegion == CFG_REGION_KOR) {
 			Gui::DrawStringCentered(0, 218, 0.50, BLACK, this->gameYearTextKOR);
 		} else {
 			Gui::DrawStringCentered(0, 218, 0.50, BLACK, sysRegion==CFG_REGION_JPN ? this->gameYearText : this->gameYearText2);
 		}
-	} else if (gfxIsWide()) {
-		//Gui::DrawStringCentered(0, 48, 0.50, WHITE, this->presentedText);
-		//Gui::DrawStringCentered(0, 88, 0.60, WHITE, "Cinema");
-		//GFX::DrawSprite(sprites_logo_widescreen_idx, 66, 107);
-		Gui::DrawStringCentered(0, 48, 0.75, WHITE, this->presentedText);
-		GFX::DrawSprite(sprites_logo_horiHD_idx, 32, 85);
-	} else {
-		if (delay < iFps*3) delay = iFps*3;
+	} else if (subMode == 0) {
+		GFX::DrawSprite(sprites_logo_UniversalCore_idx, 0, 26);
 	}
 	if (rr_fadeAlpha > 0) Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(0, 0, 0, rr_fadeAlpha)); // Fade in/out effect
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
@@ -106,9 +104,6 @@ void RocketRobz::Draw(void) const {
 		case 24:
 			fadeFPS = 14;
 			break;
-	}
-	if (subMode == 2) {
-		fadeFPS += fadeFPS;
 	}
 	
 	if (rr_fadeType) {
