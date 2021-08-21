@@ -39,6 +39,7 @@ sound *sfx_select = NULL;
 sound *sfx_back = NULL;
 sound *sfx_highlight = NULL;
 
+bool horiHd = true;
 bool dspfirmfound = false;
 bool exiting = false;
 bool musicPlayStarted = false;
@@ -51,6 +52,7 @@ void loadSettings(void) {
 
 	//studioBg = settingsini.GetInt("SAVVY-MANAGER", "STUDIO_BG", studioBg);
 	iFps = settingsini.GetInt("SAVVY-MANAGER", "FRAME_RATE", iFps);
+	horiHd = settingsini.GetInt("SAVVY-MANAGER", "HORI_HD", horiHd);
 
 	currentMusicPack = settingsini.GetString("SS2", "CURRENT_MUSIC_PACK", currentMusicPack);
 }
@@ -172,8 +174,8 @@ int main()
 	aptExit();
 
 	gfxInitDefault();
-	gfxSetWide(consoleModel != 3);	// Enable 800x240 mode for non-O2DS consoles. Improves clarity in graphics.
 	loadSettings();
+	gfxSetWide(horiHd && consoleModel != 3);	// Enable 800x240 mode for non-O2DS consoles. Improves clarity in graphics.
 
 	Gui::init();
 	GFX::loadSheets();
