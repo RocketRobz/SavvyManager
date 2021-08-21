@@ -719,10 +719,25 @@ void CharacterChange::Draw(void) const {
 	Gui::ScreenDraw(Top);
 
 	//GFX::showBgSprite(zoomIn);
-	Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
-	for(int w = 0; w < 7; w++) {
-		for(int h = 0; h < 3; h++) {
-			GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
+	if (highlightedGame == 3 && !previewCharacter) {
+		Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(247, 206, 164, 255));
+		bool light = true;
+		int x = 0;
+		int width = 29;
+		for (int i = 0; i < 14; i++) {
+			if (light) {
+				Gui::Draw_Rect(x, 0, width, 240, C2D_Color32(247, 231, 206, 255));
+			}
+			light = !light;
+			x += width;
+			width = light ? 29 : 28;
+		}
+	} else {
+		Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
+		for(int w = 0; w < 7; w++) {
+			for(int h = 0; h < 3; h++) {
+				GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
+			}
 		}
 	}
 	if (previewCharacter) {
@@ -732,6 +747,9 @@ void CharacterChange::Draw(void) const {
 			Gui::DrawStringCentered(0, 104, 0.65, BLACK, (import_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
 		}
 	} else if (subScreenMode == 0 && peopleMet > 0) {
+		if (highlightedGame == 3) {
+			Gui::Draw_Rect(0, 208, 400, 32, WHITE);
+		}
 		char peopleMetText[24];
 		sprintf(peopleMetText, "People Met: %i", peopleMet);
 		Gui::DrawStringCentered(0, 216, 0.55, BLACK, peopleMetText);
@@ -754,10 +772,27 @@ void CharacterChange::Draw(void) const {
 		return;
 	}
 	Gui::ScreenDraw(Bottom);
-	Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
-	for(int w = 0; w < 7; w++) {
-		for(int h = 0; h < 3; h++) {
-			GFX::DrawSprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
+	if (highlightedGame == 3) {
+		Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(247, 214, 181, 255));
+		bool dark = true;
+		int x = 0;
+		int width = 17;
+		for (int i = 0; i < 14; i++) {
+			if (dark) {
+				Gui::Draw_Rect(x, 0, width, 240, C2D_Color32(247, 206, 164, 255));
+			}
+			dark = !dark;
+			x += width;
+			width = dark ? 29 : 28;
+		}
+		Gui::Draw_Rect(0, 0, 320, 33, C2D_Color32(247, 235, 206, 255));
+		Gui::Draw_Rect(0, 33, 320, 5, C2D_Color32(214, 158, 58, 255));
+	} else {
+		Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
+		for(int w = 0; w < 7; w++) {
+			for(int h = 0; h < 3; h++) {
+				GFX::DrawSprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
+			}
 		}
 	}
 
@@ -794,7 +829,7 @@ void CharacterChange::Draw(void) const {
 		}
 
 	  if (!displayNothing) {
-		int i2 = 48;
+		int i2 = (highlightedGame == 3 ? 56 : 48);
 		for (int i = import_characterShownFirst; i < import_characterShownFirst+3; i++) {
 			if (import_highlightedGame == 4) {
 				if (i >= numberOfExportedCharacters) break;
@@ -826,7 +861,7 @@ void CharacterChange::Draw(void) const {
 
 		Gui::DrawString(8, 8, 0.50, BLACK, characterName(true));
 
-		int i2 = 0;
+		int i2 = (highlightedGame == 3 ? 8 : 0);
 		if (characterChangeMenu_optionShownFirst == 0) {
 			i2 += 48;
 			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
@@ -863,7 +898,7 @@ void CharacterChange::Draw(void) const {
 		}
 
 	  if (!displayNothing) {
-		int i2 = 48;
+		int i2 = (highlightedGame == 3 ? 56 : 48);
 		for (int i = characterShownFirst; i < characterShownFirst+3; i++) {
 			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 			if (highlightedGame == 3) {

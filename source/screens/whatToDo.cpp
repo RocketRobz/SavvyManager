@@ -35,10 +35,25 @@ void WhatToDo::Draw(void) const {
 
 	Gui::ScreenDraw(Top);
 
-	Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
-	for(int w = 0; w < 7; w++) {
-		for(int h = 0; h < 3; h++) {
-			GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
+	if (highlightedGame == 3) {
+		Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(247, 206, 164, 255));
+		bool light = true;
+		int x = 0;
+		int width = 29;
+		for (int i = 0; i < 14; i++) {
+			if (light) {
+				Gui::Draw_Rect(x, 0, width, 240, C2D_Color32(247, 231, 206, 255));
+			}
+			light = !light;
+			x += width;
+			width = light ? 29 : 28;
+		}
+	} else {
+		Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
+		for(int w = 0; w < 7; w++) {
+			for(int h = 0; h < 3; h++) {
+				GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
+			}
 		}
 	}
 
@@ -62,10 +77,27 @@ void WhatToDo::Draw(void) const {
 
 	if (shiftBySubPixel) return;
 	Gui::ScreenDraw(Bottom);
-	Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
-	for(int w = 0; w < 7; w++) {
-		for(int h = 0; h < 3; h++) {
-			GFX::DrawSprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
+	if (highlightedGame == 3) {
+		Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(247, 214, 181, 255));
+		bool dark = true;
+		int x = 0;
+		int width = 17;
+		for (int i = 0; i < 14; i++) {
+			if (dark) {
+				Gui::Draw_Rect(x, 0, width, 240, C2D_Color32(247, 206, 164, 255));
+			}
+			dark = !dark;
+			x += width;
+			width = dark ? 29 : 28;
+		}
+		Gui::Draw_Rect(0, 0, 320, 33, C2D_Color32(247, 235, 206, 255));
+		Gui::Draw_Rect(0, 33, 320, 5, C2D_Color32(214, 158, 58, 255));
+	} else {
+		Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
+		for(int w = 0; w < 7; w++) {
+			for(int h = 0; h < 3; h++) {
+				GFX::DrawSprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
+			}
 		}
 	}
 
