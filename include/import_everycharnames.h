@@ -39,7 +39,6 @@ const char* import_everyCharacterNames[] {
 	"Abigail",
 	"Jo",
 	"Madeira",
-// Not found in SS4 save data yet
 	"Xin",
 	"Hannah",
 	"Sylvia",
@@ -48,7 +47,6 @@ const char* import_everyCharacterNames[] {
 	"Tessa Lyle",
 	"Yvette Regnier",
 	"Yulia Mirova",
-//
 	"Robz"
 };
 
@@ -93,7 +91,6 @@ const char* import_everyCharacterProfileNamesEUR[] {
 	"Abigail",
 	"Jo",
 	"Madeira",
-// Not found in NSB3 save data yet
 	"Xin",
 	"Hannah",
 	"Sylvia",
@@ -102,6 +99,5 @@ const char* import_everyCharacterProfileNamesEUR[] {
 	"Tessa Lyle",
 	"Yvette Regnier",
 	"Yulia Mirova",
-//
 	"Robz"
 };

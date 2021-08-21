@@ -23,6 +23,7 @@ char ss1PlayerName[10] = {0};
 char ss2PlayerName[10] = {0};
 char ss3PlayerName[10] = {0};
 char ss4PlayerName[10] = {0};
+char dlCharName[16] = {0};
 
 static bool ss1SaveRead = false;
 static bool ss2SaveRead = false;
@@ -193,105 +194,162 @@ void writeSS3Save(void) {
 	ss3SaveModified = true;
 }
 
-void readSS3Character(u16 id) {
-	u32 playableCharOffset = (sysRegion==CFG_REGION_JPN ? 0x5387E : 0x54A22);
-	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x830D2 : 0x8427E);
-	u32 npCharOffset = (sysRegion==CFG_REGION_JPN ? 0x54D52 : 0x55EFE);
-
-	if (id == 0) {
+static u32 getSS3CharacterOffset(u16 id) {
+	if (id == 0x7D1) {
 		// Playable character
-		tonccpy(&ss4CharacterData, (char*)ss3Save+(playableCharOffset), 0x36);
+		return (sysRegion==CFG_REGION_JPN ? 0x5387E : 0x54A22);
 	} else if (id >= 0x0BB9) {
 		// Downloaded character
 		id -= 0x0BB9;
-		tonccpy(&ss4CharacterData, (char*)ss3Save+(dlCharOffset + (0x110*id)), 0x36);
+		return (sysRegion==CFG_REGION_JPN ? 0x830D2 : 0x8427E) + (0x110*id);
+	} else if (id == 0x0B87) {
+		// Unused/Hidden character
+		return (sysRegion==CFG_REGION_JPN ? 0x82FC2 : 0x8416E);
+	} else if (id == 0x0B55) {
+		// Unused/Hidden character
+		return (sysRegion==CFG_REGION_JPN ? 0x82EB2 : 0x8405E);
+	} else if (id == 0x0A8D) {
+		// Unused/Hidden character
+		return (sysRegion==CFG_REGION_JPN ? 0x82DA2 : 0x83F4E);
+	} else if (id == 0x0A29 || id == 0x0A2A) {
+		// Unused/Hidden character
+		id -= 0x0A29;
+		return (sysRegion==CFG_REGION_JPN ? 0x82B82 : 0x83D2E) + (0x110*id);
+	} else if (id >= 0x09C5 && id <= 0x09C9) {
+		// Unused/Hidden character
+		id -= 0x09C5;
+		return (sysRegion==CFG_REGION_JPN ? 0x82632 : 0x837DE) + (0x110*id);
+	} else if (id == 0x0961) {
+		// Unused/Hidden character
+		return (sysRegion==CFG_REGION_JPN ? 0x82522 : 0x836CE);
+	} else if (id >= 0x08FD && id <= 0x0901) {
+		// Unused/Hidden character
+		id -= 0x08FD;
+		return (sysRegion==CFG_REGION_JPN ? 0x81FD2 : 0x8317E) + (0x110*id);
+	} else if (id == 0x0899) {
+		// Unused/Hidden character
+		return (sysRegion==CFG_REGION_JPN ? 0x81EC2 : 0x8360E);
+	} else if (id >= 0x0835 && id <= 0x0852) {
+		// Unused/Hidden character
+		id -= 0x0835;
+		return (sysRegion==CFG_REGION_JPN ? 0x7FEE2 : 0x8101E) + (0x110*id);
+	} else if (id >= 0x044C && id <= 0x0469) {
+		// Non-playable character
+		id -= 0x044C;
+		return (sysRegion==CFG_REGION_JPN ? 0x7D9B2 : 0x7EB5E) + (0x110*id);
+	} else if (id >= 0x041A && id <= 0x0437) {
+		// Non-playable character
+		id -= 0x041A;
+		return (sysRegion==CFG_REGION_JPN ? 0x7BD92 : 0x7CB7E) + (0x110*id);
+	} else if (id >= 0x03E8 && id <= 0x0405) {
+		// Non-playable character
+		id -= 0x03E8;
+		return (sysRegion==CFG_REGION_JPN ? 0x799F2 : 0x7AB9E) + (0x110*id);
+	} else if (id >= 0x0352 && id <= 0x036F) {
+		// Non-playable character
+		id -= 0x0352;
+		return (sysRegion==CFG_REGION_JPN ? 0x77A12 : 0x78BBE) + (0x110*id);
+	} else if (id >= 0x0320 && id <= 0x033D) {
+		// Non-playable character
+		id -= 0x0320;
+		return (sysRegion==CFG_REGION_JPN ? 0x75A32 : 0x76BDE) + (0x110*id);
+	} else if (id >= 0x02EE && id <= 0x030B) {
+		// Non-playable character
+		id -= 0x02EE;
+		return (sysRegion==CFG_REGION_JPN ? 0x73A52 : 0x74BFE) + (0x110*id);
+	} else if (id >= 0x02BC && id <= 0x02D9) {
+		// Non-playable character
+		id -= 0x02BC;
+		return (sysRegion==CFG_REGION_JPN ? 0x71962 : 0x72C1E) + (0x110*id);
+	} else if (id >= 0x028A && id <= 0x02A7) {
+		// Non-playable character
+		id -= 0x028A;
+		return (sysRegion==CFG_REGION_JPN ? 0x6FA92 : 0x70C3E) + (0x110*id);
+	} else if (id >= 0x0258 && id <= 0x0275) {
+		// Non-playable character
+		id -= 0x0258;
+		return (sysRegion==CFG_REGION_JPN ? 0x6DAB2 : 0x6EC5E) + (0x110*id);
+	} else if (id >= 0x0226 && id <= 0x0243) {
+		// Non-playable character
+		id -= 0x0226;
+		return (sysRegion==CFG_REGION_JPN ? 0x6BAD2 : 0x6CC7E) + (0x110*id);
+	} else if (id >= 0x01F4 && id <= 0x0211) {
+		// Non-playable character
+		id -= 0x01F4;
+		return (sysRegion==CFG_REGION_JPN ? 0x69AF2 : 0x6AC9E) + (0x110*id);
+	} else if (id >= 0x01C2 && id >= 0x01DF) {
+		// Non-playable character
+		id -= 0x01C2;
+		return (sysRegion==CFG_REGION_JPN ? 0x67B12 : 0x68CBE) + (0x110*id);
+	} else if (id >= 0x0190 && id <= 0x01AD) {
+		// Non-playable character
+		id -= 0x0190;
+		return (sysRegion==CFG_REGION_JPN ? 0x65B32 : 0x66CDE) + (0x110*id);
+	} else if (id >= 0x015E && id <= 0x017B) {
+		// Non-playable character
+		id -= 0x015E;
+		return (sysRegion==CFG_REGION_JPN ? 0x63B52 : 0x64CFE) + (0x110*id);
+	} else if (id >= 0x012C && id <= 0x0149) {
+		// Non-playable character
+		id -= 0x012C;
+		return (sysRegion==CFG_REGION_JPN ? 0x61B72 : 0x62D1E) + (0x110*id);
+	} else if (id >= 0xFA && id <= 0x0117) {
+		// Non-playable character
+		id -= 0xFA;
+		return (sysRegion==CFG_REGION_JPN ? 0x5FB92 : 0x60D3E) + (0x110*id);
+	} else if (id >= 0xC8 && id <= 0xE5) {
+		// Non-playable character
+		id -= 0xC8;
+		return (sysRegion==CFG_REGION_JPN ? 0x5DBB2 : 0x5ED5E) + (0x110*id);
+	} else if (id >= 0x96 && id <= 0xB3) {
+		// Non-playable character
+		id -= 0x96;
+		return (sysRegion==CFG_REGION_JPN ? 0x5BBD2 : 0x5CD7E) + (0x110*id);
+	} else if (id >= 0x64 && id <= 0x81) {
+		// Non-playable character
+		id -= 0x64;
+		return (sysRegion==CFG_REGION_JPN ? 0x59BF2 : 0x5AD9E) + (0x110*id);
+	} else if (id >= 0x32 && id <= 0x5E) {
+		// Non-playable character
+		id -= 0x32;
+		return (sysRegion==CFG_REGION_JPN ? 0x56C22 : 0x57DCE) + (0x110*id);
 	} else {
 		id--;
 		// Non-playable character
-		tonccpy(&ss4CharacterData, (char*)ss3Save+(npCharOffset + (0x110*id)), 0x36);
+		return (sysRegion==CFG_REGION_JPN ? 0x54D52 : 0x55EFE) + (0x110*id);
 	}
 }
 
-void writeSS3Character(u16 id) {
-	u32 playableCharOffset = (sysRegion==CFG_REGION_JPN ? 0x5387E : 0x54A22);
-	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x830D2 : 0x8427E);
-	u32 npCharOffset = (sysRegion==CFG_REGION_JPN ? 0x54D52 : 0x55EFE);
+inline void readSS3Character(u16 id) {
+	tonccpy(&ss4CharacterData, (char*)ss3Save+getSS3CharacterOffset(id), 0x36);
+}
 
-	if (id == 0) {
-		// Playable character
-		tonccpy((char*)ss3Save+(playableCharOffset), &ss4CharacterData, 0x36);
-	} else if (id >= 0x0BB9) {
-		// Downloaded character
-		id -= 0x0BB9;
-		tonccpy((char*)ss3Save+(dlCharOffset + (0x110*id)), &ss4CharacterData, 0x36);
-	} else {
-		id--;
-		// Non-playable character
-		tonccpy((char*)ss3Save+(npCharOffset + (0x110*id)), &ss4CharacterData, 0x36);
-	}
+inline void writeSS3Character(u16 id) {
+	tonccpy((char*)ss3Save+getSS3CharacterOffset(id), &ss4CharacterData, 0x36);
 }
 
 void toggleSS3Character(u16 id, bool enable) {
-	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x83182 : 0x8432E);
+	if (id == 0 || id == 0x7D1) return;
 
-	if (id >= 0x0BB9) {
-		// Downloaded character
-		id -= 0x0BB9;
-		*(u16*)(ss3Save+(dlCharOffset + (0x110*id))) = (enable ? 0x4013 : 0x0000);
-	}
+	*(u16*)((char*)ss3Save+getSS3CharacterOffset(id)+0xB0) = (enable ? 0x4013 : 0x0000);
 }
 
 bool existsSS3Character(u16 id) {
-	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x83182 : 0x8432E);
+	if (id == 0 || id == 0x7D1) return true;
 
-	if (id >= 0x0BB9) {
-		// Downloaded character
-		id -= 0x0BB9;
-		return *(u16*)(ss3Save+(dlCharOffset + (0x110*id))) == 0x4013;
-	}
-
-	return true;
+	u8 byte = *(u8*)((char*)ss3Save+getSS3CharacterOffset(id)+0xB1);
+	return (byte & 0xF0) == 0x40;
 }
 
 void removeSS3CharacterBag(u16 id) {
-	u32 playableCharOffset = (sysRegion==CFG_REGION_JPN ? 0x538B2 : 0x54A56);
-	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x83106 : 0x842B2);
-	u32 npCharOffset = (sysRegion==CFG_REGION_JPN ? 0x54D86 : 0x55F32);
-
-	if (id == 0) {
-		// Playable character
-		*(u16*)(ss3Save+(playableCharOffset)) = 0;
-	} else if (id >= 0x0BB9) {
-		// Downloaded character
-		id -= 0x0BB9;
-		*(u16*)(ss3Save+(dlCharOffset + (0x110*id))) = 0;
-	} else {
-		id--;
-		// Non-playable character
-		*(u16*)(ss3Save+(npCharOffset + (0x110*id))) = 0;
-	}
+	*(u16*)((char*)ss3Save+getSS3CharacterOffset(id)+0x34) = 0;
 }
 
 void readSS3CharacterFile(u16 id, const char* filename) {
 	FILE* characterData = fopen(filename, "rb");
 	if (!characterData) return;
 
-	u32 playableCharOffset = (sysRegion==CFG_REGION_JPN ? 0x5387E : 0x54A22);
-	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x830D2 : 0x8427E);
-	u32 npCharOffset = (sysRegion==CFG_REGION_JPN ? 0x54D52 : 0x55EFE);
-
-	if (id == 0) {
-		// Playable character
-		fread((char*)ss3Save+(playableCharOffset), 0x36, 1, characterData);
-	} else if (id >= 0x0BB9) {
-		// Downloaded character
-		id -= 0x0BB9;
-		fread((char*)ss3Save+(dlCharOffset + (0x110*id)), 0x36, 1, characterData);
-	} else {
-		id--;
-		// Non-playable character
-		fread((char*)ss3Save+(npCharOffset + (0x110*id)), 0x36, 1, characterData);
-	}
+	fread((char*)ss3Save+getSS3CharacterOffset(id), 0x36, 1, characterData);
 	fclose(characterData);
 }
 
@@ -299,22 +357,7 @@ void writeSS3CharacterFile(u16 id, const char* filename) {
 	FILE* characterData = fopen(filename, "wb");
 	if (!characterData) return;
 
-	u32 playableCharOffset = (sysRegion==CFG_REGION_JPN ? 0x5387E : 0x54A22);
-	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x830D2 : 0x8427E);
-	u32 npCharOffset = (sysRegion==CFG_REGION_JPN ? 0x54D52 : 0x55EFE);
-
-	if (id == 0) {
-		// Playable character
-		fwrite((char*)ss3Save+(playableCharOffset), 0x36, 1, characterData);
-	} else if (id >= 0x0BB9) {
-		// Downloaded character
-		id -= 0x0BB9;
-		fwrite((char*)ss3Save+(dlCharOffset + (0x110*id)), 0x36, 1, characterData);
-	} else {
-		id--;
-		// Non-playable character
-		fwrite((char*)ss3Save+(npCharOffset + (0x110*id)), 0x36, 1, characterData);
-	}
+	fwrite((char*)ss3Save+getSS3CharacterOffset(id), 0x36, 1, characterData);
 	fclose(characterData);
 }
 
@@ -322,10 +365,8 @@ void backupSS3DLCharacters(const char* filename) {
 	FILE* characterData = fopen(filename, "wb");
 	if (!characterData) return;
 
-	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x830D0 : 0x8427C);
-
 	// Backup downloaded characters
-	fwrite((char*)ss3Save+(dlCharOffset), 0x103D4, 1, characterData);
+	fwrite((char*)ss3Save+(getSS3CharacterOffset(0x0BB9)-2), 0x103D4, 1, characterData);
 	fclose(characterData);
 }
 
@@ -333,22 +374,34 @@ void restoreSS3DLCharacters(const char* filename) {
 	FILE* characterData = fopen(filename, "rb");
 	if (!characterData) return;
 
-	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x830D0 : 0x8427C);
-
 	// Restore downloaded characters
-	fread((char*)ss3Save+(dlCharOffset), 0x103D4, 1, characterData);
+	fread((char*)ss3Save+(getSS3CharacterOffset(0x0BB9)-2), 0x103D4, 1, characterData);
 	fclose(characterData);
 }
 
 bool getSS3CharacterGender(u16 id) {
 	readSS3Character(id);
 
-	if ((id == 0) && (strcmp(ss3PlayerName, "Robz") == 0) && (ss4CharacterData.hairStyle == 0x27)) {
+	if ((id == 0x7D1) && (strcmp(ss3PlayerName, "Robz") == 0) && (ss4CharacterData.hairStyle == 0x27)) {
 		return true;	// Robz is male, so return male
 	}
 
 	// true = male, false = female
 	return (ss4CharacterData.gender == 2);
+}
+
+const char* readSS3ProfileName(u16 id) {
+	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x86F80 : 0x88C5C);
+
+	if (id >= 0x0BB9) {
+		// Downloaded character
+		id -= 0x0BB9;
+		for (int i = 0; i < 16; i++) {
+			dlCharName[i] = ss3Save[(dlCharOffset + (0x2B4*id)) + i*2];
+		}
+		return dlCharName;
+	}
+	return "???";
 }
 
 void readSS3ProfileFile(u16 id, const char* filename) {
@@ -454,40 +507,160 @@ void writeSS4Save(void) {
 	//ss4SaveModified = true;
 }
 
-void readSS4Character(u16 id) {
-	if (id == 0) {
+static u32 getSS4CharacterOffset(u16 id) {
+	if (id == 0xBAE) {
 		// Playable character
-		tonccpy(&ss4CharacterData, (char*)ss4Save+(0x2440A), 0x3E);
+		return 0x2440A;
+	} else if (id >= 0x0BB9) {
+		// Downloaded character
+		id -= 0x0BB9;
+		return 0x81CEE + (0x1F8*id);
+	} else if (id == 0x0B87) {
+		// Unused/Hidden character
+		return 0x8111E;
+	} else if (id == 0x0B55) {
+		// Unused/Hidden character
+		return 0x80F26;
+	} else if (id >= 0x0AF0 && id <= 0x0AF4) {
+		// Unused/Hidden character
+		id -= 0x0AF0;
+		return 0x8054E + (0x1F8*id);
+	} else if (id == 0x0A8D) {
+		// Unused/Hidden character
+		return 0x80356;
+	} else if (id == 0x0A29 || id == 0x0A2A) {
+		// Unused/Hidden character
+		id -= 0x0A29;
+		return 0x7FF66 + (0x1F8*id);
+	} else if (id >= 0x09C5 && id <= 0x09C9) {
+		// Unused/Hidden character
+		id -= 0x09C5;
+		return 0x7F58E + (0x1F8*id);
+	} else if (id == 0x0961) {
+		// Unused/Hidden character
+		return 0x7F396;
+	} else if (id >= 0x08FD && id <= 0x0901) {
+		// Unused/Hidden character
+		id -= 0x08FD;
+		return 0x7E9BE + (0x1F8*id);
+	} else if (id == 0x0899) {
+		// Unused/Hidden character
+		return 0x7E7C6;
+	} else if (id >= 0x0835 && id <= 0x0852) {
+		// Unused/Hidden character
+		id -= 0x0835;
+		return 0x7ACB6 + (0x1F8*id);
+	} else if (id == 0x05DC || id == 0x05DD) {
+		// Non-playable character
+		id -= 0x05DC;
+		return 0x7A8C6 + (0x1F8*id);
+	} else if (id >= 0x044C && id <= 0x0469) {
+		// Non-playable character
+		id -= 0x044C;
+		return 0x76DB6 + (0x1F8*id);
+	} else if (id >= 0x041A && id <= 0x0437) {
+		// Non-playable character
+		id -= 0x041C;
+		return 0x732A6 + (0x1F8*id);
+	} else if (id >= 0x03E8 && id <= 0x0408) {
+		// Non-playable character
+		id -= 0x03E8;
+		return 0x6F1AE + (0x1F8*id);
+	} else if (id >= 0x0384 && id <= 0x038C) {
+		// Non-playable character
+		id -= 0x0384;
+		return 0x6DFF6 + (0x1F8*id);
+	} else if (id >= 0x0352 && id <= 0x036F) {
+		// Non-playable character
+		id -= 0x0352;
+		return 0x6A4E6 + (0x1F8*id);
+	} else if (id >= 0x0320 && id <= 0x033D) {
+		// Non-playable character
+		id -= 0x0320;
+		return 0x669D6 + (0x1F8*id);
+	} else if (id >= 0x02EE && id <= 0x030B) {
+		// Non-playable character
+		id -= 0x02EE;
+		return 0x62EC6 + (0x1F8*id);
+	} else if (id >= 0x02BC && id <= 0x02D9) {
+		// Unused/Hidden character
+		id -= 0x02BC;
+		return 0x5F3B6 + (0x1F8*id);
+	} else if (id >= 0x028A && id <= 0x02A7) {
+		// Non-playable character
+		id -= 0x028A;
+		return 0x5B8A6 + (0x1F8*id);
+	} else if (id >= 0x0258 && id <= 0x0275) {
+		// Non-playable character
+		id -= 0x0258;
+		return 0x57D96 + (0x1F8*id);
+	} else if (id >= 0x0226 && id <= 0x0243) {
+		// Non-playable character
+		id -= 0x0226;
+		return 0x54286 + (0x1F8*id);
+	} else if (id >= 0x01F4 && id <= 0x0211) {
+		// Non-playable character
+		id -= 0x01F4;
+		return 0x50776 + (0x1F8*id);
+	} else if (id >= 0x01C2 && id <= 0x01DF) {
+		// Non-playable character
+		id -= 0x01C2;
+		return 0x4CC66 + (0x1F8*id);
+	} else if (id >= 0x0190 && id <= 0x01AD) {
+		// Non-playable character
+		id -= 0x0190;
+		return 0x49156 + (0x1F8*id);
+	} else if (id >= 0x015E && id <= 0x017B) {
+		// Non-playable character
+		id -= 0x015E;
+		return 0x45646 + (0x1F8*id);
+	} else if (id >= 0x012C && id <= 0x0149) {
+		// Non-playable character
+		id -= 0x012C;
+		return 0x41B36 + (0x1F8*id);
+	} else if (id >= 0xFA && id <= 0x0117) {
+		// Non-playable character
+		id -= 0xFA;
+		return 0x3E026 + (0x1F8*id);
+	} else if (id >= 0xC8 && id <= 0xE5) {
+		// Non-playable character
+		id -= 0xC8;
+		return 0x3A516 + (0x1F8*id);
+	} else if (id >= 0x96 && id <= 0xB3) {
+		// Non-playable character
+		id -= 0x96;
+		return 0x36A06 + (0x1F8*id);
+	} else if (id >= 0x63 && id <= 0x81) {
+		// Non-playable character
+		id -= 0x63;
+		return 0x32CFE + (0x1F8*id);
 	} else {
 		id--;
 		// Non-playable character
-		tonccpy(&ss4CharacterData, (char*)ss4Save+(0x273EE + (0x1F8*id)), 0x3E);
+		return 0x273EE + (0x1F8*id);
 	}
 }
 
-void writeSS4Character(u16 id) {
-	if (id == 0) {
-		// Playable character
-		tonccpy((char*)ss4Save+(0x2440A), &ss4CharacterData, 0x3E);
-	} else {
-		id--;
-		// Non-playable character
-		tonccpy((char*)ss4Save+(0x273EE + (0x1F8*id)), &ss4CharacterData, 0x3E);
-	}
+inline void readSS4Character(u16 id) {
+	tonccpy(&ss4CharacterData, (char*)ss4Save+getSS4CharacterOffset(id), 0x3E);
+}
+
+inline void writeSS4Character(u16 id) {
+	tonccpy((char*)ss4Save+getSS4CharacterOffset(id), &ss4CharacterData, 0x3E);
+}
+
+bool existsSS4Character(u16 id) {
+	if (id == 0 || id == 0xBAE) return true;
+
+	u8 byte = *(u8*)((char*)ss4Save+getSS4CharacterOffset(id)+0x181);
+	return (byte & 0xF0) == 0x40;
 }
 
 void readSS4CharacterFile(u16 id, const char* filename) {
 	FILE* characterData = fopen(filename, "rb");
 	if (!characterData) return;
 
-	if (id == 0) {
-		// Playable character
-		fread((char*)ss4Save+(0x2440A), 0x3E, 1, characterData);
-	} else {
-		id--;
-		// Non-playable character
-		fread((char*)ss4Save+(0x273EE + (0x1F8*id)), 0x3E, 1, characterData);
-	}
+	fread((char*)ss4Save+getSS4CharacterOffset(id), 0x3E, 1, characterData);
 	fclose(characterData);
 }
 
@@ -495,26 +668,31 @@ void writeSS4CharacterFile(u16 id, const char* filename) {
 	FILE* characterData = fopen(filename, "wb");
 	if (!characterData) return;
 
-	if (id == 0) {
-		// Playable character
-		fwrite((char*)ss4Save+(0x2440A), 0x3E, 1, characterData);
-	} else {
-		id--;
-		// Non-playable character
-		fwrite((char*)ss4Save+(0x273EE + (0x1F8*id)), 0x3E, 1, characterData);
-	}
+	fwrite((char*)ss4Save+getSS4CharacterOffset(id), 0x3E, 1, characterData);
 	fclose(characterData);
 }
 
 bool getSS4CharacterGender(u16 id) {
 	readSS4Character(id);
 
-	if ((id == 0) && (strcmp(ss4PlayerName, "Robz") == 0) && (ss4CharacterData.hairStyle == 0x6D)) {
+	if ((id == 0xBAE) && (strcmp(ss4PlayerName, "Robz") == 0) && (ss4CharacterData.hairStyle == 0x6D)) {
 		return true;	// Robz is male, so return male
 	}
 
 	// true = male, false = female
 	return (ss4CharacterData.gender == 2);
+}
+
+const char* readSS4ProfileName(u16 id) {
+	if (id >= 0x0BB9) {
+		// Downloaded character
+		id -= 0x0BB9;
+		for (int i = 0; i < 16; i++) {
+			dlCharName[i] = ss4Save[(0x895BC + (0x150*id)) + i*2];
+		}
+		return dlCharName;
+	}
+	return "???";
 }
 
 void readSS4Emblem(int id) {

@@ -17,26 +17,151 @@
 
 extern bool ss3DLCharactersBackedUp;
 
+static u16 currentCharId = 0;
+
 CharacterChange::CharacterChange() {
 	getList();
 }
 
 void CharacterChange::getList() {
+	peopleMet = 0;
 	if (highlightedGame == 3) {
 		characterChangeMenuOps[0] = 0;
 		characterChangeMenuOps[1] = 0;
 		characterChangeMenuOps[2] = 4;
 		characterChangeMenuOps[3] = 10;
 		characterChangeMenuOptions = 3;
-		totalCharacters = 0x20;
+		totalCharacters = 0;
 		readSS4Save();
+		int i = 0;
+		for (i = 0; i < (int)sizeof(ss4CharacterOrder_AtoB)/sizeof(u16); i++) {
+			if (existsSS4Character(ss4CharacterOrder_AtoB[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss4CharacterOrder_CtoD)/sizeof(u16); i++) {
+			if (existsSS4Character(ss4CharacterOrder_CtoD[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss4CharacterOrder_EtoF)/sizeof(u16); i++) {
+			if (existsSS4Character(ss4CharacterOrder_EtoF[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss4CharacterOrder_GtoI)/sizeof(u16); i++) {
+			if (existsSS4Character(ss4CharacterOrder_GtoI[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss4CharacterOrder_GtoI)/sizeof(u16); i++) {
+			if (existsSS4Character(ss4CharacterOrder_GtoI[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss4CharacterOrder_JtoL)/sizeof(u16); i++) {
+			if (existsSS4Character(ss4CharacterOrder_JtoL[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss4CharacterOrder_MtoN)/sizeof(u16); i++) {
+			if (existsSS4Character(ss4CharacterOrder_MtoN[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss4CharacterOrder_OtoP)/sizeof(u16); i++) {
+			if (existsSS4Character(ss4CharacterOrder_OtoP[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss4CharacterOrder_QtoS)/sizeof(u16); i++) {
+			if (existsSS4Character(ss4CharacterOrder_QtoS[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss4CharacterOrder_TtoV)/sizeof(u16); i++) {
+			if (existsSS4Character(ss4CharacterOrder_TtoV[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss4CharacterOrder_WtoZ)/sizeof(u16); i++) {
+			if (existsSS4Character(ss4CharacterOrder_WtoZ[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < 30; i++) {
+			if (existsSS4Character(0x0BB9+i)) {
+				peopleMet++;
+			}
+		}
 	} else if (highlightedGame == 2) {
 		characterChangeMenuOps[0] = 0;
 		characterChangeMenuOps[1] = 4;
 		characterChangeMenuOps[2] = 10;
 		characterChangeMenuOptions = 2;
-		totalCharacters = 0xE;
+		totalCharacters = 0;
 		readSS3Save();
+		int i = 0;
+		for (i = 0; i < (int)sizeof(ss3CharacterOrder_AtoB)/sizeof(u16); i++) {
+			if (existsSS3Character(ss3CharacterOrder_AtoB[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss3CharacterOrder_CtoD)/sizeof(u16); i++) {
+			if (existsSS3Character(ss3CharacterOrder_CtoD[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss3CharacterOrder_EtoF)/sizeof(u16); i++) {
+			if (existsSS3Character(ss3CharacterOrder_EtoF[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss3CharacterOrder_GtoI)/sizeof(u16); i++) {
+			if (existsSS3Character(ss3CharacterOrder_GtoI[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss3CharacterOrder_GtoI)/sizeof(u16); i++) {
+			if (existsSS3Character(ss3CharacterOrder_GtoI[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss3CharacterOrder_JtoL)/sizeof(u16); i++) {
+			if (existsSS3Character(ss3CharacterOrder_JtoL[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss3CharacterOrder_MtoN)/sizeof(u16); i++) {
+			if (existsSS3Character(ss3CharacterOrder_MtoN[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss3CharacterOrder_OtoP)/sizeof(u16); i++) {
+			if (existsSS3Character(ss3CharacterOrder_OtoP[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss3CharacterOrder_QtoS)/sizeof(u16); i++) {
+			if (existsSS3Character(ss3CharacterOrder_QtoS[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss3CharacterOrder_TtoV)/sizeof(u16); i++) {
+			if (existsSS3Character(ss3CharacterOrder_TtoV[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < (int)sizeof(ss3CharacterOrder_WtoZ)/sizeof(u16); i++) {
+			if (existsSS3Character(ss3CharacterOrder_WtoZ[i])) {
+				peopleMet++;
+			}
+		}
+		for (i = 0; i < 47; i++) {
+			if (existsSS3Character(0x0BB9+i)) {
+				peopleMet++;
+			}
+		}
 	} else if (highlightedGame == 1) {
 		characterChangeMenuOps[0] = 0;
 		characterChangeMenuOps[1] = 4;
@@ -45,11 +170,96 @@ void CharacterChange::getList() {
 		totalCharacters = 0;
 		readSS2Save();
 	}
+	characterPage[highlightedGame] = 0;
 
 	getMaxChars();
 }
 
 void CharacterChange::getMaxChars() {
+	if (highlightedGame == 3) {
+		switch (characterPage[3]) {
+			case 0:
+			default:
+				totalCharacters = 0;
+				break;
+			case 1:
+				totalCharacters = (int)sizeof(ss4CharacterOrder_AtoB)/sizeof(u16);
+				break;
+			case 2:
+				totalCharacters = (int)sizeof(ss4CharacterOrder_CtoD)/sizeof(u16);
+				break;
+			case 3:
+				totalCharacters = (int)sizeof(ss4CharacterOrder_EtoF)/sizeof(u16);
+				break;
+			case 4:
+				totalCharacters = (int)sizeof(ss4CharacterOrder_GtoI)/sizeof(u16);
+				break;
+			case 5:
+				totalCharacters = (int)sizeof(ss4CharacterOrder_JtoL)/sizeof(u16);
+				break;
+			case 6:
+				totalCharacters = (int)sizeof(ss4CharacterOrder_MtoN)/sizeof(u16);
+				break;
+			case 7:
+				totalCharacters = (int)sizeof(ss4CharacterOrder_OtoP)/sizeof(u16);
+				break;
+			case 8:
+				totalCharacters = (int)sizeof(ss4CharacterOrder_QtoS)/sizeof(u16);
+				break;
+			case 9:
+				totalCharacters = (int)sizeof(ss4CharacterOrder_TtoV)/sizeof(u16);
+				break;
+			case 10:
+				totalCharacters = (int)sizeof(ss4CharacterOrder_WtoZ)/sizeof(u16);
+				break;
+			case 11:
+				totalCharacters = 30;
+				break;
+		}
+		if (totalCharacters > 0) totalCharacters--;
+	} else if (highlightedGame == 2) {
+		switch (characterPage[2]) {
+			case 0:
+			default:
+				totalCharacters = 0;
+				break;
+			case 1:
+				totalCharacters = (int)sizeof(ss3CharacterOrder_AtoB)/sizeof(u16);
+				break;
+			case 2:
+				totalCharacters = (int)sizeof(ss3CharacterOrder_CtoD)/sizeof(u16);
+				break;
+			case 3:
+				totalCharacters = (int)sizeof(ss3CharacterOrder_EtoF)/sizeof(u16);
+				break;
+			case 4:
+				totalCharacters = (int)sizeof(ss3CharacterOrder_GtoI)/sizeof(u16);
+				break;
+			case 5:
+				totalCharacters = (int)sizeof(ss3CharacterOrder_JtoL)/sizeof(u16);
+				break;
+			case 6:
+				totalCharacters = (int)sizeof(ss3CharacterOrder_MtoN)/sizeof(u16);
+				break;
+			case 7:
+				totalCharacters = (int)sizeof(ss3CharacterOrder_OtoP)/sizeof(u16);
+				break;
+			case 8:
+				totalCharacters = (int)sizeof(ss3CharacterOrder_QtoS)/sizeof(u16);
+				break;
+			case 9:
+				totalCharacters = (int)sizeof(ss3CharacterOrder_TtoV)/sizeof(u16);
+				break;
+			case 10:
+				totalCharacters = (int)sizeof(ss3CharacterOrder_WtoZ)/sizeof(u16);
+				break;
+			case 11:
+				totalCharacters = 67;
+				break;
+		}
+		if (totalCharacters > 0) totalCharacters--;
+	}
+
 	if (import_highlightedGame == 4) {
 		import_totalCharacters = numberOfExportedCharacters-1;
 	} else if (import_highlightedGame == 3) {
@@ -79,7 +289,8 @@ const char* CharacterChange::seasonName(void) const {
 }
 
 const char* CharacterChange::characterName(bool showPlayerName) const {
-	if (characterList_cursorPosition == 0) {
+	if (characterPage[highlightedGame] == 0) {
+		currentCharId = (highlightedGame == 3 ? 0x0BAE : 0x07D1);
 		if (showPlayerName) {
 			switch (highlightedGame) {
 				case 1:
@@ -96,11 +307,179 @@ const char* CharacterChange::characterName(bool showPlayerName) const {
 
 	switch (highlightedGame) {
 		case 2:
-			return ss3CharacterNames[characterList_cursorPosition];
+			switch (characterPage[2]) {
+				case 0:
+					currentCharId = 0;
+					break;
+				case 1:
+					currentCharId = ss3CharacterOrder_AtoB[characterList_cursorPosition];
+					break;
+				case 2:
+					currentCharId = ss3CharacterOrder_CtoD[characterList_cursorPosition];
+					break;
+				case 3:
+					currentCharId = ss3CharacterOrder_EtoF[characterList_cursorPosition];
+					break;
+				case 4:
+					currentCharId = ss3CharacterOrder_GtoI[characterList_cursorPosition];
+					break;
+				case 5:
+					currentCharId = ss3CharacterOrder_JtoL[characterList_cursorPosition];
+					break;
+				case 6:
+					currentCharId = ss3CharacterOrder_MtoN[characterList_cursorPosition];
+					break;
+				case 7:
+					currentCharId = ss3CharacterOrder_OtoP[characterList_cursorPosition];
+					break;
+				case 8:
+					currentCharId = ss3CharacterOrder_QtoS[characterList_cursorPosition];
+					break;
+				case 9:
+					currentCharId = ss3CharacterOrder_TtoV[characterList_cursorPosition];
+					break;
+				case 10:
+					currentCharId = ss3CharacterOrder_WtoZ[characterList_cursorPosition];
+					break;
+				case 11:
+					currentCharId = 0x0BB9+characterList_cursorPosition;
+					break;
+			}
+			if (currentCharId >= 0x0BB9) {
+				return readSS3ProfileName(currentCharId);
+			} else if (currentCharId >= 0x044C) {
+				return ss3CharacterNamesMaleP3[currentCharId-0x044C];
+			} else if (currentCharId >= 0x041A) {
+				return ss3CharacterNamesMaleP2[currentCharId-0x041A];
+			} else if (currentCharId >= 0x03E8) {
+				return ss3CharacterNamesMale[currentCharId-0x03E8];
+			} else if (currentCharId >= 0x0352) {
+				return ss3CharacterNames5S[currentCharId-0x0352];
+			} else if (currentCharId >= 0x0320) {
+				return ss3CharacterNamesReps[currentCharId-0x0320];
+			} else if (currentCharId >= 0x02EE) {
+				return ss3CharacterNamesP16[currentCharId-0x02EE];
+			} else if (currentCharId >= 0x02BC) {
+				return ss3CharacterNamesP15[currentCharId-0x02BC];
+			} else if (currentCharId >= 0x028A) {
+				return ss3CharacterNamesP14[currentCharId-0x028A];
+			} else if (currentCharId >= 0x0258) {
+				return ss3CharacterNamesP13[currentCharId-0x0258];
+			} else if (currentCharId >= 0x0226) {
+				return ss3CharacterNamesP12[currentCharId-0x0226];
+			} else if (currentCharId >= 0x01F4) {
+				return ss3CharacterNamesP11[currentCharId-0x01F4];
+			} else if (currentCharId >= 0x01C2) {
+				return ss3CharacterNamesP10[currentCharId-0x01C2];
+			} else if (currentCharId >= 0x0190) {
+				return ss3CharacterNamesP9[currentCharId-0x0190];
+			} else if (currentCharId >= 0x015E) {
+				return ss3CharacterNamesP8[currentCharId-0x015E];
+			} else if (currentCharId >= 0x012C) {
+				return ss3CharacterNamesP7[currentCharId-0x012C];
+			} else if (currentCharId >= 0x00FA) {
+				return ss3CharacterNamesP6[currentCharId-0x00FA];
+			} else if (currentCharId >= 0x00C8) {
+				return ss3CharacterNamesP5[currentCharId-0x00C8];
+			} else if (currentCharId >= 0x0096) {
+				return ss3CharacterNamesP4[currentCharId-0x0096];
+			} else if (currentCharId >= 0x0064) {
+				return ss3CharacterNamesP3[currentCharId-0x0064];
+			} else if (currentCharId >= 0x0032) {
+				return ss3CharacterNamesP2[currentCharId-0x0032];
+			}
+			return ss3CharacterNames[currentCharId];
 		case 3:
-			return ss4CharacterNames[characterList_cursorPosition];
+			switch (characterPage[3]) {
+				case 0:
+					currentCharId = 0;
+					break;
+				case 1:
+					currentCharId = ss4CharacterOrder_AtoB[characterList_cursorPosition];
+					break;
+				case 2:
+					currentCharId = ss4CharacterOrder_CtoD[characterList_cursorPosition];
+					break;
+				case 3:
+					currentCharId = ss4CharacterOrder_EtoF[characterList_cursorPosition];
+					break;
+				case 4:
+					currentCharId = ss4CharacterOrder_GtoI[characterList_cursorPosition];
+					break;
+				case 5:
+					currentCharId = ss4CharacterOrder_JtoL[characterList_cursorPosition];
+					break;
+				case 6:
+					currentCharId = ss4CharacterOrder_MtoN[characterList_cursorPosition];
+					break;
+				case 7:
+					currentCharId = ss4CharacterOrder_OtoP[characterList_cursorPosition];
+					break;
+				case 8:
+					currentCharId = ss4CharacterOrder_QtoS[characterList_cursorPosition];
+					break;
+				case 9:
+					currentCharId = ss4CharacterOrder_TtoV[characterList_cursorPosition];
+					break;
+				case 10:
+					currentCharId = ss4CharacterOrder_WtoZ[characterList_cursorPosition];
+					break;
+				case 11:
+					currentCharId = 0x0BB9+characterList_cursorPosition;
+					break;
+			}
+			if (currentCharId >= 0x0BB9) {
+				return readSS4ProfileName(currentCharId);
+			} else if (currentCharId == 0x0B55) {
+				return ss4CharacterNames0B55[currentCharId-0x0B55];
+			} else if (currentCharId >= 0x0A29) {
+				return ss4CharacterNames0A29[currentCharId-0x0A29];
+			} else if (currentCharId >= 0x09C5) {
+				return ss4CharacterNames09C5[currentCharId-0x09C5];
+			} else if (currentCharId >= 0x05DC) {
+				return ss4CharacterNamesInst[currentCharId-0x05DC];
+			} else if (currentCharId >= 0x044C) {
+				return ss4CharacterNamesMaleP3[currentCharId-0x044C];
+			} else if (currentCharId >= 0x041A) {
+				return ss4CharacterNamesMaleP2[currentCharId-0x041A];
+			} else if (currentCharId >= 0x03E8) {
+				return ss4CharacterNamesMale[currentCharId-0x03E8];
+			} else if (currentCharId >= 0x0352) {
+				return ss3CharacterNames5S[currentCharId-0x0352];
+			} else if (currentCharId >= 0x0320) {
+				return ss4CharacterNamesReps[currentCharId-0x0320];
+			} else if (currentCharId >= 0x02EE) {
+				return ss4CharacterNamesP15[currentCharId-0x02EE];
+			} else if (currentCharId >= 0x02BC) {
+				return ss3CharacterNamesP15[currentCharId-0x02BC];
+			} else if (currentCharId >= 0x028A) {
+				return ss4CharacterNamesP13[currentCharId-0x028A];
+			} else if (currentCharId >= 0x0258) {
+				return ss4CharacterNamesP12[currentCharId-0x0258];
+			} else if (currentCharId >= 0x0226) {
+				return ss3CharacterNamesP12[currentCharId-0x0226];
+			} else if (currentCharId >= 0x01F4) {
+				return ss4CharacterNamesP10[currentCharId-0x01F4];
+			} else if (currentCharId >= 0x01C2) {
+				return ss4CharacterNamesP9[currentCharId-0x01C2];
+			} else if (currentCharId >= 0x0190) {
+				return ss4CharacterNamesP8[currentCharId-0x0190];
+			} else if (currentCharId >= 0x015E) {
+				return ss4CharacterNamesP7[currentCharId-0x015E];
+			} else if (currentCharId >= 0x012C) {
+				return ss4CharacterNamesP6[currentCharId-0x012C];
+			} else if (currentCharId >= 0x00FA) {
+				return ss4CharacterNamesP5[currentCharId-0x00FA];
+			} else if (currentCharId >= 0x00C8) {
+				return ss4CharacterNamesP4[currentCharId-0x00C8];
+			} else if (currentCharId >= 0x0096) {
+				return ss4CharacterNamesP3[currentCharId-0x0096];
+			} else if (currentCharId >= 0x0063) {
+				return ss4CharacterNamesP2[currentCharId-0x0063];
+			}
+			return ss4CharacterNames[currentCharId];
 	}
-	return "null";
+	return "???";
 }
 
 const char* CharacterChange::import_characterName(void) const {
@@ -352,6 +731,10 @@ void CharacterChange::Draw(void) const {
 		} else {
 			Gui::DrawStringCentered(0, 104, 0.65, BLACK, (import_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
 		}
+	} else if (subScreenMode == 0 && peopleMet > 0) {
+		char peopleMetText[24];
+		sprintf(peopleMetText, "People Met: %i", peopleMet);
+		Gui::DrawStringCentered(0, 216, 0.55, BLACK, peopleMetText);
 	}
 
 	preview();
@@ -465,7 +848,15 @@ void CharacterChange::Draw(void) const {
 	} else {
 		cursorY = 64+(48*characterList_cursorPositionOnScreen);
 
-		Gui::DrawString(8, 8, 0.50, BLACK, "Select the character you want to change.");
+		const char* letterText[] =    { "A", "C", "E", "G", "J", "M", "O", "Q", "T", "W"};
+		const char* letterTextBot[] = {"-B","-D","-F","-I","-L","-N","-P","-S","-V","-Z"};
+		//Gui::DrawString(8, 8, 0.50, BLACK, "Select the character you want to change.");
+		Gui::DrawString(8, 10, 0.50, characterPage[highlightedGame]==0 ? RED : BLACK, "Prt.");
+		for (int i = 0; i < 10; i++) {
+			Gui::DrawString(34+(i*24), 4, 0.50, (characterPage[highlightedGame] > 0 && characterPage[highlightedGame]-1 == i) ? RED : BLACK, letterText[i]);
+			Gui::DrawString(42+(i*24), 16, 0.50, (characterPage[highlightedGame] > 0 && characterPage[highlightedGame]-1 == i) ? RED : BLACK, letterTextBot[i]);
+		}
+		Gui::DrawString(292, 10, 0.50, characterPage[highlightedGame]==11 ? RED : BLACK, "Ext.");
 
 		if (highlightedGame == 2) {
 			Gui::DrawString(116, 210, 0.50, BLACK, ss3DLCharactersBackedUp ? "START: Remove contacts" : "START: Expand contacts");
@@ -476,20 +867,234 @@ void CharacterChange::Draw(void) const {
 		for (int i = characterShownFirst; i < characterShownFirst+3; i++) {
 			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 			if (highlightedGame == 3) {
-				if (i==0) {
-					GFX::DrawSprite((getSS4CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				if (characterPage[3] == 0) {
+					GFX::DrawSprite((getSS4CharacterGender(0xBAE) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 					Gui::DrawString(64, i2, 0.65, BLACK, ss4PlayerName);
+					break;
 				} else {
-					GFX::DrawSprite((getSS4CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-					Gui::DrawString(64, i2, 0.65, BLACK, ss4CharacterNames[i]);
+					u16 charId = 0;
+					switch (characterPage[3]) {
+						case 1:
+							charId = ss4CharacterOrder_AtoB[i];
+							break;
+						case 2:
+							charId = ss4CharacterOrder_CtoD[i];
+							break;
+						case 3:
+							charId = ss4CharacterOrder_EtoF[i];
+							break;
+						case 4:
+							charId = ss4CharacterOrder_GtoI[i];
+							break;
+						case 5:
+							charId = ss4CharacterOrder_JtoL[i];
+							break;
+						case 6:
+							charId = ss4CharacterOrder_MtoN[i];
+							break;
+						case 7:
+							charId = ss4CharacterOrder_OtoP[i];
+							break;
+						case 8:
+							charId = ss4CharacterOrder_QtoS[i];
+							break;
+						case 9:
+							charId = ss4CharacterOrder_TtoV[i];
+							break;
+						case 10:
+							charId = ss4CharacterOrder_WtoZ[i];
+							break;
+						case 11:
+							charId = 0x0BB9+i;
+							break;
+					}
+					int charFlag = 0;
+					const char* charInfo = "";
+					const char* charName = "";
+					if (charId >= 0x0BB9) {
+						charName = readSS4ProfileName(charId);
+					} else if (charId == 0x0B55) {
+						charFlag = ss4CharacterFlags30_3[charId-0x0B55];
+						charName = ss4CharacterNames0B55[charId-0x0B55];
+					} else if (charId >= 0x0A29) {
+						charFlag = ss4CharacterFlags30_3[charId-0x0A29];
+						charName = ss4CharacterNames0A29[charId-0x0A29];
+					} else if (charId >= 0x09C5) {
+						charFlag = ss4CharacterFlags30_3[charId-0x09C5];
+						charName = ss4CharacterNames09C5[charId-0x09C5];
+					} else if (charId >= 0x05DC) {
+						charFlag = ss4CharacterFlags30_0[charId-0x05DC];
+						charName = ss4CharacterNamesInst[charId-0x05DC];
+					} else if (charId >= 0x044C) {
+						charFlag = ss4CharacterFlags30_0[charId-0x044C];
+						charName = ss4CharacterNamesMaleP3[charId-0x044C];
+					} else if (charId >= 0x041A) {
+						charFlag = ss4CharacterFlagsMaleP2[charId-0x041A];
+						charName = ss4CharacterNamesMaleP2[charId-0x041A];
+					} else if (charId >= 0x03E8) {
+						charFlag = ss4CharacterFlagsMale[charId-0x03E8];
+						charName = ss4CharacterNamesMale[charId-0x03E8];
+					} else if (charId >= 0x0352) {
+						charFlag = ss4CharacterFlags30_3[charId-0x0352];
+						charName = ss3CharacterNames5S[charId-0x0352];
+					} else if (charId >= 0x0320) {
+						charFlag = ss4CharacterFlagsReps[charId-0x0320];
+						charName = ss4CharacterNamesReps[charId-0x0320];
+					} else if (charId >= 0x02EE) {
+						charFlag = ss4CharacterFlags30_0[charId-0x02EE];
+						charName = ss4CharacterNamesP15[charId-0x02EE];
+					} else if (charId >= 0x02BC) {
+						charFlag = ss4CharacterFlags30_3[charId-0x02BC];
+						charName = ss3CharacterNamesP15[charId-0x02BC];
+					} else if (charId >= 0x028A) {
+						charFlag = ss4CharacterFlags30_0[charId-0x028A];
+						charName = ss4CharacterNamesP13[charId-0x028A];
+					} else if (charId >= 0x0258) {
+						charFlag = ss4CharacterFlags30_0[charId-0x0258];
+						charName = ss4CharacterNamesP12[charId-0x0258];
+					} else if (charId >= 0x0226) {
+						charFlag = ss4CharacterFlags30_0[charId-0x0226];
+						charName = ss3CharacterNamesP12[charId-0x0226];
+					} else if (charId >= 0x01F4) {
+						charFlag = ss4CharacterFlags30_0[charId-0x01F4];
+						charName = ss4CharacterNamesP10[charId-0x01F4];
+					} else if (charId >= 0x01C2) {
+						charFlag = ss4CharacterFlags30_0[charId-0x01C2];
+						charName = ss4CharacterNamesP9[charId-0x01C2];
+					} else if (charId >= 0x0190) {
+						charFlag = ss4CharacterFlags30_0[charId-0x0190];
+						charName = ss4CharacterNamesP8[charId-0x0190];
+					} else if (charId >= 0x015E) {
+						charFlag = ss4CharacterFlags30_0[charId-0x015E];
+						charName = ss4CharacterNamesP7[charId-0x015E];
+					} else if (charId >= 0x012C) {
+						charFlag = ss4CharacterFlags30_0[charId-0x012C];
+						charName = ss4CharacterNamesP6[charId-0x012C];
+					} else if (charId >= 0x00FA) {
+						charFlag = ss4CharacterFlags30_0[charId-0x00FA];
+						charName = ss4CharacterNamesP5[charId-0x00FA];
+					} else if (charId >= 0x00C8) {
+						charFlag = ss4CharacterFlags30_0[charId-0x00C8];
+						charName = ss4CharacterNamesP4[charId-0x00C8];
+					} else if (charId >= 0x0096) {
+						charFlag = ss4CharacterFlags30_0[charId-0x0096];
+						charName = ss4CharacterNamesP3[charId-0x0096];
+					} else if (charId >= 0x0063) {
+						charFlag = ss4CharacterFlagsP2[charId-0x0063];
+						charName = ss4CharacterNamesP2[charId-0x0063];
+					} else {
+						charFlag = ss4CharacterFlags[charId];
+						charName = ss4CharacterNames[charId];
+					}
+					switch (charFlag) {
+						default:
+							break;
+						case 1:
+							charInfo = "Not in Contacts";
+							break;
+						case 2:
+							charInfo = "Unseen";
+							break;
+						case 3:
+							charInfo = "Fashion Forward Leftover";
+							break;
+					}
+					GFX::DrawSprite((getSS4CharacterGender(charId) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+					if (charFlag > 0) {
+						Gui::DrawString(64, i2-12, 0.50, RED, charInfo);
+					}
+					Gui::DrawString(64, i2, 0.65, existsSS4Character(charId) ? BLACK : HALF_BLACK, charName);
 				}
 			} else if (highlightedGame == 2) {
-				if (i==0) {
-					GFX::DrawSprite((getSS3CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				if (characterPage[2] == 0) {
+					GFX::DrawSprite((getSS3CharacterGender(0x7D1) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 					Gui::DrawString(64, i2, 0.65, BLACK, ss3PlayerName);
+					break;
 				} else {
-					GFX::DrawSprite((getSS3CharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-					Gui::DrawString(64, i2, 0.65, BLACK, ss3CharacterNames[i]);
+					u16 charId = 0;
+					switch (characterPage[2]) {
+						case 1:
+							charId = ss3CharacterOrder_AtoB[i];
+							break;
+						case 2:
+							charId = ss3CharacterOrder_CtoD[i];
+							break;
+						case 3:
+							charId = ss3CharacterOrder_EtoF[i];
+							break;
+						case 4:
+							charId = ss3CharacterOrder_GtoI[i];
+							break;
+						case 5:
+							charId = ss3CharacterOrder_JtoL[i];
+							break;
+						case 6:
+							charId = ss3CharacterOrder_MtoN[i];
+							break;
+						case 7:
+							charId = ss3CharacterOrder_OtoP[i];
+							break;
+						case 8:
+							charId = ss3CharacterOrder_QtoS[i];
+							break;
+						case 9:
+							charId = ss3CharacterOrder_TtoV[i];
+							break;
+						case 10:
+							charId = ss3CharacterOrder_WtoZ[i];
+							break;
+						case 11:
+							charId = 0x0BB9+i;
+							break;
+					}
+					const char* charName = "";
+					if (charId >= 0x0BB9) {
+						charName = readSS3ProfileName(charId);
+					} else if (charId >= 0x044C) {
+						charName = ss3CharacterNamesMaleP3[charId-0x044C];
+					} else if (charId >= 0x041A) {
+						charName = ss3CharacterNamesMaleP2[charId-0x041A];
+					} else if (charId >= 0x03E8) {
+						charName = ss3CharacterNamesMale[charId-0x03E8];
+					} else if (charId >= 0x0352) {
+						charName = ss3CharacterNames5S[charId-0x0352];
+					} else if (charId >= 0x0320) {
+						charName = ss3CharacterNamesReps[charId-0x0320];
+					} else if (charId >= 0x02EE) {
+						charName = ss3CharacterNamesP16[charId-0x02EE];
+					} else if (charId >= 0x02BC) {
+						charName = ss3CharacterNamesP15[charId-0x02BC];
+					} else if (charId >= 0x028A) {
+						charName = ss3CharacterNamesP14[charId-0x028A];
+					} else if (charId >= 0x0258) {
+						charName = ss3CharacterNamesP13[charId-0x0258];
+					} else if (charId >= 0x0226) {
+						charName = ss3CharacterNamesP12[charId-0x0226];
+					} else if (charId >= 0x01F4) {
+						charName = ss3CharacterNamesP11[charId-0x01F4];
+					} else if (charId >= 0x01C2) {
+						charName = ss3CharacterNamesP10[charId-0x01C2];
+					} else if (charId >= 0x0190) {
+						charName = ss3CharacterNamesP9[charId-0x0190];
+					} else if (charId >= 0x015E) {
+						charName = ss3CharacterNamesP8[charId-0x015E];
+					} else if (charId >= 0x012C) {
+						charName = ss3CharacterNamesP7[charId-0x012C];
+					} else if (charId >= 0x00FA) {
+						charName = ss3CharacterNamesP6[charId-0x00FA];
+					} else if (charId >= 0x00C8) {
+						charName = ss3CharacterNamesP5[charId-0x00C8];
+					} else if (charId >= 0x0096) {
+						charName = ss3CharacterNamesP4[charId-0x0096];
+					} else if (charId >= 0x0064) {
+						charName = ss3CharacterNamesP3[charId-0x0064];
+					} else if (charId >= 0x0032) {
+						charName = ss3CharacterNamesP2[charId-0x0032];
+					} else {
+						charName = ss3CharacterNames[charId];
+					}
+					GFX::DrawSprite((getSS3CharacterGender(charId) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+					Gui::DrawString(64, i2, 0.65, existsSS3Character(charId) ? BLACK : HALF_BLACK, charName);
 				}
 			} else if (highlightedGame == 1) {
 				GFX::DrawSprite((getSS2CharacterGender() ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
@@ -680,7 +1285,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 						if (access(chrFilePath, F_OK) != 0) {
 							sprintf(chrFilePath, "romfs:/character/Styling Star/%s/%s.chr", seasonName(), "Robz");
 						}
-						readSS4CharacterFile(characterList_cursorPosition, chrFilePath);
+						readSS4CharacterFile(currentCharId, chrFilePath);
 						writeSS4Save();
 						break;
 					case 2:
@@ -688,7 +1293,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 						if (access(chrFilePath, F_OK) != 0) {
 							sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), "Robz");
 						}
-						readSS3CharacterFile(characterList_cursorPosition, chrFilePath);
+						readSS3CharacterFile(currentCharId, chrFilePath);
 						writeSS3Save();
 						break;
 					case 1:
@@ -712,7 +1317,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 						sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS4/characters/%s.chr", getExportedCharacterName(importCharacterList_cursorPosition));
 						if (access(chrFilePath, F_OK) == 0) {
 							sndSelect();
-							readSS4CharacterFile(characterList_cursorPosition, chrFilePath);
+							readSS4CharacterFile(currentCharId, chrFilePath);
 							writeSS4Save();
 							exportFound = true;
 						}
@@ -721,7 +1326,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 						sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS3/characters/%s.chr", getExportedCharacterName(importCharacterList_cursorPosition));
 						if (access(chrFilePath, F_OK) == 0) {
 							sndSelect();
-							readSS3CharacterFile(characterList_cursorPosition, chrFilePath);
+							readSS3CharacterFile(currentCharId, chrFilePath);
 							writeSS3Save();
 							exportFound = true;
 						}
@@ -753,7 +1358,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 						if (access(chrFilePath, F_OK) != 0) {
 							sprintf(chrFilePath, "romfs:/character/Styling Star/%s/%s.chr", seasonName(), import_characterName());
 						}
-						readSS4CharacterFile(characterList_cursorPosition, chrFilePath);
+						readSS4CharacterFile(currentCharId, chrFilePath);
 						writeSS4Save();
 						break;
 					case 2:
@@ -761,7 +1366,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 						if (access(chrFilePath, F_OK) != 0) {
 							sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), import_characterName());
 						}
-						readSS3CharacterFile(characterList_cursorPosition, chrFilePath);
+						readSS3CharacterFile(currentCharId, chrFilePath);
 						writeSS3Save();
 						break;
 					case 1:
@@ -880,11 +1485,11 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				switch (highlightedGame) {
 					case 3:
 						sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS4/characters/%s.chr", characterName(false));
-						writeSS4CharacterFile(characterList_cursorPosition, chrFilePath);
+						writeSS4CharacterFile(currentCharId, chrFilePath);
 						break;
 					case 2:
 						sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS3/characters/%s.chr", characterName(false));
-						writeSS3CharacterFile(characterList_cursorPosition, chrFilePath);
+						writeSS3CharacterFile(currentCharId, chrFilePath);
 						break;
 					case 1:
 						sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS2/characters/%s.chr", characterName(false));
@@ -915,7 +1520,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 	
 	} else {
 		if (showCursor) {
-			if ((hDown & KEY_DUP) && (highlightedGame > 1)) {
+			if ((hDown & KEY_DUP) && (highlightedGame > 1) && (characterPage[highlightedGame] > 0)) {
 				sndHighlight();
 				characterList_cursorPosition--;
 				characterList_cursorPositionOnScreen--;
@@ -928,9 +1533,10 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (characterList_cursorPositionOnScreen < 0) {
 					characterList_cursorPositionOnScreen = 0;
 				}
+				getMaxChars();
 			}
 
-			if ((hDown & KEY_DDOWN) && (highlightedGame > 1)) {
+			if ((hDown & KEY_DDOWN) && (highlightedGame > 1) && (characterPage[highlightedGame] > 0)) {
 				sndHighlight();
 				characterList_cursorPosition++;
 				characterList_cursorPositionOnScreen++;
@@ -943,6 +1549,25 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (characterList_cursorPositionOnScreen > 2) {
 					characterList_cursorPositionOnScreen = 2;
 				}
+			}
+
+			if ((hDown & KEY_DLEFT) && (highlightedGame > 1)) {
+				sndHighlight();
+				characterPage[highlightedGame]--;
+				if (characterPage[highlightedGame] < 0) characterPage[highlightedGame] = 0;
+			}
+
+			if ((hDown & KEY_DRIGHT) && (highlightedGame > 1)) {
+				sndHighlight();
+				characterPage[highlightedGame]++;
+				if (characterPage[highlightedGame] > 11) characterPage[highlightedGame] = 11;
+			}
+
+			if ((hDown & KEY_DLEFT) || (hDown & KEY_DRIGHT)) {
+				characterList_cursorPosition = 0;
+				characterList_cursorPositionOnScreen = 0;
+				characterShownFirst = 0;
+				getMaxChars();
 			}
 		}
 

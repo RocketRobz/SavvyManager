@@ -61,6 +61,8 @@ private:
 	int cheatKeys[10] = {0};
 	int cheatKeyPosition = 0;
 
+	int characterPage[4] = {0};
+	int peopleMet = 0;
 	u16 totalCharacters = 0;
 	u16 import_totalCharacters = 0;
 

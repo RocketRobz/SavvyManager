@@ -141,6 +141,7 @@ extern void writeSS4Character(u16 id);
 extern void toggleSS3Character(u16 id, bool enable);
 extern bool existsSS3Character(u16 id);
 extern void removeSS3CharacterBag(u16 id);
+extern bool existsSS4Character(u16 id);
 
 extern void readSS2CharacterFile(const char* filename);
 extern void writeSS2CharacterFile(const char* filename);
@@ -155,8 +156,10 @@ extern bool getSS2CharacterGender(void);
 extern bool getSS3CharacterGender(u16 id);
 extern bool getSS4CharacterGender(u16 id);
 
+extern const char* readSS3ProfileName(u16 id);
 extern void readSS3ProfileFile(u16 id, const char* filename);
 extern void writeSS3ProfileFile(u16 id, const char* filename);
+extern const char* readSS4ProfileName(u16 id);
 
 extern void readSS3Emblem(void);
 extern void writeSS3Emblem(void);
