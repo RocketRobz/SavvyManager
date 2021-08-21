@@ -560,7 +560,7 @@ static u32 getSS4CharacterOffset(u16 id) {
 		return 0x76DB6 + (0x1F8*id);
 	} else if (id >= 0x041A && id <= 0x0437) {
 		// Non-playable character
-		id -= 0x041C;
+		id -= 0x041A;
 		return 0x732A6 + (0x1F8*id);
 	} else if (id >= 0x03E8 && id <= 0x0408) {
 		// Non-playable character
