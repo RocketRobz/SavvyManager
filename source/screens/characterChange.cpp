@@ -449,50 +449,7 @@ const char* CharacterChange::characterName(bool showPlayerName) const {
 					currentCharId = 0x0BB9+characterList_cursorPosition;
 					break;
 			}
-			if (currentCharId >= 0x0BB9) {
-				return readSS3ProfileName(currentCharId);
-			} else if (currentCharId >= 0x044C) {
-				return ss3CharacterNamesMaleP3[currentCharId-0x044C];
-			} else if (currentCharId >= 0x041A) {
-				return ss3CharacterNamesMaleP2[currentCharId-0x041A];
-			} else if (currentCharId >= 0x03E8) {
-				return ss3CharacterNamesMale[currentCharId-0x03E8];
-			} else if (currentCharId >= 0x0352) {
-				return ss3CharacterNames5S[currentCharId-0x0352];
-			} else if (currentCharId >= 0x0320) {
-				return ss3CharacterNamesReps[currentCharId-0x0320];
-			} else if (currentCharId >= 0x02EE) {
-				return ss3CharacterNamesP16[currentCharId-0x02EE];
-			} else if (currentCharId >= 0x02BC) {
-				return ss3CharacterNamesP15[currentCharId-0x02BC];
-			} else if (currentCharId >= 0x028A) {
-				return ss3CharacterNamesP14[currentCharId-0x028A];
-			} else if (currentCharId >= 0x0258) {
-				return ss3CharacterNamesP13[currentCharId-0x0258];
-			} else if (currentCharId >= 0x0226) {
-				return ss3CharacterNamesP12[currentCharId-0x0226];
-			} else if (currentCharId >= 0x01F4) {
-				return ss3CharacterNamesP11[currentCharId-0x01F4];
-			} else if (currentCharId >= 0x01C2) {
-				return ss3CharacterNamesP10[currentCharId-0x01C2];
-			} else if (currentCharId >= 0x0190) {
-				return ss3CharacterNamesP9[currentCharId-0x0190];
-			} else if (currentCharId >= 0x015E) {
-				return ss3CharacterNamesP8[currentCharId-0x015E];
-			} else if (currentCharId >= 0x012C) {
-				return ss3CharacterNamesP7[currentCharId-0x012C];
-			} else if (currentCharId >= 0x00FA) {
-				return ss3CharacterNamesP6[currentCharId-0x00FA];
-			} else if (currentCharId >= 0x00C8) {
-				return ss3CharacterNamesP5[currentCharId-0x00C8];
-			} else if (currentCharId >= 0x0096) {
-				return ss3CharacterNamesP4[currentCharId-0x0096];
-			} else if (currentCharId >= 0x0064) {
-				return ss3CharacterNamesP3[currentCharId-0x0064];
-			} else if (currentCharId >= 0x0032) {
-				return ss3CharacterNamesP2[currentCharId-0x0032];
-			}
-			return ss3CharacterNames[currentCharId];
+			return getSS3CharName(currentCharId);
 		case 3:
 			switch (characterPage[3]) {
 				case 0:
@@ -807,7 +764,7 @@ void CharacterChange::Draw(void) const {
 		}
 		char peopleMetText[24];
 		sprintf(peopleMetText, "People Met: %i", peopleMet);
-		Gui::DrawStringCentered(0, 216, 0.55, BLACK, peopleMetText);
+		Gui::DrawStringCentered(0, 216, 0.60, BLACK, peopleMetText);
 	}
 
 	preview();

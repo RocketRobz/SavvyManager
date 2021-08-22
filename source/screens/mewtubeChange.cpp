@@ -4,6 +4,8 @@
 
 #include "savedata.h"
 
+#include "ss4charnames.h"
+
 static const char* stageTitle[] = {
 	"Open Plaza",
 	"Open Plaza",
@@ -73,7 +75,112 @@ static const int peopleAmount[] = {
 extern const char* getSS4CharName(u16 charId);
 
 MewtubeChange::MewtubeChange() {
+	peopleMet = 0;
 	readSS4Save();
+	int i = 0;
+	for (i = 0; i < (int)sizeof(ss4CharacterOrder_AtoB)/sizeof(u16); i++) {
+		if (existsSS4Character(ss4CharacterOrder_AtoB[i])) {
+			peopleMet++;
+		}
+	}
+	for (i = 0; i < (int)sizeof(ss4CharacterOrder_CtoD)/sizeof(u16); i++) {
+		if (existsSS4Character(ss4CharacterOrder_CtoD[i])) {
+			peopleMet++;
+		}
+	}
+	for (i = 0; i < (int)sizeof(ss4CharacterOrder_EtoF)/sizeof(u16); i++) {
+		if (existsSS4Character(ss4CharacterOrder_EtoF[i])) {
+			peopleMet++;
+		}
+	}
+	for (i = 0; i < (int)sizeof(ss4CharacterOrder_GtoI)/sizeof(u16); i++) {
+		if (existsSS4Character(ss4CharacterOrder_GtoI[i])) {
+			peopleMet++;
+		}
+	}
+	for (i = 0; i < (int)sizeof(ss4CharacterOrder_GtoI)/sizeof(u16); i++) {
+		if (existsSS4Character(ss4CharacterOrder_GtoI[i])) {
+			peopleMet++;
+		}
+	}
+	for (i = 0; i < (int)sizeof(ss4CharacterOrder_JtoL)/sizeof(u16); i++) {
+		if (existsSS4Character(ss4CharacterOrder_JtoL[i])) {
+			peopleMet++;
+		}
+	}
+	for (i = 0; i < (int)sizeof(ss4CharacterOrder_MtoN)/sizeof(u16); i++) {
+		if (existsSS4Character(ss4CharacterOrder_MtoN[i])) {
+			peopleMet++;
+		}
+	}
+	for (i = 0; i < (int)sizeof(ss4CharacterOrder_OtoP)/sizeof(u16); i++) {
+		if (existsSS4Character(ss4CharacterOrder_OtoP[i])) {
+			peopleMet++;
+		}
+	}
+	for (i = 0; i < (int)sizeof(ss4CharacterOrder_QtoS)/sizeof(u16); i++) {
+		if (existsSS4Character(ss4CharacterOrder_QtoS[i])) {
+			peopleMet++;
+		}
+	}
+	for (i = 0; i < (int)sizeof(ss4CharacterOrder_TtoV)/sizeof(u16); i++) {
+		if (existsSS4Character(ss4CharacterOrder_TtoV[i])) {
+			peopleMet++;
+		}
+	}
+	for (i = 0; i < (int)sizeof(ss4CharacterOrder_WtoZ)/sizeof(u16); i++) {
+		if (existsSS4Character(ss4CharacterOrder_WtoZ[i])) {
+			peopleMet++;
+		}
+	}
+	for (i = 0; i < 30; i++) {
+		if (existsSS4Character(0x0BB9+i)) {
+			peopleMet++;
+		}
+	}
+}
+
+void MewtubeChange::getMaxChars() {
+	switch (characterPage) {
+		case 0:
+		default:
+			totalCharacters = 0;
+			break;
+		case 1:
+			totalCharacters = (int)sizeof(ss4CharacterOrder_AtoB)/sizeof(u16);
+			break;
+		case 2:
+			totalCharacters = (int)sizeof(ss4CharacterOrder_CtoD)/sizeof(u16);
+			break;
+		case 3:
+			totalCharacters = (int)sizeof(ss4CharacterOrder_EtoF)/sizeof(u16);
+			break;
+		case 4:
+			totalCharacters = (int)sizeof(ss4CharacterOrder_GtoI)/sizeof(u16);
+			break;
+		case 5:
+			totalCharacters = (int)sizeof(ss4CharacterOrder_JtoL)/sizeof(u16);
+			break;
+		case 6:
+			totalCharacters = (int)sizeof(ss4CharacterOrder_MtoN)/sizeof(u16);
+			break;
+		case 7:
+			totalCharacters = (int)sizeof(ss4CharacterOrder_OtoP)/sizeof(u16);
+			break;
+		case 8:
+			totalCharacters = (int)sizeof(ss4CharacterOrder_QtoS)/sizeof(u16);
+			break;
+		case 9:
+			totalCharacters = (int)sizeof(ss4CharacterOrder_TtoV)/sizeof(u16);
+			break;
+		case 10:
+			totalCharacters = (int)sizeof(ss4CharacterOrder_WtoZ)/sizeof(u16);
+			break;
+		case 11:
+			totalCharacters = 30;
+			break;
+	}
+	if (totalCharacters > 0) totalCharacters--;
 }
 
 void MewtubeChange::drawMsg(void) const {
@@ -105,6 +212,12 @@ void MewtubeChange::Draw(void) const {
 		x += width;
 		width = light ? 29 : 28;
 	}
+	if (subScreenMode == 2 && peopleMet > 0) {
+		Gui::Draw_Rect(0, 208, 400, 32, WHITE);
+		char peopleMetText[24];
+		sprintf(peopleMetText, "People Met: %i", peopleMet);
+		Gui::DrawStringCentered(0, 216, 0.60, BLACK, peopleMetText);
+	}
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
@@ -129,11 +242,137 @@ void MewtubeChange::Draw(void) const {
 	cursorY = 64+(48*cursorPositionOnScreen[subScreenMode]);
 
 	int i2 = 56;
-	if (subScreenMode == 1) {
+	if (subScreenMode == 2) {
+		const char* letterText[] =    { "A", "C", "E", "G", "J", "M", "O", "Q", "T", "W"};
+		const char* letterTextBot[] = {"-B","-D","-F","-I","-L","-N","-P","-S","-V","-Z"};
+		Gui::DrawString(8, 10, 0.50, characterPage==0 ? RED : BLACK, "Prt.");
+		for (int i = 0; i < 10; i++) {
+			Gui::DrawString(34+(i*24), 4, 0.50, (characterPage > 0 && characterPage-1 == i) ? RED : BLACK, letterText[i]);
+			Gui::DrawString(42+(i*24), 16, 0.50, (characterPage > 0 && characterPage-1 == i) ? RED : BLACK, letterTextBot[i]);
+		}
+		Gui::DrawString(292, 10, 0.50, characterPage==11 ? RED : BLACK, "Ext.");
+
+		for (int i = characterShownFirst; i < characterShownFirst+3; i++) {
+			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+			if (characterPage == 0) {
+				GFX::DrawSprite((getSS4CharacterGender(0xBAE) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				Gui::DrawString(64, i2, 0.65, BLACK, ss4PlayerName);
+				break;
+			} else {
+				u16 charId = 0;
+				switch (characterPage) {
+					case 1:
+						charId = ss4CharacterOrder_AtoB[i];
+						break;
+					case 2:
+						charId = ss4CharacterOrder_CtoD[i];
+						break;
+					case 3:
+						charId = ss4CharacterOrder_EtoF[i];
+						break;
+					case 4:
+						charId = ss4CharacterOrder_GtoI[i];
+						break;
+					case 5:
+						charId = ss4CharacterOrder_JtoL[i];
+						break;
+					case 6:
+						charId = ss4CharacterOrder_MtoN[i];
+						break;
+					case 7:
+						charId = ss4CharacterOrder_OtoP[i];
+						break;
+					case 8:
+						charId = ss4CharacterOrder_QtoS[i];
+						break;
+					case 9:
+						charId = ss4CharacterOrder_TtoV[i];
+						break;
+					case 10:
+						charId = ss4CharacterOrder_WtoZ[i];
+						break;
+					case 11:
+						charId = 0x0BB9+i;
+						break;
+				}
+				int charFlag = 0;
+				const char* charInfo = "";
+				if (charId >= 0x0BB9) {
+				} else if (charId == 0x0B55) {
+					charFlag = ss4CharacterFlags30_3[charId-0x0B55];
+				} else if (charId >= 0x0A29) {
+					charFlag = ss4CharacterFlags30_3[charId-0x0A29];
+				} else if (charId >= 0x09C5) {
+					charFlag = ss4CharacterFlags30_3[charId-0x09C5];
+				} else if (charId >= 0x05DC) {
+					charFlag = ss4CharacterFlags30_0[charId-0x05DC];
+				} else if (charId >= 0x044C) {
+					charFlag = ss4CharacterFlags30_0[charId-0x044C];
+				} else if (charId >= 0x041A) {
+					charFlag = ss4CharacterFlagsMaleP2[charId-0x041A];
+				} else if (charId >= 0x03E8) {
+					charFlag = ss4CharacterFlagsMale[charId-0x03E8];
+				} else if (charId >= 0x0352) {
+					charFlag = ss4CharacterFlags30_3[charId-0x0352];
+				} else if (charId >= 0x0320) {
+					charFlag = ss4CharacterFlagsReps[charId-0x0320];
+				} else if (charId >= 0x02EE) {
+					charFlag = ss4CharacterFlags30_0[charId-0x02EE];
+				} else if (charId >= 0x02BC) {
+					charFlag = ss4CharacterFlags30_3[charId-0x02BC];
+				} else if (charId >= 0x028A) {
+					charFlag = ss4CharacterFlags30_0[charId-0x028A];
+				} else if (charId >= 0x0258) {
+					charFlag = ss4CharacterFlags30_0[charId-0x0258];
+				} else if (charId >= 0x0226) {
+					charFlag = ss4CharacterFlags30_0[charId-0x0226];
+				} else if (charId >= 0x01F4) {
+					charFlag = ss4CharacterFlags30_0[charId-0x01F4];
+				} else if (charId >= 0x01C2) {
+					charFlag = ss4CharacterFlags30_0[charId-0x01C2];
+				} else if (charId >= 0x0190) {
+					charFlag = ss4CharacterFlags30_0[charId-0x0190];
+				} else if (charId >= 0x015E) {
+					charFlag = ss4CharacterFlags30_0[charId-0x015E];
+				} else if (charId >= 0x012C) {
+					charFlag = ss4CharacterFlags30_0[charId-0x012C];
+				} else if (charId >= 0x00FA) {
+					charFlag = ss4CharacterFlags30_0[charId-0x00FA];
+				} else if (charId >= 0x00C8) {
+					charFlag = ss4CharacterFlags30_0[charId-0x00C8];
+				} else if (charId >= 0x0096) {
+					charFlag = ss4CharacterFlags30_0[charId-0x0096];
+				} else if (charId >= 0x0063) {
+					charFlag = ss4CharacterFlagsP2[charId-0x0063];
+				} else {
+					charFlag = ss4CharacterFlags[charId];
+				}
+				switch (charFlag) {
+					default:
+						break;
+					case 1:
+						charInfo = "Not in Contacts";
+						break;
+					case 2:
+						charInfo = "Unseen";
+						break;
+					case 3:
+						charInfo = "Fashion Forward Leftover";
+						break;
+				}
+				GFX::DrawSprite((getSS4CharacterGender(charId) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				if (charFlag > 0) {
+					Gui::DrawString(64, i2-12, 0.50, RED, charInfo);
+				}
+				Gui::DrawString(64, i2, 0.65, existsSS4Character(charId) ? BLACK : HALF_BLACK, getSS4CharName(charId));
+			}
+			i2 += 48;
+		}
+	} else if (subScreenMode == 1) {
 		Gui::DrawString(8, 8, 0.50, BLACK, "Select the character you want to change.");
-		for (int i = 0; i < peopleAmount[cursorPosition]; i++) {
-			u16 charId = getSS4MewtubeCharacterId(cursorPosition, 3+i);
-			u16 orgCharId = getSS4MewtubeCharacterId(cursorPosition, i);
+		for (int i = 0; i < peopleAmount[cursorPosition[0]]; i++) {
+			u16 charId = getSS4MewtubeCharacterId(cursorPosition[0], 3+i);
+			u16 orgCharId = getSS4MewtubeCharacterId(cursorPosition[0], i);
 			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 			GFX::DrawSprite((getSS4CharacterGender(charId) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 			if (charId == orgCharId) {
@@ -175,21 +414,159 @@ void MewtubeChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			sndSelect();
 			showMessage = false;
 		}
-	} else if (subScreenMode == 1) {
+	} else if (subScreenMode == 2) {
+		if (showCursor) {
+			if ((hDown & KEY_DUP) && (characterPage > 0)) {
+				sndHighlight();
+				cursorPosition[2]--;
+				cursorPositionOnScreen[2]--;
+				if (cursorPosition[2] < 0) {
+					cursorPosition[2] = 0;
+					characterShownFirst = 0;
+				} else if (cursorPosition[2] < characterShownFirst) {
+					characterShownFirst--;
+				}
+				if (cursorPositionOnScreen[2] < 0) {
+					cursorPositionOnScreen[2] = 0;
+				}
+				getMaxChars();
+			}
+
+			if ((hDown & KEY_DDOWN) && (characterPage > 0)) {
+				sndHighlight();
+				cursorPosition[2]++;
+				cursorPositionOnScreen[2]++;
+				if (cursorPosition[2] > totalCharacters) {
+					cursorPosition[2] = totalCharacters;
+					characterShownFirst = totalCharacters-2;
+				} else if (cursorPosition[2] > characterShownFirst+2) {
+					characterShownFirst++;
+				}
+				if (cursorPositionOnScreen[2] > 2) {
+					cursorPositionOnScreen[2] = 2;
+				}
+			}
+
+			if ((hDown & KEY_DLEFT) && (highlightedGame > 1)) {
+				sndHighlight();
+				characterPage--;
+				if (characterPage < 0) characterPage = 0;
+			}
+
+			if ((hDown & KEY_DRIGHT) && (highlightedGame > 1)) {
+				sndHighlight();
+				characterPage++;
+				if (characterPage > 11) characterPage = 11;
+			}
+
+			if ((hDown & KEY_DLEFT) || (hDown & KEY_DRIGHT)) {
+				cursorPosition[2] = 0;
+				cursorPositionOnScreen[2] = 0;
+				characterShownFirst = 0;
+				getMaxChars();
+			}
+		}
+
+		if (hDown & KEY_A) {
+			sndSelect();
+			u16 charId = 0;
+			switch (characterPage) {
+				case 0:
+				default:
+					charId = 0x0BAE;
+					break;
+				case 1:
+					charId = ss4CharacterOrder_AtoB[cursorPosition[2]];
+					break;
+				case 2:
+					charId = ss4CharacterOrder_CtoD[cursorPosition[2]];
+					break;
+				case 3:
+					charId = ss4CharacterOrder_EtoF[cursorPosition[2]];
+					break;
+				case 4:
+					charId = ss4CharacterOrder_GtoI[cursorPosition[2]];
+					break;
+				case 5:
+					charId = ss4CharacterOrder_JtoL[cursorPosition[2]];
+					break;
+				case 6:
+					charId = ss4CharacterOrder_MtoN[cursorPosition[2]];
+					break;
+				case 7:
+					charId = ss4CharacterOrder_OtoP[cursorPosition[2]];
+					break;
+				case 8:
+					charId = ss4CharacterOrder_QtoS[cursorPosition[2]];
+					break;
+				case 9:
+					charId = ss4CharacterOrder_TtoV[cursorPosition[2]];
+					break;
+				case 10:
+					charId = ss4CharacterOrder_WtoZ[cursorPosition[2]];
+					break;
+				case 11:
+					charId = 0x0BB9+cursorPosition[2];
+					break;
+			}
+			readSS4Character(charId);
+			writeSS4MewtubeCharacterId(charId, cursorPosition[0], 3+cursorPosition[1]);
+			writeSS4MewtubeCharacter(cursorPosition[0], 3+cursorPosition[1]);
+			writeSS4Save();
+			subScreenMode = 1;
+		}
+
 		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 			sndBack();
+			subScreenMode = 1;
+		}
+	} else if (subScreenMode == 1) {
+		if (showCursor) {
+			if (hDown & KEY_UP) {
+				sndHighlight();
+				cursorPosition[1]--;
+				cursorPositionOnScreen[1]--;
+				if (cursorPosition[1] < 0) {
+					cursorPosition[1] = 0;
+				}
+				if (cursorPositionOnScreen[1] < 0) {
+					cursorPositionOnScreen[1] = 0;
+				}
+			}
+			if (hDown & KEY_DOWN) {
+				sndHighlight();
+				cursorPosition[1]++;
+				cursorPositionOnScreen[1]++;
+				if (cursorPosition[1] > peopleAmount[cursorPosition[0]]-1) {
+					cursorPosition[1] = peopleAmount[cursorPosition[0]]-1;
+				}
+				if (cursorPositionOnScreen[1] > peopleAmount[cursorPosition[0]]-1) {
+					cursorPositionOnScreen[1] = peopleAmount[cursorPosition[0]]-1;
+				}
+			}
+		}
+
+		if (hDown & KEY_A) {
+			sndSelect();
+			subScreenMode = 2;
+		}
+
+		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
+			sndBack();
+			cursorPosition[1] = 0;
+			cursorPositionOnScreen[1] = 0;
 			subScreenMode = 0;
 		}
 	} else {
 		if (showCursor) {
 			if (hDown & KEY_UP) {
 				sndHighlight();
-				cursorPosition--;
+				cursorPosition[0]--;
 				cursorPositionOnScreen[0]--;
-				if (cursorPosition < 0) {
-					cursorPosition = 0;
+				if (cursorPosition[0] < 0) {
+					cursorPosition[0] = 0;
 					videoShownFirst = 0;
-				} else if (cursorPosition < videoShownFirst) {
+				} else if (cursorPosition[0] < videoShownFirst) {
 					videoShownFirst--;
 				}
 				if (cursorPositionOnScreen[0] < 0) {
@@ -198,16 +575,16 @@ void MewtubeChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			}
 			if (hDown & KEY_DOWN) {
 				sndHighlight();
-				cursorPosition++;
+				cursorPosition[0]++;
 				cursorPositionOnScreen[0]++;
-				if (cursorPosition > numberofVideos) {
-					cursorPosition = numberofVideos;
+				if (cursorPosition[0] > numberofVideos) {
+					cursorPosition[0] = numberofVideos;
 					videoShownFirst = numberofVideos-2;
 					if (videoShownFirst < 0) videoShownFirst = 0;
 					if (cursorPositionOnScreen[0] > numberofVideos) {
 						cursorPositionOnScreen[0] = numberofVideos;
 					}
-				} else if (cursorPosition > videoShownFirst+2) {
+				} else if (cursorPosition[0] > videoShownFirst+2) {
 					videoShownFirst++;
 				}
 				if (cursorPositionOnScreen[0] > 2) {

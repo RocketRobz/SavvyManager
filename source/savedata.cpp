@@ -320,11 +320,11 @@ static u32 getSS3CharacterOffset(u16 id) {
 	}
 }
 
-inline void readSS3Character(u16 id) {
+void readSS3Character(u16 id) {
 	tonccpy(&ss4CharacterData, (char*)ss3Save+getSS3CharacterOffset(id), 0x36);
 }
 
-inline void writeSS3Character(u16 id) {
+void writeSS3Character(u16 id) {
 	tonccpy((char*)ss3Save+getSS3CharacterOffset(id), &ss4CharacterData, 0x36);
 }
 
@@ -688,12 +688,16 @@ static u32 getSS4MewtubeCharacterOffset(int video, int slot) {
 	}
 }
 
-inline void readSS4Character(u16 id) {
+void readSS4Character(u16 id) {
 	tonccpy(&ss4CharacterData, (char*)ss4Save+getSS4CharacterOffset(id), 0x3E);
 }
 
-inline void writeSS4Character(u16 id) {
+void writeSS4Character(u16 id) {
 	tonccpy((char*)ss4Save+getSS4CharacterOffset(id), &ss4CharacterData, 0x3E);
+}
+
+void writeSS4MewtubeCharacter(int video, int slot) {
+	tonccpy((char*)ss4Save+getSS4MewtubeCharacterOffset(video, slot), &ss4CharacterData, 0x3E);
 }
 
 bool existsSS4Character(u16 id) {
@@ -721,6 +725,10 @@ void writeSS4CharacterFile(u16 id, const char* filename) {
 
 u16 getSS4MewtubeCharacterId(int video, int slot) {
 	return *(u16*)((char*)ss4Save+getSS4MewtubeCharacterOffset(video, slot)-2);
+}
+
+void writeSS4MewtubeCharacterId(u16 id, int video, int slot) {
+	*(u16*)((char*)ss4Save+getSS4MewtubeCharacterOffset(video, slot)-2) = id;
 }
 
 bool getSS4CharacterGender(u16 id) {
