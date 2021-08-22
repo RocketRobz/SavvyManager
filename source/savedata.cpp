@@ -700,6 +700,13 @@ void writeSS4MewtubeCharacter(int video, int slot) {
 	tonccpy((char*)ss4Save+getSS4MewtubeCharacterOffset(video, slot), &ss4CharacterData, 0x3E);
 }
 
+void revertSS4MewtubeCharacter(int video, int slot) {
+	if (slot < 3) slot += 3;
+
+	*(u16*)((char*)ss4Save+getSS4MewtubeCharacterOffset(video, slot)-2) = *(u16*)((char*)ss4Save+getSS4MewtubeCharacterOffset(video, slot-3)-2);
+	tonccpy((char*)ss4Save+getSS4MewtubeCharacterOffset(video, slot), (char*)ss4Save+getSS4MewtubeCharacterOffset(video, slot-3), 0x3E);
+}
+
 bool existsSS4Character(u16 id) {
 	if (id == 0 || id == 0xBAE) return true;
 

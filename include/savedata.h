@@ -150,6 +150,7 @@ extern void writeSS3CharacterFile(u16 id, const char* filename);
 extern void readSS4CharacterFile(u16 id, const char* filename);
 extern void writeSS4CharacterFile(u16 id, const char* filename);
 extern void writeSS4MewtubeCharacter(int video, int slot);
+extern void revertSS4MewtubeCharacter(int video, int slot);
 extern void backupSS3DLCharacters(const char* filename);
 extern void restoreSS3DLCharacters(const char* filename);
 

@@ -186,15 +186,20 @@ void MewtubeChange::getMaxChars() {
 void MewtubeChange::drawMsg(void) const {
 	GFX::DrawSprite(sprites_msg_idx, 0, 8, 1, 1);
 	GFX::DrawSprite(sprites_msg_idx, 160, 8, -1, 1);
-	GFX::DrawSprite(sprites_icon_msg_idx, 132, -2);
-	/*if (messageNo == 1) {
-		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "Failed to apply music pack.");
-	} else {
-		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "Successfully applied music pack.");
-	}*/
-	GFX::DrawSprite(sprites_button_msg_shadow_idx, 114, 197);
-	GFX::DrawSprite(sprites_button_msg_idx, 115, 188);
-	Gui::DrawString((sysRegion==CFG_REGION_KOR ? 128 : 134), 196, 0.70, MSG_BUTTONTEXT, " OK!");
+	GFX::DrawSprite(sprites_icon_question_idx, 132, -2);
+
+	Gui::DrawStringCentered(0, 58, 0.60, BLACK, "The character will be reverted to");
+	Gui::DrawStringCentered(0, 78, 0.60, BLACK, "the original one from the video.");
+	Gui::DrawStringCentered(0, 104, 0.60, BLACK, "Her outfit, hairstyle, makeup,");
+	Gui::DrawStringCentered(0, 124, 0.60, BLACK, "and nails will be included.");
+	Gui::DrawStringCentered(0, 144, 0.60, BLACK, "Is this OK?");
+
+	GFX::DrawSprite(sprites_button_msg_shadow_idx, 52, 197);
+	GFX::DrawSprite(sprites_button_msg_idx, 53, 188);
+	GFX::DrawSprite(sprites_button_msg_shadow_idx, 176, 197);
+	GFX::DrawSprite(sprites_button_msg_idx, 177, 188);
+	Gui::DrawString(72, 196, 0.70, MSG_BUTTONTEXT, " No");
+	Gui::DrawString(196, 196, 0.70, MSG_BUTTONTEXT, " Yes");
 }
 
 void MewtubeChange::Draw(void) const {
@@ -374,7 +379,9 @@ void MewtubeChange::Draw(void) const {
 			u16 charId = getSS4MewtubeCharacterId(cursorPosition[0], 3+i);
 			u16 orgCharId = getSS4MewtubeCharacterId(cursorPosition[0], i);
 			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-			GFX::DrawSprite((getSS4CharacterGender(charId) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+			if (charId != 0) {
+				GFX::DrawSprite((getSS4CharacterGender(charId) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+			}
 			if (charId == orgCharId) {
 				Gui::DrawString(64, i2, 0.65, BLACK, getSS4CharName(charId));
 			} else {
@@ -383,6 +390,11 @@ void MewtubeChange::Draw(void) const {
 			}
 			i2 += 48;
 		}
+		u16 charId = getSS4MewtubeCharacterId(cursorPosition[0], 3+cursorPosition[1]);
+		if (charId != 0) {
+			Gui::DrawString(88, 201, 0.50, BLACK, ": Remove");
+		}
+		Gui::DrawString(88, 217, 0.50, BLACK, "SELECT: Revert to original");
 	} else {
 		Gui::DrawString(8, 8, 0.50, BLACK, "Select the video to change in You Diva mode.");
 		for (int i = videoShownFirst; i < videoShownFirst+3; i++) {
@@ -410,8 +422,15 @@ void MewtubeChange::Draw(void) const {
 
 void MewtubeChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 	if (showMessage) {
-		if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
+		if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 176 && touch.px < 176+90 && touch.py >= 188 && touch.py < 188+47)) {
 			sndSelect();
+			revertSS4MewtubeCharacter(cursorPosition[0], 3+cursorPosition[1]);
+			writeSS4Save();
+			showMessage = false;
+		}
+
+		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touch.px >= 52 && touch.px < 52+90 && touch.py >= 188 && touch.py < 188+47)) {
+			sndBack();
 			showMessage = false;
 		}
 	} else if (subScreenMode == 2) {
@@ -556,6 +575,20 @@ void MewtubeChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			cursorPosition[1] = 0;
 			cursorPositionOnScreen[1] = 0;
 			subScreenMode = 0;
+		}
+
+		if (hDown & KEY_X) {
+			u16 charId = getSS4MewtubeCharacterId(cursorPosition[0], 3+cursorPosition[1]);
+			if (charId != 0) {
+				sndSelect();
+				writeSS4MewtubeCharacterId(0, cursorPosition[0], 3+cursorPosition[1]);
+				writeSS4Save();
+			}
+		}
+
+		if (hDown & KEY_SELECT) {
+			sndSelect();
+			showMessage = true;
 		}
 	} else {
 		if (showCursor) {
