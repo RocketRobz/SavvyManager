@@ -2,6 +2,7 @@
 #include "emblemChange.hpp"
 #include "gameSelect.hpp"
 #include "musicChange.hpp"
+#include "mewtubeChange.hpp"
 #include "screenvars.h"
 #include "whatToDo.hpp"
 
@@ -108,7 +109,11 @@ void WhatToDo::Draw(void) const {
 	GFX::DrawSprite(sprites_icon_profile_idx, iconXpos, 80);
 	Gui::DrawStringCentered(-64, 140, textSize, RED, "Characters");
 	iconXpos += 64;
-	if (highlightedGame == 1) {
+	if (highlightedGame == 3) {
+		// Show Mewtube option for Styling Star
+		GFX::DrawSprite(sprites_icon_mewtube_idx, iconXpos, 84);
+		Gui::DrawStringCentered(0, 140, textSize, RED, "Mewtube");
+	} else if (highlightedGame == 1) {
 		// Show music pack option for Trendsetters
 		GFX::DrawSpriteBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
 		GFX::DrawSprite(sprites_icon_music_idx, iconXpos, 80);
@@ -160,7 +165,11 @@ void WhatToDo::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (highlightedGame > 0 && showCursor) {
 			if (hDown & KEY_LEFT) {
 				sndHighlight();
-				if (highlightedGame > 1) {
+				if (highlightedGame == 3) {
+					whatToChange_cursorPosition--;
+					if (whatToChange_cursorPosition < 0)	whatToChange_cursorPosition = 2;
+					cursorChange();
+				} else if (highlightedGame > 1) {
 					if (whatToChange_cursorPosition == 2)	whatToChange_cursorPosition = 0;
 					else if (whatToChange_cursorPosition == 0)	whatToChange_cursorPosition = 2;
 					cursorChange();
@@ -171,7 +180,11 @@ void WhatToDo::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 			} else if (hDown & KEY_RIGHT) {
 				sndHighlight();
-				if (highlightedGame > 1) {
+				if (highlightedGame == 3) {
+					whatToChange_cursorPosition++;
+					if (whatToChange_cursorPosition > 2) whatToChange_cursorPosition = 0;
+					cursorChange();
+				} else if (highlightedGame > 1) {
 					if (whatToChange_cursorPosition == 0) whatToChange_cursorPosition = 2;
 					else if (whatToChange_cursorPosition == 2) whatToChange_cursorPosition = 0;
 					cursorChange();
@@ -193,7 +206,7 @@ void WhatToDo::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				cursorChange();
 				runSelection = true;
 			}
-			if ((touch.px > 134) && (touch.px < 185) && highlightedGame==1) {
+			if ((touch.px > 134) && (touch.px < 185) && (highlightedGame==1 || highlightedGame==3)) {
 				whatToChange_cursorPosition = 1;
 				cursorChange();
 				runSelection = true;
@@ -221,7 +234,7 @@ void WhatToDo::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					}
 					break;
 				case 1:
-					Gui::setScreen(std::make_unique<MusicChange>(), true);
+					highlightedGame==3 ? Gui::setScreen(std::make_unique<MewtubeChange>(), true) : Gui::setScreen(std::make_unique<MusicChange>(), true);
 					break;
 				case 2:
 					Gui::setScreen(std::make_unique<EmblemChange>(), true);

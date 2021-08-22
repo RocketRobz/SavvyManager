@@ -641,6 +641,53 @@ static u32 getSS4CharacterOffset(u16 id) {
 	}
 }
 
+static u32 getSS4MewtubeCharacterOffset(int video, int slot) {
+	     if (slot < 0) slot = 0;
+	else if (slot > 5) slot = 5;
+
+	switch (video) {
+		case 0: // Open Plaza: Flying Shiny Day
+		default:
+			return 0x9BCDA + 0x40*slot;
+		case 1: // Open Plaza: Ready Go!!
+			return 0x9BE6A + 0x40*slot;
+		case 2: // Outdoor Festival: Flying Shiny Day
+			return 0x9BFFA + 0x40*slot;
+		case 3: // Outdoor Festival: Ready Go!!
+			return 0x9C18A + 0x40*slot;
+		case 4: // Concert Hall: Higher Higher
+			return 0x9C31A + 0x40*slot;
+		case 5: // Concert Hall: To the Future
+			return 0x9C4AA + 0x40*slot;
+		case 6: // Charity Stage: Higher Higher
+			return 0x9C63A + 0x40*slot;
+		case 7: // Charity Stage: To the Future
+			return 0x9C7CA + 0x40*slot;
+		case 8: // Live Music Club: Wings
+			return 0x9C95A + 0x40*slot;
+		case 9: // Live Music Club: Beautiful
+			return 0x9CAEA + 0x40*slot;
+		case 10: // Celestial Hotel: Make Me Glow
+			return 0x9CE0A + 0x40*slot;
+		case 11: // Celestial Hotel: Glowing Moon
+			return 0x9CF9A + 0x40*slot;
+		case 12: // Alinatron On-Air: Fight For Your Style
+			return 0x9D12A + 0x40*slot;
+		case 13: // Promo Video: Twinkle Fantasia
+			return 0x9D2BA + 0x40*slot;
+		case 14: // Cinema: Maria
+			return 0x9D44A + 0x40*slot;
+		case 15: // Concert Hall: Dosukoi Koi Koi (Break It Down)
+			return 0x9D5DA + 0x40*slot;
+		case 16: // Concert Hall: Radiance
+			return 0x9D76A + 0x40*slot;
+		case 17: // Open Plaza: Ring a Ding
+			return 0x9D8FA + 0x40*slot;
+		case 18: // Open Plaza: Bravo
+			return 0x9DA8A + 0x40*slot;
+	}
+}
+
 inline void readSS4Character(u16 id) {
 	tonccpy(&ss4CharacterData, (char*)ss4Save+getSS4CharacterOffset(id), 0x3E);
 }
@@ -670,6 +717,10 @@ void writeSS4CharacterFile(u16 id, const char* filename) {
 
 	fwrite((char*)ss4Save+getSS4CharacterOffset(id), 0x3E, 1, characterData);
 	fclose(characterData);
+}
+
+u16 getSS4MewtubeCharacterId(int video, int slot) {
+	return *(u16*)((char*)ss4Save+getSS4MewtubeCharacterOffset(video, slot)-2);
 }
 
 bool getSS4CharacterGender(u16 id) {

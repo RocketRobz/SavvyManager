@@ -15,6 +15,110 @@
 
 #include <unistd.h>
 
+const char* getSS3CharName(u16 charId) {
+	if (charId >= 0x0BB9) {
+		return readSS3ProfileName(charId);
+	} else if (charId == 0x07D1) {
+		return ss3PlayerName;
+	} else if (charId >= 0x044C) {
+		return ss3CharacterNamesMaleP3[charId-0x044C];
+	} else if (charId >= 0x041A) {
+		return ss3CharacterNamesMaleP2[charId-0x041A];
+	} else if (charId >= 0x03E8) {
+		return ss3CharacterNamesMale[charId-0x03E8];
+	} else if (charId >= 0x0352) {
+		return ss3CharacterNames5S[charId-0x0352];
+	} else if (charId >= 0x0320) {
+		return ss3CharacterNamesReps[charId-0x0320];
+	} else if (charId >= 0x02EE) {
+		return ss3CharacterNamesP16[charId-0x02EE];
+	} else if (charId >= 0x02BC) {
+		return ss3CharacterNamesP15[charId-0x02BC];
+	} else if (charId >= 0x028A) {
+		return ss3CharacterNamesP14[charId-0x028A];
+	} else if (charId >= 0x0258) {
+		return ss3CharacterNamesP13[charId-0x0258];
+	} else if (charId >= 0x0226) {
+		return ss3CharacterNamesP12[charId-0x0226];
+	} else if (charId >= 0x01F4) {
+		return ss3CharacterNamesP11[charId-0x01F4];
+	} else if (charId >= 0x01C2) {
+		return ss3CharacterNamesP10[charId-0x01C2];
+	} else if (charId >= 0x0190) {
+		return ss3CharacterNamesP9[charId-0x0190];
+	} else if (charId >= 0x015E) {
+		return ss3CharacterNamesP8[charId-0x015E];
+	} else if (charId >= 0x012C) {
+		return ss3CharacterNamesP7[charId-0x012C];
+	} else if (charId >= 0x00FA) {
+		return ss3CharacterNamesP6[charId-0x00FA];
+	} else if (charId >= 0x00C8) {
+		return ss3CharacterNamesP5[charId-0x00C8];
+	} else if (charId >= 0x0096) {
+		return ss3CharacterNamesP4[charId-0x0096];
+	} else if (charId >= 0x0064) {
+		return ss3CharacterNamesP3[charId-0x0064];
+	} else if (charId >= 0x0032) {
+		return ss3CharacterNamesP2[charId-0x0032];
+	}
+	return ss3CharacterNames[charId];
+}
+
+const char* getSS4CharName(u16 charId) {
+	if (charId >= 0x0BB9) {
+		return readSS4ProfileName(charId);
+	} else if (charId == 0x0BAE) {
+		return ss4PlayerName;
+	} else if (charId == 0x0B55) {
+		return ss4CharacterNames0B55[charId-0x0B55];
+	} else if (charId >= 0x0A29) {
+		return ss4CharacterNames0A29[charId-0x0A29];
+	} else if (charId >= 0x09C5) {
+		return ss4CharacterNames09C5[charId-0x09C5];
+	} else if (charId >= 0x05DC) {
+		return ss4CharacterNamesInst[charId-0x05DC];
+	} else if (charId >= 0x044C) {
+		return ss4CharacterNamesMaleP3[charId-0x044C];
+	} else if (charId >= 0x041A) {
+		return ss4CharacterNamesMaleP2[charId-0x041A];
+	} else if (charId >= 0x03E8) {
+		return ss4CharacterNamesMale[charId-0x03E8];
+	} else if (charId >= 0x0352) {
+		return ss3CharacterNames5S[charId-0x0352];
+	} else if (charId >= 0x0320) {
+		return ss4CharacterNamesReps[charId-0x0320];
+	} else if (charId >= 0x02EE) {
+		return ss4CharacterNamesP15[charId-0x02EE];
+	} else if (charId >= 0x02BC) {
+		return ss3CharacterNamesP15[charId-0x02BC];
+	} else if (charId >= 0x028A) {
+		return ss4CharacterNamesP13[charId-0x028A];
+	} else if (charId >= 0x0258) {
+		return ss4CharacterNamesP12[charId-0x0258];
+	} else if (charId >= 0x0226) {
+		return ss3CharacterNamesP12[charId-0x0226];
+	} else if (charId >= 0x01F4) {
+		return ss4CharacterNamesP10[charId-0x01F4];
+	} else if (charId >= 0x01C2) {
+		return ss4CharacterNamesP9[charId-0x01C2];
+	} else if (charId >= 0x0190) {
+		return ss4CharacterNamesP8[charId-0x0190];
+	} else if (charId >= 0x015E) {
+		return ss4CharacterNamesP7[charId-0x015E];
+	} else if (charId >= 0x012C) {
+		return ss4CharacterNamesP6[charId-0x012C];
+	} else if (charId >= 0x00FA) {
+		return ss4CharacterNamesP5[charId-0x00FA];
+	} else if (charId >= 0x00C8) {
+		return ss4CharacterNamesP4[charId-0x00C8];
+	} else if (charId >= 0x0096) {
+		return ss4CharacterNamesP3[charId-0x0096];
+	} else if (charId >= 0x0063) {
+		return ss4CharacterNamesP2[charId-0x0063];
+	}
+	return ss4CharacterNames[charId];
+}
+
 extern bool ss3DLCharactersBackedUp;
 
 static u16 currentCharId = 0;
@@ -428,56 +532,7 @@ const char* CharacterChange::characterName(bool showPlayerName) const {
 					currentCharId = 0x0BB9+characterList_cursorPosition;
 					break;
 			}
-			if (currentCharId >= 0x0BB9) {
-				return readSS4ProfileName(currentCharId);
-			} else if (currentCharId == 0x0B55) {
-				return ss4CharacterNames0B55[currentCharId-0x0B55];
-			} else if (currentCharId >= 0x0A29) {
-				return ss4CharacterNames0A29[currentCharId-0x0A29];
-			} else if (currentCharId >= 0x09C5) {
-				return ss4CharacterNames09C5[currentCharId-0x09C5];
-			} else if (currentCharId >= 0x05DC) {
-				return ss4CharacterNamesInst[currentCharId-0x05DC];
-			} else if (currentCharId >= 0x044C) {
-				return ss4CharacterNamesMaleP3[currentCharId-0x044C];
-			} else if (currentCharId >= 0x041A) {
-				return ss4CharacterNamesMaleP2[currentCharId-0x041A];
-			} else if (currentCharId >= 0x03E8) {
-				return ss4CharacterNamesMale[currentCharId-0x03E8];
-			} else if (currentCharId >= 0x0352) {
-				return ss3CharacterNames5S[currentCharId-0x0352];
-			} else if (currentCharId >= 0x0320) {
-				return ss4CharacterNamesReps[currentCharId-0x0320];
-			} else if (currentCharId >= 0x02EE) {
-				return ss4CharacterNamesP15[currentCharId-0x02EE];
-			} else if (currentCharId >= 0x02BC) {
-				return ss3CharacterNamesP15[currentCharId-0x02BC];
-			} else if (currentCharId >= 0x028A) {
-				return ss4CharacterNamesP13[currentCharId-0x028A];
-			} else if (currentCharId >= 0x0258) {
-				return ss4CharacterNamesP12[currentCharId-0x0258];
-			} else if (currentCharId >= 0x0226) {
-				return ss3CharacterNamesP12[currentCharId-0x0226];
-			} else if (currentCharId >= 0x01F4) {
-				return ss4CharacterNamesP10[currentCharId-0x01F4];
-			} else if (currentCharId >= 0x01C2) {
-				return ss4CharacterNamesP9[currentCharId-0x01C2];
-			} else if (currentCharId >= 0x0190) {
-				return ss4CharacterNamesP8[currentCharId-0x0190];
-			} else if (currentCharId >= 0x015E) {
-				return ss4CharacterNamesP7[currentCharId-0x015E];
-			} else if (currentCharId >= 0x012C) {
-				return ss4CharacterNamesP6[currentCharId-0x012C];
-			} else if (currentCharId >= 0x00FA) {
-				return ss4CharacterNamesP5[currentCharId-0x00FA];
-			} else if (currentCharId >= 0x00C8) {
-				return ss4CharacterNamesP4[currentCharId-0x00C8];
-			} else if (currentCharId >= 0x0096) {
-				return ss4CharacterNamesP3[currentCharId-0x0096];
-			} else if (currentCharId >= 0x0063) {
-				return ss4CharacterNamesP2[currentCharId-0x0063];
-			}
-			return ss4CharacterNames[currentCharId];
+			return getSS4CharName(currentCharId);
 	}
 	return "???";
 }
@@ -945,81 +1000,55 @@ void CharacterChange::Draw(void) const {
 					}
 					int charFlag = 0;
 					const char* charInfo = "";
-					const char* charName = "";
 					if (charId >= 0x0BB9) {
-						charName = readSS4ProfileName(charId);
 					} else if (charId == 0x0B55) {
 						charFlag = ss4CharacterFlags30_3[charId-0x0B55];
-						charName = ss4CharacterNames0B55[charId-0x0B55];
 					} else if (charId >= 0x0A29) {
 						charFlag = ss4CharacterFlags30_3[charId-0x0A29];
-						charName = ss4CharacterNames0A29[charId-0x0A29];
 					} else if (charId >= 0x09C5) {
 						charFlag = ss4CharacterFlags30_3[charId-0x09C5];
-						charName = ss4CharacterNames09C5[charId-0x09C5];
 					} else if (charId >= 0x05DC) {
 						charFlag = ss4CharacterFlags30_0[charId-0x05DC];
-						charName = ss4CharacterNamesInst[charId-0x05DC];
 					} else if (charId >= 0x044C) {
 						charFlag = ss4CharacterFlags30_0[charId-0x044C];
-						charName = ss4CharacterNamesMaleP3[charId-0x044C];
 					} else if (charId >= 0x041A) {
 						charFlag = ss4CharacterFlagsMaleP2[charId-0x041A];
-						charName = ss4CharacterNamesMaleP2[charId-0x041A];
 					} else if (charId >= 0x03E8) {
 						charFlag = ss4CharacterFlagsMale[charId-0x03E8];
-						charName = ss4CharacterNamesMale[charId-0x03E8];
 					} else if (charId >= 0x0352) {
 						charFlag = ss4CharacterFlags30_3[charId-0x0352];
-						charName = ss3CharacterNames5S[charId-0x0352];
 					} else if (charId >= 0x0320) {
 						charFlag = ss4CharacterFlagsReps[charId-0x0320];
-						charName = ss4CharacterNamesReps[charId-0x0320];
 					} else if (charId >= 0x02EE) {
 						charFlag = ss4CharacterFlags30_0[charId-0x02EE];
-						charName = ss4CharacterNamesP15[charId-0x02EE];
 					} else if (charId >= 0x02BC) {
 						charFlag = ss4CharacterFlags30_3[charId-0x02BC];
-						charName = ss3CharacterNamesP15[charId-0x02BC];
 					} else if (charId >= 0x028A) {
 						charFlag = ss4CharacterFlags30_0[charId-0x028A];
-						charName = ss4CharacterNamesP13[charId-0x028A];
 					} else if (charId >= 0x0258) {
 						charFlag = ss4CharacterFlags30_0[charId-0x0258];
-						charName = ss4CharacterNamesP12[charId-0x0258];
 					} else if (charId >= 0x0226) {
 						charFlag = ss4CharacterFlags30_0[charId-0x0226];
-						charName = ss3CharacterNamesP12[charId-0x0226];
 					} else if (charId >= 0x01F4) {
 						charFlag = ss4CharacterFlags30_0[charId-0x01F4];
-						charName = ss4CharacterNamesP10[charId-0x01F4];
 					} else if (charId >= 0x01C2) {
 						charFlag = ss4CharacterFlags30_0[charId-0x01C2];
-						charName = ss4CharacterNamesP9[charId-0x01C2];
 					} else if (charId >= 0x0190) {
 						charFlag = ss4CharacterFlags30_0[charId-0x0190];
-						charName = ss4CharacterNamesP8[charId-0x0190];
 					} else if (charId >= 0x015E) {
 						charFlag = ss4CharacterFlags30_0[charId-0x015E];
-						charName = ss4CharacterNamesP7[charId-0x015E];
 					} else if (charId >= 0x012C) {
 						charFlag = ss4CharacterFlags30_0[charId-0x012C];
-						charName = ss4CharacterNamesP6[charId-0x012C];
 					} else if (charId >= 0x00FA) {
 						charFlag = ss4CharacterFlags30_0[charId-0x00FA];
-						charName = ss4CharacterNamesP5[charId-0x00FA];
 					} else if (charId >= 0x00C8) {
 						charFlag = ss4CharacterFlags30_0[charId-0x00C8];
-						charName = ss4CharacterNamesP4[charId-0x00C8];
 					} else if (charId >= 0x0096) {
 						charFlag = ss4CharacterFlags30_0[charId-0x0096];
-						charName = ss4CharacterNamesP3[charId-0x0096];
 					} else if (charId >= 0x0063) {
 						charFlag = ss4CharacterFlagsP2[charId-0x0063];
-						charName = ss4CharacterNamesP2[charId-0x0063];
 					} else {
 						charFlag = ss4CharacterFlags[charId];
-						charName = ss4CharacterNames[charId];
 					}
 					switch (charFlag) {
 						default:
@@ -1038,7 +1067,7 @@ void CharacterChange::Draw(void) const {
 					if (charFlag > 0) {
 						Gui::DrawString(64, i2-12, 0.50, RED, charInfo);
 					}
-					Gui::DrawString(64, i2, 0.65, existsSS4Character(charId) ? BLACK : HALF_BLACK, charName);
+					Gui::DrawString(64, i2, 0.65, existsSS4Character(charId) ? BLACK : HALF_BLACK, getSS4CharName(charId));
 				}
 			} else if (highlightedGame == 2) {
 				if (characterPage[2] == 0) {
@@ -1082,54 +1111,8 @@ void CharacterChange::Draw(void) const {
 							charId = 0x0BB9+i;
 							break;
 					}
-					const char* charName = "";
-					if (charId >= 0x0BB9) {
-						charName = readSS3ProfileName(charId);
-					} else if (charId >= 0x044C) {
-						charName = ss3CharacterNamesMaleP3[charId-0x044C];
-					} else if (charId >= 0x041A) {
-						charName = ss3CharacterNamesMaleP2[charId-0x041A];
-					} else if (charId >= 0x03E8) {
-						charName = ss3CharacterNamesMale[charId-0x03E8];
-					} else if (charId >= 0x0352) {
-						charName = ss3CharacterNames5S[charId-0x0352];
-					} else if (charId >= 0x0320) {
-						charName = ss3CharacterNamesReps[charId-0x0320];
-					} else if (charId >= 0x02EE) {
-						charName = ss3CharacterNamesP16[charId-0x02EE];
-					} else if (charId >= 0x02BC) {
-						charName = ss3CharacterNamesP15[charId-0x02BC];
-					} else if (charId >= 0x028A) {
-						charName = ss3CharacterNamesP14[charId-0x028A];
-					} else if (charId >= 0x0258) {
-						charName = ss3CharacterNamesP13[charId-0x0258];
-					} else if (charId >= 0x0226) {
-						charName = ss3CharacterNamesP12[charId-0x0226];
-					} else if (charId >= 0x01F4) {
-						charName = ss3CharacterNamesP11[charId-0x01F4];
-					} else if (charId >= 0x01C2) {
-						charName = ss3CharacterNamesP10[charId-0x01C2];
-					} else if (charId >= 0x0190) {
-						charName = ss3CharacterNamesP9[charId-0x0190];
-					} else if (charId >= 0x015E) {
-						charName = ss3CharacterNamesP8[charId-0x015E];
-					} else if (charId >= 0x012C) {
-						charName = ss3CharacterNamesP7[charId-0x012C];
-					} else if (charId >= 0x00FA) {
-						charName = ss3CharacterNamesP6[charId-0x00FA];
-					} else if (charId >= 0x00C8) {
-						charName = ss3CharacterNamesP5[charId-0x00C8];
-					} else if (charId >= 0x0096) {
-						charName = ss3CharacterNamesP4[charId-0x0096];
-					} else if (charId >= 0x0064) {
-						charName = ss3CharacterNamesP3[charId-0x0064];
-					} else if (charId >= 0x0032) {
-						charName = ss3CharacterNamesP2[charId-0x0032];
-					} else {
-						charName = ss3CharacterNames[charId];
-					}
 					GFX::DrawSprite((getSS3CharacterGender(charId) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-					Gui::DrawString(64, i2, 0.65, existsSS3Character(charId) ? BLACK : HALF_BLACK, charName);
+					Gui::DrawString(64, i2, 0.65, existsSS3Character(charId) ? BLACK : HALF_BLACK, getSS3CharName(charId));
 				}
 			} else if (highlightedGame == 1) {
 				GFX::DrawSprite((getSS2CharacterGender() ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
@@ -1552,7 +1535,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			sndBack();
 			subScreenMode = 0;
 		}
-	
+
 	} else {
 		if (showCursor) {
 			if ((hDown & KEY_DUP) && (highlightedGame > 1) && (characterPage[highlightedGame] > 0)) {
