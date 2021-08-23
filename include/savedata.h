@@ -174,6 +174,7 @@ void readSS3EmblemFile(const char* filename);
 void writeSS3EmblemFile(const char* filename);
 void readSS4EmblemFile(int id, const char* filename);
 void writeSS4EmblemFile(int id, const char* filename);
+void readTempEmblemFile(const char* filename);
 
 #ifdef __cplusplus
 }

@@ -460,6 +460,14 @@ void writeSS3EmblemFile(const char* filename) {
 	fclose(emblemData);
 }
 
+void readTempEmblemFile(const char* filename) {
+	FILE* emblemDataFile = fopen(filename, "rb");
+	if (!emblemDataFile) return;
+
+	fread(&emblemData, 0x804, 1, emblemDataFile);
+	fclose(emblemDataFile);
+}
+
 
 /*
 	Style Savvy: Styling Star

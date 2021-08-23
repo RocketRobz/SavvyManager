@@ -42,6 +42,8 @@ private:
 	bool showMessage = false;
 	int messageNo = 0;
 	char emblemImported[48];
+
+	bool exportedEmblemListGotten = false;
 };
 
 #endif

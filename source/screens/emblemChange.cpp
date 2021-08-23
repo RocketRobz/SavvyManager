@@ -460,15 +460,27 @@ u32 EmblemChange::emblemPixel(int pixel, bool secondPixel) {
 
 void EmblemChange::renderEmblem(void) {
 	int w = 0, h = 0, hLimit = 8;
+	bool pixelOrder = false;
 	for (int i = 0; i < (8*8)*(8*8); i+=8) {
-		emblemImage[(h*64)+w] = emblemPixel(i/2, false);
-		emblemImage[(h*64)+w+1] = emblemPixel((i+1)/2, true);
-		emblemImage[(h*64)+w+2] = emblemPixel((i+2)/2, true);
-		emblemImage[(h*64)+w+3] = emblemPixel((i+3)/2, false);
-		emblemImage[(h*64)+w+4] = emblemPixel((i+4)/2, false);
-		emblemImage[(h*64)+w+5] = emblemPixel((i+5)/2, true);
-		emblemImage[(h*64)+w+6] = emblemPixel((i+6)/2, true);
-		emblemImage[(h*64)+w+7] = emblemPixel((i+7)/2, false);
+		if (pixelOrder) {
+			emblemImage[(h*64)+w] = emblemPixel(i/2, true);
+			emblemImage[(h*64)+w+1] = emblemPixel((i+1)/2, false);
+			emblemImage[(h*64)+w+2] = emblemPixel((i+2)/2, false);
+			emblemImage[(h*64)+w+3] = emblemPixel((i+3)/2, true);
+			emblemImage[(h*64)+w+4] = emblemPixel((i+4)/2, true);
+			emblemImage[(h*64)+w+5] = emblemPixel((i+5)/2, false);
+			emblemImage[(h*64)+w+6] = emblemPixel((i+6)/2, false);
+			emblemImage[(h*64)+w+7] = emblemPixel((i+7)/2, true);
+		} else {
+			emblemImage[(h*64)+w] = emblemPixel(i/2, false);
+			emblemImage[(h*64)+w+1] = emblemPixel((i+1)/2, true);
+			emblemImage[(h*64)+w+2] = emblemPixel((i+2)/2, true);
+			emblemImage[(h*64)+w+3] = emblemPixel((i+3)/2, false);
+			emblemImage[(h*64)+w+4] = emblemPixel((i+4)/2, false);
+			emblemImage[(h*64)+w+5] = emblemPixel((i+5)/2, true);
+			emblemImage[(h*64)+w+6] = emblemPixel((i+6)/2, true);
+			emblemImage[(h*64)+w+7] = emblemPixel((i+7)/2, false);
+		}
 		h++;
 		if (h >= hLimit) {
 			w += 8;
@@ -478,6 +490,7 @@ void EmblemChange::renderEmblem(void) {
 			}
 			h = hLimit-8;
 		}
+		pixelOrder = !pixelOrder;
 	}
 }
 
@@ -671,8 +684,9 @@ void EmblemChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		}
 	} else {
 		if (subScreenMode == 2) {
+			bool action = false;
 			if (showCursor) {
-				if (hDown & KEY_UP) {
+				if ((hDown & KEY_UP) && ((importPage == 0) || (importPage == 1 && totalEmblems > 0))) {
 					sndHighlight();
 					importEmblemList_cursorPosition--;
 					importEmblemList_cursorPositionOnScreen--;
@@ -686,9 +700,10 @@ void EmblemChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					if (importEmblemList_cursorPositionOnScreen < 0) {
 						importEmblemList_cursorPositionOnScreen = 0;
 					}
+					action = true;
 				}
 
-				if (hDown & KEY_DOWN) {
+				if ((hDown & KEY_DOWN) && ((importPage == 0) || (importPage == 1 && totalEmblems > 0))) {
 					sndHighlight();
 					importEmblemList_cursorPosition++;
 					importEmblemList_cursorPositionOnScreen++;
@@ -706,6 +721,7 @@ void EmblemChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					if (importEmblemList_cursorPositionOnScreen > 2) {
 						importEmblemList_cursorPositionOnScreen = 2;
 					}
+					action = true;
 				}
 			}
 
@@ -741,7 +757,7 @@ void EmblemChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 						messageNo = 3;
 					}
 					showMessage = true;
-					} else if (importPage == 0) {
+				} else if (importPage == 0) {
 					sndSelect();
 					switch (highlightedGame) {
 						case 3:
@@ -777,25 +793,57 @@ void EmblemChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				sndHighlight();
 				importPage--;
 				if (importPage < 0) importPage = 1;
+				if (importPage == 1 && !exportedEmblemListGotten) {
+					displayNothing = true;
+					gspWaitForVBlank();
+					getExportedEmblemContents();
+					displayNothing = false;
+					exportedEmblemListGotten = true;
+				}
 				importEmblemList_cursorPosition = 0;
 				importEmblemList_cursorPositionOnScreen = 0;
 				import_emblemShownFirst = 0;
 				getMaxEmblems();
+				action = true;
 			}
 
 			if (hDown & KEY_RIGHT) {
 				sndHighlight();
 				importPage++;
 				if (importPage > 1) importPage = 0;
+				if (importPage == 1 && !exportedEmblemListGotten) {
+					displayNothing = true;
+					gspWaitForVBlank();
+					getExportedEmblemContents();
+					displayNothing = false;
+					exportedEmblemListGotten = true;
+				}
 				importEmblemList_cursorPosition = 0;
 				importEmblemList_cursorPositionOnScreen = 0;
 				import_emblemShownFirst = 0;
 				getMaxEmblems();
+				action = true;
+			}
+
+			if (action) {
+				if (importPage == 1 && totalEmblems > 0) {
+					sprintf(embFilePath, "sdmc:/3ds/SavvyManager/emblems/%s.emb", getExportedEmblemName(importEmblemList_cursorPosition));
+				} else {
+					sprintf(embFilePath, "romfs:/emblems/%s.emb", import_emblemNames[importEmblemList_cursorPosition]);
+				}
+				readTempEmblemFile(embFilePath);
+				renderEmblem();
 			}
 
 			if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 				sndBack();
 				subScreenMode = 1;
+				if (highlightedGame == 3) {
+					readSS4Emblem(cursorPosition);
+				} else {
+					readSS3Emblem();
+				}
+				renderEmblem();
 			}
 		} else if (subScreenMode == 1) {
 			if (showCursor) {
@@ -834,11 +882,14 @@ void EmblemChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				} else {
 					sndSelect();
 					subScreenMode = 2;
-					displayNothing = true;
-					gspWaitForVBlank();
-					getExportedEmblemContents();
 					getMaxEmblems();
-					displayNothing = false;
+					if (importPage == 1 && totalEmblems > 0) {
+						sprintf(embFilePath, "sdmc:/3ds/SavvyManager/emblems/%s.emb", getExportedEmblemName(importEmblemList_cursorPosition));
+					} else {
+						sprintf(embFilePath, "romfs:/emblems/%s.emb", import_emblemNames[importEmblemList_cursorPosition]);
+					}
+					readTempEmblemFile(embFilePath);
+					renderEmblem();
 				}
 			}
 			if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
