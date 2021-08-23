@@ -9,29 +9,29 @@
 #include <unistd.h>
 
 EmblemChange::EmblemChange() {
-	this->getMaxEmblems();
+	getMaxEmblems();
 }
 
 void EmblemChange::getMaxEmblems() {
-	if (this->subScreenMode == 2) {
-		if (this->importPage == 1) {
-			this->totalEmblems = numberOfExportedEmblems-1;
+	if (subScreenMode == 2) {
+		if (importPage == 1) {
+			totalEmblems = numberOfExportedEmblems-1;
 		} else {
-			this->totalEmblems = 10;
+			totalEmblems = 10;
 		}
 	} else if (highlightedGame == 3) {
-		this->totalEmblems = 2;
+		totalEmblems = 2;
 		readSS4Save();
 		//readSS4Emblem(cursorPosition);
 	} else {
-		this->totalEmblems = 0;
+		totalEmblems = 0;
 		readSS3Save();
 		//readSS3Emblem();
 	}
 
-	if (!this->modeInited) {
+	if (!modeInited) {
 		//renderEmblem();
-		this->modeInited = true;
+		modeInited = true;
 	}
 }
 
@@ -154,14 +154,14 @@ void EmblemChange::drawMsg(void) const {
 	GFX::DrawSprite(sprites_msg_idx, 0, 8, 1, 1);
 	GFX::DrawSprite(sprites_msg_idx, 160, 8, -1, 1);
 	GFX::DrawSprite(sprites_icon_msg_idx, 132, -2);
-	if (this->messageNo == 3) {
+	if (messageNo == 3) {
 		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "Failed to import emblem.");
-	} else if (this->messageNo == 2) {
+	} else if (messageNo == 2) {
 		Gui::DrawStringCentered(0, 58, 0.60, BLACK, "Emblem exported successfully.");
 		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "You can go to \"Import Emblems\"");
 		Gui::DrawStringCentered(0, 114, 0.60, BLACK, "and restore the exported emblem");
 		Gui::DrawStringCentered(0, 134, 0.60, BLACK, "at any time.");
-	} else if (this->messageNo == 1) {
+	} else if (messageNo == 1) {
 		Gui::DrawStringCentered(0, 94, 0.60, BLACK, emblemImported);
 	} else {
 		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "This feature is not available yet.");
@@ -169,16 +169,31 @@ void EmblemChange::drawMsg(void) const {
 	}
 	GFX::DrawSprite(sprites_button_msg_shadow_idx, 114, 197);
 	GFX::DrawSprite(sprites_button_msg_idx, 115, 188);
-	Gui::DrawString((sysRegion==CFG_REGION_KOR ? 128 : 134), 196, 0.70, MSG_BUTTONTEXT, " OK!");
+	Gui::DrawString(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
 }
 
 void EmblemChange::Draw(void) const {
 	Gui::ScreenDraw(Top);
 
-	Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
-	for(int w = 0; w < 7; w++) {
-		for(int h = 0; h < 3; h++) {
-			GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
+	if (highlightedGame == 3) {
+		Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(255, 255, 164, 255));
+		bool dark = true;
+		int x = 0;
+		int width = 29;
+		for (int i = 0; i < 14; i++) {
+			if (dark) {
+				Gui::Draw_Rect(x, 0, width, 240, C2D_Color32(214, 247, 140, 255));
+			}
+			dark = !dark;
+			x += width;
+			width = dark ? 29 : 28;
+		}
+	} else {
+		Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
+		for(int w = 0; w < 7; w++) {
+			for(int h = 0; h < 3; h++) {
+				GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
+			}
 		}
 	}
 	GFX::DrawSprite(sprites_emblem_back_idx, 100, 20, 2, 2);
@@ -187,20 +202,37 @@ void EmblemChange::Draw(void) const {
 
 	if (shiftBySubPixel) return;
 	Gui::ScreenDraw(Bottom);
-	Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
-	for(int w = 0; w < 7; w++) {
-		for(int h = 0; h < 3; h++) {
-			GFX::DrawSprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
+	if (highlightedGame == 3) {
+		Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(245, 245, 160, 255));
+		bool light = true;
+		int x = 0;
+		int width = 17;
+		for (int i = 0; i < 14; i++) {
+			if (light) {
+				Gui::Draw_Rect(x, 0, width, 240, C2D_Color32(255, 251, 189, 255));
+			}
+			light = !light;
+			x += width;
+			width = light ? 29 : 28;
+		}
+		Gui::Draw_Rect(0, 0, 320, 33, C2D_Color32(247, 235, 206, 255));
+		Gui::Draw_Rect(0, 33, 320, 5, C2D_Color32(214, 158, 58, 255));
+	} else {
+		Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
+		for(int w = 0; w < 7; w++) {
+			for(int h = 0; h < 3; h++) {
+				GFX::DrawSprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
+			}
 		}
 	}
 
 	char emblemText[32];
-	this->cursorX = 248;
-	if (this->subScreenMode == 2) {
-		this->cursorY = 64+(48*this->importEmblemList_cursorPositionOnScreen);
+	cursorX = 248;
+	if (subScreenMode == 2) {
+		cursorY = 64+(48*importEmblemList_cursorPositionOnScreen);
 
 		// Game name
-		switch (this->importPage) {
+		switch (importPage) {
 			case 1:
 				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Your emblem files");
 				break;
@@ -211,13 +243,13 @@ void EmblemChange::Draw(void) const {
 		Gui::DrawString(8, 8, 0.50, BLACK, "<");
 		Gui::DrawString(304, 8, 0.50, BLACK, ">");
 
-	  if (!this->displayNothing) {
-		int i2 = 48;
-		for (int i = this->import_emblemShownFirst; i < this->import_emblemShownFirst+3; i++) {
-			if (this->importPage == 1) {
+	  if (!displayNothing) {
+		int i2 = (highlightedGame == 3 ? 56 : 48);
+		for (int i = import_emblemShownFirst; i < import_emblemShownFirst+3; i++) {
+			if (importPage == 1) {
 				if (i >= numberOfExportedEmblems) break;
 			} else {
-				if (i > this->totalEmblems) break;
+				if (i > totalEmblems) break;
 			}
 			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 			if (importPage == 1) {
@@ -228,30 +260,30 @@ void EmblemChange::Draw(void) const {
 			i2 += 48;
 		}
 	  }
-	} else if (this->subScreenMode == 1) {
+	} else if (subScreenMode == 1) {
 		if (highlightedGame == 2) {
 			sprintf(emblemText, "Emblem");
 		} else {
-			sprintf(emblemText, "Emblem %i", this->cursorPosition+1);
+			sprintf(emblemText, "Emblem %i", cursorPosition+1);
 		}
 
-		this->cursorY = 64+(48*this->emblemChangeMenu_cursorPosition);
+		cursorY = 64+(48*emblemChangeMenu_cursorPosition);
 
 		Gui::DrawString(8, 8, 0.50, BLACK, emblemText);
 
-		int i2 = 48;
+		int i2 = (highlightedGame == 3 ? 56 : 48);
 		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 		Gui::DrawString(32, i2, 0.65, BLACK, "Import emblem");
 		i2 += 48;
 		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 		Gui::DrawString(32, i2, 0.65, BLACK, "Export emblem");
 	} else {
-		this->cursorY = 64+(48*this->cursorPosition);
+		cursorY = 64+(48*cursorPosition);
 
 		Gui::DrawString(8, 8, 0.50, BLACK, "Select the emblem to change.");
 
-		int i2 = 48;
-		for (int i = 0; i <= this->totalEmblems; i++) {
+		int i2 = (highlightedGame == 3 ? 56 : 48);
+		for (int i = 0; i <= totalEmblems; i++) {
 			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 			if (highlightedGame == 2) {
 				sprintf(emblemText, "Emblem");
@@ -268,7 +300,7 @@ void EmblemChange::Draw(void) const {
 	GFX::DrawSprite(sprites_arrow_back_idx, 19, 195);
 	GFX::DrawSprite(sprites_button_b_idx, 44, 218);
 
-	GFX::drawCursor(this->cursorX, this->cursorY);
+	GFX::drawCursor(cursorX, cursorY);
 
 	if (showMessage) {
 		drawMsg();
@@ -279,210 +311,210 @@ void EmblemChange::Draw(void) const {
 
 
 void EmblemChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
-	if (this->showMessage) {
+	if (showMessage) {
 		if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
 			sndSelect();
-			this->showMessage = false;
+			showMessage = false;
 		}
 	} else {
-		if (this->subScreenMode == 2) {
+		if (subScreenMode == 2) {
 			if (showCursor) {
 				if (hDown & KEY_UP) {
 					sndHighlight();
-					this->importEmblemList_cursorPosition--;
-					this->importEmblemList_cursorPositionOnScreen--;
-					if (this->importEmblemList_cursorPosition < 0) {
-						this->importEmblemList_cursorPosition = 0;
-						this->import_emblemShownFirst = 0;
-					} else if (this->importEmblemList_cursorPosition < this->import_emblemShownFirst) {
-						this->import_emblemShownFirst--;
+					importEmblemList_cursorPosition--;
+					importEmblemList_cursorPositionOnScreen--;
+					if (importEmblemList_cursorPosition < 0) {
+						importEmblemList_cursorPosition = 0;
+						import_emblemShownFirst = 0;
+					} else if (importEmblemList_cursorPosition < import_emblemShownFirst) {
+						import_emblemShownFirst--;
 					}
 
-					if (this->importEmblemList_cursorPositionOnScreen < 0) {
-						this->importEmblemList_cursorPositionOnScreen = 0;
+					if (importEmblemList_cursorPositionOnScreen < 0) {
+						importEmblemList_cursorPositionOnScreen = 0;
 					}
 				}
 
 				if (hDown & KEY_DOWN) {
 					sndHighlight();
-					this->importEmblemList_cursorPosition++;
-					this->importEmblemList_cursorPositionOnScreen++;
-					if (this->importEmblemList_cursorPosition > this->totalEmblems) {
-						this->importEmblemList_cursorPosition = this->totalEmblems;
-						this->import_emblemShownFirst = this->totalEmblems-2;
-						if (this->import_emblemShownFirst < 0) this->import_emblemShownFirst = 0;
-						if (this->importEmblemList_cursorPositionOnScreen > this->totalEmblems) {
-							this->importEmblemList_cursorPositionOnScreen = this->totalEmblems;
+					importEmblemList_cursorPosition++;
+					importEmblemList_cursorPositionOnScreen++;
+					if (importEmblemList_cursorPosition > totalEmblems) {
+						importEmblemList_cursorPosition = totalEmblems;
+						import_emblemShownFirst = totalEmblems-2;
+						if (import_emblemShownFirst < 0) import_emblemShownFirst = 0;
+						if (importEmblemList_cursorPositionOnScreen > totalEmblems) {
+							importEmblemList_cursorPositionOnScreen = totalEmblems;
 						}
-					} else if (this->importEmblemList_cursorPosition > this->import_emblemShownFirst+2) {
-						this->import_emblemShownFirst++;
+					} else if (importEmblemList_cursorPosition > import_emblemShownFirst+2) {
+						import_emblemShownFirst++;
 					}
 
-					if (this->importEmblemList_cursorPositionOnScreen > 2) {
-						this->importEmblemList_cursorPositionOnScreen = 2;
+					if (importEmblemList_cursorPositionOnScreen > 2) {
+						importEmblemList_cursorPositionOnScreen = 2;
 					}
 				}
 			}
 
 			if (hDown & KEY_A) {
 				bool exportFound = false;
-				if (this->importPage == 1 && this->totalEmblems > 0) {
+				if (importPage == 1 && totalEmblems > 0) {
 					switch (highlightedGame) {
 						case 3:
-							sprintf(this->embFilePath, "sdmc:/3ds/SavvyManager/emblems/%s.emb", getExportedEmblemName(this->importEmblemList_cursorPosition));
-							if (access(this->embFilePath, F_OK) == 0) {
+							sprintf(embFilePath, "sdmc:/3ds/SavvyManager/emblems/%s.emb", getExportedEmblemName(importEmblemList_cursorPosition));
+							if (access(embFilePath, F_OK) == 0) {
 								sndSelect();
-								readSS4EmblemFile(this->cursorPosition, this->embFilePath);
+								readSS4EmblemFile(cursorPosition, embFilePath);
 								writeSS4Save();
 								exportFound = true;
 							}
 							break;
 						case 2:
-							sprintf(this->embFilePath, "sdmc:/3ds/SavvyManager/emblems/%s.emb", getExportedEmblemName(this->importEmblemList_cursorPosition));
-							if (access(this->embFilePath, F_OK) == 0) {
+							sprintf(embFilePath, "sdmc:/3ds/SavvyManager/emblems/%s.emb", getExportedEmblemName(importEmblemList_cursorPosition));
+							if (access(embFilePath, F_OK) == 0) {
 								sndSelect();
-								readSS3EmblemFile(this->embFilePath);
+								readSS3EmblemFile(embFilePath);
 								writeSS3Save();
 								exportFound = true;
 							}
 							break;
 					}
 					if (exportFound) {
-						sprintf(this->emblemImported, "Imported %s successfully.", getExportedEmblemName(this->importEmblemList_cursorPosition));
-						this->messageNo = 1;
-						this->subScreenMode = 1;
+						sprintf(emblemImported, "Imported %s successfully.", getExportedEmblemName(importEmblemList_cursorPosition));
+						messageNo = 1;
+						subScreenMode = 1;
 					} else {
 						sndBack();
-						this->messageNo = 3;
+						messageNo = 3;
 					}
-					this->showMessage = true;
+					showMessage = true;
 					} else if (importPage == 0) {
 					sndSelect();
 					switch (highlightedGame) {
 						case 3:
-							sprintf(this->embFilePath, "romfs:/emblems/%s.emb", import_emblemNames[this->importEmblemList_cursorPosition]);
-							if (access(this->embFilePath, F_OK) == 0) {
-								readSS4EmblemFile(this->cursorPosition, this->embFilePath);
+							sprintf(embFilePath, "romfs:/emblems/%s.emb", import_emblemNames[importEmblemList_cursorPosition]);
+							if (access(embFilePath, F_OK) == 0) {
+								readSS4EmblemFile(cursorPosition, embFilePath);
 								writeSS4Save();
 								exportFound = true;
 							}
 							break;
 						case 2:
-							sprintf(this->embFilePath, "romfs:/emblems/%s.emb", import_emblemNames[this->importEmblemList_cursorPosition]);
-							if (access(this->embFilePath, F_OK) == 0) {
-								readSS3EmblemFile(this->embFilePath);
+							sprintf(embFilePath, "romfs:/emblems/%s.emb", import_emblemNames[importEmblemList_cursorPosition]);
+							if (access(embFilePath, F_OK) == 0) {
+								readSS3EmblemFile(embFilePath);
 								writeSS3Save();
 								exportFound = true;
 							}
 							break;
 					}
 					if (exportFound) {
-						sprintf(emblemImported, "Imported %s successfully.", import_emblemNames[this->importEmblemList_cursorPosition]);
-						this->messageNo = 1;
-						this->subScreenMode = 1;
+						sprintf(emblemImported, "Imported %s successfully.", import_emblemNames[importEmblemList_cursorPosition]);
+						messageNo = 1;
+						subScreenMode = 1;
 					} else {
 						sndBack();
-						this->messageNo = 3;
+						messageNo = 3;
 					}
-					this->showMessage = true;
+					showMessage = true;
 				}
 			}
 
 			if (hDown & KEY_LEFT) {
 				sndHighlight();
-				this->importPage--;
-				if (this->importPage < 0) this->importPage = 1;
-				this->importEmblemList_cursorPosition = 0;
-				this->importEmblemList_cursorPositionOnScreen = 0;
-				this->import_emblemShownFirst = 0;
-				this->getMaxEmblems();
+				importPage--;
+				if (importPage < 0) importPage = 1;
+				importEmblemList_cursorPosition = 0;
+				importEmblemList_cursorPositionOnScreen = 0;
+				import_emblemShownFirst = 0;
+				getMaxEmblems();
 			}
 
 			if (hDown & KEY_RIGHT) {
 				sndHighlight();
-				this->importPage++;
-				if (this->importPage > 1) this->importPage = 0;
-				this->importEmblemList_cursorPosition = 0;
-				this->importEmblemList_cursorPositionOnScreen = 0;
-				this->import_emblemShownFirst = 0;
-				this->getMaxEmblems();
+				importPage++;
+				if (importPage > 1) importPage = 0;
+				importEmblemList_cursorPosition = 0;
+				importEmblemList_cursorPositionOnScreen = 0;
+				import_emblemShownFirst = 0;
+				getMaxEmblems();
 			}
 
 			if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 				sndBack();
-				this->subScreenMode = 1;
+				subScreenMode = 1;
 			}
-		} else if (this->subScreenMode == 1) {
+		} else if (subScreenMode == 1) {
 			if (showCursor) {
 				if (hDown & KEY_UP) {
 					sndHighlight();
-					this->emblemChangeMenu_cursorPosition--;
-					if (this->emblemChangeMenu_cursorPosition < 0) {
-						this->emblemChangeMenu_cursorPosition = 0;
+					emblemChangeMenu_cursorPosition--;
+					if (emblemChangeMenu_cursorPosition < 0) {
+						emblemChangeMenu_cursorPosition = 0;
 					}
 				}
 
 				if (hDown & KEY_DOWN) {
 					sndHighlight();
-					this->emblemChangeMenu_cursorPosition++;
-					if (this->emblemChangeMenu_cursorPosition > 1) {
-						this->emblemChangeMenu_cursorPosition = 1;
+					emblemChangeMenu_cursorPosition++;
+					if (emblemChangeMenu_cursorPosition > 1) {
+						emblemChangeMenu_cursorPosition = 1;
 					}
 				}
 			}
 
 			if (hDown & KEY_A) {
-				if (this->emblemChangeMenu_cursorPosition == 1) {
+				if (emblemChangeMenu_cursorPosition == 1) {
 					sndSelect();
 					switch (highlightedGame) {
 						case 3:
-							sprintf(this->embFilePath, "sdmc:/3ds/SavvyManager/emblems/Emblem %i.chr", this->cursorPosition);
-							writeSS4EmblemFile(this->cursorPosition, this->embFilePath);
+							sprintf(embFilePath, "sdmc:/3ds/SavvyManager/emblems/Emblem %i.chr", cursorPosition);
+							writeSS4EmblemFile(cursorPosition, embFilePath);
 							break;
 						case 2:
-							sprintf(this->embFilePath, "sdmc:/3ds/SavvyManager/emblems/Emblem.chr");
-							writeSS3EmblemFile(this->embFilePath);
+							sprintf(embFilePath, "sdmc:/3ds/SavvyManager/emblems/Emblem.chr");
+							writeSS3EmblemFile(embFilePath);
 							break;
 					}
-					this->messageNo = 2;
-					this->showMessage = true;
+					messageNo = 2;
+					showMessage = true;
 				} else {
 					sndSelect();
-					this->subScreenMode = 2;
-					this->displayNothing = true;
+					subScreenMode = 2;
+					displayNothing = true;
 					gspWaitForVBlank();
 					getExportedEmblemContents();
-					this->getMaxEmblems();
-					this->displayNothing = false;
+					getMaxEmblems();
+					displayNothing = false;
 				}
 			}
 			if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 				sndBack();
-				this->subScreenMode = 0;
-				this->getMaxEmblems();
+				subScreenMode = 0;
+				getMaxEmblems();
 			}
 		} else {
 			if (showCursor) {
 				if (hDown & KEY_UP) {
 					sndHighlight();
-					this->cursorPosition--;
-					if (this->cursorPosition < 0) {
-						this->cursorPosition = 0;
+					cursorPosition--;
+					if (cursorPosition < 0) {
+						cursorPosition = 0;
 					}
-					this->modeInited = false;
+					modeInited = false;
 				}
 				if (hDown & KEY_DOWN) {
 					sndHighlight();
-					this->cursorPosition++;
-					if (this->cursorPosition > this->totalEmblems) {
-						this->cursorPosition = this->totalEmblems;
+					cursorPosition++;
+					if (cursorPosition > totalEmblems) {
+						cursorPosition = totalEmblems;
 					}
-					this->modeInited = false;
+					modeInited = false;
 				}
 
 				if (hDown & KEY_A) {
 					sndSelect();
-					this->subScreenMode = 1;
+					subScreenMode = 1;
 				}
 				if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 					sndBack();
