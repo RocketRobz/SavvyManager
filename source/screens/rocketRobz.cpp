@@ -56,11 +56,33 @@ void RocketRobz::Draw(void) const {
 		if (robzXpos == 135 && robzYpos == 19) {
 			GFX::DrawSpriteLinear(sprites_logo_rocketrobz_idx, 54, 74, 0.5, 1);
 			if (rrTextFade > 0) GFX::DrawSpriteLinearBlend(sprites_logo_rocketrobz_idx, 54, 74, C2D_Color32(255, 255, 255, rrTextFade), 0.5, 1);
-			rrTextFade -= 16;
+			switch (iFps) {
+				default:
+					rrTextFade -= 16;
+					break;
+				case 30:
+					rrTextFade -= 32;
+					break;
+				case 24:
+					rrTextFade -= 40;
+					break;
+			}
 			if (rrTextFade < 0) rrTextFade = 0;
 		} else {
-			robzXpos -= 4;
-			robzYpos -= 4;
+			switch (iFps) {
+				default:
+					robzXpos -= 4;
+					robzYpos -= 4;
+					break;
+				case 30:
+					robzXpos -= 8;
+					robzYpos -= 8;
+					break;
+				case 24:
+					robzXpos -= 10;
+					robzYpos -= 10;
+					break;
+			}
 			if (robzXpos < 135) robzXpos = 135;
 			if (robzYpos < 19) robzYpos = 19;
 		}
