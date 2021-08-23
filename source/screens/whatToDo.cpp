@@ -104,7 +104,7 @@ void WhatToDo::Draw(void) const {
 
 	Gui::DrawString(8, 8, 0.50, BLACK, "What do you want to change?");
 	int iconXpos = 64;
-	const float textSize = (sysRegion==CFG_REGION_KOR ? 0.45 : 0.50);
+	const float textSize = 0.50;
 	GFX::DrawSpriteBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
 	GFX::DrawSprite(sprites_icon_profile_idx, iconXpos, 80);
 	Gui::DrawStringCentered(-64, 140, textSize, RED, "Characters");

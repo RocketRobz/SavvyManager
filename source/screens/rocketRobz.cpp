@@ -33,7 +33,7 @@ void RocketRobz::Draw(void) const {
 			}
 		}
 		Gui::DrawString(120, 218-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, yearText);
-		GFX::DrawSpriteLinear(sprites_text_rocketrobz_idx, 120+(sysRegion==CFG_REGION_KOR ? 88 : 79), 220-(shiftBySubPixel ? 0.5f : 0), 0.5, 1);
+		GFX::DrawSpriteLinear(sprites_text_rocketrobz_idx, 120+79, 220-(shiftBySubPixel ? 0.5f : 0), 0.5, 1);
 		Gui::DrawString(8, 8-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, verText);
 	} else {
 		// Top half gradient
