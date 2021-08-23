@@ -22,106 +22,432 @@ void EmblemChange::getMaxEmblems() {
 	} else if (highlightedGame == 3) {
 		totalEmblems = 2;
 		readSS4Save();
-		//readSS4Emblem(cursorPosition);
+		readSS4Emblem(cursorPosition);
 	} else {
 		totalEmblems = 0;
 		readSS3Save();
-		//readSS3Emblem();
+		readSS3Emblem();
 	}
 
 	if (!modeInited) {
-		//renderEmblem();
+		renderEmblem();
 		modeInited = true;
 	}
 }
 
-/*static u32 emblemPalette[16] = 
+static u32 emblemPalette[19][16] = 
 {
-	C2D_Color32(0, 0, 0, 0),
-	C2D_Color32(16, 16, 16, 255),
-	C2D_Color32(32, 32, 32, 255),
-	C2D_Color32(48, 48, 48, 255),
-	C2D_Color32(64, 64, 64, 255),
-	C2D_Color32(80, 80, 80, 255),
-	C2D_Color32(96, 96, 96, 255),
-	C2D_Color32(112, 112, 112, 255),
-	C2D_Color32(128, 128, 128, 255),
-	C2D_Color32(144, 144, 144, 255),
-	C2D_Color32(160, 160, 160, 255),
-	C2D_Color32(176, 176, 176, 255),
-	C2D_Color32(192, 192, 192, 255),
-	C2D_Color32(208, 208, 208, 255),
-	C2D_Color32(224, 224, 224, 255),
-	C2D_Color32(240, 240, 240, 255)
+	{ // 1
+		C2D_Color32(0, 0, 0, 0),
+		C2D_Color32(255, 0, 0, 255),
+		C2D_Color32(247, 158, 0, 255),
+		C2D_Color32(255, 247, 16, 255),
+		C2D_Color32(0, 223, 25, 255),
+		C2D_Color32(0, 166, 25, 255),
+		C2D_Color32(140, 239, 255, 255),
+		C2D_Color32(0, 89, 230, 255),
+		C2D_Color32(99, 89, 255, 255),
+		C2D_Color32(187, 89, 255, 255),
+		C2D_Color32(255, 166, 164, 255),
+		C2D_Color32(148, 0, 0, 255),
+		C2D_Color32(156, 105, 49, 255),
+		C2D_Color32(132, 129, 132, 255),
+		C2D_Color32(255, 255, 255, 255),
+		C2D_Color32(0, 0, 0, 255)
+	},
+	{ // 2
+		C2D_Color32(0, 0, 0, 0),
+		C2D_Color32(230, 0, 16, 255),
+		C2D_Color32(255, 24, 41, 255),
+		C2D_Color32(255, 65, 0, 255),
+		C2D_Color32(255, 166, 123, 255),
+		C2D_Color32(247, 206, 0, 255),
+		C2D_Color32(255, 203, 0, 255),
+		C2D_Color32(255, 255, 0, 255),
+		C2D_Color32(255, 158, 164, 255),
+		C2D_Color32(255, 113, 181, 255),
+		C2D_Color32(255, 140, 40, 255),
+		C2D_Color32(148, 0, 0, 255),
+		C2D_Color32(255, 81, 214, 255),
+		C2D_Color32(189, 57, 156, 255),
+		C2D_Color32(255, 255, 255, 255),
+		C2D_Color32(0, 0, 0, 255)
+	},
+	{ // 3
+		C2D_Color32(0, 0, 0, 0),
+		C2D_Color32(41, 49, 148, 255),
+		C2D_Color32(0, 89, 230, 255),
+		C2D_Color32(0, 121, 255, 255),
+		C2D_Color32(107, 190, 255, 255),
+		C2D_Color32(123, 214, 247, 255),
+		C2D_Color32(206, 239, 255, 255),
+		C2D_Color32(25, 190, 181, 255),
+		C2D_Color32(173, 239, 66, 255),
+		C2D_Color32(0, 223, 25, 255),
+		C2D_Color32(0, 166, 25, 255),
+		C2D_Color32(173, 166, 255, 255),
+		C2D_Color32(99, 89, 255, 255),
+		C2D_Color32(90, 40, 189, 255),
+		C2D_Color32(255, 255, 255, 255),
+		C2D_Color32(0, 0, 0, 255)
+	},
+	{ // 4
+		C2D_Color32(0, 0, 0, 0),
+		C2D_Color32(255, 97, 115, 255),
+		C2D_Color32(255, 170, 99, 255),
+		C2D_Color32(255, 223, 99, 255),
+		C2D_Color32(255, 247, 156, 255),
+		C2D_Color32(156, 255, 49, 255),
+		C2D_Color32(90, 231, 90, 255),
+		C2D_Color32(74, 255, 230, 255),
+		C2D_Color32(189, 255, 255, 255),
+		C2D_Color32(99, 206, 255, 255),
+		C2D_Color32(132, 150, 255, 255),
+		C2D_Color32(181, 129, 255, 255),
+		C2D_Color32(238, 113, 255, 255),
+		C2D_Color32(255, 158, 197, 255),
+		C2D_Color32(255, 255, 255, 255),
+		C2D_Color32(99, 97, 99, 255)
+	},
+	{ // 5
+		C2D_Color32(0, 0, 0, 0),
+		C2D_Color32(206, 121, 164, 255),
+		C2D_Color32(255, 150, 156, 255),
+		C2D_Color32(255, 158, 164, 255),
+		C2D_Color32(255, 198, 197, 255),
+		C2D_Color32(255, 129, 189, 255),
+		C2D_Color32(255, 170, 122, 255),
+		C2D_Color32(255, 206, 122, 255),
+		C2D_Color32(255, 223, 156, 255),
+		C2D_Color32(255, 190, 123, 255),
+		C2D_Color32(189, 214, 247, 255),
+		C2D_Color32(197, 214, 132, 255),
+		C2D_Color32(206, 190, 255, 255),
+		C2D_Color32(181, 158, 255, 255),
+		C2D_Color32(255, 255, 255, 255),
+		C2D_Color32(99, 97, 99, 255)
+	},
+	{ // 6
+		C2D_Color32(0x00, 0x00, 0x00, 0),
+		C2D_Color32(0x5a, 0x8a, 0xce, 255),
+		C2D_Color32(0x84, 0xbe, 0xff, 255),
+		C2D_Color32(0xbd, 0xd6, 0xf7, 255),
+		C2D_Color32(0xb5, 0xef, 0xee, 255),
+		C2D_Color32(0x63, 0xce, 0xce, 255),
+		C2D_Color32(0x94, 0xef, 0xad, 255),
+		C2D_Color32(0xff, 0xf7, 0x7b, 255),
+		C2D_Color32(0xd6, 0xef, 0x6b, 255),
+		C2D_Color32(0xc5, 0xd6, 0x84, 255),
+		C2D_Color32(0xff, 0x9e, 0xa4, 255),
+		C2D_Color32(0xff, 0xbe, 0x7b, 255),
+		C2D_Color32(0xb5, 0xbe, 0xff, 255),
+		C2D_Color32(0xa4, 0x96, 0xff, 255),
+		C2D_Color32(0xff, 0xff, 0xff, 255),
+		C2D_Color32(0x63, 0x61, 0x63, 255)
+	},
+	{ // 7
+		C2D_Color32(0x00, 0x00, 0x00, 0),
+		C2D_Color32(0xce, 0x59, 0x8c, 255),
+		C2D_Color32(0xff, 0xbe, 0xc5, 255),
+		C2D_Color32(0xb5, 0x81, 0xd6, 255),
+		C2D_Color32(0xbd, 0xce, 0xf7, 255),
+		C2D_Color32(0x5a, 0x8a, 0xce, 255),
+		C2D_Color32(0xf7, 0xef, 0xb5, 255),
+		C2D_Color32(0xee, 0xd6, 0x9c, 255),
+		C2D_Color32(0xe6, 0xbe, 0x52, 255),
+		C2D_Color32(0x84, 0x61, 0x42, 255),
+		C2D_Color32(0x9c, 0xd6, 0xbd, 255),
+		C2D_Color32(0xe6, 0xd6, 0xd6, 255),
+		C2D_Color32(0xa4, 0x96, 0x94, 255),
+		C2D_Color32(0x52, 0x49, 0x4a, 255),
+		C2D_Color32(0xff, 0xff, 0xff, 255),
+		C2D_Color32(0x00, 0x00, 0x00, 255)
+	},
+	{ // 8
+		C2D_Color32(0x00, 0x00, 0x00, 0),
+		C2D_Color32(0x63, 0x18, 0x10, 255),
+		C2D_Color32(0x84, 0x20, 0x31, 255),
+		C2D_Color32(0xce, 0x59, 0x8c, 255),
+		C2D_Color32(0xff, 0xbe, 0xc5, 255),
+		C2D_Color32(0xb5, 0x81, 0xd6, 255),
+		C2D_Color32(0xf7, 0xef, 0xb5, 255),
+		C2D_Color32(0xee, 0xd6, 0x9c, 255),
+		C2D_Color32(0xe6, 0xbe, 0x52, 255),
+		C2D_Color32(0x84, 0x61, 0x42, 255),
+		C2D_Color32(0xff, 0x71, 0xb5, 255),
+		C2D_Color32(0xe6, 0xd6, 0xd6, 255),
+		C2D_Color32(0xa4, 0x96, 0x94, 255),
+		C2D_Color32(0x52, 0x49, 0x4a, 255),
+		C2D_Color32(0xff, 0xff, 0xff, 255),
+		C2D_Color32(0x00, 0x00, 0x00, 255)
+	},
+	{ // 9
+		C2D_Color32(0x00, 0x00, 0x00, 0),
+		C2D_Color32(0x31, 0x69, 0xb5, 255),
+		C2D_Color32(0x5a, 0x8a, 0xce, 255),
+		C2D_Color32(0xbd, 0xce, 0xf7, 255),
+		C2D_Color32(0x9c, 0xd6, 0xbd, 255),
+		C2D_Color32(0x00, 0xb2, 0xc5, 255),
+		C2D_Color32(0xf7, 0xef, 0xb5, 255),
+		C2D_Color32(0xee, 0xd6, 0x9c, 255),
+		C2D_Color32(0xe6, 0xbe, 0x52, 255),
+		C2D_Color32(0x84, 0x61, 0x42, 255),
+		C2D_Color32(0x63, 0x51, 0xa4, 255),
+		C2D_Color32(0xe6, 0xd6, 0xd6, 255),
+		C2D_Color32(0xa4, 0x96, 0x94, 255),
+		C2D_Color32(0x52, 0x49, 0x4a, 255),
+		C2D_Color32(0xff, 0xff, 0xff, 255),
+		C2D_Color32(0x00, 0x00, 0x00, 255)
+	},
+	{ // 10
+		C2D_Color32(0x00, 0x00, 0x00, 0),
+		C2D_Color32(0xd6, 0x00, 0x00, 255),
+		C2D_Color32(0xf7, 0x28, 0x7b, 255),
+		C2D_Color32(0xff, 0x69, 0x29, 255),
+		C2D_Color32(0xff, 0xef, 0x5a, 255),
+		C2D_Color32(0x00, 0xbe, 0xe6, 255),
+		C2D_Color32(0x00, 0x71, 0xff, 255),
+		C2D_Color32(0x29, 0x31, 0x94, 255),
+		C2D_Color32(0xa4, 0x96, 0xff, 255),
+		C2D_Color32(0x73, 0x61, 0xee, 255),
+		C2D_Color32(0xce, 0xa6, 0xff, 255),
+		C2D_Color32(0xad, 0x51, 0xff, 255),
+		C2D_Color32(0x5a, 0x28, 0xbd, 255),
+		C2D_Color32(0x4a, 0x20, 0x5a, 255),
+		C2D_Color32(0xff, 0xff, 0xff, 255),
+		C2D_Color32(0x00, 0x00, 0x00, 255)
+	},
+	{ // 11
+		C2D_Color32(0x00, 0x00, 0x00, 0),
+		C2D_Color32(0xd6, 0x00, 0x00, 255),
+		C2D_Color32(0xff, 0x00, 0x00, 255),
+		C2D_Color32(0xe6, 0x96, 0x94, 255),
+		C2D_Color32(0xf7, 0x28, 0x7b, 255),
+		C2D_Color32(0xff, 0x69, 0xa4, 255),
+		C2D_Color32(0xff, 0x51, 0xd6, 255),
+		C2D_Color32(0xff, 0xaa, 0xff, 255),
+		C2D_Color32(0xff, 0x69, 0x29, 255),
+		C2D_Color32(0xff, 0xef, 0x5a, 255),
+		C2D_Color32(0x84, 0x61, 0x42, 255),
+		C2D_Color32(0xce, 0xa6, 0xff, 255),
+		C2D_Color32(0xad, 0x51, 0xff, 255),
+		C2D_Color32(0x4a, 0x20, 0x5a, 255),
+		C2D_Color32(0xff, 0xff, 0xff, 255),
+		C2D_Color32(0x00, 0x00, 0x00, 255)
+	},
+	{ // 12
+		C2D_Color32(0x00, 0x00, 0x00, 0),
+		C2D_Color32(0x31, 0x31, 0x84, 255),
+		C2D_Color32(0x00, 0x71, 0xff, 255),
+		C2D_Color32(0x84, 0xbe, 0xff, 255),
+		C2D_Color32(0x42, 0x81, 0x8c, 255),
+		C2D_Color32(0x84, 0xce, 0xce, 255),
+		C2D_Color32(0x00, 0xbe, 0xe6, 255),
+		C2D_Color32(0xce, 0xef, 0xff, 255),
+		C2D_Color32(0xad, 0x51, 0xff, 255),
+		C2D_Color32(0xff, 0xef, 0x5a, 255),
+		C2D_Color32(0x84, 0x61, 0x42, 255),
+		C2D_Color32(0xa4, 0x96, 0xff, 255),
+		C2D_Color32(0x73, 0x61, 0xee, 255),
+		C2D_Color32(0x5a, 0x28, 0xbd, 255),
+		C2D_Color32(0xff, 0xff, 0xff, 255),
+		C2D_Color32(0x00, 0x00, 0x00, 255)
+	},
+	{ // 13
+		C2D_Color32(0x00, 0x00, 0x00, 0),
+		C2D_Color32(0x5a, 0x10, 0x00, 255),
+		C2D_Color32(0xce, 0x00, 0x5a, 255),
+		C2D_Color32(0xf7, 0x96, 0x7b, 255),
+		C2D_Color32(0xb5, 0xce, 0x8c, 255),
+		C2D_Color32(0x4a, 0x61, 0x21, 255),
+		C2D_Color32(0x8c, 0xaa, 0xe6, 255),
+		C2D_Color32(0x00, 0x49, 0x73, 255),
+		C2D_Color32(0xbd, 0x81, 0xad, 255),
+		C2D_Color32(0x9c, 0x00, 0x6b, 255),
+		C2D_Color32(0xff, 0xef, 0x7b, 255),
+		C2D_Color32(0xce, 0x96, 0x31, 255),
+		C2D_Color32(0xff, 0x41, 0x10, 255),
+		C2D_Color32(0x4a, 0x41, 0x3a, 255),
+		C2D_Color32(0xff, 0xff, 0xff, 255),
+		C2D_Color32(0x00, 0x00, 0x00, 255)
+	},
+	{ // 14
+		C2D_Color32(0x00, 0x00, 0x00, 0),
+		C2D_Color32(0x5a, 0x69, 0x3a, 255),
+		C2D_Color32(0x94, 0xb2, 0x52, 255),
+		C2D_Color32(0xd6, 0xd6, 0xa4, 255),
+		C2D_Color32(0xe6, 0xbe, 0x3a, 255),
+		C2D_Color32(0xc5, 0xa6, 0x21, 255),
+		C2D_Color32(0xbd, 0xaa, 0x94, 255),
+		C2D_Color32(0x63, 0x51, 0x3a, 255),
+		C2D_Color32(0xc5, 0x81, 0x84, 255),
+		C2D_Color32(0x9c, 0x28, 0x19, 255),
+		C2D_Color32(0xe6, 0xe7, 0x3a, 255),
+		C2D_Color32(0xff, 0x79, 0x19, 255),
+		C2D_Color32(0xd6, 0x51, 0x8c, 255),
+		C2D_Color32(0x00, 0x96, 0xbd, 255),
+		C2D_Color32(0xff, 0xff, 0xff, 255),
+		C2D_Color32(0x00, 0x00, 0x00, 255)
+	},
+	{ // 15
+		C2D_Color32(0x00, 0x00, 0x00, 0),
+		C2D_Color32(0x84, 0x39, 0x31, 255),
+		C2D_Color32(0xff, 0x9e, 0xa4, 255),
+		C2D_Color32(0x94, 0xb2, 0x52, 255),
+		C2D_Color32(0xc5, 0xa6, 0x21, 255),
+		C2D_Color32(0xde, 0xd6, 0xce, 255),
+		C2D_Color32(0xce, 0xce, 0xbd, 255),
+		C2D_Color32(0xc5, 0xbe, 0xad, 255),
+		C2D_Color32(0xb5, 0xa6, 0x9c, 255),
+		C2D_Color32(0xa4, 0x96, 0x84, 255),
+		C2D_Color32(0x8c, 0x81, 0x73, 255),
+		C2D_Color32(0x7b, 0x69, 0x5a, 255),
+		C2D_Color32(0x73, 0x59, 0x4a, 255),
+		C2D_Color32(0x63, 0x51, 0x3a, 255),
+		C2D_Color32(0xff, 0xff, 0xff, 255),
+		C2D_Color32(0x00, 0x00, 0x00, 255)
+	},
+	{ // 16
+		C2D_Color32(0x00, 0x00, 0x00, 0),
+		C2D_Color32(0xb5, 0x00, 0x00, 255),
+		C2D_Color32(0xff, 0x9e, 0xa4, 255),
+		C2D_Color32(0x31, 0xff, 0xd6, 255),
+		C2D_Color32(0x5a, 0x51, 0xee, 255),
+		C2D_Color32(0xe6, 0xe7, 0xe6, 255),
+		C2D_Color32(0xce, 0xce, 0xce, 255),
+		C2D_Color32(0xb5, 0xb2, 0xb5, 255),
+		C2D_Color32(0x9c, 0x9e, 0x9c, 255),
+		C2D_Color32(0x84, 0x81, 0x84, 255),
+		C2D_Color32(0x63, 0x61, 0x63, 255),
+		C2D_Color32(0x4a, 0x49, 0x4a, 255),
+		C2D_Color32(0x31, 0x31, 0x31, 255),
+		C2D_Color32(0x19, 0x18, 0x19, 255),
+		C2D_Color32(0xff, 0xff, 0xff, 255),
+		C2D_Color32(0x00, 0x00, 0x00, 255)
+	},
+	{ // 17
+		C2D_Color32(0x00, 0x00, 0x00, 0),
+		C2D_Color32(0xe6, 0xc6, 0x4a, 255),
+		C2D_Color32(0xff, 0xef, 0x00, 255),
+		C2D_Color32(0xff, 0xf7, 0x9c, 255),
+		C2D_Color32(0xff, 0xf7, 0xbd, 255),
+		C2D_Color32(0x52, 0xc6, 0xe6, 255),
+		C2D_Color32(0xc5, 0xe7, 0xf7, 255),
+		C2D_Color32(0x94, 0x79, 0x08, 255),
+		C2D_Color32(0x6b, 0x69, 0x6b, 255),
+		C2D_Color32(0x4a, 0x49, 0x4a, 255),
+		C2D_Color32(0xf7, 0xe7, 0xee, 255),
+		C2D_Color32(0x63, 0x41, 0x10, 255),
+		C2D_Color32(0x94, 0x79, 0x52, 255),
+		C2D_Color32(0xff, 0xff, 0xff, 255),
+		C2D_Color32(0x94, 0x79, 0x08, 255),
+		C2D_Color32(0x29, 0x51, 0x10, 255)
+	},
+	{ // 18
+		C2D_Color32(0x00, 0x00, 0x00, 0),
+		C2D_Color32(0xee, 0x39, 0x19, 255),
+		C2D_Color32(0xff, 0xb2, 0x6b, 255),
+		C2D_Color32(0x8c, 0x71, 0x10, 255),
+		C2D_Color32(0x00, 0xdf, 0x19, 255),
+		C2D_Color32(0x00, 0xa6, 0x19, 255),
+		C2D_Color32(0x8c, 0xef, 0xff, 255),
+		C2D_Color32(0x00, 0x59, 0xe6, 255),
+		C2D_Color32(0x63, 0x59, 0xff, 255),
+		C2D_Color32(0xc5, 0x59, 0xff, 255),
+		C2D_Color32(0xff, 0xa6, 0xa4, 255),
+		C2D_Color32(0x94, 0x00, 0x00, 255),
+		C2D_Color32(0x9c, 0x69, 0x31, 255),
+		C2D_Color32(0x84, 0x81, 0x84, 255),
+		C2D_Color32(0xff, 0xff, 0xff, 255),
+		C2D_Color32(0x00, 0x00, 0x00, 255)
+	},
+	{ // 19
+		C2D_Color32(0x00, 0x00, 0x00, 0),
+		C2D_Color32(0xee, 0xf7, 0x9c, 255),
+		C2D_Color32(0xff, 0x8a, 0xde, 255),
+		C2D_Color32(0xff, 0xd6, 0xf7, 255),
+		C2D_Color32(0xe6, 0xa6, 0xd6, 255),
+		C2D_Color32(0xe6, 0x51, 0xb5, 255),
+		C2D_Color32(0xb5, 0x28, 0x84, 255),
+		C2D_Color32(0x5a, 0x10, 0x29, 255),
+		C2D_Color32(0xbd, 0x41, 0x9c, 255),
+		C2D_Color32(0x7b, 0x71, 0x10, 255),
+		C2D_Color32(0x5a, 0x51, 0x08, 255),
+		C2D_Color32(0xf7, 0xf7, 0x7b, 255),
+		C2D_Color32(0x31, 0x31, 0x31, 255),
+		C2D_Color32(0x94, 0x96, 0x8c, 255),
+		C2D_Color32(0xff, 0xff, 0xff, 255),
+		C2D_Color32(0x00, 0x00, 0x00, 255)
+	}
 };
 
 int EmblemChange::getPalNumber(u8 byte, bool secondPixel) {
 	if (secondPixel) {
-		if ((byte & 0x0F) == 0x0) {
+		if ((byte & 0x0F) == 0x00) {
 			return 0;
-		} else if ((byte & 0x0F) == 0x1) {
+		} else if ((byte & 0x0F) == 0x01) {
 			return 1;
-		} else if ((byte & 0x0F) == 0x2) {
+		} else if ((byte & 0x0F) == 0x02) {
 			return 2;
-		} else if ((byte & 0x0F) == 0x3) {
+		} else if ((byte & 0x0F) == 0x03) {
 			return 3;
-		} else if ((byte & 0x0F) == 0x4) {
+		} else if ((byte & 0x0F) == 0x04) {
 			return 4;
-		} else if ((byte & 0x0F) == 0x5) {
+		} else if ((byte & 0x0F) == 0x05) {
 			return 5;
-		} else if ((byte & 0x0F) == 0x6) {
+		} else if ((byte & 0x0F) == 0x06) {
 			return 6;
-		} else if ((byte & 0x0F) == 0x7) {
+		} else if ((byte & 0x0F) == 0x07) {
 			return 7;
-		} else if ((byte & 0x0F) == 0x8) {
+		} else if ((byte & 0x0F) == 0x08) {
 			return 8;
-		} else if ((byte & 0x0F) == 0x9) {
+		} else if ((byte & 0x0F) == 0x09) {
 			return 9;
-		} else if ((byte & 0x0F) == 0xA) {
+		} else if ((byte & 0x0F) == 0x0A) {
 			return 10;
-		} else if ((byte & 0x0F) == 0xB) {
+		} else if ((byte & 0x0F) == 0x0B) {
 			return 11;
-		} else if ((byte & 0x0F) == 0xC) {
+		} else if ((byte & 0x0F) == 0x0C) {
 			return 12;
-		} else if ((byte & 0x0F) == 0xD) {
+		} else if ((byte & 0x0F) == 0x0D) {
 			return 13;
-		} else if ((byte & 0x0F) == 0xE) {
+		} else if ((byte & 0x0F) == 0x0E) {
 			return 14;
-		} else if ((byte & 0x0F) == 0xF) {
+		} else if ((byte & 0x0F) == 0x0F) {
 			return 15;
 		}
 	} else {
-		if (byte >= 0x00 && byte < 0x10) {
+		if ((byte & 0xF0) == 0x00) {
 			return 0;
-		} else if (byte >= 0x10 && byte < 0x20) {
+		} else if ((byte & 0xF0) == 0x10) {
 			return 1;
-		} else if (byte >= 0x20 && byte < 0x30) {
+		} else if ((byte & 0xF0) == 0x20) {
 			return 2;
-		} else if (byte >= 0x30 && byte < 0x40) {
+		} else if ((byte & 0xF0) == 0x30) {
 			return 3;
-		} else if (byte >= 0x40 && byte < 0x50) {
+		} else if ((byte & 0xF0) == 0x40) {
 			return 4;
-		} else if (byte >= 0x50 && byte < 0x60) {
+		} else if ((byte & 0xF0) == 0x50) {
 			return 5;
-		} else if (byte >= 0x60 && byte < 0x70) {
+		} else if ((byte & 0xF0) == 0x60) {
 			return 6;
-		} else if (byte >= 0x70 && byte < 0x80) {
+		} else if ((byte & 0xF0) == 0x70) {
 			return 7;
-		} else if (byte >= 0x80 && byte < 0x90) {
+		} else if ((byte & 0xF0) == 0x80) {
 			return 8;
-		} else if (byte >= 0x90 && byte < 0xA0) {
+		} else if ((byte & 0xF0) == 0x90) {
 			return 9;
-		} else if (byte >= 0xA0 && byte < 0xB0) {
+		} else if ((byte & 0xF0) == 0xA0) {
 			return 10;
-		} else if (byte >= 0xB0 && byte < 0xC0) {
+		} else if ((byte & 0xF0) == 0xB0) {
 			return 11;
-		} else if (byte >= 0xC0 && byte < 0xD0) {
+		} else if ((byte & 0xF0) == 0xC0) {
 			return 12;
-		} else if (byte >= 0xD0 && byte < 0xE0) {
+		} else if ((byte & 0xF0) == 0xD0) {
 			return 13;
-		} else if (byte >= 0xE0 && byte < 0xF0) {
+		} else if ((byte & 0xF0) == 0xE0) {
 			return 14;
-		} else if (byte >= 0xF0 && byte < 0x100) {
+		} else if ((byte & 0xF0) == 0xF0) {
 			return 15;
 		}
 	}
@@ -129,26 +455,31 @@ int EmblemChange::getPalNumber(u8 byte, bool secondPixel) {
 }
 
 u32 EmblemChange::emblemPixel(int pixel, bool secondPixel) {
-	pixel = pixel/2;
-	return emblemPalette[getPalNumber(emblemData.sprite[pixel], secondPixel)];
+	return emblemPalette[emblemData.palLine-1][getPalNumber(emblemData.sprite[pixel], secondPixel)];
 }
 
 void EmblemChange::renderEmblem(void) {
-	bool secondPixel = false;
-	for (int i = 0; i < 64*64; i++) {
-		emblemImage[i] = emblemPixel(i, secondPixel);
-		secondPixel = !secondPixel;
-	}
-}
-
-void EmblemChange::drawEmblem(int x, int y, bool big) {
-	for (int h = (emblemHalf ? 32: 0); h < (emblemHalf ? 64: 32); h++) {
-		for (int w = 0; w < 64; w++) {
-			Draw_Rect(x+(w*(big*2)), y+(h*(big*2)), 1+big, 1+big, emblemImage[(h*64)+w]);
+	int w = 0, h = 0, hLimit = 8;
+	for (int i = 0; i < (8*8)*(8*8); i+=8) {
+		emblemImage[(h*64)+w] = emblemPixel(i/2, false);
+		emblemImage[(h*64)+w+1] = emblemPixel((i+1)/2, true);
+		emblemImage[(h*64)+w+2] = emblemPixel((i+2)/2, true);
+		emblemImage[(h*64)+w+3] = emblemPixel((i+3)/2, false);
+		emblemImage[(h*64)+w+4] = emblemPixel((i+4)/2, false);
+		emblemImage[(h*64)+w+5] = emblemPixel((i+5)/2, true);
+		emblemImage[(h*64)+w+6] = emblemPixel((i+6)/2, true);
+		emblemImage[(h*64)+w+7] = emblemPixel((i+7)/2, false);
+		h++;
+		if (h >= hLimit) {
+			w += 8;
+			if (w >= 64) {
+				w = 0;
+				hLimit += 8;
+			}
+			h = hLimit-8;
 		}
 	}
-	emblemHalf = !emblemHalf;
-}*/
+}
 
 void EmblemChange::drawMsg(void) const {
 	GFX::DrawSprite(sprites_msg_idx, 0, 8, 1, 1);
@@ -173,6 +504,16 @@ void EmblemChange::drawMsg(void) const {
 }
 
 void EmblemChange::Draw(void) const {
+	extern bool doubleSpeed;
+	if (!doubleSpeed) {
+		if (iFps > 30) {
+			C3D_FrameRate(60);
+		} else {
+			C3D_FrameRate(iFps*2);
+		}
+		doubleSpeed = true;
+	}
+
 	Gui::ScreenDraw(Top);
 
 	if (highlightedGame == 3) {
@@ -197,10 +538,22 @@ void EmblemChange::Draw(void) const {
 		}
 	}
 	GFX::DrawSprite(sprites_emblem_back_idx, 100, 20, 2, 2);
-	//drawEmblem(136, 56, true);
+
+	int x = 136;
+	int y = 56;
+	bool big = true;
+
+	for (int h = 0; h < 64; h++) {
+		for (int w = 0; w < 64; w++) {
+			if (emblemImage[(h*64)+w] != 0) Gui::Draw_Rect(x+(w*(big*2)), y+(h*(big*2)), 1+big, 1+big, emblemImage[(h*64)+w]);
+		}
+	}
+
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+	C3D_FrameEnd(0);
 
 	if (shiftBySubPixel) return;
+	C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 	Gui::ScreenDraw(Bottom);
 	if (highlightedGame == 3) {
 		Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(245, 245, 160, 255));
@@ -501,7 +854,10 @@ void EmblemChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					if (cursorPosition < 0) {
 						cursorPosition = 0;
 					}
-					modeInited = false;
+					if (highlightedGame == 3) {
+						readSS4Emblem(cursorPosition);
+						renderEmblem();
+					}
 				}
 				if (hDown & KEY_DOWN) {
 					sndHighlight();
@@ -509,7 +865,10 @@ void EmblemChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					if (cursorPosition > totalEmblems) {
 						cursorPosition = totalEmblems;
 					}
-					modeInited = false;
+					if (highlightedGame == 3) {
+						readSS4Emblem(cursorPosition);
+						renderEmblem();
+					}
 				}
 
 				if (hDown & KEY_A) {

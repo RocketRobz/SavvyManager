@@ -32,6 +32,12 @@ void WhatToDo::initialize() {
 }
 
 void WhatToDo::Draw(void) const {
+	extern bool doubleSpeed;
+	if (doubleSpeed) {
+		C3D_FrameRate(iFps);
+		doubleSpeed = false;
+	}
+
 	GFX::loadGameSelSheets();
 
 	Gui::ScreenDraw(Top);

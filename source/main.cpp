@@ -111,6 +111,7 @@ u64 appID = 0;
 int orgHighlightedGame = 1;
 int highlightedGame = 1;
 
+bool doubleSpeed = false;
 float bg_xPos = 0.0f;
 float bg_yPos = 0.0f;
 bool showCursor = false;
@@ -374,8 +375,8 @@ int main()
 		// Scroll background
 		switch (iFps) {
 			default:
-				bg_xPos += 0.3;
-				bg_yPos -= 0.3;
+				bg_xPos += 0.3*(1+doubleSpeed);
+				bg_yPos -= 0.3*(1+doubleSpeed);
 				break;
 			case 30:
 				bg_xPos += 0.6;
@@ -420,7 +421,7 @@ int main()
 		int fadeFPS;
 		switch (iFps) {
 			default:
-				fadeFPS = 6;
+				fadeFPS = 6*(1+doubleSpeed);
 				break;
 			case 30:
 				fadeFPS = 12;

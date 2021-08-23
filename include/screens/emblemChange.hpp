@@ -13,12 +13,10 @@ public:
 	EmblemChange();
 private:
 	void getMaxEmblems();
-	//int getPalNumber(u8 byte, bool secondPixel);
-	//u32 emblemPixel(int pixel, bool secondPixel);
-	//u32 emblemImage[64*64];
-	//void renderEmblem(void);
-	//bool emblemHalf = false;
-	//void drawEmblem(int x, int y, bool big);
+	int getPalNumber(u8 byte, bool secondPixel);
+	u32 emblemPixel(int pixel, bool secondPixel);
+	u32 emblemImage[64*64];
+	void renderEmblem(void);
 	void drawMsg(void) const;
 
 	int subScreenMode = 0;
