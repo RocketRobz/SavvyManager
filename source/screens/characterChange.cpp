@@ -1577,7 +1577,9 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if ((hDown & KEY_START) && (highlightedGame == 2)) {
 			sndSelect();
 			messageNo = ss3DLCharactersBackedUp ? 6 : 4;
-			peopleMetCount = false;
+			if (!ss3DLCharactersBackedUp) {
+				peopleMetCount = false;
+			}
 			showMessage = true;
 		}
 	}
