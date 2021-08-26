@@ -261,7 +261,7 @@ void CharacterChange::getList() {
 				peopleMet++;
 			}
 		}
-		for (i = 0; i < 47; i++) {
+		for (i = 0; i < 50; i++) {
 			if (existsSS3Character(0x0BB9+i)) {
 				peopleMet++;
 			}
@@ -358,7 +358,8 @@ void CharacterChange::getMaxChars() {
 				totalCharacters = (int)sizeof(ss3CharacterOrder_WtoZ)/sizeof(u16);
 				break;
 			case 11:
-				totalCharacters = 67;
+				//totalCharacters = 67;
+				totalCharacters = 53;
 				break;
 		}
 		if (totalCharacters > 0) totalCharacters--;
@@ -690,16 +691,25 @@ void CharacterChange::addEveryone(void) {
 
 	backupSS3DLCharacters("sdmc:/3ds/SavvyManager/SS3/dlCharacters.bak");
 
-	for (int i = 0; i < 58; i++) {
-		sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", import_everyCharacterNames[i]);
+	for (int i = 0; i < 53; i++) {
+		const char* charName = import_everyCharacterNames[i];
+		const char* profileName = import_everyCharacterNames[i];
+		if (sysRegion == CFG_REGION_JPN || sysRegion == CFG_REGION_KOR) {
+			charName = import_everyCharacterNamesJAP[i];
+			profileName = import_everyCharacterNamesJAP[i];
+		}
+		if (sysRegion == CFG_REGION_EUR || sysRegion == CFG_REGION_AUS) {
+			profileName = import_everyCharacterProfileNamesEUR[i];
+		}
+		sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", charName);
 		if (access(chrFilePath, F_OK) != 0) {
-			sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), import_everyCharacterNames[i]);
+			sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), charName);
 		}
 		readSS3CharacterFile(0x0BB9+i, chrFilePath);
 		if (removeBags) {
 			removeSS3CharacterBag(0x0BB9+i);
 		}
-		sprintf(chrFilePath, "romfs:/character/Fashion Forward/Profiles/%s.cprf", sysRegion==CFG_REGION_EUR||sysRegion==CFG_REGION_AUS ? import_everyCharacterProfileNamesEUR[i] : import_everyCharacterNames[i]);
+		sprintf(chrFilePath, "romfs:/character/Fashion Forward/Profiles/%s.cprf", profileName);
 		readSS3ProfileFile(0x0BB9+i, chrFilePath);
 		toggleSS3Character(0x0BB9+i, true);
 	}
@@ -758,7 +768,7 @@ void CharacterChange::Draw(void) const {
 		} else {
 			Gui::DrawStringCentered(0, 104, 0.65, BLACK, (import_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
 		}
-	} else if (subScreenMode == 0 && peopleMet > 0) {
+	} else if (subScreenMode == 0 && peopleMet > 0 && messageNo != 4) {
 		if (highlightedGame == 3) {
 			Gui::Draw_Rect(0, 208, 400, 32, WHITE);
 		}
