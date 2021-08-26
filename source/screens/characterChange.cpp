@@ -690,7 +690,7 @@ void CharacterChange::addEveryone(void) {
 
 	backupSS3DLCharacters("sdmc:/3ds/SavvyManager/SS3/dlCharacters.bak");
 
-	for (int i = 0; i < 50; i++) {
+	for (int i = 0; i < 58; i++) {
 		sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", import_everyCharacterNames[i]);
 		if (access(chrFilePath, F_OK) != 0) {
 			sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), import_everyCharacterNames[i]);
