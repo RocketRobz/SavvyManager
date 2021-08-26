@@ -63,6 +63,7 @@ private:
 
 	int characterPage[4] = {0};
 	int peopleMet = 0;
+	bool peopleMetCount = true;
 	u16 totalCharacters = 0;
 	u16 import_totalCharacters = 0;
 

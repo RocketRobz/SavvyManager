@@ -768,7 +768,7 @@ void CharacterChange::Draw(void) const {
 		} else {
 			Gui::DrawStringCentered(0, 104, 0.65, BLACK, (import_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
 		}
-	} else if (subScreenMode == 0 && peopleMet > 0 && messageNo != 4) {
+	} else if (subScreenMode == 0 && peopleMet > 0 && peopleMetCount) {
 		if (highlightedGame == 3) {
 			Gui::Draw_Rect(0, 208, 400, 32, WHITE);
 		}
@@ -1154,11 +1154,13 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				sndSelect();
 				addEveryone();
 				messageNo = 5;
+				peopleMetCount = true;
 			}
 
 			if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touch.px >= 52 && touch.px < 52+90 && touch.py >= 188 && touch.py < 188+47)) {
 				sndBack();
 				showMessage = false;
+				peopleMetCount = true;
 			}
 
 			if (hDown & KEY_Y) {
@@ -1575,6 +1577,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if ((hDown & KEY_START) && (highlightedGame == 2)) {
 			sndSelect();
 			messageNo = ss3DLCharactersBackedUp ? 6 : 4;
+			peopleMetCount = false;
 			showMessage = true;
 		}
 	}
