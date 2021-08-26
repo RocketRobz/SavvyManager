@@ -6,6 +6,7 @@ const char* import_ss2CharacterNames[] = {
 	"Emmylou",
 	"Avery",		// aka Lola (EUR)
 	"Shoko",		// (JAP)
+	"MC Mode",
 	"India",		// aka Elena (EUR)
 	"Daphne",		// aka Shivani (EUR)
 	"Genevieve",	// aka Faye (EUR)
@@ -28,6 +29,7 @@ const char* import_nsbCharacterNames[] = {
 	"Harriet",
 	"Avery",		// Lola (EUR)
 	"Shoko",		// (JAP)
+	"MC Mode",
 	"India",		// Elena (EUR)
 	"Daphne",		// Shivani (EUR)
 	"Genevieve",	// Faye (EUR)
@@ -50,6 +52,7 @@ bool import_ss2CharacterGenders[] = {
 	false,			// Female
 	false,			// Female
 	false,			// Female
+	true,			// Male
 	false,			// Female
 	false,			// Female
 	false,			// Female
@@ -64,24 +67,3 @@ bool import_ss2CharacterGenders[] = {
 	false,			// Female
 	false,			// Female
 };
-
-/*bool import_ss2CharacterTieColors[] = {
-	false,			// Pink
-	true,			// Light Green
-	false,			// Pink
-	false,			// Pink
-	true,			// Light Green
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-	false,			// Pink
-};*/

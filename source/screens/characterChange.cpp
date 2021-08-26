@@ -371,7 +371,7 @@ void CharacterChange::getMaxChars() {
 	} else if (import_highlightedGame == 2) {
 		import_totalCharacters = 0x10;
 	} else if (import_highlightedGame == 1) {
-		import_totalCharacters = 0x12;
+		import_totalCharacters = 0x13;
 	} else if (import_highlightedGame == 0) {
 		import_totalCharacters = 0x7;
 	}
@@ -690,7 +690,7 @@ void CharacterChange::addEveryone(void) {
 
 	backupSS3DLCharacters("sdmc:/3ds/SavvyManager/SS3/dlCharacters.bak");
 
-	for (int i = 0; i < 49; i++) {
+	for (int i = 0; i < 50; i++) {
 		sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", import_everyCharacterNames[i]);
 		if (access(chrFilePath, F_OK) != 0) {
 			sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), import_everyCharacterNames[i]);
