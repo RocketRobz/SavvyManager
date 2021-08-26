@@ -359,7 +359,7 @@ void CharacterChange::getMaxChars() {
 				break;
 			case 11:
 				//totalCharacters = 67;
-				totalCharacters = 53;
+				totalCharacters = 50;
 				break;
 		}
 		if (totalCharacters > 0) totalCharacters--;
@@ -691,7 +691,7 @@ void CharacterChange::addEveryone(void) {
 
 	backupSS3DLCharacters("sdmc:/3ds/SavvyManager/SS3/dlCharacters.bak");
 
-	for (int i = 0; i < 53; i++) {
+	for (int i = 0; i < 50; i++) {
 		const char* charName = import_everyCharacterNames[i];
 		const char* profileName = import_everyCharacterNames[i];
 		if (sysRegion == CFG_REGION_JPN || sysRegion == CFG_REGION_KOR) {
