@@ -161,7 +161,7 @@ void RocketRobz::Draw(void) const {
 
 
 void RocketRobz::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
-	if ((hDown & KEY_START || hDown & KEY_TOUCH) && subMode == 2) {
-		delay = iFps*10;
+	if (((hDown & KEY_A) || (hDown & KEY_START) || (hDown & KEY_TOUCH)) && subMode == 2) {
+		delay = iFps*12;
 	}
 }
