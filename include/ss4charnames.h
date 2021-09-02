@@ -37,7 +37,7 @@ extern const u16 ss4CharacterOrder_AtoB[74];
 extern const u16 ss4CharacterOrder_CtoD[69];
 extern const u16 ss4CharacterOrder_EtoF[46];
 extern const u16 ss4CharacterOrder_GtoI[42];
-extern const u16 ss4CharacterOrder_JtoL[117];
+extern const u16 ss4CharacterOrder_JtoL[118];
 extern const u16 ss4CharacterOrder_MtoN[79];
 extern const u16 ss4CharacterOrder_OtoP[30];
 extern const u16 ss4CharacterOrder_QtoS[80];

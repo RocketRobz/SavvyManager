@@ -48,7 +48,7 @@ const char* ss4CharacterNames[] = {
 	"Tessa Lyle",
 	"Yulia Mirova",
 	"Kiki Summers",
-	"??? (Rock)", // Unseen
+	"??? (Kiki's Student)", // Not in Contacts
 	"Clover",
 	"Flora",
 	"??? (Girly)", // Unseen
@@ -724,7 +724,7 @@ const int ss4CharacterFlags[] = {
 	0, // Tessa Lyle
 	0, // Yulia Mirova
 	0, // Kiki Summers
-	2, // Unseen (Rock)
+	1, // ??? (Kiki's Student)
 	0, // Clover
 	0, // Flora
 	2, // Unseen (Girly)
@@ -1292,6 +1292,7 @@ const u16 ss4CharacterOrder_JtoL[] = {
 	0x032B, // Kez
 	0x0042, // Kevani
 	0x0026, // Kiki Summers
+	0x0027, // ??? (Kiki's Student)
 	0x02C1, // Kim (Unseen)
 	0x01F8, // Kimberly
 	0x0137, // Kiran
