@@ -145,11 +145,15 @@ extern bool existsSS4Character(u16 id);
 
 extern void readSS2CharacterFile(const char* filename);
 extern void writeSS2CharacterFile(const char* filename);
+extern void writeSS2CharacterToSave(void);
 extern void readSS3CharacterFile(u16 id, const char* filename);
 extern void writeSS3CharacterFile(u16 id, const char* filename);
+extern void writeSS3CharacterToSave(u16 id);
 extern void readSS4CharacterFile(u16 id, const char* filename);
 extern void writeSS4CharacterFile(u16 id, const char* filename);
+extern void writeSS4CharacterToSave(u16 id);
 extern void writeSS4MewtubeCharacter(int video, int slot);
+extern void writeSS4MewtubeCharacterToSave(int video, int slot);
 extern void revertSS4MewtubeCharacter(int video, int slot);
 extern void backupSS3DLCharacters(const char* filename);
 extern void restoreSS3DLCharacters(const char* filename);
@@ -167,8 +171,10 @@ extern const char* readSS4ProfileName(u16 id);
 
 extern void readSS3Emblem(void);
 extern void writeSS3Emblem(void);
+extern void writeSS3EmblemToSave(void);
 extern void readSS4Emblem(int id);
 extern void writeSS4Emblem(int id);
+extern void writeSS4EmblemToSave(int id);
 
 void readSS3EmblemFile(const char* filename);
 void writeSS3EmblemFile(const char* filename);

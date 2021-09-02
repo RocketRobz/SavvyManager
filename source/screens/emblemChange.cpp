@@ -734,7 +734,7 @@ void EmblemChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 							if (access(embFilePath, F_OK) == 0) {
 								sndSelect();
 								readSS4EmblemFile(cursorPosition, embFilePath);
-								writeSS4Save();
+								writeSS4EmblemToSave(cursorPosition); // Write to save file
 								exportFound = true;
 							}
 							break;
@@ -743,7 +743,7 @@ void EmblemChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 							if (access(embFilePath, F_OK) == 0) {
 								sndSelect();
 								readSS3EmblemFile(embFilePath);
-								writeSS3Save();
+								writeSS3EmblemToSave(); // Write to save file
 								exportFound = true;
 							}
 							break;
@@ -764,7 +764,7 @@ void EmblemChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 							sprintf(embFilePath, "romfs:/emblems/%s.emb", import_emblemNames[importEmblemList_cursorPosition]);
 							if (access(embFilePath, F_OK) == 0) {
 								readSS4EmblemFile(cursorPosition, embFilePath);
-								writeSS4Save();
+								writeSS4EmblemToSave(cursorPosition); // Write to save file
 								exportFound = true;
 							}
 							break;
@@ -772,7 +772,7 @@ void EmblemChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 							sprintf(embFilePath, "romfs:/emblems/%s.emb", import_emblemNames[importEmblemList_cursorPosition]);
 							if (access(embFilePath, F_OK) == 0) {
 								readSS3EmblemFile(embFilePath);
-								writeSS3Save();
+								writeSS3EmblemToSave(); // Write to save file
 								exportFound = true;
 							}
 							break;

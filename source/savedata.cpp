@@ -122,6 +122,15 @@ void writeSS2Character(void) {
 	tonccpy((char*)ss2Save+(0x248), (char*)&ss2CharacterData+0x1C, 0x20);
 }
 
+void writeSS2CharacterToSave(void) {
+	FILE* saveData = fopen(ss2SavePath, "rb+");
+	fseek(saveData, 0x102, SEEK_SET);
+	fwrite(ss2Save+(0x102), 0x186, 1, saveData);
+	fclose(saveData);
+
+	ss2SaveModified = true;
+}
+
 void readSS2CharacterFile(const char* filename) {
 	FILE* characterData = fopen(filename, "rb");
 	if (!characterData) return;
@@ -361,6 +370,15 @@ void writeSS3CharacterFile(u16 id, const char* filename) {
 	fclose(characterData);
 }
 
+void writeSS3CharacterToSave(u16 id) {
+	FILE* saveData = fopen(ss3SavePath, "rb+");
+	fseek(saveData, getSS3CharacterOffset(id), SEEK_SET);
+	fwrite(ss3Save+getSS3CharacterOffset(id), 0x804, 1, saveData);
+	fclose(saveData);
+
+	ss3SaveModified = true;
+}
+
 void backupSS3DLCharacters(const char* filename) {
 	FILE* characterData = fopen(filename, "wb");
 	if (!characterData) return;
@@ -440,6 +458,17 @@ void readSS3Emblem(void) {
 void writeSS3Emblem(void) {
 	u32 offset = (sysRegion==CFG_REGION_JPN ? 0x29A14 : 0x2ABB8);
 	tonccpy((char*)ss3Save+(offset), &emblemData, 0x804);
+}
+
+void writeSS3EmblemToSave(void) {
+	u32 offset = (sysRegion==CFG_REGION_JPN ? 0x29A14 : 0x2ABB8);
+
+	FILE* saveData = fopen(ss3SavePath, "rb+");
+	fseek(saveData, offset, SEEK_SET);
+	fwrite(ss3Save, 0x804, 1, saveData);
+	fclose(saveData);
+
+	ss3SaveModified = true;
 }
 
 void readSS3EmblemFile(const char* filename) {
@@ -704,8 +733,22 @@ void writeSS4Character(u16 id) {
 	tonccpy((char*)ss4Save+getSS4CharacterOffset(id), &ss4CharacterData, 0x3E);
 }
 
+void writeSS4CharacterToSave(u16 id) {
+	u32 bytesWritten = 0;
+	FSUSER_OpenFile(&handle4, archive4, fsMakePath(PATH_UTF16, (const void*)UTF8toUTF16(ss4SavePath).data()), FS_OPEN_WRITE, FS_WRITE_FLUSH);
+	FSFILE_Write(handle4, &bytesWritten, getSS4CharacterOffset(id), ss4Save+getSS4CharacterOffset(id), 0x3E, 0);
+	FSFILE_Close(handle4);
+}
+
 void writeSS4MewtubeCharacter(int video, int slot) {
 	tonccpy((char*)ss4Save+getSS4MewtubeCharacterOffset(video, slot), &ss4CharacterData, 0x3E);
+}
+
+void writeSS4MewtubeCharacterToSave(int video, int slot) {
+	u32 bytesWritten = 0;
+	FSUSER_OpenFile(&handle4, archive4, fsMakePath(PATH_UTF16, (const void*)UTF8toUTF16(ss4SavePath).data()), FS_OPEN_WRITE, FS_WRITE_FLUSH);
+	FSFILE_Write(handle4, &bytesWritten, getSS4MewtubeCharacterOffset(video, slot)-2, ss4Save+getSS4MewtubeCharacterOffset(video, slot)-2, 0x40, 0);
+	FSFILE_Close(handle4);
 }
 
 void revertSS4MewtubeCharacter(int video, int slot) {
@@ -795,6 +838,25 @@ void writeSS4Emblem(int id) {
 			tonccpy((char*)ss4Save+(0x23904), &emblemData, 0x804);
 			break;
 	}
+}
+
+void writeSS4EmblemToSave(int id) {
+	u32 bytesWritten = 0;
+	FSUSER_OpenFile(&handle4, archive4, fsMakePath(PATH_UTF16, (const void*)UTF8toUTF16(ss4SavePath).data()), FS_OPEN_WRITE, FS_WRITE_FLUSH);
+
+	switch (id) {
+		case 0:
+			FSFILE_Write(handle4, &bytesWritten, 0x228FC, ss4Save+(0x228FC), 0x804, 0);
+			break;
+		case 1:
+			FSFILE_Write(handle4, &bytesWritten, 0x23100, ss4Save+(0x23100), 0x804, 0);
+			break;
+		case 2:
+			FSFILE_Write(handle4, &bytesWritten, 0x23904, ss4Save+(0x23904), 0x804, 0);
+			break;
+	}
+
+	FSFILE_Close(handle4);
 }
 
 void readSS4EmblemFile(int id, const char* filename) {

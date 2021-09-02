@@ -531,7 +531,7 @@ void MewtubeChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			readSS4Character(charId);
 			writeSS4MewtubeCharacterId(charId, cursorPosition[0], 3+cursorPosition[1]);
 			writeSS4MewtubeCharacter(cursorPosition[0], 3+cursorPosition[1]);
-			writeSS4Save();
+			writeSS4MewtubeCharacterToSave(cursorPosition[0], 3+cursorPosition[1]);	// Write to save data
 			subScreenMode = 1;
 		}
 
@@ -582,7 +582,7 @@ void MewtubeChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			if (charId != 0) {
 				sndSelect();
 				writeSS4MewtubeCharacterId(0, cursorPosition[0], 3+cursorPosition[1]);
-				writeSS4Save();
+				writeSS4MewtubeCharacterToSave(cursorPosition[0], 3+cursorPosition[1]);	// Write to save data
 			}
 		}
 

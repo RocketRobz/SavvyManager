@@ -628,8 +628,7 @@ void CharacterChange::drawMsg(void) const {
 		Gui::DrawStringCentered(0, 124, 0.60, BLACK, "Caprice Chalet rooms (if exists)");
 		Gui::DrawStringCentered(0, 144, 0.60, BLACK, "will be restored. Is this OK?");
 	} else if (messageNo == 5) {
-		Gui::DrawStringCentered(0, 68, 0.60, BLACK, "Everyone is now in Fashion Forward!");
-		Gui::DrawStringCentered(0, 88, 0.60, BLACK, "(Except for customers and reps.)");
+		Gui::DrawStringCentered(0, 68, 0.60, BLACK, "New characters have arrived!");
 		Gui::DrawStringCentered(0, 114, 0.60, BLACK, "Invite them over for photo shoots,");
 		Gui::DrawStringCentered(0, 134, 0.60, BLACK, "as well as AR photo shoots!");
 	} else if (messageNo == 4) {
@@ -725,10 +724,10 @@ void CharacterChange::removeEveryone(void) {
 	remove("sdmc:/3ds/SavvyManager/SS3/dlCharacters.bak");
 	ss3DLCharactersBackedUp = false;
 
-	sprintf(chararacterImported, "Characters removed successfully.");
+	sprintf(chararacterImported, "Characters have been removed.");
 	for (u16 id = 0x0BB9; id <= 0x0BFD; id++) {
 		if (existsSS3Character(id)) {
-			sprintf(chararacterImported, "Character(s) restored successfully.");
+			sprintf(chararacterImported, "Character(s) have been restored.");
 			break;
 		}
 	}
@@ -1184,7 +1183,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				sndSelect();
 				if (messageNo == 5) {
 					messageNo = 1;
-					sprintf(chararacterImported, "Characters imported successfully.");
+					sprintf(chararacterImported, "Contacts have been expanded.");
 				} else {
 					if (subScreenMode == 1) {
 						previewCharacter = false;
@@ -1273,7 +1272,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 							sprintf(chrFilePath, "romfs:/character/Styling Star/%s/%s.chr", seasonName(), "Robz");
 						}
 						readSS4CharacterFile(currentCharId, chrFilePath);
-						writeSS4Save();
+						writeSS4CharacterToSave(currentCharId);
 						break;
 					case 2:
 						sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", "Robz");
@@ -1281,7 +1280,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 							sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), "Robz");
 						}
 						readSS3CharacterFile(currentCharId, chrFilePath);
-						writeSS3Save();
+						writeSS3CharacterToSave(currentCharId);
 						break;
 					case 1:
 						sprintf(chrFilePath, "romfs:/character/Trendsetters/All Seasons/%s.chr", "Robz");
@@ -1289,11 +1288,11 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 						sprintf(chrFilePath, "romfs:/character/Trendsetters/%s/%s.chr", seasonName(), "Robz");
 						}
 						readSS2CharacterFile(chrFilePath);
-						writeSS2Save();
+						writeSS2CharacterToSave();
 						break;
 				}
 				loadChrImage(true);
-				sprintf(chararacterImported, "Imported %s successfully.", "Robz");
+				sprintf(chararacterImported, "%s imported.", "Robz");
 				messageNo = 1;
 				subScreenMode = 1;
 				showMessage = true;
@@ -1305,7 +1304,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 						if (access(chrFilePath, F_OK) == 0) {
 							sndSelect();
 							readSS4CharacterFile(currentCharId, chrFilePath);
-							writeSS4Save();
+							writeSS4CharacterToSave(currentCharId);
 							exportFound = true;
 						}
 						break;
@@ -1314,7 +1313,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 						if (access(chrFilePath, F_OK) == 0) {
 							sndSelect();
 							readSS3CharacterFile(currentCharId, chrFilePath);
-							writeSS3Save();
+							writeSS3CharacterToSave(currentCharId);
 							exportFound = true;
 						}
 						break;
@@ -1323,13 +1322,13 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 						if (access(chrFilePath, F_OK) == 0) {
 							sndSelect();
 							readSS2CharacterFile(chrFilePath);
-							writeSS2Save();
+							writeSS2CharacterToSave();
 							exportFound = true;
 						}
 						break;
 				}
 				if (exportFound) {
-					sprintf(chararacterImported, "Imported %s successfully.", getExportedCharacterName(importCharacterList_cursorPosition));
+					sprintf(chararacterImported, "%s imported.", getExportedCharacterName(importCharacterList_cursorPosition));
 					messageNo = 1;
 					subScreenMode = 1;
 				} else {
@@ -1346,7 +1345,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 							sprintf(chrFilePath, "romfs:/character/Styling Star/%s/%s.chr", seasonName(), import_characterName());
 						}
 						readSS4CharacterFile(currentCharId, chrFilePath);
-						writeSS4Save();
+						writeSS4CharacterToSave(currentCharId);
 						break;
 					case 2:
 						sprintf(chrFilePath, "romfs:/character/Fashion Forward/All Seasons/%s.chr", import_characterName());
@@ -1354,7 +1353,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 							sprintf(chrFilePath, "romfs:/character/Fashion Forward/%s/%s.chr", seasonName(), import_characterName());
 						}
 						readSS3CharacterFile(currentCharId, chrFilePath);
-						writeSS3Save();
+						writeSS3CharacterToSave(currentCharId);
 						break;
 					case 1:
 						sprintf(chrFilePath, "romfs:/character/Trendsetters/All Seasons/%s.chr", import_characterName());
@@ -1362,10 +1361,10 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 							sprintf(chrFilePath, "romfs:/character/Trendsetters/%s/%s.chr", seasonName(), import_characterName());
 						}
 						readSS2CharacterFile(chrFilePath);
-						writeSS2Save();
+						writeSS2CharacterToSave();
 						break;
 				}
-				sprintf(chararacterImported, "Imported %s successfully.", import_characterNameDisplay());
+				sprintf(chararacterImported, "%s imported.", import_characterNameDisplay());
 				messageNo = 1;
 				subScreenMode = 1;
 				showMessage = true;
