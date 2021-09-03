@@ -36,11 +36,14 @@ private:
 		1: What to change
 		2: Body change
 		3: Outfit change (Currently bow placement change)
-		4: Import character
+		4: Import character (from Savvy Manager)
+		5: Import character from where?
+		6: Import character from existing save data
 	*/
 
 	mutable int cursorX, cursorY;
 	int import_highlightedGame = 0;
+	int importFromSave_highlightedGame = 3;
 	int seasonNo = 0;
 
 	char chrFilePath[256];
@@ -62,6 +65,7 @@ private:
 	int cheatKeyPosition = 0;
 
 	int characterPage[4] = {0};
+	int importFromSave_characterPage[4] = {0};
 	int peopleMet = 0;
 	bool peopleMetCount = true;
 	u16 totalCharacters = 0;
@@ -79,8 +83,14 @@ private:
 	int importCharacterList_cursorPosition = 0;
 	int importCharacterList_cursorPositionOnScreen = 0;
 
+	int importWhereList_cursorPosition = 0;
+
+	int importFromSave_cursorPosition = 0;
+	int importFromSave_cursorPositionOnScreen = 0;
+
 	int characterShownFirst = 0;
 	int import_characterShownFirst = 0;
+	int importFromSave_characterShownFirst = 0;
 
 	bool exportedCharListGotten[4] = {false};
 };

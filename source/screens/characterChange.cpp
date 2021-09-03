@@ -15,6 +15,10 @@
 
 #include <unistd.h>
 
+extern bool ss2SaveFound;
+extern bool ss3SaveFound;
+extern bool ss4SaveFound;
+
 const char* getSS3CharName(u16 charId) {
 	if (charId >= 0x0BB9) {
 		return readSS3ProfileName(charId);
@@ -132,7 +136,7 @@ void CharacterChange::getList() {
 	if (highlightedGame == 3) {
 		characterChangeMenuOps[0] = 0;
 		characterChangeMenuOps[1] = 0;
-		characterChangeMenuOps[2] = 4;
+		characterChangeMenuOps[2] = 5;
 		characterChangeMenuOps[3] = 10;
 		characterChangeMenuOptions = 3;
 		totalCharacters = 0;
@@ -280,8 +284,8 @@ void CharacterChange::getList() {
 }
 
 void CharacterChange::getMaxChars() {
-	if (highlightedGame == 3) {
-		switch (characterPage[3]) {
+	if (subScreenMode == 6 ? importFromSave_highlightedGame == 3 : highlightedGame == 3) {
+		switch (subScreenMode == 6 ? importFromSave_characterPage[3] : characterPage[3]) {
 			case 0:
 			default:
 				totalCharacters = 0;
@@ -321,8 +325,8 @@ void CharacterChange::getMaxChars() {
 				break;
 		}
 		if (totalCharacters > 0) totalCharacters--;
-	} else if (highlightedGame == 2) {
-		switch (characterPage[2]) {
+	} else if (subScreenMode == 6 ? importFromSave_highlightedGame == 2 : highlightedGame == 2) {
+		switch (subScreenMode == 6 ? importFromSave_characterPage[2] : characterPage[2]) {
 			case 0:
 			default:
 				totalCharacters = 0;
@@ -818,7 +822,41 @@ void CharacterChange::Draw(void) const {
 	}
 
 	cursorX = 248;
-	if (subScreenMode == 4) {
+	if (subScreenMode == 5) {
+		cursorY = 64+(48*importWhereList_cursorPosition);
+
+		Gui::DrawString(8, 8, 0.50, BLACK, "Import from where?");
+
+		int i2 = (highlightedGame == 3 ? 8 : 0);
+		i2 += 48;
+		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+		Gui::DrawString(32, i2, 0.65, BLACK, "Savvy Manager");
+		if (highlightedGame > 1) {
+			i2 += 48;
+			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+			Gui::DrawString(32, i2-8, 0.50, BLACK, "Save data of");
+			bool saveFound = false;
+			char gameTitle[64];
+			switch (importFromSave_highlightedGame) {
+				case 0:
+					sprintf(gameTitle, "< %s >", ss1Title());
+					break;
+				case 1:
+					saveFound = ss2SaveFound;
+					sprintf(gameTitle, "< %s >", ss2Title());
+					break;
+				case 2:
+					saveFound = ss3SaveFound;
+					sprintf(gameTitle, "< %s >", ss3Title());
+					break;
+				case 3:
+					saveFound = ss4SaveFound;
+					sprintf(gameTitle, "< %s >", ss4Title());
+					break;
+			}
+			Gui::DrawString(32, i2+8, 0.50, saveFound ? BLACK : HALF_BLACK, gameTitle);
+		}
+	} else if (subScreenMode == 4) {
 		cursorY = 64+(48*importCharacterList_cursorPositionOnScreen);
 
 		// Game name
@@ -903,33 +941,42 @@ void CharacterChange::Draw(void) const {
 		}
 	} else {
 		cursorY = 64+(48*characterList_cursorPositionOnScreen);
+		int currentGame = highlightedGame;
+		int currentCharShownFirst = characterShownFirst;
+		int currentCharPage = characterPage[currentGame];
+		if (subScreenMode == 6) {
+			cursorY = 64+(48*importFromSave_cursorPositionOnScreen);
+			currentGame = importFromSave_highlightedGame;
+			currentCharShownFirst = importFromSave_characterShownFirst;
+			currentCharPage = importFromSave_characterPage[currentGame];
+		}
 
 		const char* letterText[] =    { "A", "C", "E", "G", "J", "M", "O", "Q", "T", "W"};
 		const char* letterTextBot[] = {"-B","-D","-F","-I","-L","-N","-P","-S","-V","-Z"};
 		//Gui::DrawString(8, 8, 0.50, BLACK, "Select the character you want to change.");
-		Gui::DrawString(8, 10, 0.50, characterPage[highlightedGame]==0 ? RED : BLACK, "Prt.");
+		Gui::DrawString(8, 10, 0.50, currentCharPage==0 ? RED : BLACK, "Prt.");
 		for (int i = 0; i < 10; i++) {
-			Gui::DrawString(34+(i*24), 4, 0.50, (characterPage[highlightedGame] > 0 && characterPage[highlightedGame]-1 == i) ? RED : BLACK, letterText[i]);
-			Gui::DrawString(42+(i*24), 16, 0.50, (characterPage[highlightedGame] > 0 && characterPage[highlightedGame]-1 == i) ? RED : BLACK, letterTextBot[i]);
+			Gui::DrawString(34+(i*24), 4, 0.50, (currentCharPage > 0 && currentCharPage-1 == i) ? RED : BLACK, letterText[i]);
+			Gui::DrawString(42+(i*24), 16, 0.50, (currentCharPage > 0 && currentCharPage-1 == i) ? RED : BLACK, letterTextBot[i]);
 		}
-		Gui::DrawString(292, 10, 0.50, characterPage[highlightedGame]==11 ? RED : BLACK, "Ext.");
+		Gui::DrawString(292, 10, 0.50, currentCharPage==11 ? RED : BLACK, "Ext.");
 
-		if (highlightedGame == 2) {
+		if (subScreenMode == 0 && highlightedGame == 2) {
 			Gui::DrawString(116, 210, 0.50, BLACK, ss3DLCharactersBackedUp ? "START: Remove contacts" : "START: Expand contacts");
 		}
 
 	  if (!displayNothing) {
 		int i2 = (highlightedGame == 3 ? 56 : 48);
-		for (int i = characterShownFirst; i < characterShownFirst+3; i++) {
+		for (int i = currentCharShownFirst; i < currentCharShownFirst+3; i++) {
 			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-			if (highlightedGame == 3) {
-				if (characterPage[3] == 0) {
+			if (currentGame == 3) {
+				if (currentCharPage == 0) {
 					GFX::DrawSprite((getSS4CharacterGender(0xBAE) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 					Gui::DrawString(64, i2, 0.65, BLACK, ss4PlayerName);
 					break;
 				} else {
 					u16 charId = 0;
-					switch (characterPage[3]) {
+					switch (currentCharPage) {
 						case 1:
 							charId = ss4CharacterOrder_AtoB[i];
 							break;
@@ -1035,14 +1082,14 @@ void CharacterChange::Draw(void) const {
 					}
 					Gui::DrawString(64, i2, 0.65, existsSS4Character(charId) ? BLACK : HALF_BLACK, getSS4CharName(charId));
 				}
-			} else if (highlightedGame == 2) {
-				if (characterPage[2] == 0) {
+			} else if (currentGame == 2) {
+				if (currentCharPage == 0) {
 					GFX::DrawSprite((getSS3CharacterGender(0x7D1) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 					Gui::DrawString(64, i2, 0.65, BLACK, ss3PlayerName);
 					break;
 				} else {
 					u16 charId = 0;
-					switch (characterPage[2]) {
+					switch (currentCharPage) {
 						case 1:
 							charId = ss3CharacterOrder_AtoB[i];
 							break;
@@ -1080,7 +1127,7 @@ void CharacterChange::Draw(void) const {
 					GFX::DrawSprite((getSS3CharacterGender(charId) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 					Gui::DrawString(64, i2, 0.65, existsSS3Character(charId) ? BLACK : HALF_BLACK, getSS3CharName(charId));
 				}
-			} else if (highlightedGame == 1) {
+			} else if (currentGame == 1) {
 				GFX::DrawSprite((getSS2CharacterGender() ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, BLACK, ss2PlayerName);
 				break;
@@ -1192,6 +1239,286 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 			}
 		}
+	} else if (subScreenMode == 6) {
+		if (showCursor) {
+			if ((hDown & KEY_DUP) && (importFromSave_highlightedGame > 1) && (importFromSave_characterPage[importFromSave_highlightedGame] > 0)) {
+				sndHighlight();
+				importFromSave_cursorPosition--;
+				importFromSave_cursorPositionOnScreen--;
+				if (importFromSave_cursorPosition < 0) {
+					importFromSave_cursorPosition = 0;
+					importFromSave_characterShownFirst = 0;
+				} else if (importFromSave_cursorPosition < importFromSave_characterShownFirst) {
+					importFromSave_characterShownFirst--;
+				}
+				if (importFromSave_cursorPositionOnScreen < 0) {
+					importFromSave_cursorPositionOnScreen = 0;
+				}
+				getMaxChars();
+			}
+
+			if ((hDown & KEY_DDOWN) && (importFromSave_highlightedGame > 1) && (importFromSave_characterPage[importFromSave_highlightedGame] > 0)) {
+				sndHighlight();
+				importFromSave_cursorPosition++;
+				importFromSave_cursorPositionOnScreen++;
+				if (importFromSave_cursorPosition > totalCharacters) {
+					importFromSave_cursorPosition = totalCharacters;
+					importFromSave_characterShownFirst = totalCharacters-2;
+				} else if (importFromSave_cursorPosition > importFromSave_characterShownFirst+2) {
+					importFromSave_characterShownFirst++;
+				}
+				if (importFromSave_cursorPositionOnScreen > 2) {
+					importFromSave_cursorPositionOnScreen = 2;
+				}
+			}
+
+			if ((hDown & KEY_DLEFT) && (highlightedGame > 1)) {
+				sndHighlight();
+				importFromSave_characterPage[importFromSave_highlightedGame]--;
+				if (importFromSave_characterPage[importFromSave_highlightedGame] < 0) importFromSave_characterPage[importFromSave_highlightedGame] = 0;
+			}
+
+			if ((hDown & KEY_DRIGHT) && (highlightedGame > 1)) {
+				sndHighlight();
+				importFromSave_characterPage[importFromSave_highlightedGame]++;
+				if (importFromSave_characterPage[importFromSave_highlightedGame] > 11) importFromSave_characterPage[importFromSave_highlightedGame] = 11;
+			}
+
+			if ((hDown & KEY_DLEFT) || (hDown & KEY_DRIGHT)) {
+				importFromSave_cursorPosition = 0;
+				importFromSave_cursorPositionOnScreen = 0;
+				importFromSave_characterShownFirst = 0;
+				getMaxChars();
+			}
+		}
+
+		if (hDown & KEY_A) {
+			sndSelect();
+			if (highlightedGame == 3) {
+				u16 charId = 0;
+				if (importFromSave_highlightedGame == 3) {
+					switch (importFromSave_characterPage[3]) {
+						case 0:
+						default:
+							charId = 0x0BAE;
+							break;
+						case 1:
+							charId = ss4CharacterOrder_AtoB[importFromSave_cursorPosition];
+							break;
+						case 2:
+							charId = ss4CharacterOrder_CtoD[importFromSave_cursorPosition];
+							break;
+						case 3:
+							charId = ss4CharacterOrder_EtoF[importFromSave_cursorPosition];
+							break;
+						case 4:
+							charId = ss4CharacterOrder_GtoI[importFromSave_cursorPosition];
+							break;
+						case 5:
+							charId = ss4CharacterOrder_JtoL[importFromSave_cursorPosition];
+							break;
+						case 6:
+							charId = ss4CharacterOrder_MtoN[importFromSave_cursorPosition];
+							break;
+						case 7:
+							charId = ss4CharacterOrder_OtoP[importFromSave_cursorPosition];
+							break;
+						case 8:
+							charId = ss4CharacterOrder_QtoS[importFromSave_cursorPosition];
+							break;
+						case 9:
+							charId = ss4CharacterOrder_TtoV[importFromSave_cursorPosition];
+							break;
+						case 10:
+							charId = ss4CharacterOrder_WtoZ[importFromSave_cursorPosition];
+							break;
+						case 11:
+							charId = 0x0BB9+importFromSave_cursorPosition;
+							break;
+					}
+					readSS4Character(charId);
+					sprintf(chararacterImported, "%s imported.", getSS4CharName(charId));
+				} else {
+					switch (importFromSave_characterPage[2]) {
+						case 0:
+						default:
+							charId = 0x07D1;
+							break;
+						case 1:
+							charId = ss3CharacterOrder_AtoB[importFromSave_cursorPosition];
+							break;
+						case 2:
+							charId = ss3CharacterOrder_CtoD[importFromSave_cursorPosition];
+							break;
+						case 3:
+							charId = ss3CharacterOrder_EtoF[importFromSave_cursorPosition];
+							break;
+						case 4:
+							charId = ss3CharacterOrder_GtoI[importFromSave_cursorPosition];
+							break;
+						case 5:
+							charId = ss3CharacterOrder_JtoL[importFromSave_cursorPosition];
+							break;
+						case 6:
+							charId = ss3CharacterOrder_MtoN[importFromSave_cursorPosition];
+							break;
+						case 7:
+							charId = ss3CharacterOrder_OtoP[importFromSave_cursorPosition];
+							break;
+						case 8:
+							charId = ss3CharacterOrder_QtoS[importFromSave_cursorPosition];
+							break;
+						case 9:
+							charId = ss3CharacterOrder_TtoV[importFromSave_cursorPosition];
+							break;
+						case 10:
+							charId = ss3CharacterOrder_WtoZ[importFromSave_cursorPosition];
+							break;
+						case 11:
+							charId = 0x0BB9+importFromSave_cursorPosition;
+							break;
+					}
+					readSS3Character(charId);
+					sprintf(chararacterImported, "%s imported.", getSS3CharName(charId));
+				}
+				switch (characterPage[3]) {
+					case 0:
+					default:
+						charId = 0x0BAE;
+						break;
+					case 1:
+						charId = ss4CharacterOrder_AtoB[characterList_cursorPosition];
+						break;
+					case 2:
+						charId = ss4CharacterOrder_CtoD[characterList_cursorPosition];
+						break;
+					case 3:
+						charId = ss4CharacterOrder_EtoF[characterList_cursorPosition];
+						break;
+					case 4:
+						charId = ss4CharacterOrder_GtoI[characterList_cursorPosition];
+						break;
+					case 5:
+						charId = ss4CharacterOrder_JtoL[characterList_cursorPosition];
+						break;
+					case 6:
+						charId = ss4CharacterOrder_MtoN[characterList_cursorPosition];
+						break;
+					case 7:
+						charId = ss4CharacterOrder_OtoP[characterList_cursorPosition];
+						break;
+					case 8:
+						charId = ss4CharacterOrder_QtoS[characterList_cursorPosition];
+						break;
+					case 9:
+						charId = ss4CharacterOrder_TtoV[characterList_cursorPosition];
+						break;
+					case 10:
+						charId = ss4CharacterOrder_WtoZ[characterList_cursorPosition];
+						break;
+					case 11:
+						charId = 0x0BB9+characterList_cursorPosition;
+						break;
+				}
+				writeSS4Character(charId);
+				writeSS4CharacterToSave(charId);
+				messageNo = 1;
+				showMessage = true;
+			}
+			subScreenMode = 1;
+		}
+
+		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
+			sndBack();
+			importFromSave_cursorPosition = 0;
+			importFromSave_cursorPositionOnScreen = 0;
+			importFromSave_characterShownFirst = 0;
+			importFromSave_cursorPosition = 0;
+			importFromSave_cursorPositionOnScreen = 0;
+			subScreenMode = 5;
+		}
+	} else if (subScreenMode == 5) {
+		if (showCursor) {
+			if (hDown & KEY_DUP) {
+				sndHighlight();
+				importWhereList_cursorPosition--;
+				if (importWhereList_cursorPosition < 0) {
+					importWhereList_cursorPosition = 0;
+				}
+			}
+
+			if (hDown & KEY_DDOWN) {
+				sndHighlight();
+				importWhereList_cursorPosition++;
+				if (importWhereList_cursorPosition > 1) {
+					importWhereList_cursorPosition = 1;
+				}
+			}
+		}
+
+		if (hDown & KEY_DLEFT) {
+			sndHighlight();
+			importFromSave_highlightedGame--;
+			if (importFromSave_highlightedGame < 2) importFromSave_highlightedGame = 2;
+		}
+
+		if (hDown & KEY_DRIGHT) {
+			sndHighlight();
+			importFromSave_highlightedGame++;
+			if (importFromSave_highlightedGame > 3) importFromSave_highlightedGame = 3;
+		}
+
+		if (hDown & KEY_A) {
+			if (importWhereList_cursorPosition == 0) {
+				sndSelect();
+				displayNothing = true;
+				subScreenMode = 4;
+				if ((import_highlightedGame == 4) && !exportedCharListGotten[highlightedGame]) {
+					gspWaitForVBlank();
+					getExportedCharacterContents();
+					exportedCharListGotten[highlightedGame] = true;
+				}
+				displayNothing = false;
+				loadChrImage(false);
+			} else if (importWhereList_cursorPosition == 1) {
+				bool saveFound = false;
+				switch (importFromSave_highlightedGame) {
+					case 0:
+					default:
+						break;
+					case 1:
+						saveFound = ss2SaveFound;
+						if (saveFound) {
+							readSS2Save();
+						}
+						break;
+					case 2:
+						saveFound = ss3SaveFound;
+						if (saveFound) {
+							readSS3Save();
+						}
+						break;
+					case 3:
+						saveFound = ss4SaveFound;
+						if (saveFound) {
+							readSS4Save();
+						}
+						break;
+				}
+				if (saveFound) {
+					sndSelect();
+					subScreenMode = 6;
+				} else {
+					sndBack();
+				}
+			}
+		}
+
+		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
+			sndBack();
+			subScreenMode = 1;
+		}
+
 	} else if (subScreenMode == 4) {
 		bool robzAction = false;
 		if (hDown) {
@@ -1495,7 +1822,9 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					exportedCharListGotten[highlightedGame] = true;
 				}
 				displayNothing = false;
-				loadChrImage(false);
+				if (subScreenMode == 4) {
+					loadChrImage(false);
+				}
 			}
 		}
 
