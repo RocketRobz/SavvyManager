@@ -73,7 +73,7 @@ CFLAGS	:=	-g -Wall -O2 -mword-relocations \
 		-ffunction-sections \
 		$(ARCH)
 
-CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS -DVERSION_MAJOR=$(VERSION_MAJOR) \
+CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS -DUC_KEY_REPEAT -DVERSION_MAJOR=$(VERSION_MAJOR) \
 			-DVERSION_MINOR=$(VERSION_MINOR) -DVERSION_MICRO=$(VERSION_MICRO)
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++17
