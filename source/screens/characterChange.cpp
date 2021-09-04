@@ -204,7 +204,7 @@ void CharacterChange::getList() {
 		}
 	} else if (highlightedGame == 2) {
 		characterChangeMenuOps[0] = 0;
-		characterChangeMenuOps[1] = 4;
+		characterChangeMenuOps[1] = 5;
 		characterChangeMenuOps[2] = 10;
 		characterChangeMenuOptions = 2;
 		totalCharacters = 0;
@@ -1294,8 +1294,8 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 
 		if (hDown & KEY_A) {
 			sndSelect();
+			u16 charId = 0;
 			if (highlightedGame == 3) {
-				u16 charId = 0;
 				if (importFromSave_highlightedGame == 3) {
 					switch (importFromSave_characterPage[3]) {
 						case 0:
@@ -1424,6 +1424,93 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 				writeSS4CharacterToSave(charId);
 				messageNo = 1;
 				showMessage = true;
+			} else if (highlightedGame == 2) {
+				//if (importFromSave_highlightedGame == 2) {
+					switch (importFromSave_characterPage[2]) {
+						case 0:
+						default:
+							charId = 0x07D1;
+							break;
+						case 1:
+							charId = ss3CharacterOrder_AtoB[importFromSave_cursorPosition];
+							break;
+						case 2:
+							charId = ss3CharacterOrder_CtoD[importFromSave_cursorPosition];
+							break;
+						case 3:
+							charId = ss3CharacterOrder_EtoF[importFromSave_cursorPosition];
+							break;
+						case 4:
+							charId = ss3CharacterOrder_GtoI[importFromSave_cursorPosition];
+							break;
+						case 5:
+							charId = ss3CharacterOrder_JtoL[importFromSave_cursorPosition];
+							break;
+						case 6:
+							charId = ss3CharacterOrder_MtoN[importFromSave_cursorPosition];
+							break;
+						case 7:
+							charId = ss3CharacterOrder_OtoP[importFromSave_cursorPosition];
+							break;
+						case 8:
+							charId = ss3CharacterOrder_QtoS[importFromSave_cursorPosition];
+							break;
+						case 9:
+							charId = ss3CharacterOrder_TtoV[importFromSave_cursorPosition];
+							break;
+						case 10:
+							charId = ss3CharacterOrder_WtoZ[importFromSave_cursorPosition];
+							break;
+						case 11:
+							charId = 0x0BB9+importFromSave_cursorPosition;
+							break;
+					}
+					readSS3Character(charId);
+					sprintf(chararacterImported, "%s imported.", getSS3CharName(charId));
+				//}
+				switch (characterPage[2]) {
+					case 0:
+					default:
+						charId = 0x07D1;
+						break;
+					case 1:
+						charId = ss3CharacterOrder_AtoB[characterList_cursorPosition];
+						break;
+					case 2:
+						charId = ss3CharacterOrder_CtoD[characterList_cursorPosition];
+						break;
+					case 3:
+						charId = ss3CharacterOrder_EtoF[characterList_cursorPosition];
+						break;
+					case 4:
+						charId = ss3CharacterOrder_GtoI[characterList_cursorPosition];
+						break;
+					case 5:
+						charId = ss3CharacterOrder_JtoL[characterList_cursorPosition];
+						break;
+					case 6:
+						charId = ss3CharacterOrder_MtoN[characterList_cursorPosition];
+						break;
+					case 7:
+						charId = ss3CharacterOrder_OtoP[characterList_cursorPosition];
+						break;
+					case 8:
+						charId = ss3CharacterOrder_QtoS[characterList_cursorPosition];
+						break;
+					case 9:
+						charId = ss3CharacterOrder_TtoV[characterList_cursorPosition];
+						break;
+					case 10:
+						charId = ss3CharacterOrder_WtoZ[characterList_cursorPosition];
+						break;
+					case 11:
+						charId = 0x0BB9+characterList_cursorPosition;
+						break;
+				}
+				writeSS3Character(charId);
+				writeSS3CharacterToSave(charId);
+				messageNo = 1;
+				showMessage = true;
 			}
 			subScreenMode = 1;
 		}
@@ -1456,13 +1543,13 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 			}
 		}
 
-		if (hDown & KEY_DLEFT) {
+		if ((hDown & KEY_DLEFT) && highlightedGame > 2) {
 			sndHighlight();
 			importFromSave_highlightedGame--;
 			if (importFromSave_highlightedGame < 2) importFromSave_highlightedGame = 2;
 		}
 
-		if (hDown & KEY_DRIGHT) {
+		if ((hDown & KEY_DRIGHT) && highlightedGame > 2) {
 			sndHighlight();
 			importFromSave_highlightedGame++;
 			if (importFromSave_highlightedGame > 3) importFromSave_highlightedGame = 3;
@@ -1824,6 +1911,9 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 				displayNothing = false;
 				if (subScreenMode == 4) {
 					loadChrImage(false);
+				}
+				if (subScreenMode == 5 && highlightedGame == 2) {
+					importFromSave_highlightedGame = 2;
 				}
 			}
 		}
