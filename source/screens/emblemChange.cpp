@@ -676,7 +676,7 @@ void EmblemChange::Draw(void) const {
 }
 
 
-void EmblemChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
+void EmblemChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition touch) {
 	if (showMessage) {
 		if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
 			sndSelect();
@@ -686,7 +686,7 @@ void EmblemChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (subScreenMode == 2) {
 			bool action = false;
 			if (showCursor) {
-				if ((hDown & KEY_UP) && ((importPage == 0) || (importPage == 1 && totalEmblems > 0))) {
+				if ((hDownRepeat & KEY_UP) && ((importPage == 0) || (importPage == 1 && totalEmblems > 0))) {
 					sndHighlight();
 					importEmblemList_cursorPosition--;
 					importEmblemList_cursorPositionOnScreen--;
@@ -703,7 +703,7 @@ void EmblemChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					action = true;
 				}
 
-				if ((hDown & KEY_DOWN) && ((importPage == 0) || (importPage == 1 && totalEmblems > 0))) {
+				if ((hDownRepeat & KEY_DOWN) && ((importPage == 0) || (importPage == 1 && totalEmblems > 0))) {
 					sndHighlight();
 					importEmblemList_cursorPosition++;
 					importEmblemList_cursorPositionOnScreen++;

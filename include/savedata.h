@@ -61,12 +61,12 @@ typedef struct ss3to4character {
     u8 eyebrows;
     u8 facialHair;			// Facial hair (Male)
     u8 faceMole;			// Face mole (Female)
-    u8 freckles;			// Unknown for Styling Star
+    u8 lipstickColor;
     u8 mascaraColor;
-    u8 unknownC;
-    u8 unknownD;
+    u8 eyeshadowColor;
+    u8 eyelinerColor;
     u8 contactColor;
-    u8 unknownF;
+    u8 blusherColor;
     u8 mascaraLength;
     u8 unknown11;
     u8 lipShine;
@@ -76,9 +76,9 @@ typedef struct ss3to4character {
     u8 hairFringe;
     u8 hairColorMain;
     u8 hairColorHighlights;
-    u8 expessFreckles;		// Show expressions for Fashion Forward, or freckles for Styling Star
+    u8 freckles;
     u8 nailColor;
-    u8 eyeliner;			// Eyeliner (00=Normal, 01=Double)
+    u8 eyeliner;			// Fashion Forward: 01 = No facial expressions, Styling Star: Eyeliner (00=Normal, 01=Double)
     u8 unknown1C;
     u8 unknown1D;
     u16 inner;
@@ -136,6 +136,7 @@ extern void writeSS2Character(void);
 extern void readSS3Character(u16 id);
 extern void writeSS3Character(u16 id);
 extern void readSS4Character(u16 id);
+extern void readSS3CharacterToSS4(u16 id);
 extern void writeSS4Character(u16 id);
 
 extern void toggleSS3Character(u16 id, bool enable);

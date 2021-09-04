@@ -8,6 +8,6 @@ void Exiting::Draw(void) const {
 	Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, 255)); // Fade in/out effect
 }
 
-void Exiting::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
+void Exiting::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition touch) {
 	
 }

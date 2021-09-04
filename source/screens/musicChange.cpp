@@ -83,7 +83,7 @@ void MusicChange::Draw(void) const {
 }
 
 
-void MusicChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
+void MusicChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition touch) {
 	if (showMessage) {
 		if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
 			sndSelect();
@@ -91,7 +91,7 @@ void MusicChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		}
 	} else {
 		if (showCursor) {
-			if (hDown & KEY_UP) {
+			if (hDownRepeat & KEY_UP) {
 				sndHighlight();
 				cursorPosition--;
 				cursorPositionOnScreen--;
@@ -105,7 +105,7 @@ void MusicChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					cursorPositionOnScreen = 0;
 				}
 			}
-			if (hDown & KEY_DOWN) {
+			if (hDownRepeat & KEY_DOWN) {
 				sndHighlight();
 				cursorPosition++;
 				cursorPositionOnScreen++;

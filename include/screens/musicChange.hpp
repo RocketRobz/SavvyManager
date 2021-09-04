@@ -9,7 +9,7 @@
 class MusicChange : public Screen {
 public:
 	void Draw(void) const override;
-	void Logic(u32 hDown, u32 hHeld, touchPosition touch) override;
+	void Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition touch) override;
 	MusicChange();
 private:
 	void drawMsg(void) const;

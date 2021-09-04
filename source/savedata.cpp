@@ -286,7 +286,7 @@ static u32 getSS3CharacterOffset(u16 id) {
 		// Non-playable character
 		id -= 0x01F4;
 		return (sysRegion==CFG_REGION_JPN ? 0x69AF2 : 0x6AC9E) + (0x110*id);
-	} else if (id >= 0x01C2 && id >= 0x01DF) {
+	} else if (id >= 0x01C2 && id <= 0x01DF) {
 		// Non-playable character
 		id -= 0x01C2;
 		return (sysRegion==CFG_REGION_JPN ? 0x67B12 : 0x68CBE) + (0x110*id);
@@ -398,14 +398,15 @@ void restoreSS3DLCharacters(const char* filename) {
 }
 
 bool getSS3CharacterGender(u16 id) {
-	readSS3Character(id);
+	ss3to4character ss3CharacterGenderCheck;
+	tonccpy(&ss3CharacterGenderCheck, (char*)ss3Save+getSS3CharacterOffset(id), 0x36);
 
-	if ((id == 0x7D1) && (strcmp(ss3PlayerName, "Robz") == 0) && (ss4CharacterData.hairStyle == 0x27)) {
+	if ((id == 0x7D1) && (strcmp(ss3PlayerName, "Robz") == 0) && (ss3CharacterGenderCheck.hairStyle == 0x27)) {
 		return true;	// Robz is male, so return male
 	}
 
 	// true = male, false = female
-	return (ss4CharacterData.gender == 2);
+	return (ss3CharacterGenderCheck.gender == 2);
 }
 
 const char* readSS3ProfileName(u16 id) {
@@ -725,8 +726,261 @@ static u32 getSS4MewtubeCharacterOffset(int video, int slot) {
 	}
 }
 
+#define SS3ToSS4EyeAmount 4
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4EyeTable[SS3ToSS4EyeAmount][2] = { // Offset: 0x05
+	{0x04, 0x01},
+	{0x06, 0x0A},
+	{0x08, 0x17},
+	{0x0B, 0x0F},
+};
+
+#define SS3ToSS4MouthShapeAmount 6
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4MouthShapeTable[SS3ToSS4MouthShapeAmount][2] = { // Offset: 0x06
+	{0x02, 0x0F},
+	{0x03, 0x0B},
+	{0x04, 0x0F},
+	{0x0C, 0x0B},
+	{0x0E, 0x05},
+	{0x0D, 0x01},
+};
+
+#define SS3ToSS4LipstickAmount 18
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4LipstickTable[SS3ToSS4LipstickAmount][2] = { // Offset: 0x0A
+	{0x0F, 0x2B},
+	{0x15, 0x5E},
+	{0x17, 0x29},
+	{0x1A, 0x60},
+	{0x1F, 0x08},
+	{0x20, 0x39},
+	{0x21, 0x12},
+	{0x27, 0x2D},
+	{0x28, 0x5B},
+	{0x39, 0x6A},
+	{0x49, 0x71},
+	{0x51, 0x0F},
+	{0x55, 0x1E},
+	{0x5A, 0x63},
+	{0x67, 0x02},
+	{0x68, 0x07},
+	{0x6F, 0x37},
+	{0x71, 0x31},
+};
+
+#define SS3ToSS4MascaraAmount 11
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4MascaraTable[SS3ToSS4MascaraAmount][2] = { // Offset: 0x0B
+	{0x0B, 0x10},
+	{0x0F, 0x10},
+	{0x16, 0x20},
+	{0x22, 0x2F},
+	{0x28, 0x12},
+	{0x2A, 0x0E},
+	{0x42, 0x10},
+	{0x5A, 0x2F},
+	{0x5D, 0x2F},
+	{0x5F, 0x2F},
+	{0x75, 0x10},
+};
+
+#define SS3ToSS4EyeshadowAmount 22
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4EyeshadowTable[SS3ToSS4EyeshadowAmount][2] = { // Offset: 0x0C
+	{0x02, 0x3D},
+	{0x04, 0x53},
+	{0x0A, 0x18},
+	{0x13, 0x40},
+	{0x14, 0x13},
+	{0x15, 0x3B},
+	{0x1A, 0x4E},
+	{0x1B, 0x59},
+	{0x1C, 0x4B},
+	{0x21, 0x3E},
+	{0x23, 0x2B},
+	{0x31, 0x2F},
+	{0x34, 0x50},
+	{0x36, 0x43},
+	{0x49, 0x18},
+	{0x5C, 0x3F},
+	{0x60, 0x5A},
+	{0x61, 0x32},
+	{0x69, 0x32},
+	{0x6A, 0x39},
+	{0x6E, 0x06},
+	{0x74, 0x29},
+};
+
+#define SS3ToSS4EyelinerAmount 13
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4EyelinerTable[SS3ToSS4EyelinerAmount][2] = { // Offset: 0x0D
+	{0x07, 0x30},
+	{0x0C, 0x07},
+	{0x0F, 0x14},
+	{0x10, 0x49},
+	{0x17, 0x44},
+	{0x1B, 0x5C},
+	{0x21, 0x44},
+	{0x36, 0x50},
+	{0x3B, 0x53},
+	{0x45, 0x19},
+	{0x4E, 0x2E},
+	{0x59, 0x42},
+	{0x74, 0x06},
+};
+
+#define SS3ToSS4ContactAmount 21
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4ContactTable[SS3ToSS4ContactAmount][2] = { // Offset: 0x0E
+	{0x0A, 0x2F},
+	{0x13, 0x17},
+	{0x14, 0x52},
+	{0x1C, 0x18},
+	{0x20, 0x10},
+	{0x22, 0x3B},
+	{0x23, 0x0F},
+	{0x24, 0x1C},
+	{0x2C, 0x12},
+	{0x2D, 0x21},
+	{0x2E, 0x30},
+	{0x46, 0x1D},
+	{0x55, 0x3F},
+	{0x5A, 0x30},
+	{0x5B, 0x31},
+	{0x5D, 0x51},
+	{0x64, 0x39},
+	{0x6A, 0x18},
+	{0x6F, 0x51},
+	{0x72, 0x52},
+	{0x73, 0x3A},
+};
+
+#define SS3ToSS4BlusherAmount 13
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4BlusherTable[SS3ToSS4BlusherAmount][2] = { // Offset: 0x0F
+	{0x0A, 0x0E},
+	{0x15, 0x0E},
+	{0x17, 0x0E},
+	{0x20, 0x0A},
+	{0x21, 0x0A},
+	{0x23, 0x0E},
+	{0x30, 0x04},
+	{0x56, 0x0E},
+	{0x64, 0x12},
+	{0x66, 0x1A},
+	{0x67, 0x10},
+	{0x68, 0x06},
+	{0x69, 0x0C},
+};
+
+#define SS3ToSS4HairStyleAmount 20
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4HairStyleTable[SS3ToSS4HairStyleAmount][2] = { // Offset: 0x15
+	{0x01, 0x4B},
+	{0x03, 0x4B},
+	{0x06, 0x4B},
+	{0x07, 0x4C},
+	{0x08, 0x4D},
+	{0x0A, 0x4E},
+	{0x0B, 0x4E},
+	{0x0D, 0x4F},
+	{0x0F, 0x10},
+	{0x12, 0x60},
+	{0x13, 0x3C},
+	{0x15, 0x63},
+	{0x1C, 0x60},
+	{0x1F, 0x62},
+	{0x25, 0x50},
+	{0x29, 0x51},
+	{0x2D, 0x33},
+	{0x38, 0x64},
+	{0x41, 0x3C},
+	{0x4A, 0x52},
+};
+
 void readSS4Character(u16 id) {
 	tonccpy(&ss4CharacterData, (char*)ss4Save+getSS4CharacterOffset(id), 0x3E);
+}
+
+void readSS3CharacterToSS4(u16 id) {
+	toncset(&ss4CharacterData, 0, sizeof(ss3to4character));
+	readSS3Character(id);
+
+	// Convert the character
+	int i = 0;
+	// Eyes
+	for (i = 0; i < SS3ToSS4EyeAmount; i++) {
+		if (ss4CharacterData.eyes == SS3ToSS4EyeTable[i][0]) {
+			ss4CharacterData.eyes = SS3ToSS4EyeTable[i][1];
+			break;
+		}
+	}
+	// Mouth shape
+	for (i = 0; i < SS3ToSS4MouthShapeAmount; i++) {
+		if (ss4CharacterData.mouthShape == SS3ToSS4MouthShapeTable[i][0]) {
+			ss4CharacterData.mouthShape = SS3ToSS4MouthShapeTable[i][1];
+			break;
+		}
+	}
+	// Lipstick
+	for (i = 0; i < SS3ToSS4LipstickAmount; i++) {
+		if (ss4CharacterData.lipstickColor == SS3ToSS4LipstickTable[i][0]) {
+			ss4CharacterData.lipstickColor = SS3ToSS4LipstickTable[i][1];
+			break;
+		}
+	}
+	// Mascara
+	for (i = 0; i < SS3ToSS4MascaraAmount; i++) {
+		if (ss4CharacterData.mascaraColor == SS3ToSS4MascaraTable[i][0]) {
+			ss4CharacterData.mascaraColor = SS3ToSS4MascaraTable[i][1];
+			break;
+		}
+	}
+	// Eyeshadow
+	for (i = 0; i < SS3ToSS4EyeshadowAmount; i++) {
+		if (ss4CharacterData.eyeshadowColor == SS3ToSS4EyeshadowTable[i][0]) {
+			ss4CharacterData.eyeshadowColor = SS3ToSS4EyeshadowTable[i][1];
+			break;
+		}
+	}
+	// Eyeliner
+	for (i = 0; i < SS3ToSS4EyelinerAmount; i++) {
+		if (ss4CharacterData.eyelinerColor == SS3ToSS4EyelinerTable[i][0]) {
+			ss4CharacterData.eyelinerColor = SS3ToSS4EyelinerTable[i][1];
+			break;
+		}
+	}
+	// Contacts
+	for (i = 0; i < SS3ToSS4ContactAmount; i++) {
+		if (ss4CharacterData.contactColor == SS3ToSS4ContactTable[i][0]) {
+			ss4CharacterData.contactColor = SS3ToSS4ContactTable[i][1];
+			break;
+		}
+	}
+	// Blusher
+	for (i = 0; i < SS3ToSS4BlusherAmount; i++) {
+		if (ss4CharacterData.blusherColor == SS3ToSS4BlusherTable[i][0]) {
+			ss4CharacterData.blusherColor = SS3ToSS4BlusherTable[i][1];
+			break;
+		}
+	}
+	// Hair style
+	for (i = 0; i < SS3ToSS4HairStyleAmount; i++) {
+		if (ss4CharacterData.hairStyle == SS3ToSS4HairStyleTable[i][0]) {
+			ss4CharacterData.hairStyle = SS3ToSS4HairStyleTable[i][1];
+			break;
+		}
+	}
 }
 
 void writeSS4Character(u16 id) {
@@ -790,14 +1044,15 @@ void writeSS4MewtubeCharacterId(u16 id, int video, int slot) {
 }
 
 bool getSS4CharacterGender(u16 id) {
-	readSS4Character(id);
+	ss3to4character ss4CharacterGenderCheck;
+	tonccpy(&ss4CharacterGenderCheck, (char*)ss4Save+getSS4CharacterOffset(id), 0x3E);
 
-	if ((id == 0xBAE) && (strcmp(ss4PlayerName, "Robz") == 0) && (ss4CharacterData.hairStyle == 0x6D)) {
+	if ((id == 0xBAE) && (strcmp(ss4PlayerName, "Robz") == 0) && (ss4CharacterGenderCheck.hairStyle == 0x6D)) {
 		return true;	// Robz is male, so return male
 	}
 
 	// true = male, false = female
-	return (ss4CharacterData.gender == 2);
+	return (ss4CharacterGenderCheck.gender == 2);
 }
 
 const char* readSS4ProfileName(u16 id) {

@@ -56,7 +56,7 @@ void Settings::Draw(void) const {
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 }
 
-void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
+void Settings::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition touch) {
 	/*if (showCursor) {
 		if (hDown & KEY_UP) {
 			sndHighlight();

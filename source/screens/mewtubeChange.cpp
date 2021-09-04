@@ -420,7 +420,7 @@ void MewtubeChange::Draw(void) const {
 }
 
 
-void MewtubeChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
+void MewtubeChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition touch) {
 	if (showMessage) {
 		if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 176 && touch.px < 176+90 && touch.py >= 188 && touch.py < 188+47)) {
 			sndSelect();
@@ -435,7 +435,7 @@ void MewtubeChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		}
 	} else if (subScreenMode == 2) {
 		if (showCursor) {
-			if ((hDown & KEY_DUP) && (characterPage > 0)) {
+			if ((hDownRepeat & KEY_DUP) && (characterPage > 0)) {
 				sndHighlight();
 				cursorPosition[2]--;
 				cursorPositionOnScreen[2]--;
@@ -451,7 +451,7 @@ void MewtubeChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				getMaxChars();
 			}
 
-			if ((hDown & KEY_DDOWN) && (characterPage > 0)) {
+			if ((hDownRepeat & KEY_DDOWN) && (characterPage > 0)) {
 				sndHighlight();
 				cursorPosition[2]++;
 				cursorPositionOnScreen[2]++;

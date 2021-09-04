@@ -1172,7 +1172,7 @@ void CharacterChange::preview() const {
 
 
 
-void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
+void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition touch) {
 	if (hDown & KEY_CPAD_UP) {
 		zoomIn++;
 		if (zoomIn > 2) zoomIn = 2;
@@ -1241,7 +1241,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		}
 	} else if (subScreenMode == 6) {
 		if (showCursor) {
-			if ((hDown & KEY_DUP) && (importFromSave_highlightedGame > 1) && (importFromSave_characterPage[importFromSave_highlightedGame] > 0)) {
+			if ((hDownRepeat & KEY_DUP) && (importFromSave_highlightedGame > 1) && (importFromSave_characterPage[importFromSave_highlightedGame] > 0)) {
 				sndHighlight();
 				importFromSave_cursorPosition--;
 				importFromSave_cursorPositionOnScreen--;
@@ -1257,7 +1257,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				getMaxChars();
 			}
 
-			if ((hDown & KEY_DDOWN) && (importFromSave_highlightedGame > 1) && (importFromSave_characterPage[importFromSave_highlightedGame] > 0)) {
+			if ((hDownRepeat & KEY_DDOWN) && (importFromSave_highlightedGame > 1) && (importFromSave_characterPage[importFromSave_highlightedGame] > 0)) {
 				sndHighlight();
 				importFromSave_cursorPosition++;
 				importFromSave_cursorPositionOnScreen++;
@@ -1378,7 +1378,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 							charId = 0x0BB9+importFromSave_cursorPosition;
 							break;
 					}
-					readSS3Character(charId);
+					readSS3CharacterToSS4(charId);
 					sprintf(chararacterImported, "%s imported.", getSS3CharName(charId));
 				}
 				switch (characterPage[3]) {
@@ -1552,7 +1552,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			cheatKeyPosition = 0;
 		}
 		if (showCursor) {
-			if (hDown & KEY_DUP) {
+			if (hDownRepeat & KEY_DUP) {
 				sndHighlight();
 				importCharacterList_cursorPosition--;
 				importCharacterList_cursorPositionOnScreen--;
@@ -1568,7 +1568,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				loadChrImage(false);
 			}
 
-			if (hDown & KEY_DDOWN) {
+			if (hDownRepeat & KEY_DDOWN) {
 				sndHighlight();
 				importCharacterList_cursorPosition++;
 				importCharacterList_cursorPositionOnScreen++;
@@ -1755,7 +1755,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 
 	} else if (subScreenMode == 1) {
 		if (showCursor) {
-			if (hDown & KEY_DUP) {
+			if (hDownRepeat & KEY_DUP) {
 				sndHighlight();
 				characterChangeMenu_cursorPosition--;
 				characterChangeMenu_cursorPositionOnScreen--;
@@ -1770,7 +1770,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 			}
 
-			if (hDown & KEY_DDOWN) {
+			if (hDownRepeat & KEY_DDOWN) {
 				sndHighlight();
 				characterChangeMenu_cursorPosition++;
 				characterChangeMenu_cursorPositionOnScreen++;
@@ -1835,7 +1835,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 
 	} else {
 		if (showCursor) {
-			if ((hDown & KEY_DUP) && (highlightedGame > 1) && (characterPage[highlightedGame] > 0)) {
+			if ((hDownRepeat & KEY_DUP) && (highlightedGame > 1) && (characterPage[highlightedGame] > 0)) {
 				sndHighlight();
 				characterList_cursorPosition--;
 				characterList_cursorPositionOnScreen--;
@@ -1851,7 +1851,7 @@ void CharacterChange::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				getMaxChars();
 			}
 
-			if ((hDown & KEY_DDOWN) && (highlightedGame > 1) && (characterPage[highlightedGame] > 0)) {
+			if ((hDownRepeat & KEY_DDOWN) && (highlightedGame > 1) && (characterPage[highlightedGame] > 0)) {
 				sndHighlight();
 				characterList_cursorPosition++;
 				characterList_cursorPositionOnScreen++;

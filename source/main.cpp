@@ -125,6 +125,7 @@ int ss3Logo = gameSelSprites_title3_idx;
 int ss4Logo = gameSelSprites_title4_idx;
 
 u32 hDown = 0;
+u32 hDownRepeat = 0;
 u32 hHeld = 0;
 touchPosition touch;
 
@@ -151,7 +152,7 @@ static bool runThreads = true;
 void controlThread(void) {
 	while (runThreads) {
 		svcWaitSynchronization(threadRequest, U64_MAX);
-		Gui::ScreenLogic(hDown, hHeld, touch, true); // Call the logic of the current screen here.
+		Gui::ScreenLogic(hDown, hDownRepeat, hHeld, touch, true); // Call the logic of the current screen here.
 		svcClearEvent(threadRequest);
 	}
 }
@@ -177,6 +178,8 @@ int main()
 	gfxInitDefault();
 	loadSettings();
 	gfxSetWide(horiHd && consoleModel != 3);	// Enable 800x240 mode for non-O2DS consoles. Improves clarity in graphics.
+
+	hidSetRepeatParameters(25, 5);
 
 	Gui::init();
 	GFX::loadSheets();
@@ -345,6 +348,7 @@ int main()
 		hidScanInput();
 
 		hDown = hidKeysDown();
+		hDownRepeat = hidKeysDownRepeat();
 		hHeld = hidKeysHeld();
 
 		hidTouchRead(&touch);
@@ -391,7 +395,7 @@ int main()
 		if (bg_xPos >= 72) bg_xPos = 0.0f;
 		if (bg_yPos <= -136) bg_yPos = 0.0f;
 
-		if (hDown) {
+		if (hDown || hDownRepeat) {
 			svcSignalEvent(threadRequest);
 		}
 

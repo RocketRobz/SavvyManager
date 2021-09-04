@@ -161,7 +161,7 @@ void WhatToDo::cursorChange() {
 	}
 }
 
-void WhatToDo::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
+void WhatToDo::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition touch) {
 	if (showMessage) {
 		if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {
 			sndSelect();
