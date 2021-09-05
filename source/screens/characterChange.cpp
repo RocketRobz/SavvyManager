@@ -20,107 +20,111 @@ extern bool ss3SaveFound;
 extern bool ss4SaveFound;
 
 const char* getSS3CharName(u16 charId) {
-	if (charId >= 0x0BB9) {
+	if (charId >= 0x0BB9 && charId < 0x0BB9+50) {
 		return readSS3ProfileName(charId);
 	} else if (charId == 0x07D1) {
 		return ss3PlayerName;
-	} else if (charId >= 0x044C) {
+	} else if (charId >= 0x044C && charId <= 0x0469) {
 		return ss3CharacterNamesMaleP3[charId-0x044C];
-	} else if (charId >= 0x041A) {
+	} else if (charId >= 0x041A && charId <= 0x0437) {
 		return ss3CharacterNamesMaleP2[charId-0x041A];
-	} else if (charId >= 0x03E8) {
+	} else if (charId >= 0x03E8 && charId <= 0x0405) {
 		return ss3CharacterNamesMale[charId-0x03E8];
-	} else if (charId >= 0x0352) {
+	} else if (charId >= 0x0352 && charId <= 0x036F) {
 		return ss3CharacterNames5S[charId-0x0352];
-	} else if (charId >= 0x0320) {
+	} else if (charId >= 0x0320 && charId <= 0x033D) {
 		return ss3CharacterNamesReps[charId-0x0320];
-	} else if (charId >= 0x02EE) {
+	} else if (charId >= 0x02EE && charId <= 0x030B) {
 		return ss3CharacterNamesP16[charId-0x02EE];
-	} else if (charId >= 0x02BC) {
+	} else if (charId >= 0x02BC && charId <= 0x02D9) {
 		return ss3CharacterNamesP15[charId-0x02BC];
-	} else if (charId >= 0x028A) {
+	} else if (charId >= 0x028A && charId <= 0x02A7) {
 		return ss3CharacterNamesP14[charId-0x028A];
-	} else if (charId >= 0x0258) {
+	} else if (charId >= 0x0258 && charId <= 0x0275) {
 		return ss3CharacterNamesP13[charId-0x0258];
-	} else if (charId >= 0x0226) {
+	} else if (charId >= 0x0226 && charId <= 0x0243) {
 		return ss3CharacterNamesP12[charId-0x0226];
-	} else if (charId >= 0x01F4) {
+	} else if (charId >= 0x01F4 && charId <= 0x0211) {
 		return ss3CharacterNamesP11[charId-0x01F4];
-	} else if (charId >= 0x01C2) {
+	} else if (charId >= 0x01C2 && charId <= 0x01DF) {
 		return ss3CharacterNamesP10[charId-0x01C2];
-	} else if (charId >= 0x0190) {
+	} else if (charId >= 0x0190 && charId <= 0x01AD) {
 		return ss3CharacterNamesP9[charId-0x0190];
-	} else if (charId >= 0x015E) {
+	} else if (charId >= 0x015E && charId <= 0x017B) {
 		return ss3CharacterNamesP8[charId-0x015E];
-	} else if (charId >= 0x012C) {
+	} else if (charId >= 0x012C && charId <= 0x0149) {
 		return ss3CharacterNamesP7[charId-0x012C];
-	} else if (charId >= 0x00FA) {
+	} else if (charId >= 0x00FA && charId <= 0x0117) {
 		return ss3CharacterNamesP6[charId-0x00FA];
-	} else if (charId >= 0x00C8) {
+	} else if (charId >= 0x00C8 && charId <= 0xE5) {
 		return ss3CharacterNamesP5[charId-0x00C8];
-	} else if (charId >= 0x0096) {
+	} else if (charId >= 0x0096 && charId <= 0xB3) {
 		return ss3CharacterNamesP4[charId-0x0096];
-	} else if (charId >= 0x0064) {
+	} else if (charId >= 0x0064 && charId <= 0x81) {
 		return ss3CharacterNamesP3[charId-0x0064];
-	} else if (charId >= 0x0032) {
+	} else if (charId >= 0x0032 && charId <= 0x5E) {
 		return ss3CharacterNamesP2[charId-0x0032];
+	} else if (charId <= 0x001D) {
+		return ss3CharacterNames[charId];
 	}
-	return ss3CharacterNames[charId];
+	return "???";
 }
 
 const char* getSS4CharName(u16 charId) {
-	if (charId >= 0x0BB9) {
+	if (charId >= 0x0BB9 && charId < 0x0BB9+30) {
 		return readSS4ProfileName(charId);
 	} else if (charId == 0x0BAE) {
 		return ss4PlayerName;
 	} else if (charId == 0x0B55) {
 		return ss4CharacterNames0B55[charId-0x0B55];
-	} else if (charId >= 0x0A29) {
+	} else if (charId == 0x0A29 || charId == 0x0A2A) {
 		return ss4CharacterNames0A29[charId-0x0A29];
-	} else if (charId >= 0x09C5) {
+	} else if (charId >= 0x09C5 && charId <= 0x09C9) {
 		return ss4CharacterNames09C5[charId-0x09C5];
-	} else if (charId >= 0x05DC) {
+	} else if (charId == 0x05DC || charId == 0x05DD) {
 		return ss4CharacterNamesInst[charId-0x05DC];
-	} else if (charId >= 0x044C) {
+	} else if (charId >= 0x044C && charId <= 0x0469) {
 		return ss4CharacterNamesMaleP3[charId-0x044C];
-	} else if (charId >= 0x041A) {
+	} else if (charId >= 0x041A && charId <= 0x0437) {
 		return ss4CharacterNamesMaleP2[charId-0x041A];
-	} else if (charId >= 0x03E8) {
+	} else if (charId >= 0x03E8 && charId <= 0x0408) {
 		return ss4CharacterNamesMale[charId-0x03E8];
-	} else if (charId >= 0x0352) {
+	} else if (charId >= 0x0352 && charId <= 0x036F) {
 		return ss3CharacterNames5S[charId-0x0352];
-	} else if (charId >= 0x0320) {
+	} else if (charId >= 0x0320 && charId <= 0x033D) {
 		return ss4CharacterNamesReps[charId-0x0320];
-	} else if (charId >= 0x02EE) {
+	} else if (charId >= 0x02EE && charId <= 0x030B) {
 		return ss4CharacterNamesP15[charId-0x02EE];
-	} else if (charId >= 0x02BC) {
+	} else if (charId >= 0x02BC && charId <= 0x02D9) {
 		return ss3CharacterNamesP15[charId-0x02BC];
-	} else if (charId >= 0x028A) {
+	} else if (charId >= 0x028A && charId <= 0x02A7) {
 		return ss4CharacterNamesP13[charId-0x028A];
-	} else if (charId >= 0x0258) {
+	} else if (charId >= 0x0258 && charId <= 0x0275) {
 		return ss4CharacterNamesP12[charId-0x0258];
-	} else if (charId >= 0x0226) {
+	} else if (charId >= 0x0226 && charId <= 0x0243) {
 		return ss3CharacterNamesP12[charId-0x0226];
-	} else if (charId >= 0x01F4) {
+	} else if (charId >= 0x01F4 && charId <= 0x0211) {
 		return ss4CharacterNamesP10[charId-0x01F4];
-	} else if (charId >= 0x01C2) {
+	} else if (charId >= 0x01C2 && charId <= 0x01DF) {
 		return ss4CharacterNamesP9[charId-0x01C2];
-	} else if (charId >= 0x0190) {
+	} else if (charId >= 0x0190 && charId <= 0x01AD) {
 		return ss4CharacterNamesP8[charId-0x0190];
-	} else if (charId >= 0x015E) {
+	} else if (charId >= 0x015E && charId <= 0x017B) {
 		return ss4CharacterNamesP7[charId-0x015E];
-	} else if (charId >= 0x012C) {
+	} else if (charId >= 0x012C && charId <= 0x0149) {
 		return ss4CharacterNamesP6[charId-0x012C];
-	} else if (charId >= 0x00FA) {
+	} else if (charId >= 0x00FA && charId <= 0x0117) {
 		return ss4CharacterNamesP5[charId-0x00FA];
-	} else if (charId >= 0x00C8) {
+	} else if (charId >= 0x00C8 && charId <= 0xE5) {
 		return ss4CharacterNamesP4[charId-0x00C8];
-	} else if (charId >= 0x0096) {
+	} else if (charId >= 0x0096 && charId <= 0xB3) {
 		return ss4CharacterNamesP3[charId-0x0096];
-	} else if (charId >= 0x0063) {
+	} else if (charId >= 0x0063 && charId <= 0x81) {
 		return ss4CharacterNamesP2[charId-0x0063];
+	} else if (charId <= 0x0056) {
+		return ss4CharacterNames[charId];
 	}
-	return ss4CharacterNames[charId];
+	return "???";
 }
 
 extern bool ss3DLCharactersBackedUp;
@@ -970,12 +974,12 @@ void CharacterChange::Draw(void) const {
 
 		const char* letterText[] =    { "A", "C", "E", "G", "J", "M", "O", "Q", "T", "W"};
 		const char* letterTextBot[] = {"-B","-D","-F","-I","-L","-N","-P","-S","-V","-Z"};
-		Gui::DrawString(8, 10, 0.50, currentCharPage==0 ? RED : BLACK, "Main");
+		Gui::DrawString(8, 10, 0.50, currentCharPage==0 ? RED : (assistantChange ? HALF_BLACK : BLACK), "Main");
 		for (int i = 0; i < 10; i++) {
 			Gui::DrawString(40+(i*24), 4, 0.50, (currentCharPage > 0 && currentCharPage-1 == i) ? RED : BLACK, letterText[i]);
 			Gui::DrawString(48+(i*24), 16, 0.50, (currentCharPage > 0 && currentCharPage-1 == i) ? RED : BLACK, letterTextBot[i]);
 		}
-		Gui::DrawString(292, 10, 0.50, currentCharPage==11 ? RED : BLACK, "Ext.");
+		Gui::DrawString(292, 10, 0.50, currentCharPage==11 ? RED : (assistantChange ? HALF_BLACK : BLACK), "Ext.");
 
 		if (subScreenMode == 0 && highlightedGame == 2) {
 			Gui::DrawString(116, 210, 0.50, BLACK, ss3DLCharactersBackedUp ? "START: Remove contacts" : "START: Expand contacts");
@@ -1999,7 +2003,11 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 			if ((hDown & KEY_DRIGHT) && (highlightedGame > 1)) {
 				sndHighlight();
 				characterPage[highlightedGame]++;
-				if (characterPage[highlightedGame] > 11) characterPage[highlightedGame] = 11;
+				if (assistantChange) {
+					if (characterPage[highlightedGame] > 10) characterPage[highlightedGame] = 10;
+				} else {
+					if (characterPage[highlightedGame] > 11) characterPage[highlightedGame] = 11;
+				}
 			}
 
 			if ((hDown & KEY_DLEFT) || (hDown & KEY_DRIGHT)) {
