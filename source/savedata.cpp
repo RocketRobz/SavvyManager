@@ -994,6 +994,21 @@ void writeSS4CharacterToSave(u16 id) {
 	FSFILE_Close(handle4);
 }
 
+u16 getSS4AssistantCharacterId(void) {
+	return *(u16*)((char*)ss4Save+0x8BF96);
+}
+
+void writeSS4AssistantCharacterId(u16 id) {
+	*(u16*)((char*)ss4Save+0x8BF96) = id;
+}
+
+void writeSS4AssistantCharacterToSave(void) {
+	u32 bytesWritten = 0;
+	FSUSER_OpenFile(&handle4, archive4, fsMakePath(PATH_UTF16, (const void*)UTF8toUTF16(ss4SavePath).data()), FS_OPEN_WRITE, FS_WRITE_FLUSH);
+	FSFILE_Write(handle4, &bytesWritten, 0x8BF96, ss4Save+0x8BF96, 2, 0);
+	FSFILE_Close(handle4);
+}
+
 void writeSS4MewtubeCharacter(int video, int slot) {
 	tonccpy((char*)ss4Save+getSS4MewtubeCharacterOffset(video, slot), &ss4CharacterData, 0x3E);
 }

@@ -250,10 +250,10 @@ void MewtubeChange::Draw(void) const {
 	if (subScreenMode == 2) {
 		const char* letterText[] =    { "A", "C", "E", "G", "J", "M", "O", "Q", "T", "W"};
 		const char* letterTextBot[] = {"-B","-D","-F","-I","-L","-N","-P","-S","-V","-Z"};
-		Gui::DrawString(8, 10, 0.50, characterPage==0 ? RED : BLACK, "Prt.");
+		Gui::DrawString(8, 10, 0.50, characterPage==0 ? RED : BLACK, "Main");
 		for (int i = 0; i < 10; i++) {
-			Gui::DrawString(34+(i*24), 4, 0.50, (characterPage > 0 && characterPage-1 == i) ? RED : BLACK, letterText[i]);
-			Gui::DrawString(42+(i*24), 16, 0.50, (characterPage > 0 && characterPage-1 == i) ? RED : BLACK, letterTextBot[i]);
+			Gui::DrawString(40+(i*24), 4, 0.50, (characterPage > 0 && characterPage-1 == i) ? RED : BLACK, letterText[i]);
+			Gui::DrawString(48+(i*24), 16, 0.50, (characterPage > 0 && characterPage-1 == i) ? RED : BLACK, letterTextBot[i]);
 		}
 		Gui::DrawString(292, 10, 0.50, characterPage==11 ? RED : BLACK, "Ext.");
 

@@ -288,7 +288,7 @@ void CharacterChange::getMaxChars() {
 		switch (subScreenMode == 6 ? importFromSave_characterPage[3] : characterPage[3]) {
 			case 0:
 			default:
-				totalCharacters = 0;
+				totalCharacters = 2;
 				break;
 			case 1:
 				totalCharacters = (int)sizeof(ss4CharacterOrder_AtoB)/sizeof(u16);
@@ -771,13 +771,26 @@ void CharacterChange::Draw(void) const {
 		} else {
 			Gui::DrawStringCentered(0, 104, 0.65, BLACK, (import_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
 		}
-	} else if (subScreenMode == 0 && peopleMet > 0 && peopleMetCount) {
-		if (highlightedGame == 3) {
-			Gui::Draw_Rect(0, 208, 400, 32, WHITE);
+	} else if (subScreenMode == 0) {
+		if (!showMessage) {
+			if (assistantChange) {
+				Gui::DrawStringCentered(0, 64, 0.50, BLACK, "Choose who you want to be your");
+				Gui::DrawStringCentered(0, 78, 0.50, BLACK, "shop assistant.");
+				Gui::DrawStringCentered(0, 104, 0.50, BLACK, "Anyone other than Xin, Sylvia, Hannah,");
+				Gui::DrawStringCentered(0, 118, 0.50, BLACK, "Ken, Archie, or Rahil, will not have");
+				Gui::DrawStringCentered(0, 132, 0.50, BLACK, "their card shown in your shop.");
+			} else {
+				Gui::DrawStringCentered(0, 104, 0.50, BLACK, "Select the character you want to change.");
+			}
 		}
-		char peopleMetText[24];
-		sprintf(peopleMetText, "People Met: %i", peopleMet);
-		Gui::DrawStringCentered(0, 216, 0.60, BLACK, peopleMetText);
+		if (peopleMet > 0 && peopleMetCount) {
+			if (highlightedGame == 3) {
+				Gui::Draw_Rect(0, 208, 400, 32, WHITE);
+			}
+			char peopleMetText[24];
+			sprintf(peopleMetText, "People Met: %i", peopleMet);
+			Gui::DrawStringCentered(0, 216, 0.60, BLACK, peopleMetText);
+		}
 	}
 
 	preview();
@@ -953,11 +966,10 @@ void CharacterChange::Draw(void) const {
 
 		const char* letterText[] =    { "A", "C", "E", "G", "J", "M", "O", "Q", "T", "W"};
 		const char* letterTextBot[] = {"-B","-D","-F","-I","-L","-N","-P","-S","-V","-Z"};
-		//Gui::DrawString(8, 8, 0.50, BLACK, "Select the character you want to change.");
-		Gui::DrawString(8, 10, 0.50, currentCharPage==0 ? RED : BLACK, "Prt.");
+		Gui::DrawString(8, 10, 0.50, currentCharPage==0 ? RED : BLACK, "Main");
 		for (int i = 0; i < 10; i++) {
-			Gui::DrawString(34+(i*24), 4, 0.50, (currentCharPage > 0 && currentCharPage-1 == i) ? RED : BLACK, letterText[i]);
-			Gui::DrawString(42+(i*24), 16, 0.50, (currentCharPage > 0 && currentCharPage-1 == i) ? RED : BLACK, letterTextBot[i]);
+			Gui::DrawString(40+(i*24), 4, 0.50, (currentCharPage > 0 && currentCharPage-1 == i) ? RED : BLACK, letterText[i]);
+			Gui::DrawString(48+(i*24), 16, 0.50, (currentCharPage > 0 && currentCharPage-1 == i) ? RED : BLACK, letterTextBot[i]);
 		}
 		Gui::DrawString(292, 10, 0.50, currentCharPage==11 ? RED : BLACK, "Ext.");
 
@@ -971,9 +983,16 @@ void CharacterChange::Draw(void) const {
 			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 			if (currentGame == 3) {
 				if (currentCharPage == 0) {
-					GFX::DrawSprite((getSS4CharacterGender(0xBAE) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-					Gui::DrawString(64, i2, 0.65, BLACK, ss4PlayerName);
-					break;
+					if (i == 1) {
+						u16 charId = getSS4AssistantCharacterId();
+						GFX::DrawSprite((getSS4CharacterGender(charId) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+						Gui::DrawString(64, i2-8, 0.50, BLACK, "Shop Assistant");
+						Gui::DrawString(64, i2+8, 0.65, BLACK, getSS4CharName(charId));
+						break;
+					} else {
+						GFX::DrawSprite((getSS4CharacterGender(0xBAE) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+						Gui::DrawString(64, i2, 0.65, BLACK, ss4PlayerName);
+					}
 				} else {
 					u16 charId = 0;
 					switch (currentCharPage) {
@@ -1925,7 +1944,7 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 
 	} else {
 		if (showCursor) {
-			if ((hDownRepeat & KEY_DUP) && (highlightedGame > 1) && (characterPage[highlightedGame] > 0)) {
+			if ((hDownRepeat & KEY_DUP) && (highlightedGame > 1) && (highlightedGame == 3 || characterPage[highlightedGame] > 0)) {
 				sndHighlight();
 				characterList_cursorPosition--;
 				characterList_cursorPositionOnScreen--;
@@ -1941,13 +1960,16 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 				getMaxChars();
 			}
 
-			if ((hDownRepeat & KEY_DDOWN) && (highlightedGame > 1) && (characterPage[highlightedGame] > 0)) {
+			if ((hDownRepeat & KEY_DDOWN) && (highlightedGame > 1) && (highlightedGame == 3 || characterPage[highlightedGame] > 0)) {
 				sndHighlight();
 				characterList_cursorPosition++;
 				characterList_cursorPositionOnScreen++;
 				if (characterList_cursorPosition > totalCharacters) {
 					characterList_cursorPosition = totalCharacters;
-					characterShownFirst = totalCharacters-2;
+					characterList_cursorPositionOnScreen = totalCharacters;
+					if (totalCharacters-2 < 0) {
+						characterShownFirst = 0;
+					}
 				} else if (characterList_cursorPosition > characterShownFirst+2) {
 					characterShownFirst++;
 				}
@@ -1959,7 +1981,11 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 			if ((hDown & KEY_DLEFT) && (highlightedGame > 1)) {
 				sndHighlight();
 				characterPage[highlightedGame]--;
-				if (characterPage[highlightedGame] < 0) characterPage[highlightedGame] = 0;
+				if (assistantChange) {
+					if (characterPage[highlightedGame] < 1) characterPage[highlightedGame] = 1;
+				} else {
+					if (characterPage[highlightedGame] < 0) characterPage[highlightedGame] = 0;
+				}
 			}
 
 			if ((hDown & KEY_DRIGHT) && (highlightedGame > 1)) {
@@ -1978,18 +2004,85 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 
 		if (hDown & KEY_A) {
 			sndSelect();
-			subScreenMode = 1;
+			if (assistantChange) {
+				u16 charId = 0;
+				switch (characterPage[3]) {
+					case 0:
+					default:
+						charId = 0x0BAE;
+						break;
+					case 1:
+						charId = ss4CharacterOrder_AtoB[characterList_cursorPosition];
+						break;
+					case 2:
+						charId = ss4CharacterOrder_CtoD[characterList_cursorPosition];
+						break;
+					case 3:
+						charId = ss4CharacterOrder_EtoF[characterList_cursorPosition];
+						break;
+					case 4:
+						charId = ss4CharacterOrder_GtoI[characterList_cursorPosition];
+						break;
+					case 5:
+						charId = ss4CharacterOrder_JtoL[characterList_cursorPosition];
+						break;
+					case 6:
+						charId = ss4CharacterOrder_MtoN[characterList_cursorPosition];
+						break;
+					case 7:
+						charId = ss4CharacterOrder_OtoP[characterList_cursorPosition];
+						break;
+					case 8:
+						charId = ss4CharacterOrder_QtoS[characterList_cursorPosition];
+						break;
+					case 9:
+						charId = ss4CharacterOrder_TtoV[characterList_cursorPosition];
+						break;
+					case 10:
+						charId = ss4CharacterOrder_WtoZ[characterList_cursorPosition];
+						break;
+					case 11:
+						charId = 0x0BB9+characterList_cursorPosition;
+						break;
+				}
+				writeSS4AssistantCharacterId(charId);
+				writeSS4AssistantCharacterToSave();
+				assistantChange = false;
+				characterPage[highlightedGame] = 0;
+				characterList_cursorPosition = 1;
+				characterList_cursorPositionOnScreen = 1;
+				characterShownFirst = 0;
+				getMaxChars();
+			} else if (highlightedGame == 3 && characterList_cursorPosition == 1 && characterPage[highlightedGame] == 0) {
+				assistantChange = true;
+				characterPage[highlightedGame]++;
+				characterList_cursorPosition = 0;
+				characterList_cursorPositionOnScreen = 0;
+				characterShownFirst = 0;
+				getMaxChars();
+			} else {
+				subScreenMode = 1;
+			}
 		}
 
 		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 			sndBack();
-			characterList_cursorPosition = 0;
-			characterList_cursorPositionOnScreen = 0;
-			characterShownFirst = 0;
-			characterChangeMenu_cursorPosition = 0;
-			characterChangeMenu_cursorPositionOnScreen = 0;
-			characterChangeMenu_optionShownFirst = 0;
-			Gui::setScreen(std::make_unique<WhatToDo>(), true);
+			if (assistantChange) {
+				assistantChange = false;
+				characterPage[highlightedGame] = 0;
+				characterList_cursorPosition = 1;
+				characterList_cursorPositionOnScreen = 1;
+				characterShownFirst = 0;
+				getMaxChars();
+			} else {
+				characterList_cursorPosition = 0;
+				characterList_cursorPositionOnScreen = 0;
+				characterShownFirst = 0;
+				characterChangeMenu_cursorPosition = 0;
+				characterChangeMenu_cursorPositionOnScreen = 0;
+				characterChangeMenu_optionShownFirst = 0;
+				Gui::setScreen(std::make_unique<WhatToDo>(), true);
+			}
 		}
 
 		if ((hDown & KEY_START) && (highlightedGame == 2)) {

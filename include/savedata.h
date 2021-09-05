@@ -153,6 +153,7 @@ extern void writeSS3CharacterToSave(u16 id);
 extern void readSS4CharacterFile(u16 id, const char* filename);
 extern void writeSS4CharacterFile(u16 id, const char* filename);
 extern void writeSS4CharacterToSave(u16 id);
+extern void writeSS4AssistantCharacterToSave(void);
 extern void writeSS4MewtubeCharacter(int video, int slot);
 extern void writeSS4MewtubeCharacterToSave(int video, int slot);
 extern void revertSS4MewtubeCharacter(int video, int slot);
@@ -162,6 +163,8 @@ extern void restoreSS3DLCharacters(const char* filename);
 extern bool getSS2CharacterGender(void);
 extern bool getSS3CharacterGender(u16 id);
 extern bool getSS4CharacterGender(u16 id);
+extern u16 getSS4AssistantCharacterId(void);
+extern void writeSS4AssistantCharacterId(u16 id);
 extern u16 getSS4MewtubeCharacterId(int video, int slot);
 extern void writeSS4MewtubeCharacterId(u16 id, int video, int slot);
 

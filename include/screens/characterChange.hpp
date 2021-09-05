@@ -45,6 +45,7 @@ private:
 	int import_highlightedGame = 0;
 	int importFromSave_highlightedGame = 3;
 	int seasonNo = 0;
+	bool assistantChange = false;
 
 	char chrFilePath[256];
 	char chrFilePath2[256];
