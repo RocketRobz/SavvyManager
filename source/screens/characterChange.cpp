@@ -901,6 +901,10 @@ void CharacterChange::Draw(void) const {
 		}
 
 	  if (!displayNothing) {
+		char chrCounter[24];
+		sprintf(chrCounter, "%d/%d", importCharacterList_cursorPosition+1, import_totalCharacters+1);
+		Gui::DrawString(64, 184, 0.55, BLACK, chrCounter);
+
 		int i2 = (highlightedGame == 3 ? 56 : 48);
 		for (int i = import_characterShownFirst; i < import_characterShownFirst+3; i++) {
 			if (import_highlightedGame == 4) {
@@ -978,6 +982,10 @@ void CharacterChange::Draw(void) const {
 		}
 
 	  if (!displayNothing) {
+		char chrCounter[24];
+		sprintf(chrCounter, "%d/%d", (subScreenMode == 6 ? importFromSave_cursorPosition : characterList_cursorPosition)+1, totalCharacters+1);
+		Gui::DrawString(64, 184, 0.55, BLACK, chrCounter);
+
 		int i2 = (highlightedGame == 3 ? 56 : 48);
 		for (int i = currentCharShownFirst; i < currentCharShownFirst+3; i++) {
 			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);

@@ -55,6 +55,10 @@ void MusicChange::Draw(void) const {
 
 	Gui::DrawString(8, 8, 0.50, BLACK, "Select the music pack you want to use.");
 
+	char chrCounter[24];
+	sprintf(chrCounter, "%d/%d", cursorPosition+1, numberOfMusicPacks+1);
+	Gui::DrawString(64, 184, 0.55, BLACK, chrCounter);
+
 	int i2 = 48;
 	for (int i = musicPackShownFirst; i < musicPackShownFirst+3; i++) {
 		if (i > numberOfMusicPacks) break;

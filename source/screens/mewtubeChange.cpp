@@ -257,6 +257,10 @@ void MewtubeChange::Draw(void) const {
 		}
 		Gui::DrawString(292, 10, 0.50, characterPage==11 ? RED : BLACK, "Ext.");
 
+		char chrCounter[24];
+		sprintf(chrCounter, "%d/%d", cursorPosition[2]+1, totalCharacters+1);
+		Gui::DrawString(64, 184, 0.55, BLACK, chrCounter);
+
 		for (int i = characterShownFirst; i < characterShownFirst+3; i++) {
 			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 			if (characterPage == 0) {
@@ -396,6 +400,10 @@ void MewtubeChange::Draw(void) const {
 		}
 		Gui::DrawString(88, 217, 0.50, BLACK, "SELECT: Revert to original");
 	} else {
+		char chrCounter[24];
+		sprintf(chrCounter, "%d/%d", cursorPosition[0]+1, numberofVideos+1);
+		Gui::DrawString(64, 184, 0.55, BLACK, chrCounter);
+
 		Gui::DrawString(8, 8, 0.50, BLACK, "Select the video to change in You Diva mode.");
 		for (int i = videoShownFirst; i < videoShownFirst+3; i++) {
 			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
@@ -592,7 +600,7 @@ void MewtubeChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition t
 		}
 	} else {
 		if (showCursor) {
-			if (hDown & KEY_UP) {
+			if (hDownRepeat & KEY_UP) {
 				sndHighlight();
 				cursorPosition[0]--;
 				cursorPositionOnScreen[0]--;
@@ -606,7 +614,7 @@ void MewtubeChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition t
 					cursorPositionOnScreen[0] = 0;
 				}
 			}
-			if (hDown & KEY_DOWN) {
+			if (hDownRepeat & KEY_DOWN) {
 				sndHighlight();
 				cursorPosition[0]++;
 				cursorPositionOnScreen[0]++;

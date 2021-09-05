@@ -610,6 +610,10 @@ void EmblemChange::Draw(void) const {
 		Gui::DrawString(304, 8, 0.50, BLACK, ">");
 
 	  if (!displayNothing) {
+		char chrCounter[24];
+		sprintf(chrCounter, "%d/%d", importEmblemList_cursorPosition+1, (importPage == 1 ? numberOfExportedEmblems : totalEmblems+1));
+		Gui::DrawString(64, 184, 0.55, BLACK, chrCounter);
+
 		int i2 = (highlightedGame == 3 ? 56 : 48);
 		for (int i = import_emblemShownFirst; i < import_emblemShownFirst+3; i++) {
 			if (importPage == 1) {
@@ -899,7 +903,7 @@ void EmblemChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition to
 			}
 		} else {
 			if (showCursor) {
-				if (hDown & KEY_UP) {
+				if (hDownRepeat & KEY_UP) {
 					sndHighlight();
 					cursorPosition--;
 					if (cursorPosition < 0) {
@@ -910,7 +914,7 @@ void EmblemChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition to
 						renderEmblem();
 					}
 				}
-				if (hDown & KEY_DOWN) {
+				if (hDownRepeat & KEY_DOWN) {
 					sndHighlight();
 					cursorPosition++;
 					if (cursorPosition > totalEmblems) {
