@@ -271,16 +271,19 @@ int main()
 		sfx_highlight = new sound("romfs:/sounds/highlight.wav", 4, false);
 	}
 
-	u32 ss2Id = 0x000A9100;
-	u32 ss3Id = 0x00196500;
-	u32 ss4Id = 0x00001C25;
+	u32 ss2Id[4] = {0x000A9100, 0x000A9000, 0x0005D100, 0x000C4F00};
+	u32 ss3Id[3] = {0x00196500, 0x0016A100, 0x0012D800};
+	u32 ss4Id[3] = {0x00001C25, 0x00001C26, 0x000019F6};
 
 	switch (sysRegion) {
 		case CFG_REGION_EUR:
 		case CFG_REGION_AUS:
-			ss2Id = 0x000A9000;
-			ss3Id = 0x0016A100;
-			ss4Id = 0x00001C26;
+			ss2Id[0] = 0x000A9000;
+			ss2Id[1] = 0x000A9100; // Fallback: USA
+			ss3Id[0] = 0x0016A100;
+			ss3Id[1] = 0x00196500; // Fallback: USA
+			ss4Id[0] = 0x00001C26;
+			ss4Id[1] = 0x00001C25; // Fallback: USA
 			ss1Logo = gameSelSprites_title1_E_idx;
 			ss2Logo = gameSelSprites_title2_E_idx;
 			ss3Logo = gameSelSprites_title3_E_idx;
@@ -289,43 +292,122 @@ int main()
 			ssLogoXpos = 32;
 			break;
 		case CFG_REGION_JPN:
-			ss2Id = 0x0005D100;
-			ss3Id = 0x0012D800;
-			ss4Id = 0x000019F6;
+			ss2Id[0] = 0x0005D100;
+			ss2Id[1] = 0x000C4F00; // Fallback: KOR
+			ss2Id[2] = 0x000A9100; // Fallback: USA
+			ss2Id[3] = 0x000A9000; // Fallback: EUR/AUS
+			ss3Id[0] = 0x0012D800;
+			ss3Id[1] = 0x00196500; // Fallback: USA
+			ss3Id[2] = 0x0016A100; // Fallback: EUR/AUS
+			ss4Id[0] = 0x000019F6;
+			ss4Id[1] = 0x00001C25; // Fallback: USA
+			ss4Id[2] = 0x00001C26; // Fallback: EUR/AUS
 			ss1Logo = gameSelSprites_title1_J_idx;
 			ss2Logo = gameSelSprites_title2_J_idx;
 			ss3Logo = gameSelSprites_title3_J_idx;
 			ss4Logo = gameSelSprites_title4_J_idx;
 			break;
 		case CFG_REGION_KOR:
-			ss2Id = 0x000C4F00;
+			ss2Id[0] = 0x000C4F00;
+			ss2Id[1] = 0x0005D100; // Fallback: JAP
+			ss2Id[2] = 0x000A9100; // Fallback: JPN
+			ss2Id[3] = 0x000A9000; // Fallback: EUR/AUS
+			ss3Id[0] = 0x0012D800; // JPN
+			ss3Id[1] = 0x00196500; // Fallback: USA
+			ss3Id[2] = 0x0016A100; // Fallback: EUR/AUS
+			ss4Id[0] = 0x000019F6; // JPN
+			ss4Id[1] = 0x00001C25; // Fallback: USA
+			ss4Id[2] = 0x00001C26; // Fallback: EUR/AUS
 			ss1Logo = gameSelSprites_title1_K_idx;
 			ss2Logo = gameSelSprites_title2_K_idx;
+			ss3Logo = gameSelSprites_title3_J_idx;
+			ss4Logo = gameSelSprites_title4_J_idx;
 			ss1LogoXpos = 64;
 			break;
 		default:
 			break;
 	}
 
-	const u32 path2[3] = {MEDIATYPE_SD, ss2Id, 0x00040000};
-	const u32 path2card[3] = {MEDIATYPE_GAME_CARD, ss2Id, 0x00040000};
-	const u32 path3[3] = {MEDIATYPE_SD, ss3Id, 0x00040000};
-	const u32 path3card[3] = {MEDIATYPE_GAME_CARD, ss3Id, 0x00040000};
-	const u32 path4[3] = {MEDIATYPE_SD, ss4Id, 0};
+	u32 path2[3] = {MEDIATYPE_SD, ss2Id[0], 0x00040000};
+	u32 path2card[3] = {MEDIATYPE_GAME_CARD, ss2Id[0], 0x00040000};
+	u32 path3[3] = {MEDIATYPE_SD, ss3Id[0], 0x00040000};
+	u32 path3card[3] = {MEDIATYPE_GAME_CARD, ss3Id[0], 0x00040000};
+	u32 path4[3] = {MEDIATYPE_SD, ss4Id[0], 0};
 
-	res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2}, "ss2");	// Read from digital version
-	if (R_FAILED(res)) {
-		res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2card}, "ss2");	// Read from game card
+	for (int i = 0; i < 4; i++) {
+		res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2}, "ss2");	// Read from digital version
+		if (R_FAILED(res)) {
+			res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2card}, "ss2");	// Read from game card
+			if (R_FAILED(res)) {
+				path2[1] = ss2Id[i+1];
+				path2card[1] = ss2Id[i+1];
+			} else {
+				break;
+			}
+		} else {
+			break;
+		}
+	}
+	switch (path2[1]) {
+		case 0x000A9100:
+			saveRegion[1] = CFG_REGION_USA;
+			break;
+		case 0x000A9000:
+			saveRegion[1] = CFG_REGION_EUR;
+			break;
+		case 0x0005D100:
+			saveRegion[1] = CFG_REGION_JPN;
+			break;
+		case 0x000C4F00:
+			saveRegion[1] = CFG_REGION_KOR;
+			break;
 	}
 
-	res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path3}, "ss3");	// Read from digital version
-	if (R_FAILED(res)) {
-		res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path3card}, "ss3");	// Read from game card
+	for (int i = 0; i < 3; i++) {
+		res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path3}, "ss3");	// Read from digital version
+		if (R_FAILED(res)) {
+			res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path3card}, "ss3");	// Read from game card
+			if (R_FAILED(res)) {
+				path3[1] = ss3Id[i+1];
+				path3card[1] = ss3Id[i+1];
+			} else {
+				break;
+			}
+		} else {
+			break;
+		}
+	}
+	switch (path3[1]) {
+		case 0x00196500:
+			saveRegion[2] = CFG_REGION_USA;
+			break;
+		case 0x0016A100:
+			saveRegion[2] = CFG_REGION_EUR;
+			break;
+		case 0x0012D800:
+			saveRegion[2] = CFG_REGION_JPN;
+			break;
 	}
 
-	//archiveMount(ARCHIVE_EXTDATA, {PATH_BINARY, 12, path4}, "ss4");
-	FSUSER_OpenArchive(&archive4, ARCHIVE_EXTDATA, {PATH_BINARY, 12, path4});
-	//FSUSER_OpenDirectory(&handle4, archive4, fsMakePath(PATH_UTF16, "/"));
+	for (int i = 0; i < 3; i++) {
+		res = FSUSER_OpenArchive(&archive4, ARCHIVE_EXTDATA, {PATH_BINARY, 12, path4});
+		if (R_FAILED(res)) {
+			path4[1] = ss4Id[i+1];
+		} else {
+			break;
+		}
+	}
+	switch (path4[1]) {
+		case 0x00001C25:
+			saveRegion[3] = CFG_REGION_USA;
+			break;
+		case 0x00001C26:
+			saveRegion[3] = CFG_REGION_EUR;
+			break;
+		case 0x000019F6:
+			saveRegion[3] = CFG_REGION_JPN;
+			break;
+	}
 
 	ss2SaveFound = (access(ss2SavePath, F_OK) == 0);
 	ss3SaveFound = (access(ss3SavePath, F_OK) == 0);

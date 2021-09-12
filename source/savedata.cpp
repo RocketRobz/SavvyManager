@@ -5,7 +5,7 @@
 #include "stringtool.h"
 #include "tonccpy.h"
 
-extern u8 sysRegion;
+u8 saveRegion[4] = {0};
 
 ss2character ss2CharacterData;
 ss3to4character ss4CharacterData;
@@ -178,14 +178,14 @@ bool getSS2CharacterGender(void) {
 void readSS3Save(void) {
 	if (ss3SaveRead) return;
 
-	u32 size = (sysRegion==CFG_REGION_JPN ? 0x120000 : 0x174000);
+	u32 size = (saveRegion[2]==CFG_REGION_JPN ? 0x120000 : 0x174000);
 
 	FILE* saveData = fopen(ss3SavePath, "rb");
 	fread(ss3Save, size, 1, saveData);
 	fclose(saveData);
 
 	// Get playable character's name
-	u32 offset = (sysRegion==CFG_REGION_JPN ? 0x537DC : 0x54980);
+	u32 offset = (saveRegion[2]==CFG_REGION_JPN ? 0x537DC : 0x54980);
 	for (int i = 0; i < 9; i++) {
 		ss3PlayerName[i] = ss3Save[offset+(i*2)];
 	}
@@ -194,7 +194,7 @@ void readSS3Save(void) {
 }
 
 void writeSS3Save(void) {
-	u32 size = (sysRegion==CFG_REGION_JPN ? 0x120000 : 0x174000);
+	u32 size = (saveRegion[2]==CFG_REGION_JPN ? 0x120000 : 0x174000);
 
 	FILE* saveData = fopen(ss3SavePath, "wb");
 	fwrite(ss3Save, size, 1, saveData);
@@ -206,126 +206,126 @@ void writeSS3Save(void) {
 static u32 getSS3CharacterOffset(u16 id) {
 	if (id == 0x7D1) {
 		// Playable character
-		return (sysRegion==CFG_REGION_JPN ? 0x5387E : 0x54A22);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x5387E : 0x54A22);
 	} else if (id >= 0x0BB9) {
 		// Downloaded character
 		id -= 0x0BB9;
-		return (sysRegion==CFG_REGION_JPN ? 0x830D2 : 0x8427E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x830D2 : 0x8427E) + (0x110*id);
 	} else if (id == 0x0B87) {
 		// Unused/Hidden character
-		return (sysRegion==CFG_REGION_JPN ? 0x82FC2 : 0x8416E);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x82FC2 : 0x8416E);
 	} else if (id == 0x0B55) {
 		// Unused/Hidden character
-		return (sysRegion==CFG_REGION_JPN ? 0x82EB2 : 0x8405E);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x82EB2 : 0x8405E);
 	} else if (id == 0x0A8D) {
 		// Unused/Hidden character
-		return (sysRegion==CFG_REGION_JPN ? 0x82DA2 : 0x83F4E);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x82DA2 : 0x83F4E);
 	} else if (id == 0x0A29 || id == 0x0A2A) {
 		// Unused/Hidden character
 		id -= 0x0A29;
-		return (sysRegion==CFG_REGION_JPN ? 0x82B82 : 0x83D2E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x82B82 : 0x83D2E) + (0x110*id);
 	} else if (id >= 0x09C5 && id <= 0x09C9) {
 		// Unused/Hidden character
 		id -= 0x09C5;
-		return (sysRegion==CFG_REGION_JPN ? 0x82632 : 0x837DE) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x82632 : 0x837DE) + (0x110*id);
 	} else if (id == 0x0961) {
 		// Unused/Hidden character
-		return (sysRegion==CFG_REGION_JPN ? 0x82522 : 0x836CE);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x82522 : 0x836CE);
 	} else if (id >= 0x08FD && id <= 0x0901) {
 		// Unused/Hidden character
 		id -= 0x08FD;
-		return (sysRegion==CFG_REGION_JPN ? 0x81FD2 : 0x8317E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x81FD2 : 0x8317E) + (0x110*id);
 	} else if (id == 0x0899) {
 		// Unused/Hidden character
-		return (sysRegion==CFG_REGION_JPN ? 0x81EC2 : 0x8360E);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x81EC2 : 0x8360E);
 	} else if (id >= 0x0835 && id <= 0x0852) {
 		// Unused/Hidden character
 		id -= 0x0835;
-		return (sysRegion==CFG_REGION_JPN ? 0x7FEE2 : 0x8101E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x7FEE2 : 0x8101E) + (0x110*id);
 	} else if (id >= 0x044C && id <= 0x0469) {
 		// Non-playable character
 		id -= 0x044C;
-		return (sysRegion==CFG_REGION_JPN ? 0x7D9B2 : 0x7EB5E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x7D9B2 : 0x7EB5E) + (0x110*id);
 	} else if (id >= 0x041A && id <= 0x0437) {
 		// Non-playable character
 		id -= 0x041A;
-		return (sysRegion==CFG_REGION_JPN ? 0x7BD92 : 0x7CB7E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x7BD92 : 0x7CB7E) + (0x110*id);
 	} else if (id >= 0x03E8 && id <= 0x0405) {
 		// Non-playable character
 		id -= 0x03E8;
-		return (sysRegion==CFG_REGION_JPN ? 0x799F2 : 0x7AB9E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x799F2 : 0x7AB9E) + (0x110*id);
 	} else if (id >= 0x0352 && id <= 0x036F) {
 		// Non-playable character
 		id -= 0x0352;
-		return (sysRegion==CFG_REGION_JPN ? 0x77A12 : 0x78BBE) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x77A12 : 0x78BBE) + (0x110*id);
 	} else if (id >= 0x0320 && id <= 0x033D) {
 		// Non-playable character
 		id -= 0x0320;
-		return (sysRegion==CFG_REGION_JPN ? 0x75A32 : 0x76BDE) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x75A32 : 0x76BDE) + (0x110*id);
 	} else if (id >= 0x02EE && id <= 0x030B) {
 		// Non-playable character
 		id -= 0x02EE;
-		return (sysRegion==CFG_REGION_JPN ? 0x73A52 : 0x74BFE) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x73A52 : 0x74BFE) + (0x110*id);
 	} else if (id >= 0x02BC && id <= 0x02D9) {
 		// Non-playable character
 		id -= 0x02BC;
-		return (sysRegion==CFG_REGION_JPN ? 0x71962 : 0x72C1E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x71962 : 0x72C1E) + (0x110*id);
 	} else if (id >= 0x028A && id <= 0x02A7) {
 		// Non-playable character
 		id -= 0x028A;
-		return (sysRegion==CFG_REGION_JPN ? 0x6FA92 : 0x70C3E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x6FA92 : 0x70C3E) + (0x110*id);
 	} else if (id >= 0x0258 && id <= 0x0275) {
 		// Non-playable character
 		id -= 0x0258;
-		return (sysRegion==CFG_REGION_JPN ? 0x6DAB2 : 0x6EC5E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x6DAB2 : 0x6EC5E) + (0x110*id);
 	} else if (id >= 0x0226 && id <= 0x0243) {
 		// Non-playable character
 		id -= 0x0226;
-		return (sysRegion==CFG_REGION_JPN ? 0x6BAD2 : 0x6CC7E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x6BAD2 : 0x6CC7E) + (0x110*id);
 	} else if (id >= 0x01F4 && id <= 0x0211) {
 		// Non-playable character
 		id -= 0x01F4;
-		return (sysRegion==CFG_REGION_JPN ? 0x69AF2 : 0x6AC9E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x69AF2 : 0x6AC9E) + (0x110*id);
 	} else if (id >= 0x01C2 && id <= 0x01DF) {
 		// Non-playable character
 		id -= 0x01C2;
-		return (sysRegion==CFG_REGION_JPN ? 0x67B12 : 0x68CBE) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x67B12 : 0x68CBE) + (0x110*id);
 	} else if (id >= 0x0190 && id <= 0x01AD) {
 		// Non-playable character
 		id -= 0x0190;
-		return (sysRegion==CFG_REGION_JPN ? 0x65B32 : 0x66CDE) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x65B32 : 0x66CDE) + (0x110*id);
 	} else if (id >= 0x015E && id <= 0x017B) {
 		// Non-playable character
 		id -= 0x015E;
-		return (sysRegion==CFG_REGION_JPN ? 0x63B52 : 0x64CFE) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x63B52 : 0x64CFE) + (0x110*id);
 	} else if (id >= 0x012C && id <= 0x0149) {
 		// Non-playable character
 		id -= 0x012C;
-		return (sysRegion==CFG_REGION_JPN ? 0x61B72 : 0x62D1E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x61B72 : 0x62D1E) + (0x110*id);
 	} else if (id >= 0xFA && id <= 0x0117) {
 		// Non-playable character
 		id -= 0xFA;
-		return (sysRegion==CFG_REGION_JPN ? 0x5FB92 : 0x60D3E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x5FB92 : 0x60D3E) + (0x110*id);
 	} else if (id >= 0xC8 && id <= 0xE5) {
 		// Non-playable character
 		id -= 0xC8;
-		return (sysRegion==CFG_REGION_JPN ? 0x5DBB2 : 0x5ED5E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x5DBB2 : 0x5ED5E) + (0x110*id);
 	} else if (id >= 0x96 && id <= 0xB3) {
 		// Non-playable character
 		id -= 0x96;
-		return (sysRegion==CFG_REGION_JPN ? 0x5BBD2 : 0x5CD7E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x5BBD2 : 0x5CD7E) + (0x110*id);
 	} else if (id >= 0x64 && id <= 0x81) {
 		// Non-playable character
 		id -= 0x64;
-		return (sysRegion==CFG_REGION_JPN ? 0x59BF2 : 0x5AD9E) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x59BF2 : 0x5AD9E) + (0x110*id);
 	} else if (id >= 0x32 && id <= 0x5E) {
 		// Non-playable character
 		id -= 0x32;
-		return (sysRegion==CFG_REGION_JPN ? 0x56C22 : 0x57DCE) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x56C22 : 0x57DCE) + (0x110*id);
 	} else {
 		id--;
 		// Non-playable character
-		return (sysRegion==CFG_REGION_JPN ? 0x54D52 : 0x55EFE) + (0x110*id);
+		return (saveRegion[2]==CFG_REGION_JPN ? 0x54D52 : 0x55EFE) + (0x110*id);
 	}
 }
 
@@ -410,7 +410,7 @@ bool getSS3CharacterGender(u16 id) {
 }
 
 const char* readSS3ProfileName(u16 id) {
-	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x86F80 : 0x88C5C);
+	u32 dlCharOffset = (saveRegion[2]==CFG_REGION_JPN ? 0x86F80 : 0x88C5C);
 
 	if (id >= 0x0BB9) {
 		// Downloaded character
@@ -427,7 +427,7 @@ void readSS3ProfileFile(u16 id, const char* filename) {
 	FILE* profileData = fopen(filename, "rb");
 	if (!profileData) return;
 
-	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x86F80 : 0x88C5C);
+	u32 dlCharOffset = (saveRegion[2]==CFG_REGION_JPN ? 0x86F80 : 0x88C5C);
 
 	if (id >= 0x0BB9) {
 		// Downloaded character
@@ -441,7 +441,7 @@ void writeSS3ProfileFile(u16 id, const char* filename) {
 	FILE* profileData = fopen(filename, "wb");
 	if (!profileData) return;
 
-	u32 dlCharOffset = (sysRegion==CFG_REGION_JPN ? 0x86F80 : 0x88C5C);
+	u32 dlCharOffset = (saveRegion[2]==CFG_REGION_JPN ? 0x86F80 : 0x88C5C);
 
 	if (id >= 0x0BB9) {
 		// Downloaded character
@@ -452,17 +452,17 @@ void writeSS3ProfileFile(u16 id, const char* filename) {
 }
 
 void readSS3Emblem(void) {
-	u32 offset = (sysRegion==CFG_REGION_JPN ? 0x29A14 : 0x2ABB8);
+	u32 offset = (saveRegion[2]==CFG_REGION_JPN ? 0x29A14 : 0x2ABB8);
 	tonccpy(&emblemData, (char*)ss3Save+(offset), 0x804);
 }
 
 void writeSS3Emblem(void) {
-	u32 offset = (sysRegion==CFG_REGION_JPN ? 0x29A14 : 0x2ABB8);
+	u32 offset = (saveRegion[2]==CFG_REGION_JPN ? 0x29A14 : 0x2ABB8);
 	tonccpy((char*)ss3Save+(offset), &emblemData, 0x804);
 }
 
 void writeSS3EmblemToSave(void) {
-	u32 offset = (sysRegion==CFG_REGION_JPN ? 0x29A14 : 0x2ABB8);
+	u32 offset = (saveRegion[2]==CFG_REGION_JPN ? 0x29A14 : 0x2ABB8);
 
 	FILE* saveData = fopen(ss3SavePath, "rb+");
 	fseek(saveData, offset, SEEK_SET);
@@ -476,7 +476,7 @@ void readSS3EmblemFile(const char* filename) {
 	FILE* emblemData = fopen(filename, "rb");
 	if (!emblemData) return;
 
-	u32 offset = (sysRegion==CFG_REGION_JPN ? 0x29A14 : 0x2ABB8);
+	u32 offset = (saveRegion[2]==CFG_REGION_JPN ? 0x29A14 : 0x2ABB8);
 	fread((char*)ss3Save+(offset), 0x804, 1, emblemData);
 	fclose(emblemData);
 }
@@ -485,7 +485,7 @@ void writeSS3EmblemFile(const char* filename) {
 	FILE* emblemData = fopen(filename, "wb");
 	if (!emblemData) return;
 
-	u32 offset = (sysRegion==CFG_REGION_JPN ? 0x29A14 : 0x2ABB8);
+	u32 offset = (saveRegion[2]==CFG_REGION_JPN ? 0x29A14 : 0x2ABB8);
 	fwrite((char*)ss3Save+(offset), 0x804, 1, emblemData);
 	fclose(emblemData);
 }

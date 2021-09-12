@@ -105,14 +105,13 @@ typedef struct ss3to4emblem {
 	u8 sprite[0x800];
 } ss3to4emblem;
 
+extern u8 saveRegion[4];
+
 //extern ss3to4character ss4CharacterData;
 
 extern ss3to4emblem emblemData;
 
 extern const char* ss1SavePath;
-
-//extern char ss3Save[0x174000];
-//extern char ss4Save[0xF0000];
 
 extern char ss2PlayerName[10];
 extern char ss3PlayerName[10];

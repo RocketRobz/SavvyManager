@@ -157,11 +157,11 @@ void GameSelect::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition touc
 		if ((hDown & KEY_LEFT) || ((hDown & KEY_TOUCH) && touch.px >= 0 && touch.px < 32 && touch.py >= 104 && touch.py < 104+32)) {
 			sndHighlight();
 			highlightedGame--;
-			if (highlightedGame < 0) highlightedGame = (sysRegion==CFG_REGION_KOR ? 1 : 3);
+			if (highlightedGame < 0) highlightedGame = ((sysRegion == CFG_REGION_KOR && !ss3SaveFound && !ss4SaveFound) ? 1 : 3);
 		} else if ((hDown & KEY_RIGHT) || ((hDown & KEY_TOUCH) && touch.px >= 320-32 && touch.px < 320 && touch.py >= 104 && touch.py < 104+32)) {
 			sndHighlight();
 			highlightedGame++;
-			if (highlightedGame > (sysRegion==CFG_REGION_KOR ? 1 : 3)) highlightedGame = 0;
+			if (highlightedGame > ((sysRegion == CFG_REGION_KOR && !ss3SaveFound && !ss4SaveFound) ? 1 : 3)) highlightedGame = 0;
 		}
 
 		if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 32 && touch.px < 320-32 && touch.py >= 56 && touch.py < 56+128)) {
