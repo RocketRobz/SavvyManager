@@ -78,33 +78,33 @@ void RocketRobz::Draw(void) const {
 
 		} else {
 			// Ceiling
-			C2D_DrawLine(0, 64, wireframeColor, 400, 64, wireframeColor, 1, 0);
-			C2D_DrawLine(200, 0, wireframeColor, 200, 64, wireframeColor, 1, 0);
+			C2D_DrawLine(0, 64, wireframeColor, 400, 64, wireframeColor, 2, 0);
+			C2D_DrawLine(200, 0, wireframeColor, 200, 64, wireframeColor, 2, 0);
 			int xTop = 0;
 			int xBot = 0;
 			for (int i = 0; i < 4; i++) {
 				xTop += 80;
 				xBot += 48;
-				C2D_DrawLine(200-xTop, 0, wireframeColor, 200-xBot, 64, wireframeColor, 1, 0);
-				C2D_DrawLine(200+xTop, 0, wireframeColor, 200+xBot, 64, wireframeColor, 1, 0);
+				C2D_DrawLine(200-xTop, 0, wireframeColor, 200-xBot, 64, wireframeColor, 2, 0);
+				C2D_DrawLine(200+xTop, 0, wireframeColor, 200+xBot, 64, wireframeColor, 2, 0);
 			}
 			for (int i = 0; i < 3; i++) {
-				C2D_DrawLine(0, 64-floorLineYpos[floorLineCurrentYpos[i]], wireframeColor, 400, 64-floorLineYpos[floorLineCurrentYpos[i]], wireframeColor, 1, 0);
+				C2D_DrawLine(0, 64-floorLineYpos[floorLineCurrentYpos[i]], wireframeColor, 400, 64-floorLineYpos[floorLineCurrentYpos[i]], wireframeColor, 2, 0);
 			}
 
 			// Floor
-			C2D_DrawLine(0, 240-64, wireframeColor, 400, 240-64, wireframeColor, 1, 0);
-			C2D_DrawLine(200, 240-64, wireframeColor, 200, 240, wireframeColor, 1, 0);
+			C2D_DrawLine(0, 240-64, wireframeColor, 400, 240-64, wireframeColor, 2, 0);
+			C2D_DrawLine(200, 240-64, wireframeColor, 200, 240, wireframeColor, 2, 0);
 			xTop = 0;
 			xBot = 0;
 			for (int i = 0; i < 4; i++) {
 				xTop += 48;
 				xBot += 80;
-				C2D_DrawLine(200-xTop, 240-64, wireframeColor, 200-xBot, 240, wireframeColor, 1, 0);
-				C2D_DrawLine(200+xTop, 240-64, wireframeColor, 200+xBot, 240, wireframeColor, 1, 0);
+				C2D_DrawLine(200-xTop, 240-64, wireframeColor, 200-xBot, 240, wireframeColor, 2, 0);
+				C2D_DrawLine(200+xTop, 240-64, wireframeColor, 200+xBot, 240, wireframeColor, 2, 0);
 			}
 			for (int i = 0; i < 3; i++) {
-				C2D_DrawLine(0, (240-64)+floorLineYpos[floorLineCurrentYpos[i]], wireframeColor, 400, (240-64)+floorLineYpos[floorLineCurrentYpos[i]], wireframeColor, 1, 0);
+				C2D_DrawLine(0, (240-64)+floorLineYpos[floorLineCurrentYpos[i]], wireframeColor, 400, (240-64)+floorLineYpos[floorLineCurrentYpos[i]], wireframeColor, 2, 0);
 			}
 
 			for (int i = 0; i < 3; i++) {
@@ -125,12 +125,12 @@ void RocketRobz::Draw(void) const {
 
 		// Top half gradient
 		C2D_DrawRectangle(
-	0, 0, 0, 400, 120,
+	0, -64, 0, 400, 120+64,
 	0, 0,
 	rrTopGradient, rrTopGradient);
 		// Bottom half gradient
 		C2D_DrawRectangle(
-	0, 120, 0, 400, 120,
+	0, 120, 0, 400, 120+64,
 	rrTopGradient, rrTopGradient,
 	0, 0);
 
