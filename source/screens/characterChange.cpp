@@ -121,7 +121,7 @@ const char* getSS4CharName(u16 charId) {
 		return ss4CharacterNamesP3[charId-0x0096];
 	} else if (charId >= 0x0063 && charId <= 0x81) {
 		return ss4CharacterNamesP2[charId-0x0063];
-	} else if (charId <= 0x0056) {
+	} else if (charId <= 0x005E) {
 		return ss4CharacterNames[charId];
 	}
 	return "???";
