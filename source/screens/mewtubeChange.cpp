@@ -570,6 +570,10 @@ void MewtubeChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition t
 						writeSS4MewtubeCharacter(cursorPosition[0], peopleAmount);
 						writeSS4MewtubeCharacterToSave(cursorPosition[0], peopleAmount);	// Write to save data
 					}
+					if (cursorPosition[1] > peopleAmount-1) {
+						cursorPosition[1]--;
+						cursorPositionOnScreen[1]--;
+					}
 				}
 			}
 			if ((hDown & KEY_RIGHT) && cursorPosition[0] != 12) {
