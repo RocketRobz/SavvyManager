@@ -364,8 +364,8 @@ void danceSetPeopleAmount(const int video, int amount) {
 				writeDanceCpkWord(groupFormLoc, 0x7D054614);
 			} else {
 				writeDanceCpkDword(charIdLoc+1, 0x54);
-				writeDanceCpkDword(charAniLoc+1, 0x057B);
-				writeDanceCpkDword(charAniLoc+2, 0x057B);
+				writeDanceCpkDword(charAniLoc+1, 0x0582);
+				writeDanceCpkDword(charAniLoc+2, 0x0582);
 				if (amount == 2) {
 					writeDanceCpkDword(charIdLoc+2, 0x55);
 					writeDanceCpkWord(groupFormLoc, 0x7D054615);
