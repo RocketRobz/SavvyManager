@@ -62,13 +62,25 @@ void danceSetPeopleAmount(const int video, int amount) {
 	const u16* charIdLoc = (u16*)((u32)0x800 + 0x64 + (saveRegion[3] == CFG_REGION_JPN ? (0xAC*video) : (0xB0*video)));
 	const u16* charAniLoc = (u16*)((u32)0x800 + 0x6A + (saveRegion[3] == CFG_REGION_JPN ? (0xAC*video) : (0xB0*video)));
 	const u32* groupFormLoc = (u32*)((u32)0x800 + 0x70 + (saveRegion[3] == CFG_REGION_JPN ? (0xAC*video) : (0xB0*video)));
+	u32 charOrderLoc = 0x800 + 0xA8 + (saveRegion[3] == CFG_REGION_JPN ? (0xAC*video) : (0xB0*video));
 
-	if (saveRegion[3] == CFG_REGION_JPN) {
-		danceCpkData[0x800 + 2 + 0xAC*video] = amount;
-	} else {
-		danceCpkData[0x800 + 2 + 0xB0*video] = amount;
-	}
+	danceCpkData[0x800 + 2 + (saveRegion[3] == CFG_REGION_JPN ? (0xAC*video) : (0xB0*video))] = amount;
 	amount--;
+
+	switch (amount) {
+		case 0:
+		case 1:
+		default:
+			danceCpkData[charOrderLoc] = 1;
+			danceCpkData[charOrderLoc+1] = (amount == 1) ? 2 : 0;
+			danceCpkData[charOrderLoc+2] = 0;
+			break;
+		case 2:
+			danceCpkData[charOrderLoc] = 2;
+			danceCpkData[charOrderLoc+1] = 1;
+			danceCpkData[charOrderLoc+2] = 3;
+			break;
+	}
 
 	switch (video) {
 		case 0: // Open Plaza: Flying Shiny Day
