@@ -12,6 +12,7 @@
 #include "gameSelect.hpp"
 #include "inifile.h"
 #include "rocketRobz.hpp"
+#include "danceCpk.hpp"
 #include "savedata.h"
 #include "screen.hpp"
 #include "sound.h"
@@ -201,38 +202,6 @@ int main()
 	mkdir("sdmc:/luma", 0777);
 	mkdir("sdmc:/luma/titles", 0777);
 
-	switch (sysRegion) {
-		default:
-			// Style Savvy: Trendsetters folders
-			mkdir("sdmc:/luma/titles/00040000000A9100", 0777);
-			mkdir("sdmc:/luma/titles/00040000000A9100/romfs", 0777);
-			mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common", 0777);
-			mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound", 0777);
-			break;
-		case CFG_REGION_EUR:
-		case CFG_REGION_AUS:
-			// New Style Boutique folders
-			mkdir("sdmc:/luma/titles/00040000000A9000", 0777);
-			mkdir("sdmc:/luma/titles/00040000000A9000/romfs", 0777);
-			mkdir("sdmc:/luma/titles/00040000000A9000/romfs/Common", 0777);
-			mkdir("sdmc:/luma/titles/00040000000A9000/romfs/Common/Sound", 0777);
-			break;
-		case CFG_REGION_JPN:
-			// Wagamama Fashion: Girls Mode - Yokubari Sengen folders
-			mkdir("sdmc:/luma/titles/000400000005D100", 0777);
-			mkdir("sdmc:/luma/titles/000400000005D100/romfs", 0777);
-			mkdir("sdmc:/luma/titles/000400000005D100/romfs/Common", 0777);
-			mkdir("sdmc:/luma/titles/000400000005D100/romfs/Common/Sound", 0777);
-			break;
-		case CFG_REGION_KOR:
-			// Girls Style: Paesyeon Lideo Seon-eon! folders
-			mkdir("sdmc:/luma/titles/00040000000C4F00", 0777);
-			mkdir("sdmc:/luma/titles/00040000000C4F00/romfs", 0777);
-			mkdir("sdmc:/luma/titles/00040000000C4F00/romfs/Common", 0777);
-			mkdir("sdmc:/luma/titles/00040000000C4F00/romfs/Common/Sound", 0777);
-			break;
-	}
-
  	// Style Savvy: Fashion Forward folders
 	//mkdir("sdmc:/luma/titles/0004000000196500", 0777);
 
@@ -362,6 +331,39 @@ int main()
 			saveRegion[1] = CFG_REGION_KOR;
 			break;
 	}
+	if (R_SUCCEEDED(res)) {
+		switch (saveRegion[1]) {
+			default:
+				// Style Savvy: Trendsetters folders
+				mkdir("sdmc:/luma/titles/00040000000A9100", 0777);
+				mkdir("sdmc:/luma/titles/00040000000A9100/romfs", 0777);
+				mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common", 0777);
+				mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound", 0777);
+				break;
+			case CFG_REGION_EUR:
+			case CFG_REGION_AUS:
+				// New Style Boutique folders
+				mkdir("sdmc:/luma/titles/00040000000A9000", 0777);
+				mkdir("sdmc:/luma/titles/00040000000A9000/romfs", 0777);
+				mkdir("sdmc:/luma/titles/00040000000A9000/romfs/Common", 0777);
+				mkdir("sdmc:/luma/titles/00040000000A9000/romfs/Common/Sound", 0777);
+				break;
+			case CFG_REGION_JPN:
+				// Wagamama Fashion: Girls Mode - Yokubari Sengen folders
+				mkdir("sdmc:/luma/titles/000400000005D100", 0777);
+				mkdir("sdmc:/luma/titles/000400000005D100/romfs", 0777);
+				mkdir("sdmc:/luma/titles/000400000005D100/romfs/Common", 0777);
+				mkdir("sdmc:/luma/titles/000400000005D100/romfs/Common/Sound", 0777);
+				break;
+			case CFG_REGION_KOR:
+				// Girls Style: Paesyeon Lideo Seon-eon! folders
+				mkdir("sdmc:/luma/titles/00040000000C4F00", 0777);
+				mkdir("sdmc:/luma/titles/00040000000C4F00/romfs", 0777);
+				mkdir("sdmc:/luma/titles/00040000000C4F00/romfs/Common", 0777);
+				mkdir("sdmc:/luma/titles/00040000000C4F00/romfs/Common/Sound", 0777);
+				break;
+		}
+	}
 
 	for (int i = 0; i < 3; i++) {
 		res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path3}, "ss3");	// Read from digital version
@@ -407,6 +409,38 @@ int main()
 		case 0x000019F6:
 			saveRegion[3] = CFG_REGION_JPN;
 			break;
+	}
+	if (R_SUCCEEDED(res)) {
+		switch (saveRegion[3]) {
+			default:
+				// Style Savvy: Styling Star folders
+				mkdir("sdmc:/luma/titles/00040000001C2500", 0777);
+				mkdir("sdmc:/luma/titles/00040000001C2500/romfs", 0777);
+				mkdir("sdmc:/luma/titles/00040000001C2500/romfs/USA", 0777);
+				mkdir("sdmc:/luma/titles/00040000001C2500/romfs/USA/Common", 0777);
+				mkdir("sdmc:/luma/titles/00040000001C2500/romfs/USA/Common/Scene", 0777);
+				readDanceCpk();
+				break;
+			case CFG_REGION_EUR:
+			case CFG_REGION_AUS:
+				// New Style Boutique 3: Styling Star folders
+				mkdir("sdmc:/luma/titles/00040000001C2600", 0777);
+				mkdir("sdmc:/luma/titles/00040000001C2600/romfs", 0777);
+				mkdir("sdmc:/luma/titles/00040000001C2600/romfs/EUR", 0777);
+				mkdir("sdmc:/luma/titles/00040000001C2600/romfs/EUR/Common", 0777);
+				mkdir("sdmc:/luma/titles/00040000001C2600/romfs/EUR/Common/Scene", 0777);
+				readDanceCpk();
+				break;
+			case CFG_REGION_JPN:
+				// Girls Mode 4: Star Stylist
+				mkdir("sdmc:/luma/titles/000400000019F600", 0777);
+				mkdir("sdmc:/luma/titles/000400000019F600/romfs", 0777);
+				mkdir("sdmc:/luma/titles/000400000019F600/romfs/JPN", 0777);
+				mkdir("sdmc:/luma/titles/000400000019F600/romfs/JPN/Common", 0777);
+				mkdir("sdmc:/luma/titles/000400000019F600/romfs/JPN/Common/Scene", 0777);
+				readDanceCpk();
+				break;
+		}
 	}
 
 	ss2SaveFound = (access(ss2SavePath, F_OK) == 0);

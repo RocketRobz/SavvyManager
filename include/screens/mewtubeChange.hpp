@@ -33,6 +33,7 @@ private:
 	int videoShownFirst = 0;
 	const int numberofVideos = 18;
 	int characterShownFirst = 0;
+	mutable int textTimer = 0;
 
 	bool showMessage = false;
 	int messageNo = 0;

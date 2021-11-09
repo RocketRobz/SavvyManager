@@ -2,6 +2,7 @@
 #include "screenvars.h"
 #include "whatToDo.hpp"
 
+#include "danceCpk.hpp"
 #include "savedata.h"
 
 #include "ss4charnames.h"
@@ -48,28 +49,6 @@ static const char* songTitle[] = {
 	"Radiance",
 	"Ring a Ding",
 	"Bravo",
-};
-
-static const int peopleAmount[] = {
-	1,
-	1,
-	3,
-	1,
-	3,
-	1,
-	2,
-	2,
-	1,
-	3,
-	3,
-	1,
-	1,
-	1,
-	1,
-	3,
-	3,
-	3,
-	3,
 };
 
 extern const char* getSS4CharName(u16 charId);
@@ -377,9 +356,10 @@ void MewtubeChange::Draw(void) const {
 			}
 			i2 += 48;
 		}
+		textTimer = 0;
 	} else if (subScreenMode == 1) {
 		Gui::DrawString(8, 8, 0.50, BLACK, "Select the character you want to change.");
-		for (int i = 0; i < peopleAmount[cursorPosition[0]]; i++) {
+		for (int i = 0; i < danceGetPeopleAmount(cursorPosition[0]); i++) {
 			u16 charId = getSS4MewtubeCharacterId(cursorPosition[0], 3+i);
 			u16 orgCharId = getSS4MewtubeCharacterId(cursorPosition[0], i);
 			GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
@@ -395,9 +375,13 @@ void MewtubeChange::Draw(void) const {
 			i2 += 48;
 		}
 		u16 charId = getSS4MewtubeCharacterId(cursorPosition[0], 3+cursorPosition[1]);
-		if (charId != 0) {
-			Gui::DrawString(88, 201, 0.50, BLACK, ": Remove");
+		if (cursorPosition[0] != 12 && textTimer > iFps*3) {
+			Gui::DrawString(88, 201, 0.50, BLACK,"LEFT/RIGHT: Remove/Add");
+		} else if (charId != 0) {
+			Gui::DrawString(88, 201, 0.50, BLACK, ": Blank out");
 		}
+		textTimer++;
+		if (textTimer > iFps*6 || charId == 0) textTimer = 0;
 		Gui::DrawString(88, 217, 0.50, BLACK, "SELECT: Revert to original");
 	} else {
 		char chrCounter[24];
@@ -411,6 +395,7 @@ void MewtubeChange::Draw(void) const {
 			Gui::DrawString(32, i2+8, 0.60, BLACK, songTitle[i]);
 			i2 += 48;
 		}
+		textTimer = 0;
 	}
 
 	GFX::DrawSprite(sprites_button_shadow_idx, 5, 199);
@@ -564,11 +549,45 @@ void MewtubeChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition t
 				sndHighlight();
 				cursorPosition[1]++;
 				cursorPositionOnScreen[1]++;
-				if (cursorPosition[1] > peopleAmount[cursorPosition[0]]-1) {
-					cursorPosition[1] = peopleAmount[cursorPosition[0]]-1;
+				if (cursorPosition[1] > danceGetPeopleAmount(cursorPosition[0])-1) {
+					cursorPosition[1] = danceGetPeopleAmount(cursorPosition[0])-1;
 				}
-				if (cursorPositionOnScreen[1] > peopleAmount[cursorPosition[0]]-1) {
-					cursorPositionOnScreen[1] = peopleAmount[cursorPosition[0]]-1;
+				if (cursorPositionOnScreen[1] > danceGetPeopleAmount(cursorPosition[0])-1) {
+					cursorPositionOnScreen[1] = danceGetPeopleAmount(cursorPosition[0])-1;
+				}
+			}
+			if ((hDown & KEY_LEFT) && cursorPosition[0] != 12) {
+				int peopleAmount = danceGetPeopleAmount(cursorPosition[0]);
+				peopleAmount--;
+				if (peopleAmount < 1) {
+					peopleAmount = 1;
+				} else {
+					sndHighlight();
+					danceSetPeopleAmount(cursorPosition[0], peopleAmount);
+					danceWriteDataToCpk(cursorPosition[0]);
+					if (getSS4MewtubeCharacterId(cursorPosition[0], peopleAmount) != 0) {
+						writeSS4MewtubeCharacterId(0, cursorPosition[0], peopleAmount);
+						writeSS4MewtubeCharacter(cursorPosition[0], peopleAmount);
+						writeSS4MewtubeCharacterToSave(cursorPosition[0], peopleAmount);	// Write to save data
+					}
+				}
+			}
+			if ((hDown & KEY_RIGHT) && cursorPosition[0] != 12) {
+				int peopleAmount = danceGetPeopleAmount(cursorPosition[0]);
+				peopleAmount++;
+				if (peopleAmount > 3) {
+					peopleAmount = 3;
+				} else {
+					sndHighlight();
+					danceSetPeopleAmount(cursorPosition[0], peopleAmount);
+					danceWriteDataToCpk(cursorPosition[0]);
+					if (getSS4MewtubeCharacterId(cursorPosition[0], peopleAmount-1) == 0) {
+						u16 charId = danceGetCharacterId(cursorPosition[0], peopleAmount-1);
+						readSS4Character(charId);
+						writeSS4MewtubeCharacterId(charId, cursorPosition[0], peopleAmount-1);
+						writeSS4MewtubeCharacter(cursorPosition[0], peopleAmount-1);
+						writeSS4MewtubeCharacterToSave(cursorPosition[0], peopleAmount-1);	// Write to save data
+					}
 				}
 			}
 		}
