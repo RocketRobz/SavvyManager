@@ -12,16 +12,17 @@ For Style Savvy's 10th Anniversary, a save editor is here!
 * As of currently, only games 2-4 are supported.
    * Only the 2nd game is supported for KOR regions.
 * High-resolution Hori-HD (800px wide mode), exclusive to 3DS, New 3DS, and New 2DS consoles!
-* The GUI from Kirakira Code/Fashion Forward (third game).
-* Pre-rendered characters and backgrounds.
+* Pre-rendered character previews.
 * Originally composed menu music!
 * Sound effects from ChuChu Rocket.
 * Play as most characters from all Girls Mode/Style Savvy/Style Boutique games, in all (except first) games!     (Shop customers and brand reps not included.)
 * When importing a character from those games, you can press L or R to select the seasonal outfit.     (Note that not all characters will have seasonal outfits.)
 * Add characters from the first game, GM2/Trendsetters/NSB, and Star Stylist/Styling Star, as extra contacts in Kirakira Code/Fashion Forward!
+* Import any character from the Kirakira Code/Fashion Forward save data into Star Stylist/Styling Star.
 * You can also export your current character, in case if you want to restore/import it later.
 * (3rd and 4th games) Import/Export brand emblems for custom designed outfits.
 * Apply music packs to Girls Mode 2/Style Savvy: Trendsetters/New Style Boutique. (Requires game patching enabled in Luma.)
+* (GM4/SS4/NSB3): Add, remove, and/or change characters in Mewtube videos!
 * Coming soon: Change attributes of your character (such as gender, skin color, pose set, height, etc.).
 * Coming soon (GM4/SS4/NSB3): Change bow placement on your character, if a bow is being worn.
 
