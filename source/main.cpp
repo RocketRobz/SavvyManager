@@ -278,8 +278,8 @@ int main()
 			break;
 		case CFG_REGION_KOR:
 			ss2Id[0] = 0x000C4F00;
-			ss2Id[1] = 0x0005D100; // Fallback: JAP
-			ss2Id[2] = 0x000A9100; // Fallback: JPN
+			ss2Id[1] = 0x0005D100; // Fallback: JPN
+			ss2Id[2] = 0x000A9100; // Fallback: USA
 			ss2Id[3] = 0x000A9000; // Fallback: EUR/AUS
 			ss3Id[0] = 0x0012D800; // JPN
 			ss3Id[1] = 0x00196500; // Fallback: USA
