@@ -303,7 +303,8 @@ int main()
 	u32 path3card[3] = {MEDIATYPE_GAME_CARD, ss3Id[0], 0x00040000};
 	u32 path4[3] = {MEDIATYPE_SD, ss4Id[0], 0};
 
-	for (int i = 0; i < 4; i++) {
+	int i = 0;
+	while (i < 4) {
 		res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2}, "ss2");	// Read from digital version
 		if (R_FAILED(res)) {
 			res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2card}, "ss2");	// Read from game card
@@ -316,6 +317,7 @@ int main()
 		} else {
 			break;
 		}
+		i++;
 	}
 	switch (path2[1]) {
 		case 0x000A9100:
@@ -365,7 +367,8 @@ int main()
 		}
 	}
 
-	for (int i = 0; i < 3; i++) {
+	i = 0;
+	while (i < 3) {
 		res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path3}, "ss3");	// Read from digital version
 		if (R_FAILED(res)) {
 			res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path3card}, "ss3");	// Read from game card
@@ -378,6 +381,7 @@ int main()
 		} else {
 			break;
 		}
+		i++;
 	}
 	switch (path3[1]) {
 		case 0x00196500:
@@ -391,13 +395,15 @@ int main()
 			break;
 	}
 
-	for (int i = 0; i < 3; i++) {
+	i = 0;
+	while (i < 3) {
 		res = FSUSER_OpenArchive(&archive4, ARCHIVE_EXTDATA, {PATH_BINARY, 12, path4});
 		if (R_FAILED(res)) {
 			path4[1] = ss4Id[i+1];
 		} else {
 			break;
 		}
+		i++;
 	}
 	switch (path4[1]) {
 		case 0x00001C25:
