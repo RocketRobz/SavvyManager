@@ -304,19 +304,15 @@ int main()
 	u32 path4[3] = {MEDIATYPE_SD, ss4Id[0], 0};
 
 	for (int i = 0; i < 4; i++) {
+		path2[1] = ss2Id[i];
+		path2card[1] = ss2Id[i];
 		res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2}, "ss2");	// Read from digital version
 		if (R_FAILED(res)) {
 			res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2card}, "ss2");	// Read from game card
-			if (R_FAILED(res)) {
-				path2[1] = ss2Id[i+1];
-				path2card[1] = ss2Id[i+1];
-			} else {
+			if (R_SUCCEEDED(res)) {
 				break;
 			}
 		} else {
-			break;
-		}
-		if (i >= 4) {
 			break;
 		}
 	}
@@ -369,19 +365,15 @@ int main()
 	}
 
 	for (int i = 0; i < 3; i++) {
+		path3[1] = ss3Id[i];
+		path3card[1] = ss3Id[i];
 		res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path3}, "ss3");	// Read from digital version
 		if (R_FAILED(res)) {
 			res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path3card}, "ss3");	// Read from game card
-			if (R_FAILED(res)) {
-				path3[1] = ss3Id[i+1];
-				path3card[1] = ss3Id[i+1];
-			} else {
+			if (R_SUCCEEDED(res)) {
 				break;
 			}
 		} else {
-			break;
-		}
-		if (i >= 3) {
 			break;
 		}
 	}
@@ -398,13 +390,9 @@ int main()
 	}
 
 	for (int i = 0; i < 3; i++) {
+		path4[1] = ss4Id[i];
 		res = FSUSER_OpenArchive(&archive4, ARCHIVE_EXTDATA, {PATH_BINARY, 12, path4});
-		if (R_FAILED(res)) {
-			path4[1] = ss4Id[i+1];
-		} else {
-			break;
-		}
-		if (i >= 3) {
+		if (R_SUCCEEDED(res)) {
 			break;
 		}
 	}
