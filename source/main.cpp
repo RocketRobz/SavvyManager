@@ -362,6 +362,7 @@ int main()
 				mkdir("sdmc:/luma/titles/00040000000C4F00/romfs/Common/Sound", 0777);
 				break;
 		}
+		ss2SaveFound = (access(ss2SavePath, F_OK) == 0);
 	}
 
 	for (int i = 0; i < 3; i++) {
@@ -387,6 +388,9 @@ int main()
 		case 0x0012D800:
 			saveRegion[2] = CFG_REGION_JPN;
 			break;
+	}
+	if (R_SUCCEEDED(res)) {
+		ss3SaveFound = (access(ss3SavePath, F_OK) == 0);
 	}
 
 	for (int i = 0; i < 3; i++) {
@@ -438,12 +442,9 @@ int main()
 				readDanceCpk();
 				break;
 		}
+		ss4SaveFound = foundSS4Save();
 	}
 
-	ss2SaveFound = (access(ss2SavePath, F_OK) == 0);
-	ss3SaveFound = (access(ss3SavePath, F_OK) == 0);
-	ss4SaveFound = foundSS4Save();
-	
 	ss3DLCharactersBackedUp = (access("sdmc:/3ds/SavvyManager/SS3/dlCharacters.bak", F_OK) == 0);
 
 	sprintf(verText, "Ver. %i.%i.%i", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
