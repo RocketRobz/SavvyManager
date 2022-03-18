@@ -836,7 +836,7 @@ static u8 SS3ToSS4EyelinerTable[SS3ToSS4EyelinerAmount][2] = { // Offset: 0x0D
 	{0x74, 0x06},
 };
 
-#define SS3ToSS4ContactAmount 21
+#define SS3ToSS4ContactAmount 22
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4ContactTable[SS3ToSS4ContactAmount][2] = { // Offset: 0x0E
@@ -844,6 +844,7 @@ static u8 SS3ToSS4ContactTable[SS3ToSS4ContactAmount][2] = { // Offset: 0x0E
 	{0x13, 0x17},
 	{0x14, 0x52},
 	{0x1C, 0x18},
+	{0x1E, 0x3B},
 	{0x20, 0x10},
 	{0x22, 0x3B},
 	{0x23, 0x0F},
@@ -869,7 +870,7 @@ static u8 SS3ToSS4ContactTable[SS3ToSS4ContactAmount][2] = { // Offset: 0x0E
 static u8 SS3ToSS4BlusherTable[SS3ToSS4BlusherAmount][2] = { // Offset: 0x0F
 	{0x0A, 0x0E},
 	{0x15, 0x0E},
-	{0x17, 0x0E},
+	{0x17, 0x11},
 	{0x20, 0x0A},
 	{0x21, 0x0A},
 	{0x23, 0x0E},
@@ -882,7 +883,7 @@ static u8 SS3ToSS4BlusherTable[SS3ToSS4BlusherAmount][2] = { // Offset: 0x0F
 	{0x69, 0x0C},
 };
 
-#define SS3ToSS4HairStyleAmount 20
+#define SS3ToSS4HairStyleAmount 21
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4HairStyleTable[SS3ToSS4HairStyleAmount][2] = { // Offset: 0x15
@@ -901,6 +902,7 @@ static u8 SS3ToSS4HairStyleTable[SS3ToSS4HairStyleAmount][2] = { // Offset: 0x15
 	{0x1C, 0x60},
 	{0x1F, 0x62},
 	{0x25, 0x50},
+	{0x28, 0x4E},
 	{0x29, 0x51},
 	{0x2D, 0x33},
 	{0x38, 0x64},
