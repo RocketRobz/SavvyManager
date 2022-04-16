@@ -172,13 +172,16 @@ int main()
 		cfguExit();
 	}
 
+	s64 isCitra = 0;
+	svcGetSystemInfo(&isCitra, 0x20000, 0); // Check if running on Citra
+
 	aptInit();
 	APT_GetProgramID(&appID);
 	aptExit();
 
 	gfxInitDefault();
 	loadSettings();
-	gfxSetWide(horiHd && consoleModel != 3);	// Enable 800x240 mode for non-O2DS consoles. Improves clarity in graphics.
+	gfxSetWide(!isCitra && horiHd && consoleModel != 3);	// Enable 800x240 mode for non-O2DS consoles. Improves clarity in graphics.
 
 	hidSetRepeatParameters(25, 5);
 
