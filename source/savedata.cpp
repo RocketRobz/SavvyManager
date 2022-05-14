@@ -789,7 +789,7 @@ static u8 SS3ToSS4MascaraTable[SS3ToSS4MascaraAmount][2] = { // Offset: 0x0B
 	{0x75, 0x10},
 };
 
-#define SS3ToSS4EyeshadowAmount 22
+#define SS3ToSS4EyeshadowAmount 23
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4EyeshadowTable[SS3ToSS4EyeshadowAmount][2] = { // Offset: 0x0C
@@ -804,6 +804,7 @@ static u8 SS3ToSS4EyeshadowTable[SS3ToSS4EyeshadowAmount][2] = { // Offset: 0x0C
 	{0x1C, 0x4B},
 	{0x21, 0x3E},
 	{0x23, 0x2B},
+	{0x2A, 0x2B},
 	{0x31, 0x2F},
 	{0x34, 0x50},
 	{0x36, 0x43},
@@ -817,7 +818,7 @@ static u8 SS3ToSS4EyeshadowTable[SS3ToSS4EyeshadowAmount][2] = { // Offset: 0x0C
 	{0x74, 0x29},
 };
 
-#define SS3ToSS4EyelinerAmount 13
+#define SS3ToSS4EyelinerAmount 14
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4EyelinerTable[SS3ToSS4EyelinerAmount][2] = { // Offset: 0x0D
@@ -828,6 +829,7 @@ static u8 SS3ToSS4EyelinerTable[SS3ToSS4EyelinerAmount][2] = { // Offset: 0x0D
 	{0x17, 0x44},
 	{0x1B, 0x5C},
 	{0x21, 0x44},
+	{0x28, 0x14},
 	{0x36, 0x50},
 	{0x3B, 0x53},
 	{0x45, 0x19},
@@ -883,7 +885,7 @@ static u8 SS3ToSS4BlusherTable[SS3ToSS4BlusherAmount][2] = { // Offset: 0x0F
 	{0x69, 0x0C},
 };
 
-#define SS3ToSS4HairStyleAmount 21
+#define SS3ToSS4HairStyleAmount 22
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4HairStyleTable[SS3ToSS4HairStyleAmount][2] = { // Offset: 0x15
@@ -907,6 +909,7 @@ static u8 SS3ToSS4HairStyleTable[SS3ToSS4HairStyleAmount][2] = { // Offset: 0x15
 	{0x2D, 0x33},
 	{0x38, 0x64},
 	{0x41, 0x3C},
+	{0x48, 0x4E},
 	{0x4A, 0x52},
 };
 
