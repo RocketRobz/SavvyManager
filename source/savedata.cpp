@@ -748,6 +748,13 @@ static u8 SS3ToSS4MouthShapeTable[SS3ToSS4MouthShapeAmount][2] = { // Offset: 0x
 	{0x0D, 0x01},
 };
 
+#define SS3ToSS4EyebrowAmount 1
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4EyebrowTable[SS3ToSS4EyebrowAmount][2] = { // Offset: 0x07
+	{0x04, 0x10},
+};
+
 #define SS3ToSS4LipstickAmount 18
 
 // Left: SS3, Right: SS4
@@ -866,10 +873,11 @@ static u8 SS3ToSS4ContactTable[SS3ToSS4ContactAmount][2] = { // Offset: 0x0E
 	{0x73, 0x3A},
 };
 
-#define SS3ToSS4BlusherAmount 13
+#define SS3ToSS4BlusherAmount 14
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4BlusherTable[SS3ToSS4BlusherAmount][2] = { // Offset: 0x0F
+	{0x01, 0x0F},
 	{0x0A, 0x0E},
 	{0x15, 0x0E},
 	{0x17, 0x11},
@@ -937,6 +945,13 @@ void readSS3CharacterToSS4(u16 id) {
 			break;
 		}
 	}
+	// Eyebrows
+	for (i = 0; i < SS3ToSS4EyebrowAmount; i++) {
+		if (ss4CharacterData.eyebrows == SS3ToSS4EyebrowTable[i][0]) {
+			ss4CharacterData.eyebrows = SS3ToSS4EyebrowTable[i][1];
+			break;
+		}
+	}
 	// Lipstick
 	for (i = 0; i < SS3ToSS4LipstickAmount; i++) {
 		if (ss4CharacterData.lipstickColor == SS3ToSS4LipstickTable[i][0]) {
@@ -976,6 +991,13 @@ void readSS3CharacterToSS4(u16 id) {
 	for (i = 0; i < SS3ToSS4BlusherAmount; i++) {
 		if (ss4CharacterData.blusherColor == SS3ToSS4BlusherTable[i][0]) {
 			ss4CharacterData.blusherColor = SS3ToSS4BlusherTable[i][1];
+			break;
+		}
+	}
+	// Overlaying Eyebrows
+	for (i = 0; i < SS3ToSS4EyebrowAmount; i++) {
+		if (ss4CharacterData.eyebrowOverlay == SS3ToSS4EyebrowTable[i][0]) {
+			ss4CharacterData.eyebrowOverlay = SS3ToSS4EyebrowTable[i][1];
 			break;
 		}
 	}
