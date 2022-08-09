@@ -38,7 +38,7 @@ void StockManage::drawMsg(void) const {
 			Gui::DrawStringCentered(0, 98, 0.60, BLACK, "to your wardrobe.");
 		} else {
 			Gui::DrawStringCentered(0, 68, 0.60, BLACK, "All fashion items will be added");
-			Gui::DrawStringCentered(0, 88, 0.60, BLACK, "to your boutique and wardrobe.");
+			Gui::DrawStringCentered(0, 88, 0.60, BLACK, (highlightedGame == 3) ? "to your boutique and wardrobe." : "to your wardrobe.");
 		}
 		Gui::DrawStringCentered(0, 144, 0.60, BLACK, "Is this OK?");
 	} else {
@@ -164,7 +164,7 @@ void StockManage::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition tou
 					}
 				} else {
 					for (int i = 0; i < ((highlightedGame == 3) ? 30304 : 15500); i++) {
-						(highlightedGame == 3) ? writeSS4FashionOwnFlag(i, 0xFFFF) : writeSS3FashionOwnFlag(i, 0xFFFF);
+						(highlightedGame == 3) ? writeSS4FashionOwnFlag(i, 0x6301) : writeSS3FashionOwnWardFlag(i, 0x01);
 					}
 					flagModified = true;
 				}
