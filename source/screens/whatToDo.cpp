@@ -229,21 +229,44 @@ void WhatToDo::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition touch)
 			runSelection = true;
 		}
 
-		if ((hDown & KEY_TOUCH) && touch.px >= 71 && touch.px <= 248 && touch.py >= 91 && touch.py <= 136) {
-			if (touch.px < 120) {
-				whatToChange_cursorPosition = 0;
-				cursorChange();
-				runSelection = true;
-			}
-			if ((touch.px > 134) && (touch.px < 185) && (highlightedGame==1 || highlightedGame==3)) {
-				whatToChange_cursorPosition = 1;
-				cursorChange();
-				runSelection = true;
-			}
-			if ((touch.px > 198) && highlightedGame > 1) {
-				whatToChange_cursorPosition = 2;
-				cursorChange();
-				runSelection = true;
+		if ((hDown & KEY_TOUCH) && touch.py >= 91 && touch.py <= 136) {
+			if (highlightedGame == 3 && touch.px >= 39 && touch.px <= 279) {
+				if (touch.px < 88) {
+					whatToChange_cursorPosition = 0;
+					cursorChange();
+					runSelection = true;
+				}
+				if ((touch.px > 102) && (touch.px < 153)) {
+					whatToChange_cursorPosition = 1;
+					cursorChange();
+					runSelection = true;
+				}
+				if ((touch.px > 166) && (touch.px < 217)) {
+					whatToChange_cursorPosition = 2;
+					cursorChange();
+					runSelection = true;
+				}
+				if (touch.px > 230) {
+					whatToChange_cursorPosition = 3;
+					cursorChange();
+					runSelection = true;
+				}
+			} else if (touch.px >= 71 && touch.px <= 248) {
+				if (touch.px < 120) {
+					whatToChange_cursorPosition = 0;
+					cursorChange();
+					runSelection = true;
+				}
+				if ((touch.px > 134) && (touch.px < 185) && (highlightedGame > 0)) {
+					whatToChange_cursorPosition = 1;
+					cursorChange();
+					runSelection = true;
+				}
+				if ((touch.px > 198) && highlightedGame > 1) {
+					whatToChange_cursorPosition = 2;
+					cursorChange();
+					runSelection = true;
+				}
 			}
 		}
 		
