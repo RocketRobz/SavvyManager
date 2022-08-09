@@ -38,7 +38,10 @@ void StockManage::drawMsg(void) const {
 			Gui::DrawStringCentered(0, 98, 0.60, BLACK, "to your wardrobe.");
 		} else {
 			Gui::DrawStringCentered(0, 68, 0.60, BLACK, "All fashion items will be added");
-			Gui::DrawStringCentered(0, 88, 0.60, BLACK, (highlightedGame == 3) ? "to your boutique and wardrobe." : "to your wardrobe.");
+			Gui::DrawStringCentered(0, 88, 0.60, BLACK, (highlightedGame == 3 && boutiqueToo) ? "to your boutique and wardrobe." : "to your wardrobe.");
+			if (highlightedGame == 3 && boutiqueToo) {
+				Gui::DrawStringCentered(0, 108, 0.60, BLACK, "Stock will have 99 of each.");
+			}
 		}
 		Gui::DrawStringCentered(0, 144, 0.60, BLACK, "Is this OK?");
 	} else {
@@ -81,6 +84,10 @@ void StockManage::Draw(void) const {
 			light = !light;
 			x += width;
 			width = light ? 29 : 28;
+		}
+		if (cursorPosition == 0 && showMessage && messageNo == 1) {
+			Gui::Draw_Rect(0, 208, 400, 32, WHITE);
+			Gui::DrawStringCentered(0, 216, 0.60, BLACK, boutiqueToo ? "SELECT: Wardrobe only" : "SELECT: Boutique & Wardrobe");
 		}
 	} else {
 		Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
@@ -164,7 +171,7 @@ void StockManage::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition tou
 					}
 				} else {
 					for (int i = 0; i < ((highlightedGame == 3) ? 30304 : 15500); i++) {
-						(highlightedGame == 3) ? writeSS4FashionOwnFlag(i, 0x6301) : writeSS3FashionOwnWardFlag(i, 0x01);
+						(highlightedGame == 3) ? (boutiqueToo ? writeSS4FashionOwnFlag(i, 0x6301) : writeSS4FashionOwnWardFlag(i, 0x01)) : writeSS3FashionOwnWardFlag(i, 0x01);
 					}
 					flagModified = true;
 				}
@@ -177,6 +184,11 @@ void StockManage::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition tou
 			if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touch.px >= 52 && touch.px < 52+90 && touch.py >= 188 && touch.py < 188+47)) {
 				sndBack();
 				showMessage = false;
+			}
+
+			if ((hDown & KEY_SELECT) && (cursorPosition == 0) && (highlightedGame == 3)) {
+				sndHighlight();
+				boutiqueToo = !boutiqueToo;
 			}
 		} else {
 			if ((hDown & KEY_A) || ((hDown & KEY_TOUCH) && touch.px >= 115 && touch.px < 115+90 && touch.py >= 188 && touch.py < 188+47)) {

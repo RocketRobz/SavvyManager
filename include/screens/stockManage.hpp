@@ -18,6 +18,7 @@ private:
 	int cursorPosition = 0;
 
 	const int numberofOptions = 1;
+	bool boutiqueToo = true;
 
 	bool showMessage = false;
 	int messageNo = 0;
