@@ -187,9 +187,13 @@ void readTempEmblemFile(const char* filename);
 
 extern u16 readSS3FashionOwnFlag(int id);
 extern void writeSS3FashionOwnFlag(int id, u16 flag);
+extern u8 readSS3FashionOwnWardFlag(int id);
+extern void writeSS3FashionOwnWardFlag(int id, u8 flag);
 extern void writeSS3FashionOwnFlagsToSave(void);
 extern u16 readSS4FashionOwnFlag(int id);
 extern void writeSS4FashionOwnFlag(int id, u16 flag);
+extern u8 readSS4FashionOwnWardFlag(int id);
+extern void writeSS4FashionOwnWardFlag(int id, u8 flag);
 extern void writeSS4FashionOwnFlagsToSave(void);
 
 #ifdef __cplusplus

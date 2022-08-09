@@ -508,6 +508,16 @@ void writeSS3FashionOwnFlag(int id, u16 flag) {
 	toncset16((char*)ss3Save+(offset)+(id*sizeof(u16)), flag, 1);
 }
 
+u8 readSS3FashionOwnWardFlag(int id) {
+	u32 offset = (saveRegion[2]==CFG_REGION_JPN ? 0x11BB4 : 0x12D58);
+	return *(u8*)((char*)ss3Save+(offset)+(id*sizeof(u16)));
+}
+
+void writeSS3FashionOwnWardFlag(int id, u8 flag) {
+	u32 offset = (saveRegion[2]==CFG_REGION_JPN ? 0x11BB4 : 0x12D58);
+	toncset((char*)ss3Save+(offset)+(id*sizeof(u16)), flag, 1);
+}
+
 void writeSS3FashionOwnFlagsToSave(void) {
 	u32 offset = (saveRegion[2]==CFG_REGION_JPN ? 0x11BB4 : 0x12D58);
 
@@ -1221,6 +1231,14 @@ u16 readSS4FashionOwnFlag(int id) {
 
 void writeSS4FashionOwnFlag(int id, u16 flag) {
 	toncset16((char*)ss4Save+0x10A1C+(id*sizeof(u16)), flag, 1);
+}
+
+u8 readSS4FashionOwnWardFlag(int id) {
+	return *(u8*)((char*)ss4Save+0x10A1C+(id*sizeof(u16)));
+}
+
+void writeSS4FashionOwnWardFlag(int id, u8 flag) {
+	toncset((char*)ss4Save+0x10A1C+(id*sizeof(u16)), flag, 1);
 }
 
 void writeSS4FashionOwnFlagsToSave(void) {

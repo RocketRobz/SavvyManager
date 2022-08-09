@@ -35,7 +35,7 @@ void StockManage::drawMsg(void) const {
 		if (cursorPosition == 1) {
 			Gui::DrawStringCentered(0, 58, 0.60, BLACK, "Fashion items owned in the");
 			Gui::DrawStringCentered(0, 78, 0.60, BLACK, "previous game will be added");
-			Gui::DrawStringCentered(0, 98, 0.60, BLACK, "to your boutique and wardrobe.");
+			Gui::DrawStringCentered(0, 98, 0.60, BLACK, "to your wardrobe.");
 		} else {
 			Gui::DrawStringCentered(0, 68, 0.60, BLACK, "All fashion items will be added");
 			Gui::DrawStringCentered(0, 88, 0.60, BLACK, "to your boutique and wardrobe.");
@@ -156,9 +156,9 @@ void StockManage::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition tou
 				bool flagModified = false;
 				if (cursorPosition == 1) {
 					for (int i = 0; i < 15500; i++) {
-						u16 flag = readSS3FashionOwnFlag(i);
-						if (flag == 0x0101 || flag == 0x0102 || flag == 0x0202 || flag == 0x0201) {
-							writeSS4FashionOwnFlag(i, flag);
+						u8 flag = readSS3FashionOwnWardFlag(i);
+						if (flag == 0x01 || flag == 0x03) {
+							writeSS4FashionOwnWardFlag(i, flag);
 							flagModified = true;
 						}
 					}
