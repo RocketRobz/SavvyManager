@@ -498,6 +498,27 @@ void readTempEmblemFile(const char* filename) {
 	fclose(emblemDataFile);
 }
 
+u16 readSS3FashionOwnFlag(int id) {
+	u32 offset = (saveRegion[2]==CFG_REGION_JPN ? 0x11BB4 : 0x12D58);
+	return *(u16*)((char*)ss3Save+(offset)+(id*sizeof(u16)));
+}
+
+void writeSS3FashionOwnFlag(int id, u16 flag) {
+	u32 offset = (saveRegion[2]==CFG_REGION_JPN ? 0x11BB4 : 0x12D58);
+	toncset16((char*)ss3Save+(offset)+(id*sizeof(u16)), flag, 1);
+}
+
+void writeSS3FashionOwnFlagsToSave(void) {
+	u32 offset = (saveRegion[2]==CFG_REGION_JPN ? 0x11BB4 : 0x12D58);
+
+	FILE* saveData = fopen(ss3SavePath, "rb+");
+	fseek(saveData, offset, SEEK_SET);
+	fwrite(ss3Save+offset, 0x7918, 1, saveData);
+	fclose(saveData);
+
+	ss3SaveModified = true;
+}
+
 
 /*
 	Style Savvy: Styling Star
@@ -1190,4 +1211,21 @@ void writeSS4EmblemFile(int id, const char* filename) {
 			break;
 	}
 	fclose(emblemData);
+}
+
+
+
+u16 readSS4FashionOwnFlag(int id) {
+	return *(u16*)((char*)ss4Save+0x10A1C+(id*sizeof(u16)));
+}
+
+void writeSS4FashionOwnFlag(int id, u16 flag) {
+	toncset16((char*)ss4Save+0x10A1C+(id*sizeof(u16)), flag, 1);
+}
+
+void writeSS4FashionOwnFlagsToSave(void) {
+	u32 bytesWritten = 0;
+	FSUSER_OpenFile(&handle4, archive4, fsMakePath(PATH_UTF16, (const void*)UTF8toUTF16(ss4SavePath).data()), FS_OPEN_WRITE, FS_WRITE_FLUSH);
+	FSFILE_Write(handle4, &bytesWritten, 0x10A1C, ss4Save+(0x10A1C), 0xECC0, 0);
+	FSFILE_Close(handle4);
 }

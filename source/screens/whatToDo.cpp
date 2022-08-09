@@ -2,6 +2,7 @@
 #include "emblemChange.hpp"
 #include "gameSelect.hpp"
 #include "musicChange.hpp"
+#include "stockManage.hpp"
 #include "mewtubeChange.hpp"
 #include "screenvars.h"
 #include "whatToDo.hpp"
@@ -23,7 +24,6 @@ WhatToDo::WhatToDo() {
 
 void WhatToDo::initialize() {
 	if ((highlightedGame == 0)
-	|| (highlightedGame > 1 && whatToChange_cursorPosition == 1)
 	|| (highlightedGame < 2 && whatToChange_cursorPosition == 2)) {
 		whatToChange_cursorPosition = 0;
 	}
@@ -109,28 +109,38 @@ void WhatToDo::Draw(void) const {
 	}
 
 	Gui::DrawString(8, 8, 0.50, BLACK, "What do you want to change?");
-	int iconXpos = 64;
+	int iconXpos = (highlightedGame == 3 ? 32 : 64);
+	int textXpos = (highlightedGame == 3 ? -96 : -64);
 	const float textSize = 0.50;
 	GFX::DrawSpriteBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
 	GFX::DrawSprite(sprites_icon_profile_idx, iconXpos, 80);
-	Gui::DrawStringCentered(-64, 140, textSize, RED, "Characters");
+	Gui::DrawStringCentered(textXpos, 140, textSize, RED, "Characters");
 	iconXpos += 64;
-	if (highlightedGame == 3) {
-		// Show Mewtube option for Styling Star
-		GFX::DrawSprite(sprites_icon_mewtube_idx, iconXpos, 84);
-		Gui::DrawStringCentered(0, 140, textSize, RED, "Mewtube");
+	textXpos += 64;
+	if (highlightedGame > 1) {
+		// Show stock option for Fashion Forward and Styling Star
+		GFX::DrawSprite(sprites_icon_stock_idx, iconXpos, 84);
+		Gui::DrawStringCentered(textXpos, 140, textSize, RED, "Stock");
 	} else if (highlightedGame == 1) {
 		// Show music pack option for Trendsetters
 		GFX::DrawSpriteBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
 		GFX::DrawSprite(sprites_icon_music_idx, iconXpos, 80);
-		Gui::DrawStringCentered(0, 140, textSize, RED, "Music");
+		Gui::DrawStringCentered(textXpos, 140, textSize, RED, "Music");
 	}
 	iconXpos += 64;
+	textXpos += 64;
 	if (highlightedGame > 1) {
 		// Show emblem option for Fashion Forward and Styling Star
 		GFX::DrawSpriteBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
 		GFX::DrawSprite(sprites_icon_emblem_idx, iconXpos, 80);
-		Gui::DrawStringCentered(64, 140, textSize, RED, "Emblem");
+		Gui::DrawStringCentered(textXpos, 140, textSize, RED, "Emblem");
+	}
+	iconXpos += 64;
+	textXpos += 64;
+	if (highlightedGame == 3) {
+		// Show Mewtube option for Styling Star
+		GFX::DrawSprite(sprites_icon_mewtube_idx, iconXpos, 84);
+		Gui::DrawStringCentered(textXpos, 140, textSize, RED, "Mewtube");
 	}
 	GFX::DrawSprite(sprites_button_shadow_idx, 5, 199);
 	GFX::DrawSprite(sprites_button_red_idx, 5, 195);
@@ -144,20 +154,41 @@ void WhatToDo::Draw(void) const {
 }
 
 void WhatToDo::cursorChange() {
-	switch (whatToChange_cursorPosition) {
-		case 0:
-		default:
-			cursorX = 80;
-			cursorY = 104;
-			break;
-		case 1:
-			cursorX = 148;
-			cursorY = 104;
-			break;
-		case 2:
-			cursorX = 212;
-			cursorY = 104;
-			break;
+	if (highlightedGame == 3) {
+		switch (whatToChange_cursorPosition) {
+			case 0:
+				cursorX = 48;
+				cursorY = 104;
+				break;
+			case 1:
+				cursorX = 116;
+				cursorY = 104;
+				break;
+			case 2:
+				cursorX = 180;
+				cursorY = 104;
+				break;
+			case 3:
+				cursorX = 244;
+				cursorY = 104;
+				break;
+		}
+	} else {
+		switch (whatToChange_cursorPosition) {
+			case 0:
+			default:
+				cursorX = 80;
+				cursorY = 104;
+				break;
+			case 1:
+				cursorX = 148;
+				cursorY = 104;
+				break;
+			case 2:
+				cursorX = 212;
+				cursorY = 104;
+				break;
+		}
 	}
 }
 
@@ -171,34 +202,26 @@ void WhatToDo::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition touch)
 		if (highlightedGame > 0 && showCursor) {
 			if (hDown & KEY_LEFT) {
 				sndHighlight();
+				whatToChange_cursorPosition--;
 				if (highlightedGame == 3) {
-					whatToChange_cursorPosition--;
-					if (whatToChange_cursorPosition < 0)	whatToChange_cursorPosition = 2;
-					cursorChange();
+					if (whatToChange_cursorPosition < 0) whatToChange_cursorPosition = 3;
 				} else if (highlightedGame > 1) {
-					if (whatToChange_cursorPosition == 2)	whatToChange_cursorPosition = 0;
-					else if (whatToChange_cursorPosition == 0)	whatToChange_cursorPosition = 2;
-					cursorChange();
+					if (whatToChange_cursorPosition < 0) whatToChange_cursorPosition = 2;
 				} else {
-					whatToChange_cursorPosition--;
-					if (whatToChange_cursorPosition < 0)	whatToChange_cursorPosition = 1;
-					cursorChange();
+					if (whatToChange_cursorPosition < 0) whatToChange_cursorPosition = 1;
 				}
+				cursorChange();
 			} else if (hDown & KEY_RIGHT) {
 				sndHighlight();
+				whatToChange_cursorPosition++;
 				if (highlightedGame == 3) {
-					whatToChange_cursorPosition++;
-					if (whatToChange_cursorPosition > 2) whatToChange_cursorPosition = 0;
-					cursorChange();
+					if (whatToChange_cursorPosition > 3) whatToChange_cursorPosition = 0;
 				} else if (highlightedGame > 1) {
-					if (whatToChange_cursorPosition == 0) whatToChange_cursorPosition = 2;
-					else if (whatToChange_cursorPosition == 2) whatToChange_cursorPosition = 0;
-					cursorChange();
+					if (whatToChange_cursorPosition > 2) whatToChange_cursorPosition = 0;
 				} else {
-					whatToChange_cursorPosition++;
 					if (whatToChange_cursorPosition > 1) whatToChange_cursorPosition = 0;
-					cursorChange();
 				}
+				cursorChange();
 			}
 		}
 
@@ -240,10 +263,13 @@ void WhatToDo::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition touch)
 					}
 					break;
 				case 1:
-					highlightedGame==3 ? Gui::setScreen(std::make_unique<MewtubeChange>(), true) : Gui::setScreen(std::make_unique<MusicChange>(), true);
+					highlightedGame>1 ? Gui::setScreen(std::make_unique<StockManage>(), true) : Gui::setScreen(std::make_unique<MusicChange>(), true);
 					break;
 				case 2:
 					Gui::setScreen(std::make_unique<EmblemChange>(), true);
+					break;
+				case 3:
+					Gui::setScreen(std::make_unique<MewtubeChange>(), true);
 					break;
 			}
 		}
