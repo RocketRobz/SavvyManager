@@ -792,7 +792,7 @@ static u8 SS3ToSS4EyebrowTable[SS3ToSS4EyebrowAmount][2] = { // Offset: 0x07
 static u8 SS3ToSS4LipstickTable[SS3ToSS4LipstickAmount][2] = { // Offset: 0x0A
 	{0x0F, 0x2B},
 	{0x15, 0x5E},
-	{0x17, 0x29},
+	{0x17, 0x40},
 	{0x1A, 0x60},
 	{0x1F, 0x08},
 	{0x20, 0x39},
@@ -810,7 +810,7 @@ static u8 SS3ToSS4LipstickTable[SS3ToSS4LipstickAmount][2] = { // Offset: 0x0A
 	{0x71, 0x31},
 };
 
-#define SS3ToSS4MascaraAmount 11
+#define SS3ToSS4MascaraAmount 12
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4MascaraTable[SS3ToSS4MascaraAmount][2] = { // Offset: 0x0B
@@ -821,13 +821,14 @@ static u8 SS3ToSS4MascaraTable[SS3ToSS4MascaraAmount][2] = { // Offset: 0x0B
 	{0x28, 0x12},
 	{0x2A, 0x0E},
 	{0x42, 0x10},
+	{0x56, 0x02},
 	{0x5A, 0x2F},
 	{0x5D, 0x2F},
 	{0x5F, 0x2F},
 	{0x75, 0x10},
 };
 
-#define SS3ToSS4EyeshadowAmount 23
+#define SS3ToSS4EyeshadowAmount 24
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4EyeshadowTable[SS3ToSS4EyeshadowAmount][2] = { // Offset: 0x0C
@@ -843,6 +844,7 @@ static u8 SS3ToSS4EyeshadowTable[SS3ToSS4EyeshadowAmount][2] = { // Offset: 0x0C
 	{0x21, 0x3E},
 	{0x23, 0x2B},
 	{0x2A, 0x2B},
+	{0x2B, 0x08},
 	{0x31, 0x2F},
 	{0x34, 0x50},
 	{0x36, 0x43},
@@ -856,7 +858,7 @@ static u8 SS3ToSS4EyeshadowTable[SS3ToSS4EyeshadowAmount][2] = { // Offset: 0x0C
 	{0x74, 0x29},
 };
 
-#define SS3ToSS4EyelinerAmount 14
+#define SS3ToSS4EyelinerAmount 16
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4EyelinerTable[SS3ToSS4EyelinerAmount][2] = { // Offset: 0x0D
@@ -866,6 +868,7 @@ static u8 SS3ToSS4EyelinerTable[SS3ToSS4EyelinerAmount][2] = { // Offset: 0x0D
 	{0x10, 0x49},
 	{0x17, 0x44},
 	{0x1B, 0x5C},
+	{0x1C, 0x3B},
 	{0x21, 0x44},
 	{0x28, 0x14},
 	{0x36, 0x50},
@@ -873,10 +876,11 @@ static u8 SS3ToSS4EyelinerTable[SS3ToSS4EyelinerAmount][2] = { // Offset: 0x0D
 	{0x45, 0x19},
 	{0x4E, 0x2E},
 	{0x59, 0x42},
+	{0x73, 0x14},
 	{0x74, 0x06},
 };
 
-#define SS3ToSS4ContactAmount 22
+#define SS3ToSS4ContactAmount 23
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4ContactTable[SS3ToSS4ContactAmount][2] = { // Offset: 0x0E
@@ -892,6 +896,7 @@ static u8 SS3ToSS4ContactTable[SS3ToSS4ContactAmount][2] = { // Offset: 0x0E
 	{0x2C, 0x12},
 	{0x2D, 0x21},
 	{0x2E, 0x30},
+	{0x31, 0x12},
 	{0x46, 0x1D},
 	{0x55, 0x3F},
 	{0x5A, 0x30},
@@ -904,7 +909,7 @@ static u8 SS3ToSS4ContactTable[SS3ToSS4ContactAmount][2] = { // Offset: 0x0E
 	{0x73, 0x3A},
 };
 
-#define SS3ToSS4BlusherAmount 14
+#define SS3ToSS4BlusherAmount 15
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4BlusherTable[SS3ToSS4BlusherAmount][2] = { // Offset: 0x0F
@@ -915,6 +920,7 @@ static u8 SS3ToSS4BlusherTable[SS3ToSS4BlusherAmount][2] = { // Offset: 0x0F
 	{0x20, 0x0A},
 	{0x21, 0x0A},
 	{0x23, 0x0E},
+	{0x2B, 0x09},
 	{0x30, 0x04},
 	{0x56, 0x0E},
 	{0x64, 0x12},
@@ -952,6 +958,68 @@ static u8 SS3ToSS4HairStyleTable[SS3ToSS4HairStyleAmount][2] = { // Offset: 0x15
 	{0x4A, 0x52},
 };
 
+#define SS3ToSS4InnerTopAmount 14
+
+// Left: SS3, Right: SS4
+static u16 SS3ToSS4InnerTopTable[SS3ToSS4InnerTopAmount][2] = { // Offsets: 0x1E & 0x20 (Table based on 0x1E)
+	{0x1248, 0x3E87}, // Streetflow: Sleeveless Polo Shirt (White) -> Marzipan Sky: Flowery Sleevelss Shirt
+	{0x25B8, 0x3D43}, // Streetflow: Sleeveless Polo Shirt (Light-Blue) -> Marzipan Sky: Lace-Panel Sleevelss Shirt
+	{0x25BA, 0x4D1D}, // Streetflow: Sleeveless Polo Shirt (Green) -> Chorale: Lace-Belted Sleeveless Shirt
+	{0x25BC, 0x2AB2}, // Streetflow: Sleeveless Polo Shirt (Magenta) -> Chorale: Sleeveless Shirt
+	{0x25BE, 0x2AB6}, // Streetflow: Sleeveless Polo Shirt (Black) -> Chorale: Sleeveless Shirt
+	{0x25C0, 0x52AA}, // Streetflow: Sleeveless Polo Shirt (Orange) -> April Bonbon: Funky Two-Tone Shirt
+	{0x25C2, 0x4D25}, // Streetflow: Sleeveless Polo Shirt (Dark Beige) -> Chorale: Lace-Belted Sleeveless Shirt
+	{0x399C, 0x3E85}, // Streetflow: Sleeveless Polo Shirt (Red) -> AZ-USA: Stripey Sleeveless Shirt
+	{0x13CC, 0x13CB}, // Streetflow: Wave Design Shirt (White) -> Chorale: Sleeveless Shirt
+	{0x25C4, 0x2AB2}, // Streetflow: Wave Design Shirt (Pink) -> Chorale: Sleeveless Shirt
+	{0x25C6, 0x4D1D}, // Streetflow: Wave Design Shirt (Green) -> Chorale: Lace-Belted Sleeveless Shirt
+	{0x25C8, 0x2AAE}, // Streetflow: Wave Design Shirt (Purple) -> Chorale: Sleeveless Shirt
+	{0x25CA, 0x2AB6}, // Streetflow: Wave Design Shirt (Black) -> Chorale: Sleeveless Shirt
+	{0x399E, 0x3E85}, // Streetflow: Wave Design Shirt (Red) -> AZ-USA: Stripey Sleeveless Shirt
+};
+
+#define SS3ToSS4TopAmount 1
+
+// Left: SS3, Right: SS4
+static u16 SS3ToSS4TopTable[SS3ToSS4TopAmount][2] = { // Offset: 0x20
+	{0x5F6A, 0x5D0B}, // Soy: Jellyfish Top -> Soy: Notch Neck Gradient Tunic
+};
+
+#define SS3ToSS4SkirtPantsAmount 16
+
+// Left: SS3, Right: SS4
+static u16 SS3ToSS4SkirtPantsTable[SS3ToSS4SkirtPantsAmount][2] = { // Offset: 0x2A
+	{0x0463, 0x28BA}, // Streetflow: Butterfly Miniskirt (White) -> Basic U: Tiered Skirt
+	{0x2083, 0x28C0}, // Streetflow: Butterfly Miniskirt (Light-Green) -> Basic U: Tiered Skirt
+	{0x2084, 0x137F}, // Streetflow: Butterfly Miniskirt (Pink) -> April Bonbon: Frilly Denim Skirt
+	{0x2085, 0x28B9}, // Streetflow: Butterfly Miniskirt (Black) -> Basic U: Tiered Skirt
+	{0x2086, 0x015F}, // Streetflow: Butterfly Miniskirt (Purple) -> Basic U: Tiered Skirt
+	{0x3D49, 0x28BE}, // Streetflow: Butterfly Miniskirt (Red) -> Basic U: Tiered Skirt
+	{0x3A86, 0x28B8}, // Streetflow: Butterfly Miniskirt (Yellow) -> Basic U: Tiered Skirt
+	{0x3A87, 0x20B2}, // Streetflow: Butterfly Miniskirt (Orange) -> AZ-USA: Tiered Lace Miniskirt
+	{0x4237, 0x12D6}, // Streetflow: Sporty Miniskirt (Yellow-Green) -> April Bonbon: Miniskirt with Ribbon
+	{0x4771, 0x4236}, // Streetflow: Sporty Miniskirt (Blue) -> AZ-USA: Gold-Buttoned Miniskirt
+	{0x4772, 0x43F5}, // Streetflow: Sporty Miniskirt (Green) -> AZ-USA: Gold-Buttoned Miniskirt
+	{0x4773, 0x36A2}, // Streetflow: Sporty Miniskirt (Orange) -> AZ-USA: Lace-Up Denim Mini
+	{0x4774, 0x43F6}, // Streetflow: Sporty Miniskirt (Purple) -> AZ-USA: Gold-Buttoned Miniskirt
+	{0x4775, 0x43FB}, // Streetflow: Sporty Miniskirt (Green-Blue) -> AZ-USA: Gold-Buttoned Miniskirt
+	{0x4776, 0x43F7}, // Streetflow: Sporty Miniskirt (Magenta) -> AZ-USA: Gold-Buttoned Miniskirt
+	{0x5F51, 0x1FB0}, // Soy: Undersea Flares -> Basic U: Bootcut Jeans
+};
+
+#define SS3ToSS4HatAmount 7
+
+// Left: SS3, Right: SS4
+static u16 SS3ToSS4HatTable[SS3ToSS4HatAmount][2] = { // Offset: 0x30
+	{0x053C, 0x3E0C}, // Streetflow: Butterfly Sun Visor (White) -> April Bonbon: Sun Visor with Ribbon
+	{0x247B, 0x3CA9}, // Streetflow: Butterfly Sun Visor (Pink) -> April Bonbon: Sun Visor with Ribbon (Magenta)
+	{0x247C, 0x3E08}, // Streetflow: Butterfly Sun Visor (Light-Blue) -> April Bonbon: Sun Visor with Ribbon
+	{0x247D, 0x3E09}, // Streetflow: Butterfly Sun Visor (Green) -> April Bonbon: Sun Visor with Ribbon
+	{0x247E, 0x3E06}, // Streetflow: Butterfly Sun Visor (Black) -> April Bonbon: Sun Visor with Ribbon
+	{0x247F, 0x3E0A}, // Streetflow: Butterfly Sun Visor (Yellow) -> April Bonbon: Sun Visor with Ribbon
+	{0x3968, 0x3E0B}, // Streetflow: Butterfly Sun Visor (Red) -> April Bonbon: Sun Visor with Ribbon (Orange)
+};
+
 void readSS4Character(u16 id) {
 	tonccpy(&ss4CharacterData, (char*)ss4Save+getSS4CharacterOffset(id), 0x3E);
 }
@@ -984,45 +1052,57 @@ void readSS3CharacterToSS4(u16 id) {
 		}
 	}
 	// Lipstick
-	for (i = 0; i < SS3ToSS4LipstickAmount; i++) {
-		if (ss4CharacterData.lipstickColor == SS3ToSS4LipstickTable[i][0]) {
-			ss4CharacterData.lipstickColor = SS3ToSS4LipstickTable[i][1];
-			break;
+	if (ss4CharacterData.lipstickColor != 0) {
+		for (i = 0; i < SS3ToSS4LipstickAmount; i++) {
+			if (ss4CharacterData.lipstickColor == SS3ToSS4LipstickTable[i][0]) {
+				ss4CharacterData.lipstickColor = SS3ToSS4LipstickTable[i][1];
+				break;
+			}
 		}
 	}
 	// Mascara
-	for (i = 0; i < SS3ToSS4MascaraAmount; i++) {
-		if (ss4CharacterData.mascaraColor == SS3ToSS4MascaraTable[i][0]) {
-			ss4CharacterData.mascaraColor = SS3ToSS4MascaraTable[i][1];
-			break;
+	if (ss4CharacterData.mascaraColor != 0) {
+		for (i = 0; i < SS3ToSS4MascaraAmount; i++) {
+			if (ss4CharacterData.mascaraColor == SS3ToSS4MascaraTable[i][0]) {
+				ss4CharacterData.mascaraColor = SS3ToSS4MascaraTable[i][1];
+				break;
+			}
 		}
 	}
 	// Eyeshadow
-	for (i = 0; i < SS3ToSS4EyeshadowAmount; i++) {
-		if (ss4CharacterData.eyeshadowColor == SS3ToSS4EyeshadowTable[i][0]) {
-			ss4CharacterData.eyeshadowColor = SS3ToSS4EyeshadowTable[i][1];
-			break;
+	if (ss4CharacterData.eyeshadowColor != 0) {
+		for (i = 0; i < SS3ToSS4EyeshadowAmount; i++) {
+			if (ss4CharacterData.eyeshadowColor == SS3ToSS4EyeshadowTable[i][0]) {
+				ss4CharacterData.eyeshadowColor = SS3ToSS4EyeshadowTable[i][1];
+				break;
+			}
 		}
 	}
 	// Eyeliner
-	for (i = 0; i < SS3ToSS4EyelinerAmount; i++) {
-		if (ss4CharacterData.eyelinerColor == SS3ToSS4EyelinerTable[i][0]) {
-			ss4CharacterData.eyelinerColor = SS3ToSS4EyelinerTable[i][1];
-			break;
+	if (ss4CharacterData.eyelinerColor != 0) {
+		for (i = 0; i < SS3ToSS4EyelinerAmount; i++) {
+			if (ss4CharacterData.eyelinerColor == SS3ToSS4EyelinerTable[i][0]) {
+				ss4CharacterData.eyelinerColor = SS3ToSS4EyelinerTable[i][1];
+				break;
+			}
 		}
 	}
 	// Contacts
-	for (i = 0; i < SS3ToSS4ContactAmount; i++) {
-		if (ss4CharacterData.contactColor == SS3ToSS4ContactTable[i][0]) {
-			ss4CharacterData.contactColor = SS3ToSS4ContactTable[i][1];
-			break;
+	if (ss4CharacterData.contactColor != 0) {
+		for (i = 0; i < SS3ToSS4ContactAmount; i++) {
+			if (ss4CharacterData.contactColor == SS3ToSS4ContactTable[i][0]) {
+				ss4CharacterData.contactColor = SS3ToSS4ContactTable[i][1];
+				break;
+			}
 		}
 	}
 	// Blusher
-	for (i = 0; i < SS3ToSS4BlusherAmount; i++) {
-		if (ss4CharacterData.blusherColor == SS3ToSS4BlusherTable[i][0]) {
-			ss4CharacterData.blusherColor = SS3ToSS4BlusherTable[i][1];
-			break;
+	if (ss4CharacterData.blusherColor != 0) {
+		for (i = 0; i < SS3ToSS4BlusherAmount; i++) {
+			if (ss4CharacterData.blusherColor == SS3ToSS4BlusherTable[i][0]) {
+				ss4CharacterData.blusherColor = SS3ToSS4BlusherTable[i][1];
+				break;
+			}
 		}
 	}
 	// Overlaying Eyebrows
@@ -1037,6 +1117,57 @@ void readSS3CharacterToSS4(u16 id) {
 		if (ss4CharacterData.hairStyle == SS3ToSS4HairStyleTable[i][0]) {
 			ss4CharacterData.hairStyle = SS3ToSS4HairStyleTable[i][1];
 			break;
+		}
+	}
+
+	// Replace fashion items removed in Styling Star
+
+	// Inner/Top Hybrid
+	if (ss4CharacterData.inner != 0) {
+		for (i = 0; i < SS3ToSS4InnerTopAmount; i++) {
+			if (ss4CharacterData.inner == SS3ToSS4InnerTopTable[i][0]) {
+				ss4CharacterData.inner = SS3ToSS4InnerTopTable[i][1];
+				break;
+			}
+		}
+	}
+	// Top
+	if (ss4CharacterData.top != 0) {
+		bool topChanged = false;
+		for (i = 0; i < SS3ToSS4InnerTopAmount; i++) {
+			u16 top1 = ss4CharacterData.top;
+			top1++;
+			if (top1 == SS3ToSS4InnerTopTable[i][0]+1) {
+				top1 = SS3ToSS4InnerTopTable[i][1]+1;
+				topChanged = true;
+				break;
+			}
+		}
+		if (!topChanged) {
+			for (i = 0; i < SS3ToSS4TopAmount; i++) {
+				if (ss4CharacterData.top == SS3ToSS4TopTable[i][0]) {
+					ss4CharacterData.top = SS3ToSS4TopTable[i][1];
+					break;
+				}
+			}
+		}
+	}
+	// Skirt/Pants
+	if (ss4CharacterData.skirtPants != 0) {
+		for (i = 0; i < SS3ToSS4SkirtPantsAmount; i++) {
+			if (ss4CharacterData.skirtPants == SS3ToSS4SkirtPantsTable[i][0]) {
+				ss4CharacterData.skirtPants = SS3ToSS4SkirtPantsTable[i][1];
+				break;
+			}
+		}
+	}
+	// Hat
+	if (ss4CharacterData.hat != 0) {
+		for (i = 0; i < SS3ToSS4HatAmount; i++) {
+			if (ss4CharacterData.hat == SS3ToSS4HatTable[i][0]) {
+				ss4CharacterData.hat = SS3ToSS4HatTable[i][1];
+				break;
+			}
 		}
 	}
 }
