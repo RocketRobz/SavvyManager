@@ -23,6 +23,7 @@ For Style Savvy's 10th Anniversary, a save editor is here!
 * (3rd and 4th games) Import/Export brand emblems for custom designed outfits.
 * Apply music packs to Girls Mode 2/Style Savvy: Trendsetters/New Style Boutique. (Requires game patching enabled in Luma.)
 * (GM4/SS4/NSB3): Add, remove, and/or change characters in Mewtube videos!
+* Add all fashion to your wardrobe and shop in the 3rd and 4th games!
 * Coming soon: Change attributes of your character (such as gender, skin color, pose set, height, etc.).
 * Coming soon (GM4/SS4/NSB3): Change bow placement on your character, if a bow is being worn.
 
