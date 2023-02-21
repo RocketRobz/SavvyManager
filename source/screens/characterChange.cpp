@@ -2,6 +2,7 @@
 #include "screenvars.h"
 #include "whatToDo.hpp"
 
+#include "commonLut.hpp"
 #include "savedata.h"
 #include "file_browse.h"
 
@@ -629,7 +630,9 @@ void CharacterChange::drawMsg(void) const {
 	GFX::DrawSprite(sprites_msg_idx, 0, 8, 1, 1);
 	GFX::DrawSprite(sprites_msg_idx, 160, 8, -1, 1);
 	GFX::DrawSprite(messageNo == 4 ? sprites_icon_question_idx : sprites_icon_msg_idx, 132, -2);
-	if (messageNo == 6) {
+	if (messageNo == 7) {
+		Gui::DrawStringCentered(0, 94, 0.60, BLACK, "Shading has been applied.");
+	} else if (messageNo == 6) {
 		Gui::DrawStringCentered(0, 58, 0.60, BLACK, "Characters from the 1st, 2nd, and");
 		Gui::DrawStringCentered(0, 78, 0.60, BLACK, "4th games, will leave from the 3rd.");
 		Gui::DrawStringCentered(0, 104, 0.60, BLACK, "Characters part of downloaded");
@@ -839,7 +842,22 @@ void CharacterChange::Draw(void) const {
 	}
 
 	cursorX = 248;
-	if (subScreenMode == 5) {
+	if (subScreenMode == 7) {
+		cursorY = 64+(48*shadeChange_cursorPosition);
+
+		Gui::DrawString(8, 8, 0.50, BLACK, "Select the shading to use for every character.");
+
+		int i2 = (highlightedGame == 3 ? 8 : 0);
+		i2 += 48;
+		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+		Gui::DrawString(32, i2, 0.65, BLACK, "Cel-shade (Original)");
+		i2 += 48;
+		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+		Gui::DrawString(32, i2, 0.65, BLACK, "No cel-shade");
+		i2 += 48;
+		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+		Gui::DrawString(32, i2, 0.65, BLACK, "Fashion Dreamer");
+	} else if (subScreenMode == 5) {
 		cursorY = 64+(48*importWhereList_cursorPosition);
 
 		Gui::DrawString(8, 8, 0.50, BLACK, "Import from where?");
@@ -981,8 +999,12 @@ void CharacterChange::Draw(void) const {
 		}
 		Gui::DrawString(292, 10, 0.50, currentCharPage==11 ? RED : (assistantChange ? HALF_BLACK : BLACK), "Ext.");
 
-		if (subScreenMode == 0 && highlightedGame == 2) {
-			Gui::DrawString(116, 210, 0.50, BLACK, ss3DLCharactersBackedUp ? "START: Remove contacts" : "START: Expand contacts");
+		if (subScreenMode == 0) {
+			if (highlightedGame == 3) {
+				Gui::DrawString(116, 210, 0.50, BLACK, "START: Change shading");
+			} else if (highlightedGame == 2) {
+				Gui::DrawString(116, 210, 0.50, BLACK, ss3DLCharactersBackedUp ? "START: Remove contacts" : "START: Expand contacts");
+			}
 		}
 
 	  if (!displayNothing) {
@@ -1270,6 +1292,38 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 				}
 			}
 		}
+	} else if (subScreenMode == 7) {
+		if (showCursor) {
+			if (hDown & KEY_DUP) {
+				sndHighlight();
+				shadeChange_cursorPosition--;
+				if (shadeChange_cursorPosition < 0) {
+					shadeChange_cursorPosition = 0;
+				}
+			}
+
+			if (hDown & KEY_DDOWN) {
+				sndHighlight();
+				shadeChange_cursorPosition++;
+				if (shadeChange_cursorPosition > 2) {
+					shadeChange_cursorPosition = 2;
+				}
+			}
+		}
+
+		if (hDown & KEY_A) {
+			sndSelect();
+			loadCommonLut(shadeChange_cursorPosition);
+			messageNo = 7;
+			showMessage = true;
+			subScreenMode = 0;
+		}
+
+		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
+			sndBack();
+			subScreenMode = 0;
+		}
+
 	} else if (subScreenMode == 6) {
 		if (showCursor) {
 			if ((hDownRepeat & KEY_DUP) && (importFromSave_highlightedGame > 1) && (importFromSave_characterPage[importFromSave_highlightedGame] > 0)) {
@@ -2101,13 +2155,18 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 			}
 		}
 
-		if ((hDown & KEY_START) && (highlightedGame == 2)) {
-			sndSelect();
-			messageNo = ss3DLCharactersBackedUp ? 6 : 4;
-			if (!ss3DLCharactersBackedUp) {
-				peopleMetCount = false;
+		if (hDown & KEY_START) {
+			if (highlightedGame == 3) {
+				sndSelect();
+				subScreenMode = 7;
+			} else if (highlightedGame == 2) {
+				sndSelect();
+				messageNo = ss3DLCharactersBackedUp ? 6 : 4;
+				if (!ss3DLCharactersBackedUp) {
+					peopleMetCount = false;
+				}
+				showMessage = true;
 			}
-			showMessage = true;
 		}
 	}
 }

@@ -89,6 +89,8 @@ private:
 	int importFromSave_cursorPosition = 0;
 	int importFromSave_cursorPositionOnScreen = 0;
 
+	int shadeChange_cursorPosition = 0;
+
 	int characterShownFirst = 0;
 	int import_characterShownFirst = 0;
 	int importFromSave_characterShownFirst = 0;
