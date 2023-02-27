@@ -571,7 +571,8 @@ const char* CharacterChange::import_characterNameDisplay(void) const {
 }
 
 const char* CharacterChange::ss1Title(void) const {
-	switch (sysRegion) {
+	extern int ss1Region;
+	switch (ss1Region) {
 		default:
 			return "Style Savvy";
 		case CFG_REGION_EUR:
@@ -585,7 +586,7 @@ const char* CharacterChange::ss1Title(void) const {
 }
 
 const char* CharacterChange::ss2Title(void) const {
-	switch (sysRegion) {
+	switch (saveRegion[1]) {
 		default:
 			return "Style Savvy: Trendsetters";
 		case CFG_REGION_EUR:
@@ -599,7 +600,7 @@ const char* CharacterChange::ss2Title(void) const {
 }
 
 const char* CharacterChange::ss3Title(void) const {
-	switch (sysRegion) {
+	switch (saveRegion[2]) {
 		default:
 			return "Style Savvy: Fashion Forward";
 		case CFG_REGION_EUR:
@@ -613,7 +614,7 @@ const char* CharacterChange::ss3Title(void) const {
 }
 
 const char* CharacterChange::ss4Title(void) const {
-	switch (sysRegion) {
+	switch (saveRegion[3]) {
 		default:
 			return "Style Savvy: Styling Star";
 		case CFG_REGION_EUR:

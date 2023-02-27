@@ -48,12 +48,22 @@ static bool musicPlaying = false;
 static bool musicLoopPlaying = false;
 static int musicLoopDelay = 0;
 
+int ss1Region = -1;
+static int ss2Region = -1;
+static int ss3Region = -1;
+static int ss4Region = -1;
+
 void loadSettings(void) {
 	CIniFile settingsini(settingsIni);
 
 	//studioBg = settingsini.GetInt("SAVVY-MANAGER", "STUDIO_BG", studioBg);
 	iFps = settingsini.GetInt("SAVVY-MANAGER", "FRAME_RATE", iFps);
 	horiHd = settingsini.GetInt("SAVVY-MANAGER", "HORI_HD", horiHd);
+
+	ss1Region = settingsini.GetInt("SS1", "REGION", ss1Region);
+	ss2Region = settingsini.GetInt("SS2", "REGION", ss2Region);
+	ss3Region = settingsini.GetInt("SS3", "REGION", ss3Region);
+	ss4Region = settingsini.GetInt("SS4", "REGION", ss4Region);
 
 	currentMusicPack = settingsini.GetString("SS2", "CURRENT_MUSIC_PACK", currentMusicPack);
 }
@@ -120,10 +130,11 @@ int cursorAlpha = 0;
 
 int ss1Logo = gameSelSprites_title1_idx;
 int ss2Logo = gameSelSprites_title2_idx;
-int ss1LogoXpos = 0;
-int ssLogoXpos = 0;
 int ss3Logo = gameSelSprites_title3_idx;
 int ss4Logo = gameSelSprites_title4_idx;
+int ss1LogoXpos = 0;
+int ss2LogoXpos = 0;
+int ss4LogoXpos = 0;
 
 u32 hDown = 0;
 u32 hDownRepeat = 0;
@@ -247,54 +258,88 @@ int main()
 	u32 ss3Id[3] = {0x00196500, 0x0016A100, 0x0012D800};
 	u32 ss4Id[3] = {0x00001C25, 0x00001C26, 0x000019F6};
 
-	switch (sysRegion) {
+	if (ss1Region < 0 || ss1Region >= 6) {
+		ss1Region = sysRegion;
+	}
+
+	switch (ss1Region) {
+		case CFG_REGION_EUR:
+		case CFG_REGION_AUS:
+			ss1Logo = gameSelSprites_title1_E_idx;
+			ss1LogoXpos = 32;
+			break;
+		case CFG_REGION_JPN:
+			ss1Logo = gameSelSprites_title1_J_idx;
+			break;
+		case CFG_REGION_KOR:
+			ss1Logo = gameSelSprites_title1_K_idx;
+			ss1LogoXpos = 64;
+			break;
+		default:
+			break;
+	}
+
+	if (ss2Region < 0 || ss2Region >= 6) {
+		ss2Region = sysRegion;
+	}
+
+	switch (ss2Region) {
 		case CFG_REGION_EUR:
 		case CFG_REGION_AUS:
 			ss2Id[0] = 0x000A9000;
 			ss2Id[1] = 0x000A9100; // Fallback: USA
-			ss3Id[0] = 0x0016A100;
-			ss3Id[1] = 0x00196500; // Fallback: USA
-			ss4Id[0] = 0x00001C26;
-			ss4Id[1] = 0x00001C25; // Fallback: USA
-			ss1Logo = gameSelSprites_title1_E_idx;
-			ss2Logo = gameSelSprites_title2_E_idx;
-			ss3Logo = gameSelSprites_title3_E_idx;
-			ss4Logo = gameSelSprites_title4_E_idx;
-			ss1LogoXpos = 32;
-			ssLogoXpos = 32;
 			break;
 		case CFG_REGION_JPN:
 			ss2Id[0] = 0x0005D100;
 			ss2Id[1] = 0x000C4F00; // Fallback: KOR
 			ss2Id[2] = 0x000A9100; // Fallback: USA
 			ss2Id[3] = 0x000A9000; // Fallback: EUR/AUS
-			ss3Id[0] = 0x0012D800;
-			ss3Id[1] = 0x00196500; // Fallback: USA
-			ss3Id[2] = 0x0016A100; // Fallback: EUR/AUS
-			ss4Id[0] = 0x000019F6;
-			ss4Id[1] = 0x00001C25; // Fallback: USA
-			ss4Id[2] = 0x00001C26; // Fallback: EUR/AUS
-			ss1Logo = gameSelSprites_title1_J_idx;
-			ss2Logo = gameSelSprites_title2_J_idx;
-			ss3Logo = gameSelSprites_title3_J_idx;
-			ss4Logo = gameSelSprites_title4_J_idx;
 			break;
 		case CFG_REGION_KOR:
 			ss2Id[0] = 0x000C4F00;
 			ss2Id[1] = 0x0005D100; // Fallback: JPN
 			ss2Id[2] = 0x000A9100; // Fallback: USA
 			ss2Id[3] = 0x000A9000; // Fallback: EUR/AUS
-			ss3Id[0] = 0x0012D800; // JPN
+			break;
+		default:
+			break;
+	}
+
+	if (ss3Region < 0 || ss3Region >= 6) {
+		ss3Region = sysRegion;
+	}
+
+	switch (ss3Region) {
+		case CFG_REGION_EUR:
+		case CFG_REGION_AUS:
+			ss3Id[0] = 0x0016A100;
+			ss3Id[1] = 0x00196500; // Fallback: USA
+			break;
+		case CFG_REGION_JPN:
+		case CFG_REGION_KOR:
+			ss3Id[0] = 0x0012D800;
 			ss3Id[1] = 0x00196500; // Fallback: USA
 			ss3Id[2] = 0x0016A100; // Fallback: EUR/AUS
-			ss4Id[0] = 0x000019F6; // JPN
+			break;
+		default:
+			break;
+	}
+
+	if (ss4Region < 0 || ss4Region >= 6) {
+		ss4Region = sysRegion;
+	}
+
+	switch (ss4Region) {
+		case CFG_REGION_EUR:
+		case CFG_REGION_AUS:
+			ss4Id[0] = 0x00001C26;
+			ss4Id[1] = 0x00001C25; // Fallback: USA
+			break;
+		case CFG_REGION_JPN:
+		case CFG_REGION_KOR:
+			ss4Id[0] = 0x000019F6;
 			ss4Id[1] = 0x00001C25; // Fallback: USA
 			ss4Id[2] = 0x00001C26; // Fallback: EUR/AUS
-			ss1Logo = gameSelSprites_title1_K_idx;
-			ss2Logo = gameSelSprites_title2_K_idx;
-			ss3Logo = gameSelSprites_title3_J_idx;
-			ss4Logo = gameSelSprites_title4_J_idx;
-			ss1LogoXpos = 64;
 			break;
 		default:
 			break;
@@ -449,6 +494,54 @@ int main()
 	}
 
 	ss3DLCharactersBackedUp = (access("sdmc:/3ds/SavvyManager/SS3/dlCharacters.bak", F_OK) == 0);
+
+	switch (saveRegion[1]) {
+		case CFG_REGION_EUR:
+		case CFG_REGION_AUS:
+			ss2Logo = gameSelSprites_title2_E_idx;
+			ss2LogoXpos = 32;
+			break;
+		case CFG_REGION_JPN:
+			ss2Logo = gameSelSprites_title2_J_idx;
+			break;
+		case CFG_REGION_KOR:
+			ss2Logo = gameSelSprites_title2_K_idx;
+			break;
+		default:
+			break;
+	}
+
+	switch (saveRegion[2]) {
+		case CFG_REGION_EUR:
+		case CFG_REGION_AUS:
+			ss3Logo = gameSelSprites_title3_E_idx;
+			break;
+		case CFG_REGION_JPN:
+		case CFG_REGION_KOR:
+			ss3Logo = gameSelSprites_title3_J_idx;
+			break;
+		default:
+			break;
+	}
+
+	switch (saveRegion[3]) {
+		case CFG_REGION_EUR:
+		case CFG_REGION_AUS:
+			ss4Id[0] = 0x00001C26;
+			ss4Id[1] = 0x00001C25; // Fallback: USA
+			ss4Logo = gameSelSprites_title4_E_idx;
+			ss4LogoXpos = 32;
+			break;
+		case CFG_REGION_JPN:
+		case CFG_REGION_KOR:
+			ss4Id[0] = 0x000019F6;
+			ss4Id[1] = 0x00001C25; // Fallback: USA
+			ss4Id[2] = 0x00001C26; // Fallback: EUR/AUS
+			ss4Logo = gameSelSprites_title4_J_idx;
+			break;
+		default:
+			break;
+	}
 
 	sprintf(verText, "Ver. %i.%i.%i", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
 

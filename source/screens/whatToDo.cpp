@@ -10,10 +10,11 @@
 extern int ss1Logo;
 extern int ss2Screenshot;
 extern int ss2Logo;
-extern int ss1LogoXpos;
-extern int ssLogoXpos;
 extern int ss3Logo;
 extern int ss4Logo;
+extern int ss1LogoXpos;
+extern int ss2LogoXpos;
+extern int ss4LogoXpos;
 extern bool ss2SaveFound;
 extern bool ss3SaveFound;
 extern bool ss4SaveFound;
@@ -70,13 +71,13 @@ void WhatToDo::Draw(void) const {
 			GFX::DrawGameSelSprite(ss1Logo, 40+ss1LogoXpos, 56);
 			break;
 		case 1:
-			GFX::DrawGameSelSprite(ss2Logo, 40+ssLogoXpos, 56);
+			GFX::DrawGameSelSprite(ss2Logo, 40+ss2LogoXpos, 56);
 			break;
 		case 2:
 			GFX::DrawGameSelSprite(ss3Logo, 40, 56);
 			break;
 		case 3:
-			GFX::DrawGameSelSprite(ss4Logo, 40+ssLogoXpos, 56);
+			GFX::DrawGameSelSprite(ss4Logo, 40+ss4LogoXpos, 56);
 			break;
 	}
 

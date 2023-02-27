@@ -9,10 +9,11 @@ extern bool exiting;
 
 extern int ss1Logo;
 extern int ss2Logo;
-extern int ss1LogoXpos;
-extern int ssLogoXpos;
 extern int ss3Logo;
 extern int ss4Logo;
+extern int ss1LogoXpos;
+extern int ss2LogoXpos;
+extern int ss4LogoXpos;
 extern bool ss2SaveFound;
 extern bool ss3SaveFound;
 extern bool ss4SaveFound;
@@ -114,7 +115,7 @@ void GameSelect::Draw(void) const {
 			break;
 		case 1:
 			GFX::DrawGameBgSprite(gameBgSprites_title2_bg_idx, 0, 0);
-			GFX::DrawGameSelSprite(ss2Logo, ssLogoXpos, 56);
+			GFX::DrawGameSelSprite(ss2Logo, ss2LogoXpos, 56);
 			break;
 		case 2:
 			GFX::DrawGameBgSprite(gameBgSprites_title3_bg_idx, 0, 0);
@@ -122,7 +123,7 @@ void GameSelect::Draw(void) const {
 			break;
 		case 3:
 			GFX::DrawGameBgSprite((sysRegion==CFG_REGION_EUR || sysRegion==CFG_REGION_AUS) ? gameBgSprites_title4_bgE_idx : gameBgSprites_title4_bg_idx, 0, 0);
-			GFX::DrawGameSelSprite(ss4Logo, ssLogoXpos, 56);
+			GFX::DrawGameSelSprite(ss4Logo, ss4LogoXpos, 56);
 			break;
 	}
 	Gui::DrawString(8, 8, 0.50, BLACK, "Select a game to manage its save data.");
