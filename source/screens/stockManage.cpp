@@ -171,7 +171,7 @@ void StockManage::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition tou
 					}
 				} else {
 					for (int i = 0; i < ((highlightedGame == 3) ? 30304 : 15500); i++) {
-						(highlightedGame == 3) ? (boutiqueToo ? writeSS4FashionOwnFlag(i, 0x6301) : writeSS4FashionOwnWardFlag(i, 0x01)) : writeSS3FashionOwnWardFlag(i, 0x01);
+						(highlightedGame == 3) ? (boutiqueToo ? writeSS4FashionOwnFlag(i, 0x6301) : writeSS4FashionOwnWardFlag(i, 0x01)) : writeSS3FashionOwnFlag(i, 0x6301);
 					}
 					flagModified = true;
 				}
