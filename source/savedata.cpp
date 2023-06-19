@@ -786,7 +786,7 @@ static u8 SS3ToSS4EyebrowTable[SS3ToSS4EyebrowAmount][2] = { // Offset: 0x07
 	{0x04, 0x10},
 };
 
-#define SS3ToSS4LipstickAmount 18
+#define SS3ToSS4LipstickAmount 19
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4LipstickTable[SS3ToSS4LipstickAmount][2] = { // Offset: 0x0A
@@ -804,13 +804,14 @@ static u8 SS3ToSS4LipstickTable[SS3ToSS4LipstickAmount][2] = { // Offset: 0x0A
 	{0x51, 0x0F},
 	{0x55, 0x1E},
 	{0x5A, 0x63},
+	{0x65, 0x2C}, // Poinsettia -> Passionate Love
 	{0x67, 0x02},
 	{0x68, 0x07},
 	{0x6F, 0x37},
 	{0x71, 0x31},
 };
 
-#define SS3ToSS4MascaraAmount 12
+#define SS3ToSS4MascaraAmount 13
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4MascaraTable[SS3ToSS4MascaraAmount][2] = { // Offset: 0x0B
@@ -820,6 +821,7 @@ static u8 SS3ToSS4MascaraTable[SS3ToSS4MascaraAmount][2] = { // Offset: 0x0B
 	{0x22, 0x2F},
 	{0x28, 0x12},
 	{0x2A, 0x0E},
+	{0x33, 0x1C}, // Nocturne Blue -> Darkest Blue
 	{0x42, 0x10},
 	{0x56, 0x02},
 	{0x5A, 0x2F},
@@ -828,7 +830,7 @@ static u8 SS3ToSS4MascaraTable[SS3ToSS4MascaraAmount][2] = { // Offset: 0x0B
 	{0x75, 0x10},
 };
 
-#define SS3ToSS4EyeshadowAmount 24
+#define SS3ToSS4EyeshadowAmount 25
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4EyeshadowTable[SS3ToSS4EyeshadowAmount][2] = { // Offset: 0x0C
@@ -846,6 +848,7 @@ static u8 SS3ToSS4EyeshadowTable[SS3ToSS4EyeshadowAmount][2] = { // Offset: 0x0C
 	{0x2A, 0x2B},
 	{0x2B, 0x08},
 	{0x31, 0x2F},
+	{0x32, 0x37}, // Gerbera -> Cool Peach
 	{0x34, 0x50},
 	{0x36, 0x43},
 	{0x49, 0x18},
@@ -869,7 +872,7 @@ static u8 SS3ToSS4EyelinerTable[SS3ToSS4EyelinerAmount][2] = { // Offset: 0x0D
 	{0x17, 0x44},
 	{0x1B, 0x5C},
 	{0x1C, 0x3B},
-	{0x21, 0x44},
+	{0x21, 0x44}, // Celebration Pink -> Red Carpet
 	{0x28, 0x14},
 	{0x36, 0x50},
 	{0x3B, 0x53},
@@ -909,7 +912,7 @@ static u8 SS3ToSS4ContactTable[SS3ToSS4ContactAmount][2] = { // Offset: 0x0E
 	{0x73, 0x3A},
 };
 
-#define SS3ToSS4BlusherAmount 15
+#define SS3ToSS4BlusherAmount 16
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4BlusherTable[SS3ToSS4BlusherAmount][2] = { // Offset: 0x0F
@@ -917,13 +920,14 @@ static u8 SS3ToSS4BlusherTable[SS3ToSS4BlusherAmount][2] = { // Offset: 0x0F
 	{0x0A, 0x0E},
 	{0x15, 0x0E},
 	{0x17, 0x11},
+	{0x1F, 0x12}, // Begonia -> Blossom Blush
 	{0x20, 0x0A},
 	{0x21, 0x0A},
 	{0x23, 0x0E},
 	{0x2B, 0x09},
 	{0x30, 0x04},
 	{0x56, 0x0E},
-	{0x64, 0x12},
+	{0x64, 0x12}, // ??? -> Blossom Blush
 	{0x66, 0x1A},
 	{0x67, 0x10},
 	{0x68, 0x06},
