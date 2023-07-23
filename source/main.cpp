@@ -35,7 +35,7 @@ int titleSelection = 0;
 
 sound *music = NULL;
 sound *music_loop = NULL;
-//sound *mus_logos = NULL;
+sound *mus_logos = NULL;
 sound *sfx_select = NULL;
 sound *sfx_back = NULL;
 sound *sfx_highlight = NULL;
@@ -93,11 +93,11 @@ void Play_Music(void) {
 	}
 }
 
-/*void musLogos(void) {
+void musLogos(void) {
 	if (!dspfirmfound) return;
 	mus_logos->stop();
 	mus_logos->play();
-}*/
+}
 
 void sndSelect(void) {
 	if (!dspfirmfound) return;
@@ -246,7 +246,7 @@ int main()
 
 	// Load the sound effects if DSP is available.
 	if (dspfirmfound) {
-		//mus_logos = new sound("romfs:/sounds/logos.wav", 0, false);
+		mus_logos = new sound("romfs:/sounds/rocketRobz.wav", 0, false);
 		music = new sound("romfs:/sounds/music_start.wav", 0, false);
 		music_loop = new sound("romfs:/sounds/music_loop.wav", 1, true);
 		sfx_select = new sound("romfs:/sounds/select.wav", 2, false);
@@ -550,7 +550,7 @@ int main()
 	Gui::setScreen(std::make_unique<RocketRobz>(), false); // Set screen to RocketRobz's screen.
 	svcCreateEvent(&threadRequest,(ResetType)0);
 	createThread((ThreadFunc)controlThread);
-	//musLogos();
+	musLogos();
 
 	// Loop as long as the status is not exit
 	while(aptMainLoop()) {
