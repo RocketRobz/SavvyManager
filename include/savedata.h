@@ -77,10 +77,10 @@ typedef struct ss3to4character {
     u8 hairColorMain;
     u8 hairColorHighlights;
     u8 freckles;
-    u8 nailColor;
+    u8 nailColor;			// Fashion Forward: Facial expression (00=Default), Styling Star: Nail color
     u8 eyeliner;			// Fashion Forward: 01 = No facial expressions, Styling Star: Eyeliner (00=Normal, 01=Double)
     u8 unknown1C;
-    u8 unknown1D;
+    u8 eyebrowColor;		// Fashion Forward: Eyebrow color, Styling Star: Unknown
     u16 inner;
     u16 top;				// Top/Dress/Yukatas (Female), Yukatas/Dungarees (Male)
     u16 outer;
