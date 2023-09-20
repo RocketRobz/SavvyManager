@@ -1124,6 +1124,12 @@ void readSS3CharacterToSS4(u16 id) {
 		}
 	}
 
+	// Remove data no longer used in Styling Star
+	ss4CharacterData.nailColor = 0;
+	ss4CharacterData.eyeliner = 0;
+	ss4CharacterData.unknown1C = 0;
+	ss4CharacterData.eyebrowColor = 0;
+
 	// Replace fashion items removed in Styling Star
 
 	// Inner/Top Hybrid
