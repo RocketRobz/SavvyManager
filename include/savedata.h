@@ -68,7 +68,7 @@ typedef struct ss3to4character {
     u8 contactColor;
     u8 blusherColor;
     u8 mascaraLength;
-    u8 unknown11;
+    u8 blusherPosition;
     u8 lipShine;
     u8 eyeColor;
     u8 eyebrowOverlay;
@@ -84,19 +84,19 @@ typedef struct ss3to4character {
     u16 inner;
     u16 top;				// Top/Dress/Yukatas (Female), Yukatas/Dungarees (Male)
     u16 outer;
-    u16 necklaceScarf;		// Necklace/Scarf
+    u16 necklaceScarfHeadphones;		// Fashion Forward: Necklace/Scarf, Styling Star: Scarf/Headphones
     u16 gloves;
     u16 socks;				// Socks/Leggings/Tights
     u16 skirtPants;			// Skirt/Pants
     u16 shoes;
     u16 legWarmers;
     u16 hat;
-    u16 glasses;
+    u16 glasses;			// Also Earrings in Fashion Forward
     u16 bag;
-    u16 unknown36;
-    u16 unknown38;
-    u16 unknown3A;
-    u8 bowPosition;
+    u16 necklace;			// Styling Star
+    u16 watch;				// Styling Star
+    u16 earrings;			// Styling Star
+    u8 bowPosition;			// Styling Star
     u8 unknown3D;
 } ss3to4character;
 
@@ -133,6 +133,7 @@ extern void writeSS4Save(void);
 extern void readSS2Character(void);
 extern void writeSS2Character(void);
 extern void readSS3Character(u16 id);
+extern void readSS4CharacterToSS3(u16 id);
 extern void writeSS3Character(u16 id);
 extern void readSS4Character(u16 id);
 extern void readSS3CharacterToSS4(u16 id);

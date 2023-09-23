@@ -37,6 +37,473 @@ static bool ss3SaveModified = false;
 Handle handle4;
 FS_Archive archive4;
 
+#define SS4ToSS3SkinAmount 13
+
+// Left: SS4, Right: SS3
+static u8 SS4ToSS3SkinTable[SS4ToSS3SkinAmount][2] = { // Offset: 0x03
+	{0x09, 0x01}, // Alina
+	{0x0A, 0x02}, // Rosie
+	{0x0B, 0x05}, // Yolanda
+	{0x0C, 0x01},
+	{0x0D, 0x01}, // Ethan
+	{0x0E, 0x04}, // Tim
+	{0x0F, 0x01}, // Johann
+	{0x10, 0x03},
+	{0x11, 0x02},
+	{0x13, 0x07}, // Margot
+	{0x14, 0x02}, // Camilla
+	{0x15, 0x02}, // Fortman
+	{0x16, 0x06}, // Oliver
+};
+
+#define SS4ToSS3FaceShapeAmount 4
+
+// Left: SS4, Right: SS3
+static u8 SS4ToSS3FaceShapeTable[SS4ToSS3FaceShapeAmount][2] = { // Offset: 0x04
+	{0x07, 0x03}, // Alina
+	{0x08, 0x01}, // Rosie
+	{0x09, 0x03}, // Yolanda
+	{0x0A, 0x03}, // Angélique
+};
+
+#define SS3ToSS4EyeAmount 4
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4EyeTable[SS3ToSS4EyeAmount][2] = { // Offset: 0x05
+	{0x04, 0x01},
+	{0x06, 0x0A},
+	{0x08, 0x17},
+	{0x0B, 0x0F},
+};
+
+#define SS4ToSS3EyeAmount 4
+
+// Left: SS4, Right: SS3
+static u8 SS4ToSS3EyeTable[SS4ToSS3EyeAmount][2] = { // Offset: 0x05
+	{0x24, 0x0A}, // Alina
+	{0x25, 0x18}, // Rosie
+	{0x26, 0x06}, // Yolanda
+	{0x27, 0x01}, // Angélique
+};
+
+#define SS3ToSS4MouthShapeAmount 7
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4MouthShapeTable[SS3ToSS4MouthShapeAmount][2] = { // Offset: 0x06
+	{0x02, 0x0F},
+	{0x03, 0x0B},
+	{0x04, 0x0F},
+	{0x06, 0x03},
+	{0x0C, 0x0B},
+	{0x0E, 0x05},
+	{0x0D, 0x01},
+};
+
+#define SS4ToSS3MouthShapeAmount 5
+
+// Left: SS4, Right: SS3
+static u8 SS4ToSS3MouthShapeTable[SS4ToSS3MouthShapeAmount][2] = { // Offset: 0x06
+	{0x03, 0x06},
+	{0x14, 0x05}, // Alina
+	{0x15, 0x0D}, // Rosie
+	{0x16, 0x06}, // Yolanda
+	{0x17, 0x01}, // Angélique
+};
+
+#define SS3ToSS4EyebrowAmount 1
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4EyebrowTable[SS3ToSS4EyebrowAmount][2] = { // Offset: 0x07
+	{0x04, 0x10},
+};
+
+#define SS4ToSS3EyebrowAmount 4
+
+// Left: SS4, Right: SS3
+static u8 SS4ToSS3EyebrowTable[SS4ToSS3EyebrowAmount][2] = { // Offset: 0x07
+	{0x1E, 0x08}, // Alina
+	{0x1F, 0x0F}, // Rosie
+	{0x20, 0x0B}, // Yolanda
+	{0x21, 0x10}, // Angélique
+};
+
+#define SS3ToSS4LipstickAmount 19
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4LipstickTable[SS3ToSS4LipstickAmount][2] = { // Offset: 0x0A
+	{0x0F, 0x2B},
+	{0x15, 0x5E},
+	{0x17, 0x40},
+	{0x1A, 0x60},
+	{0x1F, 0x08},
+	{0x20, 0x39},
+	{0x21, 0x12},
+	{0x27, 0x2D},
+	{0x28, 0x5B},
+	{0x39, 0x6A},
+	{0x49, 0x71},
+	{0x51, 0x0F},
+	{0x55, 0x1E},
+	{0x5A, 0x63},
+	{0x65, 0x2C}, // Poinsettia -> Passionate Love
+	{0x67, 0x02},
+	{0x68, 0x07},
+	{0x6F, 0x37},
+	{0x71, 0x31},
+};
+
+#define SS3ToSS4MascaraAmount 13
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4MascaraTable[SS3ToSS4MascaraAmount][2] = { // Offset: 0x0B
+	{0x0B, 0x10},
+	{0x0F, 0x10},
+	{0x16, 0x20},
+	{0x22, 0x2F},
+	{0x28, 0x12},
+	{0x2A, 0x0E},
+	{0x33, 0x1C}, // Nocturne Blue -> Darkest Blue
+	{0x42, 0x10},
+	{0x56, 0x02},
+	{0x5A, 0x2F},
+	{0x5D, 0x2F},
+	{0x5F, 0x2F},
+	{0x75, 0x10},
+};
+
+#define SS3ToSS4EyeshadowAmount 26
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4EyeshadowTable[SS3ToSS4EyeshadowAmount][2] = { // Offset: 0x0C
+	{0x02, 0x3D},
+	{0x04, 0x53},
+	{0x0A, 0x18},
+	{0x13, 0x40},
+	{0x14, 0x13},
+	{0x15, 0x3B},
+	{0x1A, 0x4E},
+	{0x1B, 0x56}, // Tabby Grey -> Devilishly Dark
+	{0x1C, 0x4B},
+	{0x21, 0x3E},
+	{0x23, 0x2B},
+	{0x2A, 0x2B},
+	{0x2B, 0x08},
+	{0x31, 0x2F},
+	{0x32, 0x37}, // Gerbera -> Cool Peach
+	{0x34, 0x50},
+	{0x36, 0x43},
+	{0x49, 0x18},
+	{0x5C, 0x3F},
+	{0x60, 0x5A},
+	{0x61, 0x32},
+	{0x69, 0x32},
+	{0x6A, 0x39},
+	{0x6E, 0x06},
+	{0x71, 0x0E}, // Hibiscus -> Afterparty
+	{0x74, 0x29},
+};
+
+#define SS4EyeshadowAmount 94
+
+// Left: SS4, Right: SS3
+static u8 SS4ToSS3EyeshadowTable[SS4EyeshadowAmount][2] = { // Offset: 0x0C
+	{0x01, 0x68}, // Candlelight Pink -> City Pink
+	{0x02, 0x67}, // Shrinking Violet -> Cherry Blossom
+	{0x03, 0x67}, // Sunset Clouds -> Cherry Blossom
+	{0x04, 0x67}, // First Date Rose -> Cherry Blossom
+	{0x05, 0x5C}, // Milky Tea -> Sunlight Sand
+	{0x06, 0x68}, // Rose Tea -> City Pink
+	{0x07, 0x6C}, // Cinnamon Tea -> Lemon Chiffon
+	{0x08, 0x6C}, // Buttercream -> Lemon Chiffon
+	{0x09, 0x68}, // Pink Fondant -> City Pink
+	{0x0A, 0x68}, // Strawberry Marzipan -> City Pink
+	{0x0B, 0x67}, // Sherbet Fizz -> Cherry Blossom
+	{0x0C, 0x30}, // Jelly Bean -> Starfish Orange
+	{0x0D, 0x30}, // Gum Drop -> Starfish Orange
+	{0x5A, 0x60}, // Angel Eyed -> Baby Pink
+	{0x0E, 0x71}, // Afterparty -> Hibiscus
+	{0x0F, 0x67}, // Masterwork -> Cherry Blossom
+	{0x10, 0x15}, // Matinée -> Goldenrod
+	{0x11, 0x67}, // Curtain Rising -> Cherry Blossom
+	{0x12, 0x71}, // Pink Lemonade -> Hibiscus
+	{0x13, 0x15}, // Elderflower Cordial -> Goldenrod
+	{0x14, 0x70}, // Ginger Ale -> Toasted Sesame
+	{0x15, 0x10}, // Stylish Sister -> Chai Latte
+	{0x16, 0x10}, // Dazzling Diva -> Chai Latte
+	{0x17, 0x67}, // Fuchsia Fox -> Cherry Blossom
+	{0x18, 0x15}, // Classy Lass -> Goldenrod
+	{0x19, 0x30}, // Firelit Brush -> Starfish Orange
+	{0x1A, 0x30}, // Fireheart -> Starfish Orange
+	{0x1B, 0x12}, // Golden Flame -> Golden Arch
+	{0x1C, 0x49}, // Candlewick -> Champagne
+	{0x1D, 0x01}, // White Frost -> Chalk White
+	{0x1E, 0x02}, // Morning Mist -> Snow White
+	{0x20, 0x5B}, // Dewfall Grey -> Night Sand
+	{0x2D, 0x0A}, // Night Dark -> Owl Stone
+	{0x53, 0x07}, // Smooth Chocolate -> Sawtooth Oak
+	{0x54, 0x49}, // Tea Biscuit -> Champagne
+	{0x55, 0x5C}, // Champagne Pop -> Sunlight Sand
+	{0x57, 0x0A}, // Devilishly Demure -> Owl Stone
+	{0x58, 0x07}, // Devilishly Darling -> Sawtooth Oak
+	{0x59, 0x03}, // Witch Child -> Misty Grey
+	{0x5B, 0x20}, // Buccaneer Brown -> Tiramisu
+	{0x5C, 0x5C}, // Apricutie -> Sunlight Sand
+	{0x1F, 0x08}, // Evening Mist -> Antique Rose
+	{0x21, 0x67}, // Plum Swallowtail -> Cherry Blossom
+	{0x22, 0x08}, // Purple Emperor -> Antique Rose
+	{0x23, 0x1E}, // Mischievous Mauve -> Blush Pink
+	{0x24, 0x70}, // Meadow Brown -> Toasted Sesame
+	{0x25, 0x60}, // Sweet Dreams -> Baby Pink
+	{0x26, 0x08}, // Midnight Feast -> Antique Rose
+	{0x27, 0x07}, // Dark Dawn -> Sawtooth Oak
+	{0x28, 0x69}, // Evening Gown -> Strawberry Pink
+	{0x29, 0x73}, // Lace Handkerchief -> Cocoa
+	{0x2A, 0x23}, // Petticoats -> Elegant Rose
+	{0x2B, 0x23}, // Trembling Flame -> Elegant Rose
+	{0x2C, 0x08}, // Mystic Purple -> Antique Rose
+	{0x4E, 0x08}, // Amethyst Appeal -> Antique Rose
+	{0x52, 0x20}, // Earth Dancer -> Tiramisu
+	{0x56, 0x1B}, // Devilishly Dark -> Tabby Grey
+	{0x2E, 0x60}, // Strawberry Milkshake -> Baby Pink
+	{0x2F, 0x2F}, // Mango Lassi -> Banana
+	{0x30, 0x4A}, // Milky Melon -> Green Balloon
+	{0x32, 0x6B}, // Guava -> Soft Pink
+	{0x33, 0x71}, // Papaya -> Hibiscus
+	{0x34, 0x2C}, // Liana Green -> Merry-Go-Green
+	{0x36, 0x60}, // Cherry Sherbet -> Baby Pink
+	{0x37, 0x17}, // Cool Peach -> Marmalade
+	{0x3A, 0x71}, // Ruby Red -> Hibiscus
+	{0x3B, 0x35}, // Topaz -> Golden Star
+	{0x3E, 0x26}, // Moroccan Red -> Ruby
+	{0x42, 0x66}, // Lotus Petal -> Hot Pepper
+	{0x43, 0x12}, // Burnished Yellow -> Golden Arch
+	{0x31, 0x1D}, // Cream Soda -> Bicycle Blue
+	{0x35, 0x13}, // Scuba Blue -> Blue Lagoon
+	{0x38, 0x05}, // Powder Purple -> Brilliant Purple
+	{0x39, 0x13}, // Dreamy Blue -> Blue Lagoon
+	{0x3C, 0x3F}, // Emerald -> Moss Green
+	{0x3D, 0x4B}, // Sapphire -> Star Cerulean
+	{0x3F, 0x57}, // India Green -> Shrub Green
+	{0x40, 0x1C}, // Fijian Turquoise -> Emerald Ocean
+	{0x41, 0x4B}, // Stormy Night -> Star Cerulean
+	{0x44, 0x45}, // Olive Green -> Mint
+	{0x45, 0x1C}, // Marina -> Emerald Ocean
+	{0x46, 0x45}, // Milan -> Mint
+	{0x47, 0x45}, // Prague -> Mint
+	{0x48, 0x4A}, // Matcha Latte -> Green Balloon
+	{0x49, 0x3F}, // London -> Moss Green
+	{0x4A, 0x2C}, // Curtsy -> Merry-Go-Green
+	{0x4B, 0x2D}, // Polite Society -> Lime
+	{0x4C, 0x03}, // Steely Eye -> Misty Grey
+	{0x4D, 0x3F}, // Strong Green Tea -> Moss Green
+	{0x4F, 0x19}, // Night Hush -> Lavender
+	{0x50, 0x3B}, // Fly By Night -> Deep Azure
+	{0x51, 0x6A}, // Celestial -> Electric Blue
+	{0x5D, 0x03}, // Lavender Ghost -> Misty Grey
+	{0x5E, 0x13}, // Forest Hunter -> Blue Lagoon
+};
+
+#define SS3ToSS4EyelinerAmount 16
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4EyelinerTable[SS3ToSS4EyelinerAmount][2] = { // Offset: 0x0D
+	{0x07, 0x30},
+	{0x0C, 0x07},
+	{0x0F, 0x14},
+	{0x10, 0x49},
+	{0x17, 0x44},
+	{0x1B, 0x5C},
+	{0x1C, 0x3B},
+	{0x21, 0x44}, // Celebration Pink -> Red Carpet
+	{0x28, 0x14},
+	{0x36, 0x50},
+	{0x3B, 0x53},
+	{0x45, 0x19},
+	{0x4E, 0x2E},
+	{0x59, 0x42},
+	{0x73, 0x14},
+	{0x74, 0x06},
+};
+
+#define SS3ToSS4ContactAmount 23
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4ContactTable[SS3ToSS4ContactAmount][2] = { // Offset: 0x0E
+	{0x0A, 0x2F},
+	{0x13, 0x17},
+	{0x14, 0x52},
+	{0x1C, 0x18},
+	{0x1E, 0x3B},
+	{0x20, 0x10},
+	{0x22, 0x3B},
+	{0x23, 0x0F},
+	{0x24, 0x1C},
+	{0x2C, 0x12},
+	{0x2D, 0x21},
+	{0x2E, 0x30},
+	{0x31, 0x12},
+	{0x46, 0x1D},
+	{0x55, 0x3F},
+	{0x5A, 0x30},
+	{0x5B, 0x31},
+	{0x5D, 0x51},
+	{0x64, 0x39},
+	{0x6A, 0x18},
+	{0x6F, 0x51},
+	{0x72, 0x52},
+	{0x73, 0x3A},
+};
+
+#define SS3ToSS4BlusherAmount 16
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4BlusherTable[SS3ToSS4BlusherAmount][2] = { // Offset: 0x0F
+	{0x01, 0x0F},
+	{0x0A, 0x0E},
+	{0x15, 0x0E},
+	{0x17, 0x11},
+	{0x1F, 0x12}, // Begonia -> Blossom Blush
+	{0x20, 0x0A},
+	{0x21, 0x0A},
+	{0x23, 0x0E},
+	{0x2B, 0x09},
+	{0x30, 0x04},
+	{0x56, 0x0E},
+	{0x64, 0x12}, // ??? -> Blossom Blush
+	{0x66, 0x1A},
+	{0x67, 0x10},
+	{0x68, 0x06},
+	{0x69, 0x0C},
+};
+
+#define SS3ToSS4HairStyleAmount 22
+
+// Left: SS3, Right: SS4
+static u8 SS3ToSS4HairStyleTable[SS3ToSS4HairStyleAmount][2] = { // Offset: 0x15
+	{0x01, 0x4B},
+	{0x03, 0x4B},
+	{0x06, 0x4B},
+	{0x07, 0x4C}, // Volumised Midi -> Wavy bob
+	{0x08, 0x4D}, // Straight Midi -> Curled under bob
+	{0x0A, 0x4E}, // Long & Wavy -> Long elegant waves
+	{0x0B, 0x4E}, // Volumised Long -> Long elegant waves
+	{0x0D, 0x4F},
+	{0x0F, 0x10},
+	{0x12, 0x60},
+	{0x13, 0x3C},
+	{0x15, 0x63},
+	{0x1C, 0x60},
+	{0x1F, 0x62},
+	{0x25, 0x50},
+	{0x28, 0x4E},
+	{0x29, 0x51},
+	{0x2D, 0x33},
+	{0x38, 0x64},
+	{0x41, 0x3C},
+	{0x48, 0x4E},
+	{0x4A, 0x52},
+};
+
+#define SS4ToSS3HairStyleAmount 4
+
+// Left: SS4, Right: SS3
+static u8 SS4ToSS3HairStyleTable[SS4ToSS3HairStyleAmount][2] = { // Offset: 0x15
+	{0x4C, 0x07}, // Wavy bob -> Volumised Midi
+	{0x4D, 0x08}, // Curled under bob -> Straight Midi
+	{0x4E, 0x0A}, // Long elegant waves -> Long & Wavy
+	{0x6A, 0x0A}, // Long loose ringlets -> Long & Wavy
+};
+
+#define SS4ToSS3HairColorAmount 2
+
+// Left: SS4, Right: SS3
+static u8 SS4ToSS3HairColorTable[SS4ToSS3HairColorAmount][2] = { // Offsets: 0x17 & 0x18
+	{0x77, 0x21}, // Rosie Strawberry
+	{0x7A, 0x6C}, // Angélique Blonde
+};
+
+#define SS3ToSS4InnerTopAmount 14
+
+// Left: SS3, Right: SS4
+static u16 SS3ToSS4InnerTopTable[SS3ToSS4InnerTopAmount][2] = { // Offsets: 0x1E & 0x20 (Table based on 0x1E)
+	{0x1248, 0x3E87}, // Streetflow: Sleeveless Polo Shirt (White) -> Marzipan Sky: Flowery Sleevelss Shirt
+	{0x25B8, 0x3D43}, // Streetflow: Sleeveless Polo Shirt (Light-Blue) -> Marzipan Sky: Lace-Panel Sleevelss Shirt
+	{0x25BA, 0x4D1D}, // Streetflow: Sleeveless Polo Shirt (Green) -> Chorale: Lace-Belted Sleeveless Shirt
+	{0x25BC, 0x2AB2}, // Streetflow: Sleeveless Polo Shirt (Magenta) -> Chorale: Sleeveless Shirt
+	{0x25BE, 0x2AB6}, // Streetflow: Sleeveless Polo Shirt (Black) -> Chorale: Sleeveless Shirt
+	{0x25C0, 0x52AA}, // Streetflow: Sleeveless Polo Shirt (Orange) -> April Bonbon: Funky Two-Tone Shirt
+	{0x25C2, 0x4D25}, // Streetflow: Sleeveless Polo Shirt (Dark Beige) -> Chorale: Lace-Belted Sleeveless Shirt
+	{0x399C, 0x3E85}, // Streetflow: Sleeveless Polo Shirt (Red) -> AZ-USA: Stripey Sleeveless Shirt
+	{0x13CC, 0x13CB}, // Streetflow: Wave Design Shirt (White) -> Chorale: Sleeveless Shirt
+	{0x25C4, 0x2AB2}, // Streetflow: Wave Design Shirt (Pink) -> Chorale: Sleeveless Shirt
+	{0x25C6, 0x4D1D}, // Streetflow: Wave Design Shirt (Green) -> Chorale: Lace-Belted Sleeveless Shirt
+	{0x25C8, 0x2AAE}, // Streetflow: Wave Design Shirt (Purple) -> Chorale: Sleeveless Shirt
+	{0x25CA, 0x2AB6}, // Streetflow: Wave Design Shirt (Black) -> Chorale: Sleeveless Shirt
+	{0x399E, 0x3E85}, // Streetflow: Wave Design Shirt (Red) -> AZ-USA: Stripey Sleeveless Shirt
+};
+
+#define SS3ToSS4TopAmount 1
+
+// Left: SS3, Right: SS4
+static u16 SS3ToSS4TopTable[SS3ToSS4TopAmount][2] = { // Offset: 0x20
+	{0x5F6A, 0x5D0B}, // Soy: Jellyfish Top -> Soy: Notch Neck Gradient Tunic
+};
+
+#define SS3ToSS4SkirtPantsAmount 16
+
+// Left: SS3, Right: SS4
+static u16 SS3ToSS4SkirtPantsTable[SS3ToSS4SkirtPantsAmount][2] = { // Offset: 0x2A
+	{0x0463, 0x28BA}, // Streetflow: Butterfly Miniskirt (White) -> Basic U: Tiered Skirt
+	{0x2083, 0x28C0}, // Streetflow: Butterfly Miniskirt (Light-Green) -> Basic U: Tiered Skirt
+	{0x2084, 0x137F}, // Streetflow: Butterfly Miniskirt (Pink) -> April Bonbon: Frilly Denim Skirt
+	{0x2085, 0x28B9}, // Streetflow: Butterfly Miniskirt (Black) -> Basic U: Tiered Skirt
+	{0x2086, 0x015F}, // Streetflow: Butterfly Miniskirt (Purple) -> Basic U: Tiered Skirt
+	{0x3D49, 0x28BE}, // Streetflow: Butterfly Miniskirt (Red) -> Basic U: Tiered Skirt
+	{0x3A86, 0x28B8}, // Streetflow: Butterfly Miniskirt (Yellow) -> Basic U: Tiered Skirt
+	{0x3A87, 0x20B2}, // Streetflow: Butterfly Miniskirt (Orange) -> AZ-USA: Tiered Lace Miniskirt
+	{0x4237, 0x12D6}, // Streetflow: Sporty Miniskirt (Yellow-Green) -> April Bonbon: Miniskirt with Ribbon
+	{0x4771, 0x4236}, // Streetflow: Sporty Miniskirt (Blue) -> AZ-USA: Gold-Buttoned Miniskirt
+	{0x4772, 0x43F5}, // Streetflow: Sporty Miniskirt (Green) -> AZ-USA: Gold-Buttoned Miniskirt
+	{0x4773, 0x36A2}, // Streetflow: Sporty Miniskirt (Orange) -> AZ-USA: Lace-Up Denim Mini
+	{0x4774, 0x43F6}, // Streetflow: Sporty Miniskirt (Purple) -> AZ-USA: Gold-Buttoned Miniskirt
+	{0x4775, 0x43FB}, // Streetflow: Sporty Miniskirt (Green-Blue) -> AZ-USA: Gold-Buttoned Miniskirt
+	{0x4776, 0x43F7}, // Streetflow: Sporty Miniskirt (Magenta) -> AZ-USA: Gold-Buttoned Miniskirt
+	{0x5F51, 0x1FB0}, // Soy: Undersea Flares -> Basic U: Bootcut Jeans
+};
+
+#define SS3ToSS4HatAmount 7
+
+// Left: SS3, Right: SS4
+static u16 SS3ToSS4HatTable[SS3ToSS4HatAmount][2] = { // Offset: 0x30
+	{0x053C, 0x3E0C}, // Streetflow: Butterfly Sun Visor (White) -> April Bonbon: Sun Visor with Ribbon
+	{0x247B, 0x3CA9}, // Streetflow: Butterfly Sun Visor (Pink) -> April Bonbon: Sun Visor with Ribbon (Magenta)
+	{0x247C, 0x3E08}, // Streetflow: Butterfly Sun Visor (Light-Blue) -> April Bonbon: Sun Visor with Ribbon
+	{0x247D, 0x3E09}, // Streetflow: Butterfly Sun Visor (Green) -> April Bonbon: Sun Visor with Ribbon
+	{0x247E, 0x3E06}, // Streetflow: Butterfly Sun Visor (Black) -> April Bonbon: Sun Visor with Ribbon
+	{0x247F, 0x3E0A}, // Streetflow: Butterfly Sun Visor (Yellow) -> April Bonbon: Sun Visor with Ribbon
+	{0x3968, 0x3E0B}, // Streetflow: Butterfly Sun Visor (Red) -> April Bonbon: Sun Visor with Ribbon (Orange)
+};
+
+static inline bool isHeadphone(const u16 headphone) {
+	switch (headphone) {
+		case 0x5F85: // April Bonbon: Headphones (Light Green)
+		case 0x63A7: // April Bonbon: Headphones (Red)
+		case 0x63A8: // April Bonbon: Headphones (Cyan)
+		case 0x63A9: // April Bonbon: Headphones (Purple)
+		case 0x63AA: // April Bonbon: Headphones (Yellow)
+		case 0x60A8: // StageDive: Rock Headphones (Red)
+		case 0x64ED: // StageDive: Rock Headphones (Cyan)
+		case 0x675D: // StageDive: Rock Headphones (Blue)
+		case 0x675E: // StageDive: Rock Headphones (Purple)
+		case 0x675F: // StageDive: Rock Headphones (Yellow)
+		case 0x6760: // StageDive: Rock Headphones (Magenta)
+		case 0x6761: // StageDive: Rock Headphones (Green)
+			return true;
+	}
+
+	return false;
+}
+
 void commitSaveData(void) {
 	if (ss2SaveModified) {
 		archiveCommitSaveData("ss2");
@@ -331,6 +798,100 @@ static u32 getSS3CharacterOffset(u16 id) {
 
 void readSS3Character(u16 id) {
 	tonccpy(&ss4CharacterData, (char*)ss3Save+getSS3CharacterOffset(id), 0x36);
+}
+
+void readSS4CharacterToSS3(u16 id) {
+	toncset(&ss4CharacterData, 0, sizeof(ss3to4character));
+	readSS4Character(id);
+
+	// Convert the character
+	int i = 0;
+	// Skin color
+	for (i = 0; i < SS4ToSS3SkinAmount; i++) {
+		if (ss4CharacterData.skinColor == SS4ToSS3SkinTable[i][0]) {
+			ss4CharacterData.skinColor = SS4ToSS3SkinTable[i][1];
+			break;
+		}
+	}
+	// Face shape
+	for (i = 0; i < SS4ToSS3FaceShapeAmount; i++) {
+		if (ss4CharacterData.faceShape == SS4ToSS3FaceShapeTable[i][0]) {
+			ss4CharacterData.faceShape = SS4ToSS3FaceShapeTable[i][1];
+			break;
+		}
+	}
+	// Eyes
+	for (i = 0; i < SS4ToSS3EyeAmount; i++) {
+		if (ss4CharacterData.eyes == SS4ToSS3EyeTable[i][0]) {
+			ss4CharacterData.eyes = SS4ToSS3EyeTable[i][1];
+			break;
+		}
+	}
+	// Mouth shape
+	for (i = 0; i < SS4ToSS3MouthShapeAmount; i++) {
+		if (ss4CharacterData.mouthShape == SS4ToSS3MouthShapeTable[i][0]) {
+			ss4CharacterData.mouthShape = SS4ToSS3MouthShapeTable[i][1];
+			break;
+		}
+	}
+	// Eyebrows
+	for (i = 0; i < SS4ToSS3EyebrowAmount; i++) {
+		if (ss4CharacterData.eyebrows == SS4ToSS3EyebrowTable[i][0]) {
+			ss4CharacterData.eyebrows = SS4ToSS3EyebrowTable[i][1];
+			break;
+		}
+	}
+	// Eyeshadow
+	if (ss4CharacterData.eyeshadowColor != 0) {
+		for (i = 0; i < SS4EyeshadowAmount; i++) {
+			if (ss4CharacterData.eyeshadowColor == SS4ToSS3EyeshadowTable[i][0]) {
+				ss4CharacterData.eyeshadowColor = SS4ToSS3EyeshadowTable[i][1];
+				break;
+			}
+		}
+	}
+	// Overlaying Eyebrows
+	for (i = 0; i < SS4ToSS3EyebrowAmount; i++) {
+		if (ss4CharacterData.eyebrowOverlay == SS4ToSS3EyebrowTable[i][0]) {
+			ss4CharacterData.eyebrowOverlay = SS4ToSS3EyebrowTable[i][1];
+			break;
+		}
+	}
+	// Hair style
+	for (i = 0; i < SS4ToSS3HairStyleAmount; i++) {
+		if (ss4CharacterData.hairStyle == SS4ToSS3HairStyleTable[i][0]) {
+			ss4CharacterData.hairStyle = SS4ToSS3HairStyleTable[i][1];
+			break;
+		}
+	}
+	// Hair color (Main)
+	for (i = 0; i < SS4ToSS3HairColorAmount; i++) {
+		if (ss4CharacterData.hairColorMain == SS4ToSS3HairColorTable[i][0]) {
+			ss4CharacterData.hairColorMain = SS4ToSS3HairColorTable[i][1];
+			break;
+		}
+	}
+	// Hair color (Highlights)
+	for (i = 0; i < SS4ToSS3HairColorAmount; i++) {
+		if (ss4CharacterData.hairColorHighlights == SS4ToSS3HairColorTable[i][0]) {
+			ss4CharacterData.hairColorHighlights = SS4ToSS3HairColorTable[i][1];
+			break;
+		}
+	}
+	// Fix offset 0x24
+	if (ss4CharacterData.necklaceScarfHeadphones == 0 || isHeadphone(ss4CharacterData.necklaceScarfHeadphones)) {
+		ss4CharacterData.necklaceScarfHeadphones = ss4CharacterData.necklace;
+	}
+	// Fix offset 0x32
+	if (ss4CharacterData.glasses == 0) {
+		ss4CharacterData.glasses = ss4CharacterData.earrings;
+	}
+
+	// Remove data exclusive to Styling Star
+	ss4CharacterData.nailColor = 0;
+	ss4CharacterData.eyeliner = 0;
+	ss4CharacterData.unknown1C = 0;
+	ss4CharacterData.eyebrowColor = 0;
 }
 
 void writeSS3Character(u16 id) {
@@ -756,273 +1317,6 @@ static u32 getSS4MewtubeCharacterOffset(int video, int slot) {
 			return 0x9DA8A + 0x40*slot;
 	}
 }
-
-#define SS3ToSS4EyeAmount 4
-
-// Left: SS3, Right: SS4
-static u8 SS3ToSS4EyeTable[SS3ToSS4EyeAmount][2] = { // Offset: 0x05
-	{0x04, 0x01},
-	{0x06, 0x0A},
-	{0x08, 0x17},
-	{0x0B, 0x0F},
-};
-
-#define SS3ToSS4MouthShapeAmount 6
-
-// Left: SS3, Right: SS4
-static u8 SS3ToSS4MouthShapeTable[SS3ToSS4MouthShapeAmount][2] = { // Offset: 0x06
-	{0x02, 0x0F},
-	{0x03, 0x0B},
-	{0x04, 0x0F},
-	{0x0C, 0x0B},
-	{0x0E, 0x05},
-	{0x0D, 0x01},
-};
-
-#define SS3ToSS4EyebrowAmount 1
-
-// Left: SS3, Right: SS4
-static u8 SS3ToSS4EyebrowTable[SS3ToSS4EyebrowAmount][2] = { // Offset: 0x07
-	{0x04, 0x10},
-};
-
-#define SS3ToSS4LipstickAmount 19
-
-// Left: SS3, Right: SS4
-static u8 SS3ToSS4LipstickTable[SS3ToSS4LipstickAmount][2] = { // Offset: 0x0A
-	{0x0F, 0x2B},
-	{0x15, 0x5E},
-	{0x17, 0x40},
-	{0x1A, 0x60},
-	{0x1F, 0x08},
-	{0x20, 0x39},
-	{0x21, 0x12},
-	{0x27, 0x2D},
-	{0x28, 0x5B},
-	{0x39, 0x6A},
-	{0x49, 0x71},
-	{0x51, 0x0F},
-	{0x55, 0x1E},
-	{0x5A, 0x63},
-	{0x65, 0x2C}, // Poinsettia -> Passionate Love
-	{0x67, 0x02},
-	{0x68, 0x07},
-	{0x6F, 0x37},
-	{0x71, 0x31},
-};
-
-#define SS3ToSS4MascaraAmount 13
-
-// Left: SS3, Right: SS4
-static u8 SS3ToSS4MascaraTable[SS3ToSS4MascaraAmount][2] = { // Offset: 0x0B
-	{0x0B, 0x10},
-	{0x0F, 0x10},
-	{0x16, 0x20},
-	{0x22, 0x2F},
-	{0x28, 0x12},
-	{0x2A, 0x0E},
-	{0x33, 0x1C}, // Nocturne Blue -> Darkest Blue
-	{0x42, 0x10},
-	{0x56, 0x02},
-	{0x5A, 0x2F},
-	{0x5D, 0x2F},
-	{0x5F, 0x2F},
-	{0x75, 0x10},
-};
-
-#define SS3ToSS4EyeshadowAmount 25
-
-// Left: SS3, Right: SS4
-static u8 SS3ToSS4EyeshadowTable[SS3ToSS4EyeshadowAmount][2] = { // Offset: 0x0C
-	{0x02, 0x3D},
-	{0x04, 0x53},
-	{0x0A, 0x18},
-	{0x13, 0x40},
-	{0x14, 0x13},
-	{0x15, 0x3B},
-	{0x1A, 0x4E},
-	{0x1B, 0x59},
-	{0x1C, 0x4B},
-	{0x21, 0x3E},
-	{0x23, 0x2B},
-	{0x2A, 0x2B},
-	{0x2B, 0x08},
-	{0x31, 0x2F},
-	{0x32, 0x37}, // Gerbera -> Cool Peach
-	{0x34, 0x50},
-	{0x36, 0x43},
-	{0x49, 0x18},
-	{0x5C, 0x3F},
-	{0x60, 0x5A},
-	{0x61, 0x32},
-	{0x69, 0x32},
-	{0x6A, 0x39},
-	{0x6E, 0x06},
-	{0x74, 0x29},
-};
-
-#define SS3ToSS4EyelinerAmount 16
-
-// Left: SS3, Right: SS4
-static u8 SS3ToSS4EyelinerTable[SS3ToSS4EyelinerAmount][2] = { // Offset: 0x0D
-	{0x07, 0x30},
-	{0x0C, 0x07},
-	{0x0F, 0x14},
-	{0x10, 0x49},
-	{0x17, 0x44},
-	{0x1B, 0x5C},
-	{0x1C, 0x3B},
-	{0x21, 0x44}, // Celebration Pink -> Red Carpet
-	{0x28, 0x14},
-	{0x36, 0x50},
-	{0x3B, 0x53},
-	{0x45, 0x19},
-	{0x4E, 0x2E},
-	{0x59, 0x42},
-	{0x73, 0x14},
-	{0x74, 0x06},
-};
-
-#define SS3ToSS4ContactAmount 23
-
-// Left: SS3, Right: SS4
-static u8 SS3ToSS4ContactTable[SS3ToSS4ContactAmount][2] = { // Offset: 0x0E
-	{0x0A, 0x2F},
-	{0x13, 0x17},
-	{0x14, 0x52},
-	{0x1C, 0x18},
-	{0x1E, 0x3B},
-	{0x20, 0x10},
-	{0x22, 0x3B},
-	{0x23, 0x0F},
-	{0x24, 0x1C},
-	{0x2C, 0x12},
-	{0x2D, 0x21},
-	{0x2E, 0x30},
-	{0x31, 0x12},
-	{0x46, 0x1D},
-	{0x55, 0x3F},
-	{0x5A, 0x30},
-	{0x5B, 0x31},
-	{0x5D, 0x51},
-	{0x64, 0x39},
-	{0x6A, 0x18},
-	{0x6F, 0x51},
-	{0x72, 0x52},
-	{0x73, 0x3A},
-};
-
-#define SS3ToSS4BlusherAmount 16
-
-// Left: SS3, Right: SS4
-static u8 SS3ToSS4BlusherTable[SS3ToSS4BlusherAmount][2] = { // Offset: 0x0F
-	{0x01, 0x0F},
-	{0x0A, 0x0E},
-	{0x15, 0x0E},
-	{0x17, 0x11},
-	{0x1F, 0x12}, // Begonia -> Blossom Blush
-	{0x20, 0x0A},
-	{0x21, 0x0A},
-	{0x23, 0x0E},
-	{0x2B, 0x09},
-	{0x30, 0x04},
-	{0x56, 0x0E},
-	{0x64, 0x12}, // ??? -> Blossom Blush
-	{0x66, 0x1A},
-	{0x67, 0x10},
-	{0x68, 0x06},
-	{0x69, 0x0C},
-};
-
-#define SS3ToSS4HairStyleAmount 22
-
-// Left: SS3, Right: SS4
-static u8 SS3ToSS4HairStyleTable[SS3ToSS4HairStyleAmount][2] = { // Offset: 0x15
-	{0x01, 0x4B},
-	{0x03, 0x4B},
-	{0x06, 0x4B},
-	{0x07, 0x4C},
-	{0x08, 0x4D},
-	{0x0A, 0x4E},
-	{0x0B, 0x4E},
-	{0x0D, 0x4F},
-	{0x0F, 0x10},
-	{0x12, 0x60},
-	{0x13, 0x3C},
-	{0x15, 0x63},
-	{0x1C, 0x60},
-	{0x1F, 0x62},
-	{0x25, 0x50},
-	{0x28, 0x4E},
-	{0x29, 0x51},
-	{0x2D, 0x33},
-	{0x38, 0x64},
-	{0x41, 0x3C},
-	{0x48, 0x4E},
-	{0x4A, 0x52},
-};
-
-#define SS3ToSS4InnerTopAmount 14
-
-// Left: SS3, Right: SS4
-static u16 SS3ToSS4InnerTopTable[SS3ToSS4InnerTopAmount][2] = { // Offsets: 0x1E & 0x20 (Table based on 0x1E)
-	{0x1248, 0x3E87}, // Streetflow: Sleeveless Polo Shirt (White) -> Marzipan Sky: Flowery Sleevelss Shirt
-	{0x25B8, 0x3D43}, // Streetflow: Sleeveless Polo Shirt (Light-Blue) -> Marzipan Sky: Lace-Panel Sleevelss Shirt
-	{0x25BA, 0x4D1D}, // Streetflow: Sleeveless Polo Shirt (Green) -> Chorale: Lace-Belted Sleeveless Shirt
-	{0x25BC, 0x2AB2}, // Streetflow: Sleeveless Polo Shirt (Magenta) -> Chorale: Sleeveless Shirt
-	{0x25BE, 0x2AB6}, // Streetflow: Sleeveless Polo Shirt (Black) -> Chorale: Sleeveless Shirt
-	{0x25C0, 0x52AA}, // Streetflow: Sleeveless Polo Shirt (Orange) -> April Bonbon: Funky Two-Tone Shirt
-	{0x25C2, 0x4D25}, // Streetflow: Sleeveless Polo Shirt (Dark Beige) -> Chorale: Lace-Belted Sleeveless Shirt
-	{0x399C, 0x3E85}, // Streetflow: Sleeveless Polo Shirt (Red) -> AZ-USA: Stripey Sleeveless Shirt
-	{0x13CC, 0x13CB}, // Streetflow: Wave Design Shirt (White) -> Chorale: Sleeveless Shirt
-	{0x25C4, 0x2AB2}, // Streetflow: Wave Design Shirt (Pink) -> Chorale: Sleeveless Shirt
-	{0x25C6, 0x4D1D}, // Streetflow: Wave Design Shirt (Green) -> Chorale: Lace-Belted Sleeveless Shirt
-	{0x25C8, 0x2AAE}, // Streetflow: Wave Design Shirt (Purple) -> Chorale: Sleeveless Shirt
-	{0x25CA, 0x2AB6}, // Streetflow: Wave Design Shirt (Black) -> Chorale: Sleeveless Shirt
-	{0x399E, 0x3E85}, // Streetflow: Wave Design Shirt (Red) -> AZ-USA: Stripey Sleeveless Shirt
-};
-
-#define SS3ToSS4TopAmount 1
-
-// Left: SS3, Right: SS4
-static u16 SS3ToSS4TopTable[SS3ToSS4TopAmount][2] = { // Offset: 0x20
-	{0x5F6A, 0x5D0B}, // Soy: Jellyfish Top -> Soy: Notch Neck Gradient Tunic
-};
-
-#define SS3ToSS4SkirtPantsAmount 16
-
-// Left: SS3, Right: SS4
-static u16 SS3ToSS4SkirtPantsTable[SS3ToSS4SkirtPantsAmount][2] = { // Offset: 0x2A
-	{0x0463, 0x28BA}, // Streetflow: Butterfly Miniskirt (White) -> Basic U: Tiered Skirt
-	{0x2083, 0x28C0}, // Streetflow: Butterfly Miniskirt (Light-Green) -> Basic U: Tiered Skirt
-	{0x2084, 0x137F}, // Streetflow: Butterfly Miniskirt (Pink) -> April Bonbon: Frilly Denim Skirt
-	{0x2085, 0x28B9}, // Streetflow: Butterfly Miniskirt (Black) -> Basic U: Tiered Skirt
-	{0x2086, 0x015F}, // Streetflow: Butterfly Miniskirt (Purple) -> Basic U: Tiered Skirt
-	{0x3D49, 0x28BE}, // Streetflow: Butterfly Miniskirt (Red) -> Basic U: Tiered Skirt
-	{0x3A86, 0x28B8}, // Streetflow: Butterfly Miniskirt (Yellow) -> Basic U: Tiered Skirt
-	{0x3A87, 0x20B2}, // Streetflow: Butterfly Miniskirt (Orange) -> AZ-USA: Tiered Lace Miniskirt
-	{0x4237, 0x12D6}, // Streetflow: Sporty Miniskirt (Yellow-Green) -> April Bonbon: Miniskirt with Ribbon
-	{0x4771, 0x4236}, // Streetflow: Sporty Miniskirt (Blue) -> AZ-USA: Gold-Buttoned Miniskirt
-	{0x4772, 0x43F5}, // Streetflow: Sporty Miniskirt (Green) -> AZ-USA: Gold-Buttoned Miniskirt
-	{0x4773, 0x36A2}, // Streetflow: Sporty Miniskirt (Orange) -> AZ-USA: Lace-Up Denim Mini
-	{0x4774, 0x43F6}, // Streetflow: Sporty Miniskirt (Purple) -> AZ-USA: Gold-Buttoned Miniskirt
-	{0x4775, 0x43FB}, // Streetflow: Sporty Miniskirt (Green-Blue) -> AZ-USA: Gold-Buttoned Miniskirt
-	{0x4776, 0x43F7}, // Streetflow: Sporty Miniskirt (Magenta) -> AZ-USA: Gold-Buttoned Miniskirt
-	{0x5F51, 0x1FB0}, // Soy: Undersea Flares -> Basic U: Bootcut Jeans
-};
-
-#define SS3ToSS4HatAmount 7
-
-// Left: SS3, Right: SS4
-static u16 SS3ToSS4HatTable[SS3ToSS4HatAmount][2] = { // Offset: 0x30
-	{0x053C, 0x3E0C}, // Streetflow: Butterfly Sun Visor (White) -> April Bonbon: Sun Visor with Ribbon
-	{0x247B, 0x3CA9}, // Streetflow: Butterfly Sun Visor (Pink) -> April Bonbon: Sun Visor with Ribbon (Magenta)
-	{0x247C, 0x3E08}, // Streetflow: Butterfly Sun Visor (Light-Blue) -> April Bonbon: Sun Visor with Ribbon
-	{0x247D, 0x3E09}, // Streetflow: Butterfly Sun Visor (Green) -> April Bonbon: Sun Visor with Ribbon
-	{0x247E, 0x3E06}, // Streetflow: Butterfly Sun Visor (Black) -> April Bonbon: Sun Visor with Ribbon
-	{0x247F, 0x3E0A}, // Streetflow: Butterfly Sun Visor (Yellow) -> April Bonbon: Sun Visor with Ribbon
-	{0x3968, 0x3E0B}, // Streetflow: Butterfly Sun Visor (Red) -> April Bonbon: Sun Visor with Ribbon (Orange)
-};
 
 void readSS4Character(u16 id) {
 	tonccpy(&ss4CharacterData, (char*)ss4Save+getSS4CharacterOffset(id), 0x3E);
