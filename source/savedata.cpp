@@ -325,6 +325,112 @@ static u8 SS3ToSS4EyelinerTable[SS3ToSS4EyelinerAmount][2] = { // Offset: 0x0D
 	{0x74, 0x06},
 };
 
+#define SS4EyelinerAmount 100
+
+// Left: SS4, Right: SS3
+static u8 SS4ToSS3EyelinerTable[SS4EyelinerAmount][2] = { // Offset: 0x0D
+	{0x01, 0x68}, // Caramel Shot -> City Pink
+	{0x02, 0x60}, // Rose Petal -> Baby Pink
+	{0x03, 0x68}, // Cinnamon Sprinkles -> City Pink
+	{0x04, 0x20}, // Cranberry Syrup -> Tiramisu
+	{0x08, 0x67}, // Sweet Strawberry -> Cherry Blossom
+	{0x09, 0x15}, // Mango Dream -> Goldenrod
+	{0x0A, 0x21}, // Cassis Swirl -> Celebration Pink
+	{0x1B, 0x67}, // Flamingo -> Cherry Blossom
+	{0x1C, 0x68}, // Clover Blossom -> City Pink
+	{0x1D, 0x67}, // Pink Oats -> Cherry Blossom
+	{0x1E, 0x15}, // Ripe Corn -> Goldenrod
+	{0x28, 0x67}, // Day's End -> Cherry Blossom
+	{0x29, 0x06}, // Meadowsweet -> Lilac
+	{0x2A, 0x69}, // Moirae Pink -> Strawberry Pink
+	{0x2B, 0x72}, // Sepia Destiny -> Walnut
+	{0x0B, 0x70}, // Cinnamon -> Toasted Sesame
+	{0x0C, 0x14}, // Cumin -> Seaside Terrace
+	{0x0D, 0x72}, // Pink Peppercorn -> Walnut
+	{0x0E, 0x14}, // Solar Wind -> Seaside Terrace
+	{0x0F, 0x70}, // Martian Soil -> Toasted Sesame
+	{0x10, 0x2D}, // Comet Tail -> Lime
+	{0x11, 0x67}, // Princess Pink -> Cherry Blossom
+	{0x12, 0x30}, // Amber Crown -> Starfish Orange
+	{0x13, 0x10}, // Crown Jewels -> Chai Latte
+	{0x49, 0x2B}, // Bright Gold -> Gold Bell
+	{0x4A, 0x6E}, // Sugarspun Yellow -> Lemonade
+	{0x50, 0x2B}, // Starry Night -> Gold Bell
+	{0x51, 0x35}, // A Dozen Red Roses -> Golden Star
+	{0x05, 0x0A}, // Cocoa Butter -> Owl Stone
+	{0x06, 0x73}, // Chocolate -> Cocoa
+	{0x07, 0x72}, // Caramel Ribbon -> Walnut
+	{0x17, 0x49}, // Ochre Loam -> Champagne
+	{0x18, 0x68}, // Apricot Flower -> City Pink
+	{0x19, 0x6C}, // Winter Earth -> Lemon Chiffon
+	{0x1A, 0x5C}, // Nut Brown -> Sunlight Sand
+	{0x1F, 0x68}, // Pearl Barley -> City Pink
+	{0x20, 0x15}, // Melted Honey -> Goldenrod
+	{0x21, 0x10}, // Creamed Honey -> Chai Latte
+	{0x22, 0x5C}, // Honeycomb -> Sunlight Sand
+	{0x5C, 0x0A}, // Chocoholic -> Owl Stone
+	{0x5D, 0x49}, // Sunset Cloud -> Champagne
+	{0x5E, 0x5C}, // Golden Hour -> Sunlight Sand
+	{0x14, 0x5E}, // Pure Black -> Bass Charcoal
+	{0x15, 0x73}, // Coffee Roast -> Cocoa
+	{0x16, 0x0A}, // Bitter Brown -> Owl Stone
+	{0x2C, 0x08}, // Fey Lilac -> Antique Rose
+	{0x2D, 0x07}, // Bronze Kismet -> Sawtooth Oak
+	{0x2E, 0x64}, // Graceful Violet -> Afternoon Rose
+	{0x2F, 0x73}, // Bitter Rose -> Cocoa
+	{0x30, 0x1E}, // Graceful Dahlia -> Blush Pink
+	{0x31, 0x1B}, // Midnight Black -> Tabby Grey
+	{0x32, 0x04}, // Shadow Grey -> Station Grey
+	{0x33, 0x19}, // Starlit Blue -> Lavender
+	{0x57, 0x76}, // Chaotic Green -> Railway Green
+	{0x58, 0x08}, // Galactic Violet -> Antique Rose
+	{0x59, 0x06}, // Anemone Blue -> Lilac
+	{0x5A, 0x54}, // Moondark Blue -> Tickled Blue
+	{0x5B, 0x6A}, // Mystic Dance -> Electric Blue
+	{0x34, 0x60}, // Sugarspun Pink -> Baby Pink
+	{0x35, 0x2F}, // Mango Mallow -> Banana
+	{0x36, 0x57}, // Peppermint Thrill -> Shrub Green
+	{0x37, 0x1D}, // Icing Sugar -> Bicycle Blue
+	{0x38, 0x6B}, // Ferris Wheel -> Soft Pink
+	{0x39, 0x71}, // Merry-Go-Round -> Hibiscus
+	{0x3A, 0x2C}, // Waltzer -> Merry-Go-Green
+	{0x3B, 0x1C}, // Teacups -> Emerald Ocean
+	{0x3C, 0x60}, // Pink Flash -> Baby Pink
+	{0x3D, 0x30}, // Orange Streak -> Starfish Orange
+	{0x3E, 0x05}, // Lilac Gleam -> Brilliant Purple
+	{0x3F, 0x13}, // Blue Burst -> Blue Lagoon
+	{0x40, 0x71}, // Gourmet Truffles -> Hibiscus
+	{0x41, 0x2B}, // Quail's Eggs -> Gold Bell
+	{0x42, 0x3F}, // Soufflé -> Moss Green
+	{0x43, 0x6A}, // Salmon Terrine -> Electric Blue
+	{0x44, 0x26}, // Red Carpet -> Ruby
+	{0x45, 0x57}, // Acceptance Speech -> Shrub Green
+	{0x46, 0x13}, // Perfect Dress -> Blue Lagoon
+	{0x47, 0x54}, // Guestlist Glitterati -> Tickled Blue
+	{0x48, 0x67}, // Sunset Glow -> Cherry Blossom
+	{0x4B, 0x57}, // Emerald River -> Shrub Green
+	{0x52, 0x13}, // Diamond Ring -> Blue Lagoon
+	{0x53, 0x54}, // Tosca -> Tickled Blue
+	{0x54, 0x34}, // Macbeth -> Sapphire Snapshot
+	{0x55, 0x37}, // Faust -> Taylor Green
+	{0x56, 0x3C}, // The Valkyrie -> Ivy Olive
+	{0x64, 0x54}, // Sweet Thunder -> Tickled Blue
+	{0x23, 0x01}, // Spidersilk -> Chalk White
+	{0x24, 0x02}, // Spinneret -> Snow White
+	{0x25, 0x60}, // Lilac Mist -> Baby Pink
+	{0x26, 0x60}, // Silken Web -> Baby Pink
+	{0x27, 0x5C}, // Lambswool -> Sunlight Sand
+	{0x4C, 0x4A}, // Harlequin -> Green Balloon
+	{0x4D, 0x45}, // Lovebird -> Mint
+	{0x4E, 0x4A}, // Muted Jade -> Green Balloon
+	{0x4F, 0x76}, // Lyrebird -> Railway Green
+	{0x5F, 0x6C}, // Nebula -> Lemon Chiffon
+	{0x60, 0x01}, // Starshine Shower -> Chalk White
+	{0x61, 0x02}, // Moondrop -> Snow White
+	{0x62, 0x02}, // Angelic Heart -> Snow White
+	{0x63, 0x1D}, // Rainy Girl -> Bicycle Blue
+};
+
 #define SS3ToSS4ContactAmount 23
 
 // Left: SS3, Right: SS4
@@ -418,8 +524,8 @@ static u8 SS4ToSS3HairStyleTable[SS4ToSS3HairStyleAmount][2] = { // Offset: 0x15
 
 // Left: SS4, Right: SS3
 static u8 SS4ToSS3HairColorTable[SS4ToSS3HairColorAmount][2] = { // Offsets: 0x17 & 0x18
-	{0x77, 0x21}, // Rosie Strawberry
-	{0x7A, 0x6C}, // Angélique Blonde
+	{0x77, 0x21}, // Rosie Strawberry -> Celebration Pink
+	{0x7A, 0x6C}, // Angélique Blonde -> Lemon Chiffon
 };
 
 #define SS3ToSS4InnerTopAmount 14
@@ -846,6 +952,15 @@ void readSS4CharacterToSS3(u16 id) {
 		for (i = 0; i < SS4EyeshadowAmount; i++) {
 			if (ss4CharacterData.eyeshadowColor == SS4ToSS3EyeshadowTable[i][0]) {
 				ss4CharacterData.eyeshadowColor = SS4ToSS3EyeshadowTable[i][1];
+				break;
+			}
+		}
+	}
+	// Eyeliner
+	if (ss4CharacterData.eyelinerColor != 0) {
+		for (i = 0; i < SS4EyelinerAmount; i++) {
+			if (ss4CharacterData.eyelinerColor == SS4ToSS3EyelinerTable[i][0]) {
+				ss4CharacterData.eyelinerColor = SS4ToSS3EyelinerTable[i][1];
 				break;
 			}
 		}
