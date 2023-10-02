@@ -436,7 +436,7 @@ static u8 SS4ToSS3EyelinerTable[SS4EyelinerAmount][2] = { // Offset: 0x0D
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4ContactTable[SS3ToSS4ContactAmount][2] = { // Offset: 0x0E
 	{0x0A, 0x2F},
-	{0x13, 0x17},
+	{0x13, 0x17}, // Blue Lagoon -> Turquoise Blue
 	{0x14, 0x52},
 	{0x1C, 0x18},
 	{0x1E, 0x3B},
@@ -454,10 +454,105 @@ static u8 SS3ToSS4ContactTable[SS3ToSS4ContactAmount][2] = { // Offset: 0x0E
 	{0x5B, 0x31},
 	{0x5D, 0x51},
 	{0x64, 0x39},
-	{0x6A, 0x18},
+	{0x6A, 0x18}, // Electric Blue -> Sky Blue
 	{0x6F, 0x51},
 	{0x72, 0x52},
 	{0x73, 0x3A},
+};
+
+#define SS4ContactAmount 89
+
+// Left: SS4, Right: SS3
+static u8 SS4ToSS3ContactTable[SS4ContactAmount][2] = { // Offset: 0x0E
+	{0x2E, 0x04}, // Silver Grey -> Station Grey
+	{0x2F, 0x1B}, // Grey -> Tabby Grey
+	{0x30, 0x5E}, // Slate Grey -> Bass Charcoal
+	{0x31, 0x5C}, // Stone Grey -> Sunlight Sand
+	{0x32, 0x5C}, // Oyster -> Sunlight Sand
+	{0x33, 0x0A}, // Gunmetal Grey -> Owl Stone
+	{0x34, 0x05}, // Smoky Grey -> Brilliant Purple
+	{0x35, 0x1B}, // Misty Grey -> Tabby Grey
+	{0x36, 0x4B}, // Ash Grey -> Star Cerulean
+	{0x08, 0x13}, // Electric Blue -> Blue Lagoon
+	{0x17, 0x13}, // Turquoise Blue -> Blue Lagoon
+	{0x58, 0x13}, // Angelic Blue -> Blue Lagoon
+	{0x26, 0x1C}, // Peacock -> Emerald Ocean
+	{0x09, 0x6A}, // Pale Blue -> Electric Blue
+	{0x18, 0x6A}, // Sky Blue -> Electric Blue
+	{0x27, 0x3B}, // Night Sky Blue -> Deep Azure
+	{0x56, 0x54}, // Moonlight Blue -> Tickled Blue
+	{0x0A, 0x05}, // Baby Blue -> Brilliant Purple
+	{0x19, 0x3B}, // Hyacinth Blue -> Deep Azure
+	{0x28, 0x3B}, // Dark Hyacinth -> Deep Azure
+	{0x29, 0x63}, // Dark Ultramarine -> Metropolis Navy
+	{0x54, 0x4B}, // Azure -> Star Cerulean
+	{0x0B, 0x06}, // Pale Violet -> Lilac
+	{0x1A, 0x19}, // Ultramarine -> Lavender
+	{0x2A, 0x1A}, // Dark Violet -> Violet
+	{0x4E, 0x19}, // Grape -> Lavender
+	{0x0C, 0x06}, // Lilac
+	{0x1B, 0x19}, // Violet -> Lavender
+	{0x2B, 0x4E}, // Royal Purple -> Rebel Violet
+	{0x2C, 0x4E}, // Plum -> Rebel Violet
+	{0x4D, 0x06}, // Purple -> Lilac
+	{0x37, 0x08}, // Violet Grey -> Antique Rose
+	{0x42, 0x60}, // Pearly Purple -> Baby Pink
+	{0x43, 0x60}, // Pale Lavender -> Baby Pink
+	{0x0D, 0x60}, // Soft Lavender -> Baby Pink
+	{0x0E, 0x60}, // Candyfloss Pink -> Baby Pink
+	{0x1C, 0x61}, // Raspberry -> Meadow Pink
+	{0x1D, 0x1E}, // Warm Pink -> Blush Pink
+	{0x4F, 0x68}, // Baby Pink -> City Pink
+	{0x50, 0x6B}, // Pink -> Soft Pink
+	{0x55, 0x69}, // Blossom Pink -> Strawberry Pink
+	{0x01, 0x67}, // Carnation Pink -> Cherry Blossom
+	{0x0F, 0x21}, // Terracotta -> Celebration Pink
+	{0x1E, 0x27}, // Deep Reed -> Rooibos Tea
+	{0x2D, 0x44}, // Dark Raspberry -> Redcurrant Cake
+	{0x38, 0x21}, // Coral -> Celebration Pink
+	{0x39, 0x64}, // Ruby Red -> Afternoon Rose
+	{0x53, 0x53}, // Garnet -> Fiery Rose
+	{0x02, 0x07}, // Light Brown -> Sawtooth Oak
+	{0x10, 0x15}, // Brown -> Goldenrod
+	{0x1F, 0x6F}, // Dark Brown -> Maple Syrup
+	{0x3B, 0x23}, // Chocolate Brown -> Elegant Rose
+	{0x3A, 0x07}, // Cocoa Brown -> Sawtooth Oak
+	{0x52, 0x72}, // Mocha Brown -> Walnut
+	{0x20, 0x14}, // Dark Amber -> Seaside Terrace
+	{0x3C, 0x74}, // Sepia -> Workbench Brown
+	{0x3D, 0x5C}, // Hazel Sepia -> Sunlight Sand
+	{0x3E, 0x14}, // Khaki -> Seaside Terrace
+	{0x3F, 0x0D}, // Burnt Umber -> Antique Door
+	{0x51, 0x72}, // Almond -> Walnut
+	{0x47, 0x5B}, // Amber Grey -> Night Sand
+	{0x40, 0x17}, // Orange -> Marmalade
+	{0x41, 0x25}, // Carrot Orange -> Maple
+	{0x03, 0x11}, // Pale Amber Brown -> Caramel
+	{0x11, 0x11}, // Amber Brown -> Caramel
+	{0x04, 0x6E}, // Pale Yellow -> Lemonade
+	{0x12, 0x12}, // Citrus Yellow -> Golden Arch
+	{0x44, 0x2B}, // Yellow -> Gold Bell
+	{0x45, 0x6D}, // Saffron Yellow -> Yellow Balloon
+	{0x46, 0x32}, // Pumpkin -> Gerbera
+	{0x05, 0x45}, // Spring Green -> Mint
+	{0x13, 0x45}, // Apple Green -> Mint
+	{0x21, 0x2D}, // Dark Hazel Green -> Lime
+	{0x48, 0x2C}, // Yellowish Green -> Merry-Go-Green
+	{0x06, 0x4A}, // Light Green -> Green Balloon
+	{0x14, 0x3F}, // Leaf Green -> Moss Green
+	{0x57, 0x57}, // Fresh Star Green -> Shrub Green
+	{0x22, 0x57}, // Dark Moss Green -> Shrub Green
+	{0x24, 0x57}, // Dark Green -> Shrub Green
+	{0x23, 0x57}, // Dark Leaf Green -> Shrub Green
+	{0x4C, 0x37}, // Moss Green -> Taylor Green
+	{0x4B, 0x3F}, // Pine Green -> Moss Green
+	{0x15, 0x76}, // Mint Green -> Railway Green
+	{0x59, 0x1C}, // Friendship Green -> Emerald Ocean
+	{0x4A, 0x40}, // Slate Green -> Jade Green
+	{0x07, 0x13}, // Pale Green -> Blue Lagoon
+	{0x16, 0x1C}, // Turquoise Green -> Emerald Ocean
+	{0x25, 0x1C}, // Dark Aqua Green -> Emerald Ocean
+	{0x49, 0x1C}, // Emerald Green -> Emerald Ocean
 };
 
 #define SS3ToSS4BlusherAmount 16
@@ -961,6 +1056,15 @@ void readSS4CharacterToSS3(u16 id) {
 		for (i = 0; i < SS4EyelinerAmount; i++) {
 			if (ss4CharacterData.eyelinerColor == SS4ToSS3EyelinerTable[i][0]) {
 				ss4CharacterData.eyelinerColor = SS4ToSS3EyelinerTable[i][1];
+				break;
+			}
+		}
+	}
+	// Contacts
+	if (ss4CharacterData.contactColor != 0) {
+		for (i = 0; i < SS4ContactAmount; i++) {
+			if (ss4CharacterData.contactColor == SS4ToSS3ContactTable[i][0]) {
+				ss4CharacterData.contactColor = SS4ToSS3ContactTable[i][1];
 				break;
 			}
 		}
