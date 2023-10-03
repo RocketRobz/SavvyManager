@@ -559,7 +559,7 @@ static u8 SS4ToSS3ContactTable[SS4ContactAmount][2] = { // Offset: 0x0E
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4BlusherTable[SS3ToSS4BlusherAmount][2] = { // Offset: 0x0F
-	{0x01, 0x0F},
+	{0x01, 0x0F}, // Chalk White -> Apple Blossom
 	{0x0A, 0x0E},
 	{0x15, 0x0E},
 	{0x17, 0x11},
@@ -573,8 +573,34 @@ static u8 SS3ToSS4BlusherTable[SS3ToSS4BlusherAmount][2] = { // Offset: 0x0F
 	{0x64, 0x12}, // ??? -> Blossom Blush
 	{0x66, 0x1A},
 	{0x67, 0x10},
-	{0x68, 0x06},
+	{0x68, 0x06}, // City Pink -> Maple Syrup
 	{0x69, 0x0C},
+};
+
+#define SS4BlusherAmount 20
+
+// Left: SS4, Right: SS3
+static u8 SS4ToSS3BlusherTable[SS4BlusherAmount][2] = { // Offset: 0x0F
+	{0x01, 0x60}, // Rosy Spirit -> Baby Pink
+	{0x02, 0x68}, // Shy Fairy -> City Pink
+	{0x04, 0x68}, // Coy Blush -> City Pink
+	{0x06, 0x68}, // Maple Syrup -> City Pink
+	{0x07, 0x68}, // Flapjack -> City Pink
+	{0x0D, 0x01}, // Stage Musical -> Chalk White
+	{0x0F, 0x01}, // Apple Blossom -> Chalk White
+	{0x03, 0x60}, // Mischievous Glow -> Baby Pink
+	{0x05, 0x68}, // First Kiss -> City Pink
+	{0x0C, 0x60}, // Classical Ballet -> Baby Pink
+	{0x11, 0x67}, // Divine Coral -> Cherry Blossom
+	{0x12, 0x6B}, // Blossom Blush -> Soft Pink
+	{0x13, 0x6B}, // Magenta Spring -> Soft Pink
+	{0x14, 0x66}, // Bouquet Blush -> Hot Pepper
+	{0x08, 0x30}, // Tangerine Freckles -> Starfish Orange
+	{0x09, 0x6C}, // Lemon Dimples -> Lemon Chiffon
+	{0x0A, 0x67}, // Apple Cheeked -> Cherry Blossom
+	{0x0B, 0x5C}, // Light Opera -> Sunlight Sand
+	{0x0E, 0x07}, // Cherry Valentine -> Sawtooth Oak
+	{0x10, 0x30}, // Love Flush -> Starfish Orange
 };
 
 #define SS3ToSS4HairStyleAmount 22
@@ -1065,6 +1091,15 @@ void readSS4CharacterToSS3(u16 id) {
 		for (i = 0; i < SS4ContactAmount; i++) {
 			if (ss4CharacterData.contactColor == SS4ToSS3ContactTable[i][0]) {
 				ss4CharacterData.contactColor = SS4ToSS3ContactTable[i][1];
+				break;
+			}
+		}
+	}
+	// Blusher
+	if (ss4CharacterData.blusherColor != 0) {
+		for (i = 0; i < SS4BlusherAmount; i++) {
+			if (ss4CharacterData.blusherColor == SS4ToSS3BlusherTable[i][0]) {
+				ss4CharacterData.blusherColor = SS4ToSS3BlusherTable[i][1];
 				break;
 			}
 		}
