@@ -171,6 +171,60 @@ static u8 SS3ToSS4MascaraTable[SS3ToSS4MascaraAmount][2] = { // Offset: 0x0B
 	{0x75, 0x10},
 };
 
+#define SS4MascaraAmount 48
+
+// Left: SS4, Right: SS3
+static u8 SS4ToSS3MascaraTable[SS4MascaraAmount][2] = { // Offset: 0x0B
+	{0x01, 0x0D}, // Golden Brown -> Antique Door
+	{0x02, 0x56}, // Butter Scone -> Cherrywood
+	{0x03, 0x58}, // Marmalade -> Brick Tile
+	{0x04, 0x2E}, // Espresso Shot -> Science Lion
+	{0x05, 0x07}, // Iced Mocha -> Sawtooth Oak
+	{0x0A, 0x5D}, // Ceylon Ebony -> Bitter Chocolate
+	{0x0B, 0x22}, // Cuban Mahogany -> Mahogany
+	{0x0C, 0x73}, // Sugar Maple -> Cocoa
+	{0x18, 0x25}, // Butterfly Russet -> Maple
+	{0x1B, 0x56}, // Quirky Wink -> Cherrywood
+	{0x2F, 0x5D}, // Yeux Chocolats -> Bitter Chocolate
+	{0x30, 0x0E}, // Coconut -> Night Rose
+	{0x0D, 0x2A}, // Scandalous Scarlet -> Maroon
+	{0x0E, 0x44}, // Villainous Violet -> Redcurrant Cake
+	{0x0F, 0x46}, // Mischievous Mauve -> Mulberry
+	{0x10, 0x00}, // True Obsidian -> None (Default Black)
+	{0x11, 0x50}, // Volcanic Ash -> Amethyst Sky
+	{0x12, 0x28}, // Lava Glow -> Glamorous Garnet
+	{0x13, 0x62}, // Evening Sky -> Warm Brick
+	{0x14, 0x5F}, // Still Waters -> Aubergine Entrée
+	{0x19, 0x24}, // Cheeky Wink -> Lantern Light
+	{0x06, 0x5E}, // Grunge Black -> Bass Charcoal
+	{0x07, 0x5E}, // Punk Grey -> Bass Charcoal
+	{0x08, 0x09}, // Indie Green -> Winter Green
+	{0x09, 0x1B}, // Glam Grey -> Tabby Grey
+	{0x15, 0x04}, // Moon Silver -> Station Grey
+	{0x16, 0x18}, // Bumblebee Yellow -> Khaki
+	{0x17, 0x54}, // Hummingbird Blue -> Tickled Blue
+	{0x1A, 0x63}, // Charming Wink -> Metropolis Navy
+	{0x1C, 0x33}, // Darkest Blue -> Nocturne Blue
+	{0x1D, 0x50}, // Darkest Purple -> Amethyst Sky
+	{0x1E, 0x3E}, // Darkest Green -> Green Shadow
+	{0x1F, 0x48}, // Indigo -> Midnight Ocean
+	{0x20, 0x39}, // Empire Line -> Sylvan Night
+	{0x21, 0x3C}, // Lace Gloves -> Ivy Olive
+	{0x22, 0x65}, // Vivacity -> Poinsettia
+	{0x23, 0x71}, // Vermilion Orange -> Hibiscus
+	{0x24, 0x4E}, // Grape Pop -> Rebel Violet
+	{0x25, 0x1F}, // Paradise Gazer -> Begonia
+	{0x26, 0x57}, // Cool Watermelon -> Shrub Green
+	{0x27, 0x6D}, // Sweet Pineapple -> Yellow Balloon
+	{0x28, 0x19}, // Tropical Night -> Lavender
+	{0x29, 0x67}, // Secret Keeper -> Cherry Blossom
+	{0x2A, 0x76}, // Soft Apple -> Railway Green
+	{0x2B, 0x06}, // Delicate Indigo -> Lilac
+	{0x2C, 0x13}, // Sea Ice -> Blue Lagoon
+	{0x2D, 0x60}, // Winter Orchid -> Baby Pink
+	{0x2E, 0x6E}, // Beachgazing -> Lemonade
+};
+
 #define SS3ToSS4EyeshadowAmount 26
 
 // Left: SS3, Right: SS4
@@ -1066,6 +1120,15 @@ void readSS4CharacterToSS3(u16 id) {
 		if (ss4CharacterData.eyebrows == SS4ToSS3EyebrowTable[i][0]) {
 			ss4CharacterData.eyebrows = SS4ToSS3EyebrowTable[i][1];
 			break;
+		}
+	}
+	// Mascara
+	if (ss4CharacterData.mascaraColor != 0) {
+		for (i = 0; i < SS4MascaraAmount; i++) {
+			if (ss4CharacterData.mascaraColor == SS4ToSS3MascaraTable[i][0]) {
+				ss4CharacterData.mascaraColor = SS4ToSS3MascaraTable[i][1];
+				break;
+			}
 		}
 	}
 	// Eyeshadow
