@@ -152,6 +152,128 @@ static u8 SS3ToSS4LipstickTable[SS3ToSS4LipstickAmount][2] = { // Offset: 0x0A
 	{0x71, 0x31},
 };
 
+#define SS4LipstickAmount 117
+
+// Left: SS4, Right: SS3
+static u8 SS4ToSS3LipstickTable[SS4LipstickAmount][2] = { // Offset: 0x0A
+	{0x01, 0x60}, // Strawberry Fancy -> Baby Pink
+	{0x02, 0x67}, // Maple Macaroon -> Cherry Blossom
+	{0x04, 0x67}, // Cranberry Cheesecake -> Cherry Blossom
+	{0x05, 0x30}, // Baked Apple -> Starfish Orange
+	{0x07, 0x68}, // Grape Splash -> City Pink
+	{0x08, 0x6B}, // Berry Blast -> Soft Pink
+	{0x0A, 0x67}, // Pearl Pink -> Cherry Blossom
+	{0x10, 0x71}, // Soft Coral -> Hibiscus
+	{0x13, 0x67}, // Earnest Glow -> Cherry Blossom
+	{0x1F, 0x67}, // Pale Peach -> Cherry Blossom
+	{0x22, 0x67}, // Ginseng -> Cherry Blossom
+	{0x71, 0x67}, // Day Dreamer -> Cherry Blossom
+	{0x06, 0x30}, // Lemon Drizzle -> Starfish Orange
+	{0x0B, 0x30}, // Honey Tint -> Starfish Orange
+	{0x0C, 0x30}, // Orange Kisses -> Starfish Orange
+	{0x14, 0x30}, // Risky Blush -> Starfish Orange
+	{0x20, 0x30}, // Pink Flush -> Starfish Orange
+	{0x21, 0x49}, // Golden Wheat -> Champagne
+	{0x23, 0x30}, // Orange Peel -> Starfish Orange
+	{0x24, 0x30}, // Camomile -> Starfish Orange
+	{0x25, 0x67}, // Rosebud -> Cherry Blossom
+	{0x26, 0x6C}, // Beech Leaf -> Lemon Chiffon
+	{0x27, 0x30}, // Wild Honey -> Starfish Orange
+	{0x28, 0x30}, // Genmai -> Starfish Orange
+	{0x29, 0x30}, // Salmon Pink -> Starfish Orange
+	{0x2B, 0x17}, // Earthen Pink -> Marmalade
+	{0x33, 0x15}, // Hot Chocolate -> Goldenrod
+	{0x55, 0x15}, // Amber Smile -> Goldenrod
+	{0x0E, 0x71}, // Reality Star -> Hibiscus
+	{0x0F, 0x21}, // It Girl -> Celebration Pink
+	{0x11, 0x65}, // Pink Spice -> Poinsettia
+	{0x12, 0x20}, // Mulberry Crush -> Tiramisu
+	{0x2A, 0x30}, // Coral Pink -> Starfish Orange
+	{0x2C, 0x65}, // Passionate Love -> Poinsettia
+	{0x2D, 0x53}, // True Love -> Fiery Rose
+	{0x2E, 0x52}, // Eternal Love -> Chocolate Cake
+	{0x31, 0x71}, // Sundae -> Hibiscus
+	{0x34, 0x66}, // Rose Red -> Hot Pepper
+	{0x38, 0x67}, // Camellia -> Cherry Blossom
+	{0x39, 0x67}, // Rose Confection -> Cherry Blossom
+	{0x69, 0x53}, // Amaranthine -> Fiery Rose
+	{0x6A, 0x20}, // Pearled Rose -> Tiramisu
+	{0x6B, 0x21}, // Dusky Cloud -> Celebration Pink
+	{0x6C, 0x67}, // Shy Flamingo -> Cherry Blossom
+	{0x1C, 0x22}, // Wrath -> Mahogany
+	{0x35, 0x20}, // Misty Mauve -> Tiramisu
+	{0x36, 0x24}, // Purple Rose -> Lantern Light
+	{0x3B, 0x52}, // Burgundy Love -> Chocolate Cake
+	{0x3C, 0x27}, // Crimson Future -> Rooibos Tea
+	{0x3D, 0x4F}, // Mauve Mistake -> Bunny Purple
+	{0x5B, 0x0E}, // Cherry Velvet -> Night Rose
+	{0x5C, 0x29}, // Purple Tango -> Pansy
+	{0x5D, 0x52}, // Terracotta Kiss -> Chocolate Cake
+	{0x5E, 0x73}, // Harmonious -> Cocoa
+	{0x5F, 0x24}, // Reckless Grin -> Lantern Light
+	{0x60, 0x44}, // Delusion -> Redcurrant Cake
+	{0x64, 0x1B}, // Citrus Mist -> Tabby Grey
+	{0x67, 0x2E}, // Hot Cocoa -> Science Lion
+	{0x6D, 0x52}, // Ashes of Roses -> Chocolate Cake
+	{0x15, 0x15}, // Strategic Shimmer -> Goldenrod
+	{0x16, 0x30}, // Lunar Gold -> Starfish Orange
+	{0x17, 0x30}, // Serene Sparkle -> Starfish Orange
+	{0x18, 0x6D}, // Divine Glow -> Yellow Balloon
+	{0x19, 0x6C}, // Moonbeam -> Lemon Chiffon
+	{0x1A, 0x30}, // Dawn Star -> Starfish Orange
+	{0x1D, 0x6F}, // Acedia -> Maple Syrup
+	{0x1E, 0x6F}, // Gluttony -> Maple Syrup
+	{0x37, 0x74}, // Hidden Thorn -> Workbench Brown
+	{0x3A, 0x72}, // Sepia Grey -> Walnut
+	{0x63, 0x28}, // Mahogany Rose -> Glamorous Garnet
+	{0x6E, 0x20}, // Late Roses -> Tiramisu
+	{0x6F, 0x15}, // Dusty Roses -> Goldenrod
+	{0x70, 0x15}, // Dreamer Girl -> Goldenrod
+	{0x72, 0x49}, // Rose Moon -> Champagne
+	{0x1B, 0x5C}, // Starshine -> Sunlight Sand
+	{0x2F, 0x02}, // Angel's Whisper -> Snow White
+	{0x30, 0x01}, // Angel's Wing -> Chalk White
+	{0x3E, 0x28}, // Deep Heart -> Glamorous Garnet
+	{0x51, 0x72}, // Californium Dreaming -> Walnut
+	{0x53, 0x02}, // Precious Platinum -> Snow White
+	{0x58, 0x76}, // Jack -> Railway Green
+	{0x59, 0x56}, // King -> Cherrywood
+	{0x5A, 0x1B}, // Ace -> Tabby Grey
+	{0x65, 0x5B}, // Autumn Moon -> Night Sand
+	{0x66, 0x44}, // Fine Vintage -> Redcurrant Cake
+	{0x68, 0x73}, // Woodsmoke -> Cocoa
+	{0x73, 0x10}, // Harvest Moon -> Chai Latte
+	{0x74, 0x0A}, // Mystic Snowscape -> Owl Stone
+	{0x75, 0x0F}, // Oblivion -> Jet Black
+	{0x03, 0x6C}, // Orange Chiffon -> Lemon Chiffon
+	{0x09, 0x2F}, // Orange Zest -> Banana
+	{0x32, 0x61}, // Lavender Sorbet -> Meadow Pink
+	{0x3F, 0x6B}, // Pink Charm -> Soft Pink
+	{0x40, 0x17}, // Enchanting Orange -> Marmalade
+	{0x41, 0x45}, // Spellbound Green -> Mint
+	{0x42, 0x13}, // Bewitching Blue -> Blue Lagoon
+	{0x43, 0x60}, // Pink Delight -> Baby Pink
+	{0x44, 0x30}, // Marigold Girl -> Starfish Orange
+	{0x45, 0x6D}, // Sunshine Idol -> Yellow Balloon
+	{0x46, 0x1D}, // Aqua Darling -> Bicycle Blue
+	{0x47, 0x6B}, // Candyfloss -> Soft Pink
+	{0x48, 0x2F}, // Sunny Day -> Banana
+	{0x49, 0x57}, // Apple Bliss -> Shrub Green
+	{0x4A, 0x3B}, // Mermaid Splash -> Deep Azure
+	{0x4B, 0x24}, // Geisha's Lips -> Lantern Light
+	{0x4C, 0x3F}, // Green Tea -> Moss Green
+	{0x4D, 0x57}, // Bamboo -> Shrub Green
+	{0x4E, 0x65}, // Classic Red -> Poinsettia
+	{0x4F, 0x6B}, // Matinee Violet -> Soft Pink
+	{0x50, 0x3B}, // Eyecatching Blue -> Deep Azure
+	{0x52, 0x6D}, // Solid Gold -> Yellow Balloon
+	{0x54, 0x61}, // Amethyst Lips -> Meadow Pink
+	{0x56, 0x17}, // Citrine Gloss -> Marmalade
+	{0x57, 0x6D}, // Garnet Kiss -> Yellow Balloon
+	{0x61, 0x1F}, // Candy Gelato -> Begonia
+	{0x62, 0x6B}, // Foxglove -> Soft Pink
+};
+
 #define SS3ToSS4MascaraAmount 13
 
 // Left: SS3, Right: SS4
@@ -1120,6 +1242,15 @@ void readSS4CharacterToSS3(u16 id) {
 		if (ss4CharacterData.eyebrows == SS4ToSS3EyebrowTable[i][0]) {
 			ss4CharacterData.eyebrows = SS4ToSS3EyebrowTable[i][1];
 			break;
+		}
+	}
+	// Lipstick
+	if (ss4CharacterData.lipstickColor != 0) {
+		for (i = 0; i < SS4LipstickAmount; i++) {
+			if (ss4CharacterData.lipstickColor == SS4ToSS3LipstickTable[i][0]) {
+				ss4CharacterData.lipstickColor = SS4ToSS3LipstickTable[i][1];
+				break;
+			}
 		}
 	}
 	// Mascara
