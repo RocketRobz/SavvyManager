@@ -99,11 +99,12 @@ static u8 SS3ToSS4MouthShapeTable[SS3ToSS4MouthShapeAmount][2] = { // Offset: 0x
 	{0x0D, 0x01},
 };
 
-#define SS4ToSS3MouthShapeAmount 5
+#define SS4ToSS3MouthShapeAmount 6
 
 // Left: SS4, Right: SS3
 static u8 SS4ToSS3MouthShapeTable[SS4ToSS3MouthShapeAmount][2] = { // Offset: 0x06
 	{0x03, 0x06},
+	{0x0B, 0x03},
 	{0x14, 0x05}, // Alina
 	{0x15, 0x0D}, // Rosie
 	{0x16, 0x06}, // Yolanda
@@ -807,7 +808,7 @@ static u8 SS3ToSS4HairStyleTable[SS3ToSS4HairStyleAmount][2] = { // Offset: 0x15
 	{0x4A, 0x52},
 };
 
-#define SS4ToSS3HairStyleAmount 4
+#define SS4ToSS3HairStyleAmount 5
 
 // Left: SS4, Right: SS3
 static u8 SS4ToSS3HairStyleTable[SS4ToSS3HairStyleAmount][2] = { // Offset: 0x15
@@ -815,6 +816,7 @@ static u8 SS4ToSS3HairStyleTable[SS4ToSS3HairStyleAmount][2] = { // Offset: 0x15
 	{0x4D, 0x08}, // Curled under bob -> Straight Midi
 	{0x4E, 0x0A}, // Long elegant waves -> Long & Wavy
 	{0x6A, 0x0A}, // Long loose ringlets -> Long & Wavy
+	{0x6C, 0x09}, // Ear-tucked long -> Long & Straight
 };
 
 #define SS4ToSS3HairColorAmount 2
@@ -1308,6 +1310,9 @@ void readSS4CharacterToSS3(u16 id) {
 	// Hair style
 	for (i = 0; i < SS4ToSS3HairStyleAmount; i++) {
 		if (ss4CharacterData.hairStyle == SS4ToSS3HairStyleTable[i][0]) {
+			if (ss4CharacterData.hairStyle == 0x6C) { // Ear-tucked long
+				ss4CharacterData.hairFringe = 0x0C;
+			}
 			ss4CharacterData.hairStyle = SS4ToSS3HairStyleTable[i][1];
 			break;
 		}
