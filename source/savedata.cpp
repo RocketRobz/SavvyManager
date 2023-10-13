@@ -66,7 +66,7 @@ static u8 SS4ToSS3FaceShapeTable[SS4ToSS3FaceShapeAmount][2] = { // Offset: 0x04
 	{0x0A, 0x03}, // Angélique
 };
 
-#define SS3ToSS4EyeAmount 4
+#define SS3ToSS4EyeAmount 5
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4EyeTable[SS3ToSS4EyeAmount][2] = { // Offset: 0x05
@@ -74,6 +74,7 @@ static u8 SS3ToSS4EyeTable[SS3ToSS4EyeAmount][2] = { // Offset: 0x05
 	{0x06, 0x0A},
 	{0x08, 0x17},
 	{0x0B, 0x0F},
+	{0x20, 0x1E},
 };
 
 #define SS4ToSS3EyeAmount 4
@@ -86,7 +87,7 @@ static u8 SS4ToSS3EyeTable[SS4ToSS3EyeAmount][2] = { // Offset: 0x05
 	{0x27, 0x01}, // Angélique
 };
 
-#define SS3ToSS4MouthShapeAmount 7
+#define SS3ToSS4MouthShapeAmount 8
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4MouthShapeTable[SS3ToSS4MouthShapeAmount][2] = { // Offset: 0x06
@@ -97,6 +98,7 @@ static u8 SS3ToSS4MouthShapeTable[SS3ToSS4MouthShapeAmount][2] = { // Offset: 0x
 	{0x0C, 0x0B},
 	{0x0E, 0x05},
 	{0x0D, 0x01},
+	{0x13, 0x10},
 };
 
 #define SS4ToSS3MouthShapeAmount 6
@@ -111,11 +113,12 @@ static u8 SS4ToSS3MouthShapeTable[SS4ToSS3MouthShapeAmount][2] = { // Offset: 0x
 	{0x17, 0x01}, // Angélique
 };
 
-#define SS3ToSS4EyebrowAmount 1
+#define SS3ToSS4EyebrowAmount 2
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4EyebrowTable[SS3ToSS4EyebrowAmount][2] = { // Offset: 0x07
 	{0x04, 0x10},
+	{0x19, 0x17},
 };
 
 #define SS4ToSS3EyebrowAmount 4
