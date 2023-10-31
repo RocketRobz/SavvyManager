@@ -1001,6 +1001,7 @@ const u16 ss3CharacterOrder_JtoL[] = {
 	0x00A3, // Keana
 	0x010B, // Keeva
 	0x028D, // Keira
+	0x0033, // Keisha
 	0x02EE, // Kelly
 	0x0198, // Kelsie
 	0x032B, // Kez

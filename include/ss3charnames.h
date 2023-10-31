@@ -27,7 +27,7 @@ extern const u16 ss3CharacterOrder_AtoB[70];
 extern const u16 ss3CharacterOrder_CtoD[62];
 extern const u16 ss3CharacterOrder_EtoF[41];
 extern const u16 ss3CharacterOrder_GtoI[35];
-extern const u16 ss3CharacterOrder_JtoL[109];
+extern const u16 ss3CharacterOrder_JtoL[110];
 extern const u16 ss3CharacterOrder_MtoN[69];
 extern const u16 ss3CharacterOrder_OtoP[26];
 extern const u16 ss3CharacterOrder_QtoS[79];
