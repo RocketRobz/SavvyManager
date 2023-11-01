@@ -167,11 +167,6 @@ void CharacterChange::getList() {
 				peopleMet++;
 			}
 		}
-		for (i = 0; i < (int)sizeof(ss4CharacterOrder_GtoI)/sizeof(u16); i++) {
-			if (existsSS4Character(ss4CharacterOrder_GtoI[i])) {
-				peopleMet++;
-			}
-		}
 		for (i = 0; i < (int)sizeof(ss4CharacterOrder_JtoL)/sizeof(u16); i++) {
 			if (existsSS4Character(ss4CharacterOrder_JtoL[i])) {
 				peopleMet++;
@@ -227,11 +222,6 @@ void CharacterChange::getList() {
 		}
 		for (i = 0; i < (int)sizeof(ss3CharacterOrder_EtoF)/sizeof(u16); i++) {
 			if (existsSS3Character(ss3CharacterOrder_EtoF[i])) {
-				peopleMet++;
-			}
-		}
-		for (i = 0; i < (int)sizeof(ss3CharacterOrder_GtoI)/sizeof(u16); i++) {
-			if (existsSS3Character(ss3CharacterOrder_GtoI[i])) {
 				peopleMet++;
 			}
 		}
