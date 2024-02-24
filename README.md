@@ -6,7 +6,7 @@
 </p>
 For Style Savvy's 10th Anniversary, a save editor is here!
 
-# Features
+## Features
 
 * Edit save data from all four Girls Mode/Style Savvy/Style Boutique games.
 * As of currently, only games 2-4 are supported.
@@ -33,7 +33,35 @@ Before using Savvy Manager, it is recommended to back up your Girls Mode/Style S
 Star Stylist/Styling Star players, if you're playing as a male character, or as a female character with a unique eye shape (ex. Angélique), it is highly recommended you don't update your shop data at Shopdo.
 As such features are not normally available in-game, you may risk a possible ban when doing so, as the character data will be part of your Shopdo.
 
-# Credits
+## Compilation
+
+### Setting up your environment
+
+To build Savvy Manager from source, you will need to install devkitARM and some libraries. Follow devkitPro's [Getting Started](https://devkitpro.org/wiki/Getting_Started) page to install pacman, then run the following command to install everything you need:
+```
+(sudo dkp-)pacman -S 3ds-dev
+```
+(The `sudo dkp-` may not be needed depending on your OS)
+
+You will also need [bannertool](https://github.com/Steveice10/bannertool/releases/latest) and [makerom](https://github.com/profi200/Project_CTR/releases/latest) in your PATH.
+
+### Cloning the repository
+
+To download the source you will need to clone the repository with submodules, this can be done by running:
+```
+git clone --recursive https://github.com/RocketRobz/SavvyManager.git
+```
+
+If you've already cloned it, you can use the following command to update all of the submodules:
+```
+git submodule update --init --recursive
+```
+
+### Building
+
+Once you've cloned the repository (with submodules), simply run `make` in the root of the repository.
+
+## Credits
 * devkitPro: libctru, citro2d/3d, nds-hb-menu's file/folder browsing code
 * Universal Team: Universal Core
 * Pixel Perfect: [Music icon](https://www.flaticon.com/free-icon/musical-note_727218)
