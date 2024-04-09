@@ -29,10 +29,6 @@ For Style Savvy's 10th Anniversary, a save editor is here!
 
 Before using Savvy Manager, it is recommended to back up your Girls Mode/Style Savvy/Style Boutique game save(s) using Checkpoint, in case something goes wrong.
 
-**WARNING**     
-Star Stylist/Styling Star players, if you're playing as a male character, or as a female character with a unique eye shape (ex. Angélique), it is highly recommended you don't update your shop data at Shopdo.
-As such features are not normally available in-game, you may risk a possible ban when doing so, as the character data will be part of your Shopdo.
-
 ## Compilation
 
 ### Setting up your environment
