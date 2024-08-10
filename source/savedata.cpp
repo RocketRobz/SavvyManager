@@ -37,26 +37,27 @@ static bool ss3SaveModified = false;
 Handle handle4;
 FS_Archive archive4;
 
-#define SS4ToSS3SkinAmount 13
+#define SS4ToSS3SkinAmount 14
 
 // Left: SS4, Right: SS3
 static u8 SS4ToSS3SkinTable[SS4ToSS3SkinAmount][2] = { // Offset: 0x03
 	{0x09, 0x01}, // Alina
 	{0x0A, 0x02}, // Rosie
 	{0x0B, 0x05}, // Yolanda
-	{0x0C, 0x01},
+	{0x0C, 0x01}, // ???
 	{0x0D, 0x01}, // Ethan
 	{0x0E, 0x04}, // Tim
 	{0x0F, 0x01}, // Johann
-	{0x10, 0x03},
-	{0x11, 0x02},
+	{0x10, 0x03}, // Ken
+	{0x11, 0x02}, // Melvin
+	{0x12, 0x03}, // Xin
 	{0x13, 0x07}, // Margot
 	{0x14, 0x02}, // Camilla
 	{0x15, 0x02}, // Fortman
 	{0x16, 0x06}, // Oliver
 };
 
-#define SS4ToSS3FaceShapeAmount 4
+#define SS4ToSS3FaceShapeAmount 7
 
 // Left: SS4, Right: SS3
 static u8 SS4ToSS3FaceShapeTable[SS4ToSS3FaceShapeAmount][2] = { // Offset: 0x04
@@ -64,6 +65,9 @@ static u8 SS4ToSS3FaceShapeTable[SS4ToSS3FaceShapeAmount][2] = { // Offset: 0x04
 	{0x08, 0x01}, // Rosie
 	{0x09, 0x03}, // Yolanda
 	{0x0A, 0x03}, // Angélique
+	{0x10, 0x01}, // Xin
+	{0x11, 0x03}, // Margot
+	{0x12, 0x01}, // Camilla
 };
 
 #define SS3ToSS4EyeAmount 5
@@ -2166,8 +2170,6 @@ static void changeSS4CharacterGenderToMale(u16 id) {
 	ss4CharacterGenderSwap.gender = 2; // Male
 
 	int i = 0;
-	// Face Shape
-	ss4CharacterGenderSwap.faceShape += 3;
 	// Workaround incompatible skin color
 	for (i = 0; i < SS4ToSS3SkinAmount; i++) {
 		if (ss4CharacterGenderSwap.skinColor == SS4ToSS3SkinTable[i][0]) {
@@ -2175,6 +2177,14 @@ static void changeSS4CharacterGenderToMale(u16 id) {
 			break;
 		}
 	}
+	// Workaround incompatible face shape
+	for (i = 0; i < SS4ToSS3FaceShapeAmount; i++) {
+		if (ss4CharacterGenderSwap.faceShape == SS4ToSS3FaceShapeTable[i][0]) {
+			ss4CharacterGenderSwap.faceShape = SS4ToSS3FaceShapeTable[i][1];
+			break;
+		}
+	}
+	ss4CharacterGenderSwap.faceShape += 3; // Use male face shape set
 	// Eyes
 	for (i = 0; i < SS4FTMEyeAmount; i++) {
 		if (ss4CharacterGenderSwap.eyes == SS4FTMEyeTable[i][0]) {
@@ -2200,8 +2210,6 @@ static void changeSS4CharacterGenderToFemale(u16 id) {
 	ss4CharacterGenderSwap.gender = 1; // Female
 
 	int i = 0;
-	// Face Shape
-	ss4CharacterGenderSwap.faceShape -= 3;
 	// Workaround incompatible skin color
 	for (i = 0; i < SS4ToSS3SkinAmount; i++) {
 		if (ss4CharacterGenderSwap.skinColor == SS4ToSS3SkinTable[i][0]) {
@@ -2209,6 +2217,8 @@ static void changeSS4CharacterGenderToFemale(u16 id) {
 			break;
 		}
 	}
+	// Workaround incompatible face shape
+	ss4CharacterGenderSwap.faceShape -= 3; // Use female face shape set
 	// Eyes
 	for (i = 0; i < SS4MTFEyeAmount; i++) {
 		if (ss4CharacterGenderSwap.eyes == SS4MTFEyeTable[i][0]) {
