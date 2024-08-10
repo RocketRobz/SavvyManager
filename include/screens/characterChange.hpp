@@ -34,11 +34,12 @@ private:
 	/*
 		0: Character list
 		1: What to change
-		2: Body change
+		2: Attribute change
 		3: Outfit change (Currently bow placement change)
 		4: Import character (from Savvy Manager)
 		5: Import character from where?
 		6: Import character from existing save data
+		7: Character shading change
 	*/
 
 	mutable int cursorX, cursorY;
@@ -80,6 +81,9 @@ private:
 	int characterChangeMenu_optionShownFirst = 0;
 	int characterChangeMenuOps[4] = {0};
 	int characterChangeMenuOptions = 2;
+
+	int characterAttributeList_cursorPosition = 0;
+	bool changesMade = false;
 
 	int importCharacterList_cursorPosition = 0;
 	int importCharacterList_cursorPositionOnScreen = 0;

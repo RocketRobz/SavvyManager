@@ -131,6 +131,7 @@ const char* getSS4CharName(u16 charId) {
 extern bool ss3DLCharactersBackedUp;
 
 static u16 currentCharId = 0;
+static u8 currentPoseSet = 0;
 
 CharacterChange::CharacterChange() {
 	getList();
@@ -139,7 +140,7 @@ CharacterChange::CharacterChange() {
 void CharacterChange::getList() {
 	peopleMet = 0;
 	if (highlightedGame == 3) {
-		characterChangeMenuOps[0] = 0;
+		characterChangeMenuOps[0] = 2;
 		characterChangeMenuOps[1] = 0;
 		characterChangeMenuOps[2] = 5;
 		characterChangeMenuOps[3] = 10;
@@ -203,7 +204,7 @@ void CharacterChange::getList() {
 			}
 		}
 	} else if (highlightedGame == 2) {
-		characterChangeMenuOps[0] = 0;
+		characterChangeMenuOps[0] = 2;
 		characterChangeMenuOps[1] = 5;
 		characterChangeMenuOps[2] = 10;
 		characterChangeMenuOptions = 2;
@@ -266,7 +267,7 @@ void CharacterChange::getList() {
 			}
 		}
 	} else if (highlightedGame == 1) {
-		characterChangeMenuOps[0] = 0;
+		characterChangeMenuOps[0] = 2;
 		characterChangeMenuOps[1] = 4;
 		characterChangeMenuOps[2] = 10;
 		characterChangeMenuOptions = 2;
@@ -945,6 +946,36 @@ void CharacterChange::Draw(void) const {
 			i2 += 48;
 		}
 	  }
+	} else if (subScreenMode == 2) {
+		cursorY = 64+(48*characterAttributeList_cursorPosition);
+
+		Gui::DrawString(8, 8, 0.50, BLACK, characterName(true));
+		bool isMale = false;
+		if (highlightedGame == 3) {
+			isMale = getSS4CharacterGenderNoExceptions(currentCharId);
+			currentPoseSet = readSS4CharacterPoseSet(currentCharId);
+		} else if (highlightedGame == 2) {
+			isMale = getSS3CharacterGenderNoExceptions(currentCharId);
+			currentPoseSet = readSS3CharacterPoseSet(currentCharId);
+		} else if (highlightedGame == 1) {
+			isMale = getSS2CharacterGenderNoExceptions();
+			currentPoseSet = readSS2CharacterPoseSet();
+		}
+
+		int i2 = (highlightedGame == 3 ? 8 : 0);
+		i2 += 48;
+		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+		GFX::DrawSprite((isMale ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+		Gui::DrawString(64, i2, 0.65, BLACK, (highlightedGame == 3) ? (isMale ? "Gender: < Male >" : "Gender: < Female >") : (isMale ? "Gender: Male" : "Gender: Female"));
+		i2 += 48;
+		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+		const char* poseSetString = "Pose Set: < Active >";
+		if (currentPoseSet == 2) {
+			poseSetString = "Pose Set: < Cute >";
+		} else if (currentPoseSet == 3) {
+			poseSetString = "Pose Set: < Cool >";
+		}
+		Gui::DrawString(64, i2, 0.65, BLACK, poseSetString);
 	} else if (subScreenMode == 1) {
 		cursorY = 64+(48*characterChangeMenu_cursorPositionOnScreen);
 
@@ -1956,6 +1987,89 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 			sndBack();
 			subScreenMode = 1;
 			previewCharacter = false;
+		}
+
+	} else if (subScreenMode == 2) {
+		if (showCursor) {
+			if (hDown & KEY_DUP) {
+				sndHighlight();
+				characterAttributeList_cursorPosition--;
+				if (characterAttributeList_cursorPosition < 0) {
+					characterAttributeList_cursorPosition = 0;
+				}
+			}
+
+			if (hDown & KEY_DDOWN) {
+				sndHighlight();
+				characterAttributeList_cursorPosition++;
+				if (characterAttributeList_cursorPosition > 1) {
+					characterAttributeList_cursorPosition = 1;
+				}
+			}
+
+			if (hDown & KEY_DLEFT) {
+				switch (characterAttributeList_cursorPosition) {
+					case 0:
+						if (highlightedGame == 3) {
+							sndHighlight();
+							changeSS4CharacterGender(currentCharId);
+							changesMade = true;
+						}
+						break;
+					case 1:
+						sndHighlight();
+						currentPoseSet--;
+						if (currentPoseSet < 1) currentPoseSet = 3;
+						if (highlightedGame == 3) {
+							writeSS4CharacterPoseSet(currentCharId, currentPoseSet);
+						} else if (highlightedGame == 2) {
+							writeSS3CharacterPoseSet(currentCharId, currentPoseSet);
+						} else if (highlightedGame == 1) {
+							writeSS2CharacterPoseSet(currentPoseSet);
+						}
+						changesMade = true;
+						break;
+				}
+			}
+
+			if ((hDown & KEY_DRIGHT) || (hDown & KEY_A)) {
+				switch (characterAttributeList_cursorPosition) {
+					case 0:
+						if (highlightedGame == 3) {
+							sndHighlight();
+							changeSS4CharacterGender(currentCharId);
+							changesMade = true;
+						}
+						break;
+					case 1:
+						sndHighlight();
+						currentPoseSet++;
+						if (currentPoseSet > 3) currentPoseSet = 1;
+						if (highlightedGame == 3) {
+							writeSS4CharacterPoseSet(currentCharId, currentPoseSet);
+						} else if (highlightedGame == 2) {
+							writeSS3CharacterPoseSet(currentCharId, currentPoseSet);
+						} else if (highlightedGame == 1) {
+							writeSS2CharacterPoseSet(currentPoseSet);
+						}
+						changesMade = true;
+						break;
+				}
+			}
+
+		}
+
+		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
+			sndBack();
+			if (changesMade) {
+				if (highlightedGame == 3) {
+					writeSS4CharacterToSave(currentCharId);
+				} else if (highlightedGame == 2) {
+					writeSS3CharacterToSave(currentCharId);
+				}
+				changesMade = false;
+			}
+			subScreenMode = 1;
 		}
 
 	} else if (subScreenMode == 1) {

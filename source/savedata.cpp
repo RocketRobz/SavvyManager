@@ -87,6 +87,60 @@ static u8 SS4ToSS3EyeTable[SS4ToSS3EyeAmount][2] = { // Offset: 0x05
 	{0x27, 0x01}, // Angélique
 };
 
+#define SS4FTMEyeAmount 27
+
+// Left: Female, Right: Male
+static u8 SS4FTMEyeTable[SS4FTMEyeAmount][2] = { // Offset: 0x05
+	{0x01, 0x1E}, // P1, N1
+	{0x02, 0x1B}, // P1, N2
+	{0x03, 0x1E}, // P1, N3
+	{0x05, 0x1E}, // P1, N4
+	{0x07, 0x1B}, // P1, N5
+	{0x08, 0x20}, // P2, N1
+	{0x0A, 0x1E}, // P2, N2
+	{0x0C, 0x1A}, // P2, N3
+	{0x0D, 0x1E}, // P2, N4
+	{0x0E, 0x1E}, // P2, N5
+	{0x0F, 0x1A}, // P3, N1
+	{0x10, 0x1C}, // P3, N2
+	{0x11, 0x1E}, // P3, N3
+	{0x12, 0x21}, // P3, N4
+	{0x13, 0x1A}, // P3, N5
+	{0x14, 0x1C}, // P4, N1
+	{0x15, 0x1E}, // P4, N2
+	{0x16, 0x1D}, // P4, N3
+	{0x17, 0x1E}, // P4, N4
+	{0x19, 0x1F}, // P4, N5
+	{0x24, 0x1A}, // Alina
+	{0x25, 0x1E}, // Rosie
+	{0x26, 0x1E}, // Yolanda
+	{0x27, 0x1A}, // Angélique
+	{0x2D, 0x1A}, // Xin
+	{0x2E, 0x1A}, // Margot
+	{0x2F, 0x1E}, // Camilla
+};
+
+#define SS4MTFEyeAmount 15
+
+// Left: Male, Right: Female
+static u8 SS4MTFEyeTable[SS4MTFEyeAmount][2] = { // Offset: 0x05
+	{0x1A, 0x0F}, // ??? -> P3, N1
+	{0x1B, 0x07}, // ??? -> P1, N5
+	{0x1C, 0x10}, // ??? -> P3, N2
+	{0x1D, 0x16}, // ??? -> P4, N3
+	{0x1E, 0x15}, // ??? -> P4, N2
+	{0x1F, 0x19}, // ??? -> P4, N5
+	{0x20, 0x08}, // ??? -> P2, N1
+	{0x21, 0x12}, // ??? -> P3, N4
+	{0x28, 0x07}, // Ethan -> P1, N5
+	{0x29, 0x19}, // Tim -> P4, N5
+	{0x2A, 0x10}, // Johann -> P3, N2
+	{0x2B, 0x16}, // Ken -> P4, N3
+	{0x2C, 0x16}, // Melvin -> P4, N3
+	{0x30, 0x07}, // Fortman -> P1, N5
+	{0x31, 0x19}, // Oliver -> P4, N5
+};
+
 #define SS3ToSS4MouthShapeAmount 8
 
 // Left: SS3, Right: SS4
@@ -111,6 +165,48 @@ static u8 SS4ToSS3MouthShapeTable[SS4ToSS3MouthShapeAmount][2] = { // Offset: 0x
 	{0x15, 0x0D}, // Rosie
 	{0x16, 0x06}, // Yolanda
 	{0x17, 0x01}, // Angélique
+};
+
+#define SS4FTMMouthShapeAmount 20
+
+// Left: Female, Right: Male
+static u8 SS4FTMMouthShapeTable[SS4FTMMouthShapeAmount][2] = { // Offset: 0x06
+	{0x01, 0x10}, // P1, N1
+	{0x02, 0x11}, // P1, N2
+	{0x03, 0x11}, // P1, N3
+	{0x04, 0x11}, // P1, N4
+	{0x05, 0x12}, // P1, N5
+	{0x06, 0x11}, // P1, N6
+	{0x07, 0x12}, // P2, N1
+	{0x08, 0x11}, // P2, N2
+	{0x09, 0x11}, // P2, N3
+	{0x0A, 0x10}, // P2, N4
+	{0x0B, 0x10}, // P2, N5
+	{0x0D, 0x11}, // P2, N6
+	{0x0F, 0x11}, // P3, N1
+	{0x14, 0x12}, // Alina
+	{0x15, 0x10}, // Rosie
+	{0x16, 0x10}, // Yolanda
+	{0x17, 0x11}, // Angélique
+	{0x1D, 0x12}, // Xin
+	{0x1E, 0x11}, // Margot
+	{0x1F, 0x11}, // Camilla
+};
+
+#define SS4MTFMouthShapeAmount 10
+
+// Left: Male, Right: Female
+static u8 SS4MTFMouthShapeTable[SS4MTFMouthShapeAmount][2] = { // Offset: 0x06
+	{0x10, 0x0B}, // ??? -> P2, N5
+	{0x11, 0x0F}, // ??? -> P3, N1
+	{0x12, 0x05}, // ??? -> P1, N5
+	{0x18, 0x08}, // Ethan -> P2, N2
+	{0x19, 0x0B}, // Tim -> P2, N5
+	{0x1A, 0x0B}, // Johann -> P2, N5
+	{0x1B, 0x08}, // Ken -> P2, N2
+	{0x1C, 0x08}, // Melvin -> P2, N2
+	{0x20, 0x08}, // Fortman -> P2, N2
+	{0x21, 0x0B}, // Oliver -> P2, N5
 };
 
 #define SS3ToSS4EyebrowAmount 2
@@ -626,11 +722,11 @@ static u8 SS3ToSS4ContactTable[SS3ToSS4ContactAmount][2] = { // Offset: 0x0E
 	{0x24, 0x1C},
 	{0x2C, 0x12},
 	{0x2D, 0x21},
-	{0x2E, 0x30},
+	{0x2E, 0x30}, // ??? -> Slate Grey
 	{0x31, 0x12},
 	{0x46, 0x1D},
 	{0x55, 0x3F},
-	{0x5A, 0x30},
+	{0x5A, 0x30}, // ??? -> Slate Grey
 	{0x5B, 0x31},
 	{0x5D, 0x51},
 	{0x64, 0x39},
@@ -1046,6 +1142,19 @@ bool getSS2CharacterGender(void) {
 	return (ss2Save[0x102] == 2);
 }
 
+bool getSS2CharacterGenderNoExceptions(void) {
+	// true = male, false = female
+	return (ss2Save[0x102] == 2);
+}
+
+u8 readSS2CharacterPoseSet(void) {
+	return ss2CharacterData.poseSet;
+}
+
+void writeSS2CharacterPoseSet(u8 poseSet) {
+	ss2CharacterData.poseSet = poseSet;
+}
+
 
 /*
 	Style Savvy: Fashion Forward
@@ -1424,6 +1533,29 @@ bool getSS3CharacterGender(u16 id) {
 
 	// true = male, false = female
 	return (ss3CharacterGenderCheck.gender == 2);
+}
+
+bool getSS3CharacterGenderNoExceptions(u16 id) {
+	ss3to4character ss3CharacterGenderCheck;
+	tonccpy(&ss3CharacterGenderCheck, (char*)ss3Save+getSS3CharacterOffset(id), 0x36);
+
+	// true = male, false = female
+	return (ss3CharacterGenderCheck.gender == 2);
+}
+
+u8 readSS3CharacterPoseSet(u16 id) {
+	ss3to4character ss3CharacterTemp;
+	tonccpy(&ss3CharacterTemp, (char*)ss3Save+getSS3CharacterOffset(id), 0x36);
+
+	return ss3CharacterTemp.poseSet;
+}
+
+void writeSS3CharacterPoseSet(u16 id, u8 poseSet) {
+	ss3to4character ss3CharacterTemp;
+	tonccpy(&ss3CharacterTemp, (char*)ss3Save+getSS3CharacterOffset(id), 0x36);
+
+	ss3CharacterTemp.poseSet = poseSet;
+	tonccpy((char*)ss3Save+getSS3CharacterOffset(id), &ss3CharacterTemp, 0x36);
 }
 
 const char* readSS3ProfileName(u16 id) {
@@ -2017,6 +2149,101 @@ bool getSS4CharacterGender(u16 id) {
 
 	// true = male, false = female
 	return (ss4CharacterGenderCheck.gender == 2);
+}
+
+bool getSS4CharacterGenderNoExceptions(u16 id) {
+	ss3to4character ss4CharacterGenderCheck;
+	tonccpy(&ss4CharacterGenderCheck, (char*)ss4Save+getSS4CharacterOffset(id), 0x3E);
+
+	// true = male, false = female
+	return (ss4CharacterGenderCheck.gender == 2);
+}
+
+static void changeSS4CharacterGenderToMale(u16 id) {
+	ss3to4character ss4CharacterGenderSwap;
+	tonccpy(&ss4CharacterGenderSwap, (char*)ss4Save+getSS4CharacterOffset(id), 0x3E);
+
+	ss4CharacterGenderSwap.gender = 2; // Male
+
+	int i = 0;
+	// Face Shape
+	ss4CharacterGenderSwap.faceShape += 3;
+	// Workaround incompatible skin color
+	for (i = 0; i < SS4ToSS3SkinAmount; i++) {
+		if (ss4CharacterGenderSwap.skinColor == SS4ToSS3SkinTable[i][0]) {
+			ss4CharacterGenderSwap.skinColor = SS4ToSS3SkinTable[i][1];
+			break;
+		}
+	}
+	// Eyes
+	for (i = 0; i < SS4FTMEyeAmount; i++) {
+		if (ss4CharacterGenderSwap.eyes == SS4FTMEyeTable[i][0]) {
+			ss4CharacterGenderSwap.eyes = SS4FTMEyeTable[i][1];
+			break;
+		}
+	}
+	// Mouth shape
+	for (i = 0; i < SS4FTMMouthShapeAmount; i++) {
+		if (ss4CharacterGenderSwap.mouthShape == SS4FTMMouthShapeTable[i][0]) {
+			ss4CharacterGenderSwap.mouthShape = SS4FTMMouthShapeTable[i][1];
+			break;
+		}
+	}
+
+	tonccpy((char*)ss4Save+getSS4CharacterOffset(id), &ss4CharacterGenderSwap, 0x3E);
+}
+
+static void changeSS4CharacterGenderToFemale(u16 id) {
+	ss3to4character ss4CharacterGenderSwap;
+	tonccpy(&ss4CharacterGenderSwap, (char*)ss4Save+getSS4CharacterOffset(id), 0x3E);
+
+	ss4CharacterGenderSwap.gender = 1; // Female
+
+	int i = 0;
+	// Face Shape
+	ss4CharacterGenderSwap.faceShape -= 3;
+	// Workaround incompatible skin color
+	for (i = 0; i < SS4ToSS3SkinAmount; i++) {
+		if (ss4CharacterGenderSwap.skinColor == SS4ToSS3SkinTable[i][0]) {
+			ss4CharacterGenderSwap.skinColor = SS4ToSS3SkinTable[i][1];
+			break;
+		}
+	}
+	// Eyes
+	for (i = 0; i < SS4MTFEyeAmount; i++) {
+		if (ss4CharacterGenderSwap.eyes == SS4MTFEyeTable[i][0]) {
+			ss4CharacterGenderSwap.eyes = SS4MTFEyeTable[i][1];
+			break;
+		}
+	}
+	// Mouth shape
+	for (i = 0; i < SS4MTFMouthShapeAmount; i++) {
+		if (ss4CharacterGenderSwap.mouthShape == SS4MTFMouthShapeTable[i][0]) {
+			ss4CharacterGenderSwap.mouthShape = SS4MTFMouthShapeTable[i][1];
+			break;
+		}
+	}
+
+	tonccpy((char*)ss4Save+getSS4CharacterOffset(id), &ss4CharacterGenderSwap, 0x3E);
+}
+
+void changeSS4CharacterGender(u16 id) {
+	getSS4CharacterGenderNoExceptions(id) ? changeSS4CharacterGenderToFemale(id) : changeSS4CharacterGenderToMale(id);
+}
+
+u8 readSS4CharacterPoseSet(u16 id) {
+	ss3to4character ss4CharacterTemp;
+	tonccpy(&ss4CharacterTemp, (char*)ss4Save+getSS4CharacterOffset(id), 0x3E);
+
+	return ss4CharacterTemp.poseSet;
+}
+
+void writeSS4CharacterPoseSet(u16 id, u8 poseSet) {
+	ss3to4character ss4CharacterTemp;
+	tonccpy(&ss4CharacterTemp, (char*)ss4Save+getSS4CharacterOffset(id), 0x3E);
+
+	ss4CharacterTemp.poseSet = poseSet;
+	tonccpy((char*)ss4Save+getSS4CharacterOffset(id), &ss4CharacterTemp, 0x3E);
 }
 
 const char* readSS4ProfileName(u16 id) {

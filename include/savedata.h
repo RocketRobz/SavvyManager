@@ -14,7 +14,7 @@ extern "C" {
 
 typedef struct ss2character {
     u8 gender;				// Gender (01=Female, 02=Male)
-    u8 poseSet;				// Pose set (01=Normal, 02=Cute, 03=Bold)
+    u8 poseSet;				// Pose set (01=Active, 02=Cute, 03=Cool)
     u8 height;				// Height (00=Character is invisible)
     u8 skinColor;
     u8 faceShape;			// Face shape (03=Left, 01=Mid, 02=Right)
@@ -53,9 +53,9 @@ typedef struct ss2character {
 typedef struct ss3to4character {
     u8 gender;				// Gender (01=Female, 02=Male)
     u8 height;				// Height (00=Character is invisible)
-    u8 poseSet;				// Pose set (01=Normal, 02=Cute, 03=Bold)
+    u8 poseSet;				// Pose set (01=Active, 02=Cute, 03=Cool)
     u8 skinColor;
-    u8 faceShape;			// Face shape (03=Left, 01=Mid, 02=Right)
+    u8 faceShape;			// Face shape (03=Left, 01=Mid, 02=Right, +3 for Male)
     u8 eyes;
     u8 mouthShape;
     u8 eyebrows;
@@ -161,12 +161,23 @@ extern void backupSS3DLCharacters(const char* filename);
 extern void restoreSS3DLCharacters(const char* filename);
 
 extern bool getSS2CharacterGender(void);
+extern bool getSS2CharacterGenderNoExceptions(void);
 extern bool getSS3CharacterGender(u16 id);
+extern bool getSS3CharacterGenderNoExceptions(u16 id);
 extern bool getSS4CharacterGender(u16 id);
+extern bool getSS4CharacterGenderNoExceptions(u16 id);
+extern void changeSS4CharacterGender(u16 id);
 extern u16 getSS4AssistantCharacterId(void);
 extern void writeSS4AssistantCharacterId(u16 id);
 extern u16 getSS4MewtubeCharacterId(int video, int slot);
 extern void writeSS4MewtubeCharacterId(u16 id, int video, int slot);
+
+extern u8 readSS2CharacterPoseSet(void);
+extern void writeSS2CharacterPoseSet(u8 poseSet);
+extern u8 readSS3CharacterPoseSet(u16 id);
+extern void writeSS3CharacterPoseSet(u16 id, u8 poseSet);
+extern u8 readSS4CharacterPoseSet(u16 id);
+extern void writeSS4CharacterPoseSet(u16 id, u8 poseSet);
 
 extern const char* readSS3ProfileName(u16 id);
 extern void readSS3ProfileFile(u16 id, const char* filename);
