@@ -231,6 +231,56 @@ static u8 SS4ToSS3EyebrowTable[SS4ToSS3EyebrowAmount][2] = { // Offset: 0x07
 	{0x21, 0x10}, // Angélique
 };
 
+#define SS4FTMEyebrowAmount 25
+
+// Left: Female, Right: Male
+static u8 SS4FTMEyebrowTable[SS4FTMEyebrowAmount][2] = { // Offset: 0x07
+	{0x01, 0x17}, // Natural -> Fine Flat
+	{0x02, 0x15}, // Fine Angle
+	{0x03, 0x18}, // Full Flat -> Full Sharp Angle
+	{0x05, 0x16}, // Short Full Taper
+	{0x06, 0x18}, // Short Bold Round -> Full Sharp Angle
+	{0x07, 0x19}, // Full Angled Flat
+	{0x08, 0x17}, // Fine Round -> Fine Flat
+	{0x09, 0x15}, // Fine Straight -> Fine Angle
+	{0x0A, 0x1A}, // Ultra Short Angle
+	{0x0B, 0x17}, // Fine Flat
+	{0x0C, 0x17}, // Short Fine Taper -> Fine Flat
+	{0x0D, 0x16}, // Full Soft Angle -> Natural Flat
+	{0x0E, 0x18}, // Full Sharp Angle
+	{0x0F, 0x23}, // Ultra Fine Arch -> Tim
+	{0x10, 0x17}, // Fine Soft Arch -> Fine Flat
+	{0x11, 0x24}, // Full Angle -> Johann
+	{0x12, 0x16}, // Natural Flat
+	{0x14, 0x23}, // Full Short Angle -> Tim
+	{0x1E, 0x17}, // Alina -> Fine Flat
+	{0x1F, 0x17}, // Rosie -> Fine Flat
+	{0x20, 0x2B}, // Yolanda -> Oliver
+	{0x21, 0x2A}, // Angélique -> Fortman
+	{0x27, 0x17}, // Assistant (Xin) -> Fine Flat
+	{0x28, 0x24}, // Margot -> Johann
+	{0x29, 0x1A}, // Camilla -> Ultra Short Angle
+};
+
+#define SS4MTFEyebrowAmount 13
+
+// Left: Male, Right: Female
+static u8 SS4MTFEyebrowTable[SS4MTFEyebrowAmount][2] = { // Offset: 0x07
+	{0x15, 0x02}, // Fine Angle
+	{0x16, 0x12}, // Natural Flat
+	{0x17, 0x0B}, // Fine Flat
+	{0x18, 0x0E}, // Full Sharp Angle
+	{0x19, 0x07}, // Full Angled Flat
+	{0x1A, 0x29}, // Ultra Short Angle -> Camilla
+	{0x22, 0x09}, // Ethan -> Fine Straight
+	{0x23, 0x14}, // Tim -> Full Short Angle
+	{0x24, 0x28}, // Johann -> Margot
+	{0x25, 0x0D}, // Ken -> Full Soft Angle
+	{0x26, 0x0D}, // Melvin -> Full Soft Angle
+	{0x2A, 0x21}, // Fortman -> Angélique
+	{0x2B, 0x20}, // Oliver -> Yolanda
+};
+
 #define SS3ToSS4LipstickAmount 19
 
 // Left: SS3, Right: SS4
@@ -2199,6 +2249,13 @@ static void changeSS4CharacterGenderToMale(u16 id) {
 			break;
 		}
 	}
+	// Eyebrows
+	for (i = 0; i < SS4FTMEyebrowAmount; i++) {
+		if (ss4CharacterGenderSwap.eyebrows == SS4FTMEyebrowTable[i][0]) {
+			ss4CharacterGenderSwap.eyebrows = SS4FTMEyebrowTable[i][1];
+			break;
+		}
+	}
 
 	tonccpy((char*)ss4Save+getSS4CharacterOffset(id), &ss4CharacterGenderSwap, 0x3E);
 }
@@ -2230,6 +2287,13 @@ static void changeSS4CharacterGenderToFemale(u16 id) {
 	for (i = 0; i < SS4MTFMouthShapeAmount; i++) {
 		if (ss4CharacterGenderSwap.mouthShape == SS4MTFMouthShapeTable[i][0]) {
 			ss4CharacterGenderSwap.mouthShape = SS4MTFMouthShapeTable[i][1];
+			break;
+		}
+	}
+	// Eyebrows
+	for (i = 0; i < SS4MTFEyebrowAmount; i++) {
+		if (ss4CharacterGenderSwap.eyebrows == SS4MTFEyebrowTable[i][0]) {
+			ss4CharacterGenderSwap.eyebrows = SS4MTFEyebrowTable[i][1];
 			break;
 		}
 	}
