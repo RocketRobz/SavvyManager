@@ -2277,6 +2277,13 @@ static void changeSS4CharacterGenderToMale(u16 id) {
 			break;
 		}
 	}
+	// Overlaying Eyebrows
+	for (i = 0; i < SS4FTMEyebrowAmount; i++) {
+		if (ss4CharacterGenderSwap.eyebrowOverlay == SS4FTMEyebrowTable[i][0]) {
+			ss4CharacterGenderSwap.eyebrowOverlay = SS4FTMEyebrowTable[i][1];
+			break;
+		}
+	}
 
 	tonccpy((char*)ss4Save+getSS4CharacterOffset(id), &ss4CharacterGenderSwap, 0x3E);
 }
@@ -2332,6 +2339,13 @@ static void changeSS4CharacterGenderToFemale(u16 id) {
 	for (i = 0; i < SS4MTFEyebrowAmount; i++) {
 		if (ss4CharacterGenderSwap.eyebrows == SS4MTFEyebrowTable[i][0]) {
 			ss4CharacterGenderSwap.eyebrows = SS4MTFEyebrowTable[i][1];
+			break;
+		}
+	}
+	// Overlaying Eyebrows
+	for (i = 0; i < SS4MTFEyebrowAmount; i++) {
+		if (ss4CharacterGenderSwap.eyebrowOverlay == SS4MTFEyebrowTable[i][0]) {
+			ss4CharacterGenderSwap.eyebrowOverlay = SS4MTFEyebrowTable[i][1];
 			break;
 		}
 	}
