@@ -55,7 +55,7 @@ typedef struct ss3to4character {
     u8 height;				// Height (00=Character is invisible)
     u8 poseSet;				// Pose set (01=Active, 02=Cute, 03=Cool)
     u8 skinColor;
-    u8 faceShape;			// Face shape (03=Left, 01=Mid, 02=Right, +3 for Male)
+    u8 faceShape;			// Face shape (03=LeftF, 01=MidF, 02=RightF, 04=LeftM, 05=MidM, 06=RightM)
     u8 eyes;
     u8 mouthShape;
     u8 eyebrows;

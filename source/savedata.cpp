@@ -57,7 +57,7 @@ static u8 SS4ToSS3SkinTable[SS4ToSS3SkinAmount][2] = { // Offset: 0x03
 	{0x16, 0x06}, // Oliver
 };
 
-#define SS4ToSS3FaceShapeAmount 7
+#define SS4ToSS3FaceShapeAmount 14
 
 // Left: SS4, Right: SS3
 static u8 SS4ToSS3FaceShapeTable[SS4ToSS3FaceShapeAmount][2] = { // Offset: 0x04
@@ -65,9 +65,16 @@ static u8 SS4ToSS3FaceShapeTable[SS4ToSS3FaceShapeAmount][2] = { // Offset: 0x04
 	{0x08, 0x01}, // Rosie
 	{0x09, 0x03}, // Yolanda
 	{0x0A, 0x03}, // Angélique
+	{0x0B, 0x04}, // Ethan
+	{0x0C, 0x06}, // Tim
+	{0x0D, 0x05}, // Johann
+	{0x0E, 0x04}, // Ken
+	{0x0F, 0x04}, // Melvin
 	{0x10, 0x01}, // Xin
 	{0x11, 0x03}, // Margot
 	{0x12, 0x01}, // Camilla
+	{0x13, 0x04}, // Fortman
+	{0x14, 0x04}, // Oliver
 };
 
 #define SS3ToSS4EyeAmount 5
@@ -81,7 +88,7 @@ static u8 SS3ToSS4EyeTable[SS3ToSS4EyeAmount][2] = { // Offset: 0x05
 	{0x20, 0x1E},
 };
 
-#define SS4ToSS3EyeAmount 4
+#define SS4ToSS3EyeAmount 7
 
 // Left: SS4, Right: SS3
 static u8 SS4ToSS3EyeTable[SS4ToSS3EyeAmount][2] = { // Offset: 0x05
@@ -89,6 +96,9 @@ static u8 SS4ToSS3EyeTable[SS4ToSS3EyeAmount][2] = { // Offset: 0x05
 	{0x25, 0x18}, // Rosie
 	{0x26, 0x06}, // Yolanda
 	{0x27, 0x01}, // Angélique
+	{0x2D, 0x13}, // Xin
+	{0x2E, 0x13}, // Margot
+	{0x2F, 0x04}, // Camilla
 };
 
 #define SS4FTMEyeAmount 27
@@ -2234,7 +2244,18 @@ static void changeSS4CharacterGenderToMale(u16 id) {
 			break;
 		}
 	}
-	ss4CharacterGenderSwap.faceShape += 3; // Use male face shape set
+	// Use male face shape set
+	switch (ss4CharacterGenderSwap.faceShape) {
+		case 3:
+			ss4CharacterGenderSwap.faceShape = 4;
+			break;
+		case 1:
+			ss4CharacterGenderSwap.faceShape = 5;
+			break;
+		case 2:
+			ss4CharacterGenderSwap.faceShape = 6;
+			break;
+	}
 	// Eyes
 	for (i = 0; i < SS4FTMEyeAmount; i++) {
 		if (ss4CharacterGenderSwap.eyes == SS4FTMEyeTable[i][0]) {
@@ -2275,7 +2296,24 @@ static void changeSS4CharacterGenderToFemale(u16 id) {
 		}
 	}
 	// Workaround incompatible face shape
-	ss4CharacterGenderSwap.faceShape -= 3; // Use female face shape set
+	for (i = 0; i < SS4ToSS3FaceShapeAmount; i++) {
+		if (ss4CharacterGenderSwap.faceShape == SS4ToSS3FaceShapeTable[i][0]) {
+			ss4CharacterGenderSwap.faceShape = SS4ToSS3FaceShapeTable[i][1];
+			break;
+		}
+	}
+	// Use female face shape set
+	switch (ss4CharacterGenderSwap.faceShape) {
+		case 4:
+			ss4CharacterGenderSwap.faceShape = 3;
+			break;
+		case 5:
+			ss4CharacterGenderSwap.faceShape = 1;
+			break;
+		case 6:
+			ss4CharacterGenderSwap.faceShape = 2;
+			break;
+	}
 	// Eyes
 	for (i = 0; i < SS4MTFEyeAmount; i++) {
 		if (ss4CharacterGenderSwap.eyes == SS4MTFEyeTable[i][0]) {
