@@ -9,3 +9,5 @@ build/
 *.smdh
 *.map
 *.lst
+app/banner.bin
+app/icon.bin
