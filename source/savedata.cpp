@@ -2383,6 +2383,24 @@ static void changeSS4CharacterGenderToMale(u16 id) {
 		}
 	}
 
+	// Placeholder outfit
+	ss4CharacterGenderSwap.inner = 0;
+	ss4CharacterGenderSwap.top = 0x3365;
+	ss4CharacterGenderSwap.outer = 0;
+	ss4CharacterGenderSwap.necklaceScarfHeadphones = 0;
+	ss4CharacterGenderSwap.gloves = 0;
+	ss4CharacterGenderSwap.socks = 0;
+	ss4CharacterGenderSwap.skirtPants = 0x37D5;
+	ss4CharacterGenderSwap.shoes = 0x3B43;
+	ss4CharacterGenderSwap.legWarmers = 0;
+	ss4CharacterGenderSwap.hat = 0;
+	ss4CharacterGenderSwap.glasses = 0;
+	ss4CharacterGenderSwap.bag = 0;
+	ss4CharacterGenderSwap.necklace = 0;
+	ss4CharacterGenderSwap.watch = 0;
+	ss4CharacterGenderSwap.earrings = 0;
+	ss4CharacterGenderSwap.bowPosition = 0;
+
 	tonccpy((char*)ss4Save+getSS4CharacterOffset(id), &ss4CharacterGenderSwap, 0x3E);
 }
 
@@ -2454,6 +2472,24 @@ static void changeSS4CharacterGenderToFemale(u16 id) {
 			break;
 		}
 	}
+
+	// Placeholder outfit
+	ss4CharacterGenderSwap.inner = 0;
+	ss4CharacterGenderSwap.top = 0x0BEA;
+	ss4CharacterGenderSwap.outer = 0;
+	ss4CharacterGenderSwap.necklaceScarfHeadphones = 0;
+	ss4CharacterGenderSwap.gloves = 0;
+	ss4CharacterGenderSwap.socks = 0;
+	ss4CharacterGenderSwap.skirtPants = 0x1FAD;
+	ss4CharacterGenderSwap.shoes = 0x1FBD;
+	ss4CharacterGenderSwap.legWarmers = 0;
+	ss4CharacterGenderSwap.hat = 0;
+	ss4CharacterGenderSwap.glasses = 0;
+	ss4CharacterGenderSwap.bag = 0;
+	ss4CharacterGenderSwap.necklace = 0;
+	ss4CharacterGenderSwap.watch = 0;
+	ss4CharacterGenderSwap.earrings = 0;
+	ss4CharacterGenderSwap.bowPosition = 0;
 
 	tonccpy((char*)ss4Save+getSS4CharacterOffset(id), &ss4CharacterGenderSwap, 0x3E);
 }
