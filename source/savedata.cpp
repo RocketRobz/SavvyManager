@@ -943,43 +943,134 @@ static u8 SS4ToSS3BlusherTable[SS4BlusherAmount][2] = { // Offset: 0x0F
 	{0x10, 0x30}, // Love Flush -> Starfish Orange
 };
 
-#define SS3ToSS4HairStyleAmount 22
+#define SS3ToSS4HairStyleAmount 24
 
 // Left: SS3, Right: SS4
 static u8 SS3ToSS4HairStyleTable[SS3ToSS4HairStyleAmount][2] = { // Offset: 0x15
-	{0x01, 0x4B},
-	{0x03, 0x4B},
-	{0x06, 0x4B},
+	{0x01, 0x4B}, // Layered Crop -> Casual bob
+	{0x03, 0x4B}, // Tousled Bob -> Casual bob
+	{0x06, 0x4B}, // Mullet -> Casual bob
 	{0x07, 0x4C}, // Volumised Midi -> Wavy bob
 	{0x08, 0x4D}, // Straight Midi -> Curled under bob
 	{0x0A, 0x4E}, // Long & Wavy -> Long elegant waves
 	{0x0B, 0x4E}, // Volumised Long -> Long elegant waves
-	{0x0D, 0x4F},
-	{0x0F, 0x10},
-	{0x12, 0x60},
-	{0x13, 0x3C},
-	{0x15, 0x63},
-	{0x1C, 0x60},
-	{0x1F, 0x62},
-	{0x25, 0x50},
-	{0x28, 0x4E},
-	{0x29, 0x51},
-	{0x2D, 0x33},
-	{0x38, 0x64},
-	{0x41, 0x3C},
-	{0x48, 0x4E},
-	{0x4A, 0x52},
+	{0x0D, 0x4F}, // Long Half Ponytail -> Long plaited half-updo
+	{0x0F, 0x10}, // Side Plaited Pigtail -> Side low pigtail
+	{0x12, 0x60}, // Straight Side Ponytail -> Casual side ponytail
+	{0x13, 0x3C}, // Side Bun -> Ribbon curled side ponytail
+	{0x15, 0x63}, // High Tousled Bun -> High ponytail
+	{0x1B, 0x62}, // Ballet Bun
+	{0x1C, 0x60}, // Volumized Side Ponytail -> Casual side ponytail
+	{0x1F, 0x62}, // Topknot -> Ballet bun
+	{0x25, 0x50}, // Spiky Punk -> Asymmetrical punk
+	{0x27, 0x6D}, // Pixie Short Hair -> Chic short cut
+	{0x28, 0x4E}, // Hippie Style -> Long elegant waves
+	{0x29, 0x51}, // Afro -> Bouncy spiral curls
+	{0x2D, 0x33}, // Male: ??? -> Pixie short
+	{0x38, 0x64}, // Bouffant
+	{0x41, 0x3C}, // Side Bun with pouring curl -> Ribbon curled side ponytail
+	{0x48, 0x4E}, // Sausage Curls -> Long elegant waves
+	{0x4A, 0x52}, // Short & Choppy -> Tousled crop
 };
 
-#define SS4ToSS3HairStyleAmount 5
+#define SS4ToSS3HairStyleAmount 10
 
 // Left: SS4, Right: SS3
 static u8 SS4ToSS3HairStyleTable[SS4ToSS3HairStyleAmount][2] = { // Offset: 0x15
 	{0x4C, 0x07}, // Wavy bob -> Volumised Midi
 	{0x4D, 0x08}, // Curled under bob -> Straight Midi
 	{0x4E, 0x0A}, // Long elegant waves -> Long & Wavy
+	{0x60, 0x12}, // Casual side ponytail -> Straight Side Ponytail
+	{0x62, 0x1B}, // Ballet bun
+	{0x64, 0x38}, // Bouffant
+	{0x69, 0x3E}, // Volumised midi -> Medium Loose Curl
 	{0x6A, 0x0A}, // Long loose ringlets -> Long & Wavy
 	{0x6C, 0x09}, // Ear-tucked long -> Long & Straight
+	{0x6D, 0x27}, // Chic short cut -> Pixie Short Hair
+};
+
+#define SS4FTMHairStyleAmount 55
+
+// Left: Female, Right: Male
+static u8 SS4FTMHairStyleTable[SS4FTMHairStyleAmount][2] = { // Offset: 0x15
+	{0x02, 0x2F}, // Flicked layers
+	{0x04, 0x35}, // Straight bob -> Wavy midi
+	{0x05, 0x2E}, // Slicked back
+	{0x09, 0x59}, // Long and straight -> Johann
+	{0x0C, 0x2E}, // Shoulder-length half ponytail -> Slicked back
+	{0x0E, 0x59}, // Long ribbon curls -> Johann
+	{0x10, 0x2E}, // Side ponytail -> Slicked back
+	{0x11, 0x35}, // Plaited pigtails -> Wavy midi
+	{0x14, 0x2E}, // Low ponytail -> Slicked back
+	{0x16, 0x2E}, // Short pigtails -> Slicked back
+	{0x17, 0x2E}, // Double buns -> Slicked back
+	{0x1D, 0x2E}, // Chignon -> Slicked back
+	{0x1E, 0x2E}, // Messy ponytail -> Slicked back
+	{0x20, 0x2E}, // Long pigtails -> Slicked back
+	{0x21, 0x2E}, // Volumised high pigtails -> Slicked back
+	{0x22, 0x2E}, // Straight pigtails -> Slicked back
+	{0x23, 0x2E}, // High ribbon curl pigtails -> Slicked back
+	{0x26, 0x66}, // Side-swept bob -> Oliver
+	{0x2A, 0x36}, // Curly crew cut
+	{0x37, 0x2E}, // Messy buns -> Slicked back
+	{0x39, 0x32}, // Pageboy -> ??? (with left-swept fringe)
+	{0x3A, 0x2E}, // Natural side ponytail -> Slicked back
+	{0x3B, 0x2E}, // Curly side ponytail -> Slicked back
+	{0x3C, 0x2E}, // Ribbon curled side ponytail -> Slicked back
+	{0x3D, 0x2B}, // Short and spiky
+	{0x3E, 0x35}, // Medium loose curl -> Wavy midi
+	{0x3F, 0x35}, // High side ponytail -> Wavy midi
+	{0x40, 0x59}, // High half pigtails -> Johann
+	{0x42, 0x2E}, // Side ponytail with braids -> Slicked back
+	{0x43, 0x59}, // Side-swept waves -> Johann
+	{0x44, 0x2E}, // Long plaited pigtails -> Slicked back
+	{0x45, 0x2E}, // High plaited pigtails -> Slicked back
+	{0x46, 0x2E}, // Hair bow -> Slicked back
+	{0x47, 0x2E}, // Looped plaited pigtails -> Slicked back
+	{0x49, 0x59}, // Cat ears -> Johann
+	{0x4B, 0x31}, // Casual bob -> ???
+	{0x4C, 0x35}, // Wavy bob -> Wavy midi
+	{0x4D, 0x35}, // Curled under bob -> Wavy midi
+	{0x4E, 0x59}, // Long elegant waves -> Johann
+	{0x4F, 0x59}, // Long plaited half-updo -> Johann
+	{0x50, 0x5B}, // Asymmetrical punk -> Melvin
+	{0x51, 0x59}, // Bouncy spiral curls -> Johann
+	{0x52, 0x5A}, // Tousled crop -> Ken
+	{0x5F, 0x2E}, // Bubble pigtails -> Slicked back
+	{0x60, 0x2E}, // Casual side ponytail -> Slicked back
+	{0x61, 0x2E}, // High hair bow -> Slicked back
+	{0x62, 0x2E}, // Ballet bun -> Slicked back
+	{0x63, 0x2E}, // High ponytail -> Slicked back
+	{0x64, 0x59}, // Bouffant -> Johann
+	{0x68, 0x59}, // Asymmetrical straight cut -> Johann
+	{0x69, 0x35}, // Volumised midi -> Wavy midi
+	{0x6A, 0x59}, // Long loose ringlets -> Johann
+	{0x6B, 0x32}, // Straight casual short -> ??? (with left-swept fringe)
+	{0x6C, 0x59}, // Ear-tucked long -> Johann
+	{0x6D, 0x33}, // Chic short cut -> Pixie short
+};
+
+#define SS4MTFHairStyleAmount 17
+
+// Left: Male, Right: Female
+static u8 SS4MTFHairStyleTable[SS4MTFHairStyleAmount][2] = { // Offset: 0x15
+	{0x2B, 0x3D}, // Short and spiky
+	{0x2C, 0x3D}, // Short and spiky with side burns -> Short and spiky
+	{0x2E, 0x05}, // Slicked back
+	{0x2F, 0x02}, // Flicked layers
+	{0x31, 0x4B}, // ??? -> Casual bob
+	{0x32, 0x4B}, // ??? (with left-swept fringe) -> Casual bob
+	{0x33, 0x6D}, // Pixie short -> Chic short cut
+	{0x34, 0x4C}, // Wavy midi with right-swept fringe -> Wavy bob
+	{0x35, 0x4C}, // Wavy midi -> Wavy bob
+	{0x36, 0x2A}, // Curly crew cut
+	{0x57, 0x26}, // Ethan -> Side-swept bob
+	{0x58, 0x6D}, // Tim -> Chic short cut
+	{0x59, 0x6A}, // Johann -> Long loose ringlets
+	{0x5A, 0x52}, // Ken -> Tousled crop
+	{0x5B, 0x50}, // Melvin -> Asymmetrical punk
+	{0x65, 0x05}, // Fortman -> Slicked back
+	{0x66, 0x26}, // Oliver -> Side-swept bob
 };
 
 #define SS4ToSS3HairColorAmount 2
@@ -2284,6 +2375,13 @@ static void changeSS4CharacterGenderToMale(u16 id) {
 			break;
 		}
 	}
+	// Hair style
+	for (i = 0; i < SS4FTMHairStyleAmount; i++) {
+		if (ss4CharacterGenderSwap.hairStyle == SS4FTMHairStyleTable[i][0]) {
+			ss4CharacterGenderSwap.hairStyle = SS4FTMHairStyleTable[i][1];
+			break;
+		}
+	}
 
 	tonccpy((char*)ss4Save+getSS4CharacterOffset(id), &ss4CharacterGenderSwap, 0x3E);
 }
@@ -2346,6 +2444,13 @@ static void changeSS4CharacterGenderToFemale(u16 id) {
 	for (i = 0; i < SS4MTFEyebrowAmount; i++) {
 		if (ss4CharacterGenderSwap.eyebrowOverlay == SS4MTFEyebrowTable[i][0]) {
 			ss4CharacterGenderSwap.eyebrowOverlay = SS4MTFEyebrowTable[i][1];
+			break;
+		}
+	}
+	// Hair style
+	for (i = 0; i < SS4MTFHairStyleAmount; i++) {
+		if (ss4CharacterGenderSwap.hairStyle == SS4MTFHairStyleTable[i][0]) {
+			ss4CharacterGenderSwap.hairStyle = SS4MTFHairStyleTable[i][1];
 			break;
 		}
 	}
