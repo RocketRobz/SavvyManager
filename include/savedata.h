@@ -172,6 +172,13 @@ extern void writeSS4AssistantCharacterId(u16 id);
 extern u16 getSS4MewtubeCharacterId(int video, int slot);
 extern void writeSS4MewtubeCharacterId(u16 id, int video, int slot);
 
+extern u8 readSS2CharacterHeight(void);
+extern void writeSS2CharacterHeight(u8 height);
+extern u8 readSS3CharacterHeight(u16 id);
+extern void writeSS3CharacterHeight(u16 id, u8 height);
+extern u8 readSS4CharacterHeight(u16 id);
+extern void writeSS4CharacterHeight(u16 id, u8 height);
+
 extern u8 readSS2CharacterPoseSet(void);
 extern void writeSS2CharacterPoseSet(u8 poseSet);
 extern u8 readSS3CharacterPoseSet(u16 id);

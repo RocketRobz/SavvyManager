@@ -1302,6 +1302,14 @@ bool getSS2CharacterGenderNoExceptions(void) {
 	return (ss2Save[0x102] == 2);
 }
 
+u8 readSS2CharacterHeight(void) {
+	return ss2CharacterData.height;
+}
+
+void writeSS2CharacterHeight(u8 height) {
+	ss2CharacterData.height = height;
+}
+
 u8 readSS2CharacterPoseSet(void) {
 	return ss2CharacterData.poseSet;
 }
@@ -1696,6 +1704,21 @@ bool getSS3CharacterGenderNoExceptions(u16 id) {
 
 	// true = male, false = female
 	return (ss3CharacterGenderCheck.gender == 2);
+}
+
+u8 readSS3CharacterHeight(u16 id) {
+	ss3to4character ss3CharacterTemp;
+	tonccpy(&ss3CharacterTemp, (char*)ss3Save+getSS3CharacterOffset(id), 0x36);
+
+	return ss3CharacterTemp.height;
+}
+
+void writeSS3CharacterHeight(u16 id, u8 height) {
+	ss3to4character ss3CharacterTemp;
+	tonccpy(&ss3CharacterTemp, (char*)ss3Save+getSS3CharacterOffset(id), 0x36);
+
+	ss3CharacterTemp.height = height;
+	tonccpy((char*)ss3Save+getSS3CharacterOffset(id), &ss3CharacterTemp, 0x36);
 }
 
 u8 readSS3CharacterPoseSet(u16 id) {
@@ -2496,6 +2519,21 @@ static void changeSS4CharacterGenderToFemale(u16 id) {
 
 void changeSS4CharacterGender(u16 id) {
 	getSS4CharacterGenderNoExceptions(id) ? changeSS4CharacterGenderToFemale(id) : changeSS4CharacterGenderToMale(id);
+}
+
+u8 readSS4CharacterHeight(u16 id) {
+	ss3to4character ss4CharacterTemp;
+	tonccpy(&ss4CharacterTemp, (char*)ss4Save+getSS4CharacterOffset(id), 0x3E);
+
+	return ss4CharacterTemp.height;
+}
+
+void writeSS4CharacterHeight(u16 id, u8 height) {
+	ss3to4character ss4CharacterTemp;
+	tonccpy(&ss4CharacterTemp, (char*)ss4Save+getSS4CharacterOffset(id), 0x3E);
+
+	ss4CharacterTemp.height = height;
+	tonccpy((char*)ss4Save+getSS4CharacterOffset(id), &ss4CharacterTemp, 0x3E);
 }
 
 u8 readSS4CharacterPoseSet(u16 id) {

@@ -128,9 +128,16 @@ const char* getSS4CharName(u16 charId) {
 	return "???";
 }
 
+static const char* poseSetNames[] = {
+	"Active",
+	"Cute",
+	"Cool",
+};
+
 extern bool ss3DLCharactersBackedUp;
 
 static u16 currentCharId = 0;
+static u8 currentHeight = 0;
 static u8 currentPoseSet = 0;
 
 CharacterChange::CharacterChange() {
@@ -953,14 +960,27 @@ void CharacterChange::Draw(void) const {
 		bool isMale = false;
 		if (highlightedGame == 3) {
 			isMale = getSS4CharacterGenderNoExceptions(currentCharId);
+			currentHeight = readSS4CharacterHeight(currentCharId);
 			currentPoseSet = readSS4CharacterPoseSet(currentCharId);
 		} else if (highlightedGame == 2) {
 			isMale = getSS3CharacterGenderNoExceptions(currentCharId);
+			currentHeight = readSS3CharacterHeight(currentCharId);
 			currentPoseSet = readSS3CharacterPoseSet(currentCharId);
 		} else if (highlightedGame == 1) {
 			isMale = getSS2CharacterGenderNoExceptions();
+			currentHeight = readSS2CharacterHeight();
 			currentPoseSet = readSS2CharacterPoseSet();
 		}
+
+		char heightString[24];
+		if (currentHeight == 0) {
+			sprintf(heightString, "Height: < Invisible >");
+		} else {
+			sprintf(heightString, "Height: < %i >", currentHeight);
+		}
+
+		char poseSetString[24];
+		sprintf(poseSetString, "Pose Set: < %s >", poseSetNames[currentPoseSet-1]);
 
 		int i2 = (highlightedGame == 3 ? 8 : 0);
 		i2 += 48;
@@ -969,12 +989,9 @@ void CharacterChange::Draw(void) const {
 		Gui::DrawString(64, i2, 0.65, BLACK, (highlightedGame == 3) ? (isMale ? "Gender: < Male >" : "Gender: < Female >") : (isMale ? "Gender: Male" : "Gender: Female"));
 		i2 += 48;
 		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-		const char* poseSetString = "Pose Set: < Active >";
-		if (currentPoseSet == 2) {
-			poseSetString = "Pose Set: < Cute >";
-		} else if (currentPoseSet == 3) {
-			poseSetString = "Pose Set: < Cool >";
-		}
+		Gui::DrawString(64, i2, 0.65, BLACK, heightString);
+		i2 += 48;
+		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 		Gui::DrawString(64, i2, 0.65, BLACK, poseSetString);
 	} else if (subScreenMode == 1) {
 		cursorY = 64+(48*characterChangeMenu_cursorPositionOnScreen);
@@ -2002,8 +2019,8 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 			if (hDown & KEY_DDOWN) {
 				sndHighlight();
 				characterAttributeList_cursorPosition++;
-				if (characterAttributeList_cursorPosition > 1) {
-					characterAttributeList_cursorPosition = 1;
+				if (characterAttributeList_cursorPosition > 2) {
+					characterAttributeList_cursorPosition = 2;
 				}
 			}
 
@@ -2017,6 +2034,23 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 						}
 						break;
 					case 1:
+						sndHighlight();
+						currentHeight--;
+						if (highlightedGame == 3) {
+							if (currentHeight < 1) currentHeight = 3;
+						} else {
+							if (currentHeight == 0xFF) currentHeight = 3;
+						}
+						if (highlightedGame == 3) {
+							writeSS4CharacterHeight(currentCharId, currentHeight);
+						} else if (highlightedGame == 2) {
+							writeSS3CharacterHeight(currentCharId, currentHeight);
+						} else if (highlightedGame == 1) {
+							writeSS2CharacterHeight(currentHeight);
+						}
+						changesMade = true;
+						break;
+					case 2:
 						sndHighlight();
 						currentPoseSet--;
 						if (currentPoseSet < 1) currentPoseSet = 3;
@@ -2043,6 +2077,19 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 						break;
 					case 1:
 						sndHighlight();
+						currentHeight++;
+						if (currentHeight > 3) currentHeight = (highlightedGame == 3) ? 1 : 0;
+						if (highlightedGame == 3) {
+							writeSS4CharacterHeight(currentCharId, currentHeight);
+						} else if (highlightedGame == 2) {
+							writeSS3CharacterHeight(currentCharId, currentHeight);
+						} else if (highlightedGame == 1) {
+							writeSS2CharacterHeight(currentHeight);
+						}
+						changesMade = true;
+						break;
+					case 2:
+						sndHighlight();
 						currentPoseSet++;
 						if (currentPoseSet > 3) currentPoseSet = 1;
 						if (highlightedGame == 3) {
@@ -2066,6 +2113,9 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 					writeSS4CharacterToSave(currentCharId);
 				} else if (highlightedGame == 2) {
 					writeSS3CharacterToSave(currentCharId);
+				} else if (highlightedGame == 1) {
+					writeSS2Character();
+					writeSS2CharacterToSave();
 				}
 				changesMade = false;
 			}
@@ -2135,7 +2185,9 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 				sndSelect();
 				displayNothing = true;
 				subScreenMode = characterChangeMenuOps[characterChangeMenu_cursorPosition];
-				if ((subScreenMode == 4) && (import_highlightedGame == 4) && !exportedCharListGotten[highlightedGame]) {
+				if ((subScreenMode == 2) && (highlightedGame == 1)) {
+					readSS2Character();
+				} else if ((subScreenMode == 4) && (import_highlightedGame == 4) && !exportedCharListGotten[highlightedGame]) {
 					gspWaitForVBlank();
 					getExportedCharacterContents();
 					exportedCharListGotten[highlightedGame] = true;
