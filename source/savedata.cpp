@@ -1793,7 +1793,7 @@ void writeSS3EmblemToSave(void) {
 
 	FILE* saveData = fopen(ss3SavePath, "rb+");
 	fseek(saveData, offset, SEEK_SET);
-	fwrite(ss3Save, 0x804, 1, saveData);
+	fwrite((char*)ss3Save+(offset), 0x804, 1, saveData);
 	fclose(saveData);
 
 	ss3SaveModified = true;
