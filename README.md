@@ -11,7 +11,7 @@ For Style Savvy's 10th Anniversary, a save editor is here!
 * Edit save data from all four Girls Mode/Style Savvy/Style Boutique games.
 * As of currently, only games 2-4 are supported.
    * Only the 2nd game is supported for KOR regions.
-* High-resolution Hori-HD (800px wide mode), exclusive to 3DS, New 3DS, and New 2DS consoles!
+* High-resolution *Horizon HD* (800px wide mode), exclusive to 3DS, New 3DS, and New 2DS consoles!
 * Pre-rendered character previews.
 * Originally composed menu music!
 * Sound effects from ChuChu Rocket.

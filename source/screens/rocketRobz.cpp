@@ -97,8 +97,8 @@ void RocketRobz::Draw(void) const {
 		//Gui::DrawStringCentered(0, 48, 0.50, WHITE, this->presentedText);
 		//Gui::DrawStringCentered(0, 88, 0.60, WHITE, "Cinema");
 		//GFX::DrawSprite(sprites_logo_widescreen_idx, 66, 107);
-		Gui::DrawStringCentered(0, 48, 0.75, WHITE, this->presentedText);
-		GFX::DrawSprite(sprites_logo_horiHD_idx, 32, 85);
+		Gui::DrawStringCentered(0, 72, 0.50, WHITE, this->presentedText);
+		GFX::DrawSprite(sprites_logo_horizonHD_idx, 16, 95);
 	} else if (subMode == 1) {
 		Gui::Draw_Rect(0, 0, 320, 120, C2D_Color32(230, 0, 18, 255));
 		Gui::Draw_Rect(0, 120, 320, 120, WHITE);
