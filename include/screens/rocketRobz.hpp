@@ -14,7 +14,7 @@ private:
 	const char* gameYearText = "2008-2017";
 	const char* gameYearText2 = "2009-2017";
 	const char* gameYearTextKOR = "2010-2013";
-	const char* yearText = "2019-2023";
+	const char* yearText = "2019-2024";
 };
 
 #endif
