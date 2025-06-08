@@ -747,8 +747,8 @@ const int ss4CharacterFlags[] = {
 	0, // Mina
 	0, // Molly
 	0, // Gwen
-	0, // Tracy
-	0, // Chetna
+	1, // Tracy
+	1, // Chetna
 	0, // Svetlana
 	0, // Reiko
 	0, // Kevani
