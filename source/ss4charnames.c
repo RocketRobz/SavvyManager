@@ -71,8 +71,8 @@ const char* ss4CharacterNames[] = {
 	"Mina",
 	"Molly",
 	"Gwen",
-	"Tracy",
-	"Chetna",
+	"Tracy", // Not in Contacts
+	"Chetna (Maya dupe)", // Not in Contacts
 	"Svetlana",
 	"Reiko",
 	"Kevani",
