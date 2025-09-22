@@ -95,8 +95,11 @@ void RocketRobz::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition touc
 	if ((hDown & KEY_A) || (hDown & KEY_START) || (hDown & KEY_TOUCH)) {
 		if (subMode == 1 && delay < iFps*5) {
 			delay = iFps*5;
-		} else if (subMode == 0 && delay < iFps*1) {
-			delay = iFps*1;
+		} else if (subMode == 0 && delay < iFps*2) {
+			extern void stopMusLogos();
+			stopMusLogos();
+
+			delay = iFps*2;
 		}
 	}
 }
