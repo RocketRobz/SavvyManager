@@ -969,6 +969,7 @@ const u16 ss3CharacterOrder_JtoL[] = {
 	0x044F, // Jeremy
 	0x026F, // Jerri
 	0x0055, // Jessica
+	0x0035, // Jewel
 	0x0096, // Jiamin
 	0x0136, // Jill
 	0x0038, // Jocelyn
@@ -1157,6 +1158,7 @@ const u16 ss3CharacterOrder_OtoP[] = {
 	0x0203, // Pollyanna
 	0x02D2, // Poppy
 	0x0208, // Portia
+	0x009F, // Preeti
 	0x0066, // Preeya
 	0x01C4, // Princess
 	0x0139, // Priscilla
