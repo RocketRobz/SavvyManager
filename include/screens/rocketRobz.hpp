@@ -9,12 +9,12 @@ public:
 	void Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition touch) override;
 private:
 	//bool musicPlayed = false;
-	const char* presentedText = "Presented in";
+	//const char* presentedText = "Presented in";
 	const char* gamesByText = "Original games by";
-	const char* gameYearText = "2008-2017";
-	const char* gameYearText2 = "2009-2017";
-	const char* gameYearTextKOR = "2010-2013";
-	const char* yearText = "2019-2024";
+	const char* gameYearText = "© 2008-2017";
+	const char* gameYearText2 = "© 2009-2017";
+	const char* gameYearTextKOR = "© 2010-2013";
+	const char* yearText = "2019-2025";
 };
 
 #endif
