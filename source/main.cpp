@@ -28,7 +28,6 @@ Handle threadRequest;
 char verText[32];
 int studioBg = 0;
 int iFps = 60;
-bool fastFade = true;
 std::string currentMusicPack = "";
 bool ss3DLCharactersBackedUp = false;
 
@@ -581,9 +580,8 @@ int main()
 
 		if (isInit) {
 			delay++;
-			if (delay > iFps*5) {
+			if (delay > iFps*11) {
 				Gui::setScreen(std::make_unique<GameSelect>(), true); // Set after delay to the game select screen.
-				fastFade = false;
 				isInit = false;
 			}
 		}
@@ -635,30 +633,16 @@ int main()
 		}
 
 		int fadeFPS;
-		if (fastFade) {
-			switch (iFps) {
-				default:
-					fadeFPS = 12*(1+doubleSpeed);
-					break;
-				case 30:
-					fadeFPS = 24;
-					break;
-				case 24:
-					fadeFPS = 32;
-					break;
-			}
-		} else {
-			switch (iFps) {
-				default:
-					fadeFPS = 6*(1+doubleSpeed);
-					break;
-				case 30:
-					fadeFPS = 12;
-					break;
-				case 24:
-					fadeFPS = 14;
-					break;
-			}
+		switch (iFps) {
+			default:
+				fadeFPS = 6*(1+doubleSpeed);
+				break;
+			case 30:
+				fadeFPS = 12;
+				break;
+			case 24:
+				fadeFPS = 14;
+				break;
 		}
 
 		Gui::fadeEffects(fadeFPS, fadeFPS);
