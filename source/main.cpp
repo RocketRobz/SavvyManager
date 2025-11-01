@@ -83,7 +83,7 @@ void saveSettings(void) {
 void Play_Music(void) {
 	if (musicPlaying && !musicLoopPlaying) {
 		musicLoopDelay++;
-		if (musicLoopDelay>60 && !ndspChnIsPlaying(1)) {
+		if (musicLoopDelay>60 && !ndspChnIsPlaying(0)) {
 			music_loop->play();
 			musicLoopPlaying = true;
 		}
@@ -98,11 +98,6 @@ void musLogos(void) {
 	if (!dspfirmfound) return;
 	mus_logos->stop();
 	mus_logos->play();
-}
-
-void stopMusLogos(void) {
-	if (!dspfirmfound) return;
-	mus_logos->stop();
 }
 
 void sndSelect(void) {
@@ -253,11 +248,11 @@ int main()
 	// Load the sound effects if DSP is available.
 	if (dspfirmfound) {
 		mus_logos = new sound("romfs:/sounds/rocketRobz.wav", 0, false);
-		music = new sound("romfs:/sounds/music_start.wav", 1, false);
-		music_loop = new sound("romfs:/sounds/music_loop.wav", 2, true);
-		sfx_select = new sound("romfs:/sounds/select.wav", 3, false);
-		sfx_back = new sound("romfs:/sounds/back.wav", 4, false);
-		sfx_highlight = new sound("romfs:/sounds/highlight.wav", 5, false);
+		music = new sound("romfs:/sounds/music_start.wav", 0, false);
+		music_loop = new sound("romfs:/sounds/music_loop.wav", 1, true);
+		sfx_select = new sound("romfs:/sounds/select.wav", 2, false);
+		sfx_back = new sound("romfs:/sounds/back.wav", 3, false);
+		sfx_highlight = new sound("romfs:/sounds/highlight.wav", 4, false);
 	}
 
 	u32 ss2Id[4] = {0x000A9100, 0x000A9000, 0x0005D100, 0x000C4F00};
