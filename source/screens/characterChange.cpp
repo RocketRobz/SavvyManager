@@ -783,8 +783,8 @@ void CharacterChange::Draw(void) const {
 				Gui::DrawStringCentered(0, 64, 0.50, BLACK, "Choose who you want to be your");
 				Gui::DrawStringCentered(0, 78, 0.50, BLACK, "shop assistant.");
 				Gui::DrawStringCentered(0, 104, 0.50, BLACK, "Anyone other than Xin, Sylvia, Hannah,");
-				Gui::DrawStringCentered(0, 118, 0.50, BLACK, "Ken, Archie, or Rahil, will not have");
-				Gui::DrawStringCentered(0, 132, 0.50, BLACK, "their card shown in your shop.");
+				Gui::DrawStringCentered(0, 118, 0.50, BLACK, "Ken, Archie, or Rahil, will only appear");
+				Gui::DrawStringCentered(0, 132, 0.50, BLACK, "in events and when changing their outfits.");
 			} else {
 				Gui::DrawStringCentered(0, 104, 0.50, BLACK, "Select the character you want to change.");
 			}
