@@ -450,7 +450,7 @@ const char* ss3CharacterNamesP13[] = {
 	"Jerri",
 	"Nikita",
 	"Missy",
-	"Désirée",
+	"DÃ©sirÃ©e",
 	"Cherie",
 	"Blanca",
 	"Gerty",
@@ -858,7 +858,7 @@ const u16 ss3CharacterOrder_CtoD[] = {
 	0x00E1, // Demi
 	0x0231, // Denise
 	0x0455, // Derek
-	0x0272, // Désirée
+	0x0272, // DÃ©sirÃ©e
 	0x023D, // Diana
 	0x02D8, // Dolly
 	0x02A5, // Donna

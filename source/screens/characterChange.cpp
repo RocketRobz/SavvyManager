@@ -1865,7 +1865,7 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 					case 1:
 						sprintf(chrFilePath, "romfs:/character/Trendsetters/All Seasons/%s.chr", "Robz");
 						if (access(chrFilePath, F_OK) != 0) {
-						sprintf(chrFilePath, "romfs:/character/Trendsetters/%s/%s.chr", seasonName(), "Robz");
+							sprintf(chrFilePath, "romfs:/character/Trendsetters/%s/%s.chr", seasonName(), "Robz");
 						}
 						readSS2CharacterFile(chrFilePath);
 						writeSS2CharacterToSave();
@@ -1948,8 +1948,8 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 				messageNo = 1;
 				subScreenMode = 1;
 				showMessage = true;
-				}
 			}
+		}
 
 		if (hDown & KEY_DLEFT) {
 			sndHighlight();
@@ -2164,17 +2164,15 @@ void CharacterChange::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition
 			} else if (characterChangeMenuOps[characterChangeMenu_cursorPosition] == 10) {
 				// Export character
 				sndSelect();
+				sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS%i/characters/%s.chr", highlightedGame+1, characterName(false));
 				switch (highlightedGame) {
 					case 3:
-						sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS4/characters/%s.chr", characterName(false));
 						writeSS4CharacterFile(currentCharId, chrFilePath);
 						break;
 					case 2:
-						sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS3/characters/%s.chr", characterName(false));
 						writeSS3CharacterFile(currentCharId, chrFilePath);
 						break;
 					case 1:
-						sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS2/characters/%s.chr", characterName(false));
 						writeSS2CharacterFile(chrFilePath);
 						break;
 				}

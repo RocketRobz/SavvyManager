@@ -21,8 +21,8 @@ const char* ss4CharacterNames[] = {
 	"Niamh",
 	"Pippa",
 	"Evie", // Unseen
-	"Angélique",
-	"Angélique (Dupe)", // Unseen
+	"AngÃ©lique",
+	"AngÃ©lique (Dupe)", // Unseen
 	"Advert Director",
 	"??? (Feminine)", // Unseen
 	"Interviewer",
@@ -446,7 +446,7 @@ const char* ss4CharacterNamesP12[] = {
 	"Jerri",
 	"Nikita",
 	"Missy",
-	"Désirée",
+	"DÃ©sirÃ©e",
 	"Cherie",
 	"Blanca",
 	"Gerty",
@@ -697,8 +697,8 @@ const int ss4CharacterFlags[] = {
 	0, // Niamh
 	0, // Pippa
 	3, // Evie
-	0, // Angélique
-	2, // Angélique (Dupe)
+	0, // AngÃ©lique
+	2, // AngÃ©lique (Dupe)
 	1, // Advert Director
 	2, // Unseen (Feminine)
 	1, // Interviewer
@@ -1121,7 +1121,7 @@ const u16 ss4CharacterOrder_CtoD[] = {
 	0x0231, // Denise
 	0x0455, // Derek
 	0x03F5, // Designer
-	0x0272, // Désirée
+	0x0272, // DÃ©sirÃ©e
 	0x023D, // Diana
 	0x026D, // Ding
 	0x03F3, // Director

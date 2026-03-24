@@ -2,7 +2,7 @@
 
 const char* import_ss1CharacterNames[] = {
 	"Grace",
-	"Renee",
+	"Renée",
 	"Dominic",
 	"Eunice",
 	"Felicity",
