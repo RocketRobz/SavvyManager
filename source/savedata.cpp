@@ -1321,6 +1321,21 @@ void writeSS2CharacterPoseSet(u8 poseSet) {
 	ss2CharacterData.poseSet = poseSet;
 }
 
+void enableSS2FashionOwnWardFlags(void) {
+	memset((char*)ss2Save+0xC4C, 0xFF, 0x792);
+}
+
+void writeSS2FashionOwnWardFlagsToSave(void) {
+	const u32 offset = 0xC4C;
+
+	FILE* saveData = fopen(ss2SavePath, "rb+");
+	fseek(saveData, offset, SEEK_SET);
+	fwrite(ss2Save+offset, 0x792, 1, saveData);
+	fclose(saveData);
+
+	ss2SaveModified = true;
+}
+
 
 /*
 	Style Savvy: Fashion Forward

@@ -1,7 +1,6 @@
 #include "characterChange.hpp"
 #include "emblemChange.hpp"
 #include "gameSelect.hpp"
-#include "musicChange.hpp"
 #include "stockManage.hpp"
 #include "mewtubeChange.hpp"
 #include "screenvars.h"
@@ -118,16 +117,16 @@ void WhatToDo::Draw(void) const {
 	Gui::DrawStringCentered(textXpos, 140, textSize, RED, "Characters");
 	iconXpos += 64;
 	textXpos += 64;
-	if (highlightedGame > 1) {
+	// if (highlightedGame > 1) {
 		// Show stock option for Fashion Forward and Styling Star
 		GFX::DrawSprite(sprites_icon_stock_idx, iconXpos, 84);
 		Gui::DrawStringCentered(textXpos, 140, textSize, RED, "Stock");
-	} else if (highlightedGame == 1) {
+	/* } else if (highlightedGame == 1) {
 		// Show music pack option for Trendsetters
 		GFX::DrawSpriteBlend(sprites_icon_shadow_idx, iconXpos, 86, C2D_Color32(0, 0, 0, 63));
 		GFX::DrawSprite(sprites_icon_music_idx, iconXpos, 80);
 		Gui::DrawStringCentered(textXpos, 140, textSize, RED, "Music");
-	}
+	} */
 	iconXpos += 64;
 	textXpos += 64;
 	if (highlightedGame > 1) {
@@ -287,7 +286,7 @@ void WhatToDo::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition touch)
 					}
 					break;
 				case 1:
-					highlightedGame>1 ? Gui::setScreen(std::make_unique<StockManage>(), true) : Gui::setScreen(std::make_unique<MusicChange>(), true);
+					Gui::setScreen(std::make_unique<StockManage>(), true);
 					break;
 				case 2:
 					Gui::setScreen(std::make_unique<EmblemChange>(), true);

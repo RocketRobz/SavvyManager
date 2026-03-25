@@ -170,13 +170,27 @@ void StockManage::Logic(u32 hDown, u32 hDownRepeat, u32 hHeld, touchPosition tou
 						}
 					}
 				} else {
-					for (int i = 0; i < ((highlightedGame == 3) ? 30304 : 15500); i++) {
-						(highlightedGame == 3) ? (boutiqueToo ? writeSS4FashionOwnFlag(i, 0x6301) : writeSS4FashionOwnWardFlag(i, 0x01)) : writeSS3FashionOwnFlag(i, 0x6301);
+					if (highlightedGame == 1) {
+						enableSS2FashionOwnWardFlags();
+					} else {
+						for (int i = 0; i < ((highlightedGame == 3) ? 30304 : 15500); i++) {
+							(highlightedGame == 3) ? (boutiqueToo ? writeSS4FashionOwnFlag(i, 0x6301) : writeSS4FashionOwnWardFlag(i, 0x01)) : writeSS3FashionOwnFlag(i, 0x6301);
+						}
 					}
 					flagModified = true;
 				}
 				if (flagModified) {
-					(highlightedGame == 3) ? writeSS4FashionOwnFlagsToSave() : writeSS3FashionOwnFlagsToSave();
+					switch (highlightedGame) {
+						case 1:
+							writeSS2FashionOwnWardFlagsToSave();
+							break;
+						case 2:
+							writeSS3FashionOwnFlagsToSave();
+							break;
+						case 3:
+							writeSS4FashionOwnFlagsToSave();
+							break;
+					}
 				}
 				messageNo = 0;
 			}

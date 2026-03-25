@@ -28,7 +28,7 @@ Handle threadRequest;
 char verText[32];
 int studioBg = 0;
 int iFps = 60;
-std::string currentMusicPack = "";
+// std::string currentMusicPack = "";
 bool ss3DLCharactersBackedUp = false;
 
 int titleSelection = 0;
@@ -65,7 +65,7 @@ void loadSettings(void) {
 	ss3Region = settingsini.GetInt("SS3", "REGION", ss3Region);
 	ss4Region = settingsini.GetInt("SS4", "REGION", ss4Region);
 
-	currentMusicPack = settingsini.GetString("SS2", "CURRENT_MUSIC_PACK", currentMusicPack);
+	// currentMusicPack = settingsini.GetString("SS2", "CURRENT_MUSIC_PACK", currentMusicPack);
 }
 
 void saveSettings(void) {
@@ -74,7 +74,7 @@ void saveSettings(void) {
 	//settingsini.SetInt("SAVVY-MANAGER", "STUDIO_BG", studioBg);
 	settingsini.SetInt("SAVVY-MANAGER", "FRAME_RATE", iFps);
 
-	settingsini.SetString("SS2", "CURRENT_MUSIC_PACK", currentMusicPack);
+	// settingsini.SetString("SS2", "CURRENT_MUSIC_PACK", currentMusicPack);
 
 	settingsini.SaveIniFileModified(settingsIni);
 }
@@ -379,7 +379,7 @@ int main()
 			break;
 	}
 	if (R_SUCCEEDED(res)) {
-		switch (saveRegion[1]) {
+		/* switch (saveRegion[1]) {
 			default:
 				// Style Savvy: Trendsetters folders
 				mkdir("sdmc:/luma/titles/00040000000A9100", 0777);
@@ -409,7 +409,7 @@ int main()
 				mkdir("sdmc:/luma/titles/00040000000C4F00/romfs/Common", 0777);
 				mkdir("sdmc:/luma/titles/00040000000C4F00/romfs/Common/Sound", 0777);
 				break;
-		}
+		} */
 		ss2SaveFound = (access(ss2SavePath, F_OK) == 0);
 	}
 

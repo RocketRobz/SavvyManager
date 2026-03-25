@@ -204,6 +204,8 @@ void readSS4EmblemFile(int id, const char* filename);
 void writeSS4EmblemFile(int id, const char* filename);
 void readTempEmblemFile(const char* filename);
 
+extern void enableSS2FashionOwnWardFlags(void);
+extern void writeSS2FashionOwnWardFlagsToSave(void);
 extern u16 readSS3FashionOwnFlag(int id);
 extern void writeSS3FashionOwnFlag(int id, u16 flag);
 extern u8 readSS3FashionOwnWardFlag(int id);
