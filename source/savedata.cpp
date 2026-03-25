@@ -3,6 +3,7 @@
 #include <cstring>
 #include "savedata.h"
 #include "stringtool.h"
+#include "getFileSize.h"
 #include "tonccpy.h"
 
 u8 saveRegion[4] = {0};
@@ -14,10 +15,12 @@ ss3to4emblem emblemData;
 
 const char* ss1SavePath;
 
-char ss1Save[0x100000];
-char ss2Save[0x31736];
-char ss3Save[0x174000];
-char ss4Save[0xF0000];
+static char ss1Save[0x100000];
+static char ss2Save[0x335BE];
+static u32 ss2SaveSize = 0; // 0x31736 for USA/EUR, 0x335BE for JPN
+static char ss3Save[0x174000];
+static u32 ss3SaveSize = 0; // 0x174000 for USA/EUR, 0x120000 for JPN
+static char ss4Save[0xF0000];
 
 char ss1PlayerName[10] = {0};
 char ss2PlayerName[10] = {0};
@@ -1200,7 +1203,6 @@ void readSS1Save(void) {
 }
 
 void writeSS1Save(void) {
-	remove(ss1SavePath);
 	FILE* saveData = fopen(ss1SavePath, "wb");
 	fwrite(ss1Save, (int)sizeof(ss1Save), 1, saveData);
 	fclose(saveData);
@@ -1212,8 +1214,11 @@ void writeSS1Save(void) {
 void readSS2Save(void) {
 	if (ss2SaveRead) return;
 
+	ss2SaveSize = getFileSize(ss2SavePath);
+	if (ss2SaveSize == 0) return;
+
 	FILE* saveData = fopen(ss2SavePath, "rb");
-	fread(ss2Save, (int)sizeof(ss2Save), 1, saveData);
+	fread(ss2Save, ss2SaveSize, 1, saveData);
 	fclose(saveData);
 
 	// Get playable character's name
@@ -1226,7 +1231,7 @@ void readSS2Save(void) {
 
 void writeSS2Save(void) {
 	FILE* saveData = fopen(ss2SavePath, "wb");
-	fwrite(ss2Save, (int)sizeof(ss2Save), 1, saveData);
+	fwrite(ss2Save, ss2SaveSize, 1, saveData);
 	fclose(saveData);
 
 	ss2SaveModified = true;
@@ -1343,10 +1348,11 @@ void writeSS2FashionOwnWardFlagsToSave(void) {
 void readSS3Save(void) {
 	if (ss3SaveRead) return;
 
-	u32 size = (saveRegion[2]==CFG_REGION_JPN ? 0x120000 : 0x174000);
+	ss3SaveSize = getFileSize(ss3SavePath);
+	if (ss3SaveSize == 0) return;
 
 	FILE* saveData = fopen(ss3SavePath, "rb");
-	fread(ss3Save, size, 1, saveData);
+	fread(ss3Save, ss3SaveSize, 1, saveData);
 	fclose(saveData);
 
 	// Get playable character's name
@@ -1359,10 +1365,8 @@ void readSS3Save(void) {
 }
 
 void writeSS3Save(void) {
-	u32 size = (saveRegion[2]==CFG_REGION_JPN ? 0x120000 : 0x174000);
-
 	FILE* saveData = fopen(ss3SavePath, "wb");
-	fwrite(ss3Save, size, 1, saveData);
+	fwrite(ss3Save, ss3SaveSize, 1, saveData);
 	fclose(saveData);
 
 	ss3SaveModified = true;
