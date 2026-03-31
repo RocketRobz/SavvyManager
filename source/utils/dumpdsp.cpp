@@ -21,7 +21,7 @@ TitleInfo titles[] = {
 	{ 0x400300000B102LL, "home_menu_twn"},
 };
 
-const void *memmem(const void *haystack, size_t haystacklen, const void *needle, size_t needlelen) {
+static const void *memmem_alt(const void *haystack, size_t haystacklen, const void *needle, size_t needlelen) {
 	// Sanity check
 	if (needlelen > haystacklen) return NULL;
 
@@ -250,7 +250,7 @@ Result dumpCode(u64 tid , char* path) {
 	u8 *dsp_loc = NULL;
 	u32 dsp_size = 0;
 	
-	dsp_loc = (u8*)memmem(decompressedBuffer , decompressedSize, magic, 4);
+	dsp_loc = (u8*)memmem_alt(decompressedBuffer , decompressedSize, magic, 4);
 	if(dsp_loc){
 		printf("Magic found! Beginning dsp dump! ...\n");
 		dsp_size = *(u32*)(dsp_loc + 4);  //size usually 0xC25C
