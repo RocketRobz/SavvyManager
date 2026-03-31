@@ -21,7 +21,6 @@ For Style Savvy's 10th Anniversary, a save editor is here!
 * Import any character from the Kirakira Code/Fashion Forward save data into Star Stylist/Styling Star, or vice-versa.
 * You can also export your current character, in case if you want to restore/import it later.
 * (3rd and 4th games) Import/Export brand emblems for custom designed outfits.
-* Apply music packs to Girls Mode 2/Style Savvy: Trendsetters/New Style Boutique. (Requires game patching enabled in Luma.)
 * (GM4/SS4/NSB3): Add, remove, and/or change characters in Mewtube videos!
 * Add all fashion to your wardrobe in the 2nd, 3rd, and 4th games!
 * Add all fashion to your shop in the 4th game!
